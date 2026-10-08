@@ -1,0 +1,40 @@
+name: claude_job_soccer_dev
+
+services:
+  redis_claude_job_soccer:
+    image: redis:7
+    container_name: redis_claude_job_soccer_dev
+    ports:
+      - "6383:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  claude_job_soccer-backend:
+    build:
+      context: ./claude_job_soccer_backend
+      dockerfile: Dockerfile.dev
+    container_name: claude_job_soccer-backend_dev
+    ports:
+      - "5013:5013"
+    env_file:
+      - ./claude_job_soccer_backend/.env.development
+    volumes:
+      - ./claude_job_soccer_backend:/app
+      - node_modules:/app/node_modules    
+      - ./logs:/logs
+    depends_on:
+      redis_claude_job_soccer:
+        condition: service_healthy
+    restart: always
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+
+volumes:
+  node_modules:

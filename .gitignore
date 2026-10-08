@@ -1,0 +1,39 @@
+# Documentation (Ignored as requested)
+/doc/
+doc/
+*.doc
+*.docx
+
+# Environment variables & secrets (All levels)
+.env
+.env.*
+*.env
+!.env.example
+!.env.sample
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Next.js & TypeScript builds
+.next/
+*/.next/
+dist/
+*/dist/
+build/
+*/build/
+out/
+*/out/
+
+# Logs & media uploads
+logs/
+*/logs/
+uploads/
+*/uploads/
+*.log
+
+# IDE & OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

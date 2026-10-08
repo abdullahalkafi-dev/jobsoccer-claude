@@ -1,0 +1,47 @@
+name: claude_job_soccer_prod
+
+services:
+  redis_claude_job_soccer:
+    image: redis:7
+    container_name: redis_claude_job_soccer_prod
+    ports:
+      - "6382:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks: 
+      - claude_job_soccer_network
+  claude_job_soccer-backend:
+    build:
+      context: ./claude_job_soccer_backend
+      dockerfile: Dockerfile.prod
+    container_name: claude_job_soccer-backend_prod
+    ports:
+      - "5014:5014"
+    env_file:
+      - ./claude_job_soccer_backend/.env.production
+    volumes:
+      - ./logs:/logs
+    depends_on:
+      redis_claude_job_soccer:
+        condition: service_healthy
+    restart: always
+    environment:
+      - NODE_ENV=production
+    # Limit container logs to prevent unbounded growth
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - claude_job_soccer_network
+volumes:
+
+networks:
+  claude_job_soccer_network:
+    driver: bridge
