@@ -1,0 +1,73 @@
+name: jobsoccer_dev
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: jobsoccer_redis_dev
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - jobsoccer_dev_network
+
+  backend:
+    build:
+      context: ./backend/claude_job_soccer_backend
+      dockerfile: Dockerfile.dev
+    container_name: jobsoccer_backend_dev
+    restart: always
+    env_file:
+      - ./backend/claude_job_soccer_backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/claude_job_soccer_backend:/app
+      - /app/node_modules
+      - ./uploads:/app/uploads
+    depends_on:
+      - redis
+    networks:
+      - jobsoccer_dev_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jobsoccer_frontend_dev
+    restart: always
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - jobsoccer_dev_network
+
+  admin_dashboard:
+    build:
+      context: ./admin_dashboard
+      dockerfile: Dockerfile
+    container_name: jobsoccer_dashboard_dev
+    restart: always
+    env_file:
+      - ./admin_dashboard/.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./admin_dashboard:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - jobsoccer_dev_network
+
+volumes:
+  redis_dev_data:
+
+networks:
+  jobsoccer_dev_network:
+    driver: bridge

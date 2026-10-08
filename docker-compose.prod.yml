@@ -1,0 +1,99 @@
+name: jobsoccer_prod
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: jobsoccer_redis_prod
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - jobsoccer_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  backend:
+    build:
+      context: ./backend/claude_job_soccer_backend
+      dockerfile: Dockerfile
+    container_name: jobsoccer_backend_prod
+    restart: always
+    env_file:
+      - ./backend/claude_job_soccer_backend/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - jobsoccer_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_URL: https://api.jobsoccer.com
+        NEXT_PUBLIC_HOSTNAME: api.jobsoccer.com
+        NEXT_PUBLIC_PORT: "8000"
+        NEXT_PUBLIC_SOCKET_URL: https://api.jobsoccer.com
+    container_name: jobsoccer_frontend_prod
+    restart: always
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - jobsoccer_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  admin_dashboard:
+    build:
+      context: ./admin_dashboard
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: https://api.jobsoccer.com
+        NEXT_PUBLIC_HOSTNAME: api.jobsoccer.com
+        NEXT_PUBLIC_PORT: "8000"
+    container_name: jobsoccer_dashboard_prod
+    restart: always
+    env_file:
+      - ./admin_dashboard/.env
+    ports:
+      - "127.0.0.1:4000:4000"
+    networks:
+      - jobsoccer_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis_data:
+
+networks:
+  jobsoccer_network:
+    driver: bridge
