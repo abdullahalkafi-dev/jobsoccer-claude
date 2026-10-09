@@ -51,6 +51,7 @@ export function GlobalProfile() {
               alt="Global opportunities worldwide"
               className="object-contain w-full"
               priority
+              unoptimized
             />
           </div>
 

@@ -29,16 +29,22 @@ const corsOptions = {
       "http://10.10.12.125:3000",
       "http://10.10.12.125:3001",
       "http://localhost:3001",
-      "https://jobsoccer.com"
-    ];
+      "https://jobsoccer.com",
+      "https://www.jobsoccer.com",
+      "http://jobsoccer.com",
+      "http://www.jobsoccer.com",
+      "https://api.jobsoccer.com",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean);
     
     // In development, allow all origins
     if (process.env.NODE_ENV !== "production") {
       return callback(null, true);
     }
     
-    // In production, check against whitelist
-    if (allowedOrigins.includes(origin)) {
+    // In production, check against whitelist or any jobsoccer.com subdomain
+    const isJobsoccerDomain = /^https?:\/\/([a-zA-Z0-9-]+\.)*jobsoccer\.com$/.test(origin);
+    if (allowedOrigins.includes(origin) || isJobsoccerDomain) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
