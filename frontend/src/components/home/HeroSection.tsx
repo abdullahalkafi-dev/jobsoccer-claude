@@ -5,7 +5,7 @@ import line from "@/assets/line.png";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
-import bg from "@/assets/hero-banner.svg";
+import bg from "@/assets/hero-banner.webp";
 
 export function HeroSection() {
   const { user, token } = useAppSelector((state) => state.auth);
@@ -60,7 +60,7 @@ export function HeroSection() {
                 src={bg}
                 alt="Hero Background"
                 className="h-full object-cover"
-                loading="eager"
+                priority
               />
             </div>
           </div>
