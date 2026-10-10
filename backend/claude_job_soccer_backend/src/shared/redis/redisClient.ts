@@ -5,8 +5,8 @@ import config from "../../config";
 // Create the Redis client instance
 const createRedisClient = (): Redis => {
   return new Redis({
-    host: "127.0.0.1",
-    port: Number(config.redis.port),
+    host: config.redis.host || "127.0.0.1",
+    port: Number(config.redis.port) || 6379,
     db: 0,
     connectTimeout: 5000,
     lazyConnect: true,
