@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { CandidateExperienceController } from "./candidateExperience.controller";
 import auth from "../../shared/middlewares/auth";
+import optionalAuth from "../../shared/middlewares/optionalAuth";
 import validateRequest from "../../shared/middlewares/validateRequest";
 import {
   addExperienceSchema,
@@ -40,11 +41,11 @@ router.post(
 /**
  * @route   GET /api/v1/candidate-experience/user/:userId
  * @desc    Get all experience records for a user
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/user/:userId",
-  auth(),
+  optionalAuth,
   validateRequest(getExperiencesByUserSchema),
   CandidateExperienceController.getAllExperiencesByUser
 );
@@ -64,11 +65,11 @@ router.get(
 /**
  * @route   GET /api/v1/candidate-experience/:experienceId
  * @desc    Get a specific experience record by ID
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/:experienceId",
-  auth(),
+  optionalAuth,
   validateRequest(getExperienceByIdSchema),
   CandidateExperienceController.getExperienceById
 );

@@ -506,7 +506,7 @@ export default function UserProfilePage() {
             </div>
 
             {/* Additional Sections */}
-            <AnalyticsSection />
+            {isOwnProfile && <AnalyticsSection />}
             <ExperienceSection
               userId={user?._id || ""}
               readOnly={!isOwnProfile}

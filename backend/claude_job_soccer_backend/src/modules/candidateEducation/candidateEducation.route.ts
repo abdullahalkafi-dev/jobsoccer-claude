@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { CandidateEducationController } from "./candidateEducation.controller";
 import auth from "../../shared/middlewares/auth";
+import optionalAuth from "../../shared/middlewares/optionalAuth";
 import validateRequest from "../../shared/middlewares/validateRequest";
 import {
   addEducationSchema,
@@ -39,11 +40,11 @@ router.post(
 /**
  * @route   GET /api/v1/candidate-education/user/:userId
  * @desc    Get all education records for a user
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/user/:userId",
-  auth(),
+  optionalAuth,
   validateRequest(getEducationsByUserSchema),
   CandidateEducationController.getAllEducationsByUser
 );
@@ -51,11 +52,11 @@ router.get(
 /**
  * @route   GET /api/v1/candidate-education/:educationId
  * @desc    Get a specific education record by ID
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/:educationId",
-  auth(),
+  optionalAuth,
   validateRequest(getEducationByIdSchema),
   CandidateEducationController.getEducationById
 );

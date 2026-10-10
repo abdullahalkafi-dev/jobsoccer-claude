@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { CandidateLicensesAndCertificationController } from "./candidateLicensesAndCertification.controller";
 import auth from "../../shared/middlewares/auth";
+import optionalAuth from "../../shared/middlewares/optionalAuth";
 import validateRequest from "../../shared/middlewares/validateRequest";
 import {
   addLicenseAndCertificationSchema,
@@ -39,11 +40,11 @@ router.post(
 /**
  * @route   GET /api/v1/candidate-licenses-and-certifications/user/:userId
  * @desc    Get all license and certification records for a user
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/user/:userId",
-  auth(),
+  optionalAuth,
   validateRequest(getLicensesAndCertificationsByUserSchema),
   CandidateLicensesAndCertificationController.getAllLicensesAndCertificationsByUser
 );
@@ -51,11 +52,11 @@ router.get(
 /**
  * @route   GET /api/v1/candidate-licenses-and-certifications/:licenseId
  * @desc    Get a specific license and certification record by ID
- * @access  Private (All authenticated users)
+ * @access  Public / Optional Auth
  */
 router.get(
   "/:licenseId",
-  auth(),
+  optionalAuth,
   validateRequest(getLicenseAndCertificationByIdSchema),
   CandidateLicensesAndCertificationController.getLicenseAndCertificationById
 );
