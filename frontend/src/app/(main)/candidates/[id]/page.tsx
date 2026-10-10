@@ -48,10 +48,10 @@ export default function UserProfilePage() {
     skip: !userId,
   });
 
-  // Check friendship status
+  // Check friendship status (skip if not logged in to avoid 401 console error)
   const { data: friendshipData, isLoading: isLoadingFriendship } =
     useCheckFriendshipStatusQuery(userId, {
-      skip: !userId,
+      skip: !userId || !currentUser,
     });
 
   // Send friend request mutation
@@ -116,9 +116,13 @@ export default function UserProfilePage() {
       );
     }
   };
+  // ⚠️ TEMPORARY BYPASS: Set to true during client review/development so anyone (logged in or guest) can view candidate details without access request.
+  // To revert back to production restrictions, simply set TEMPORARY_BYPASS_ACCESS to false.
+  const TEMPORARY_BYPASS_ACCESS = true;
+
   const areFriends = friendshipData?.data?.areFriends || false;
   const isAdmin = (currentUser?.userType as string) === "admin" || currentUser?.role === "admin";
-  const hasAccess = areFriends || isAdmin || isOwnProfile;
+  const hasAccess = TEMPORARY_BYPASS_ACCESS || areFriends || isAdmin || isOwnProfile;
 
   // Handle friend request
   const handleRequestAccess = async () => {
