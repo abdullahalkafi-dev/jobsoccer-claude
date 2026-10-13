@@ -32,7 +32,7 @@ type HomeJobCardProps = {
   staffLabel?: string;
 };
 
-export function HomeJobCard({ job, staffLabel }: HomeJobCardProps) {
+export function HomeJobCard({ job }: HomeJobCardProps) {
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
@@ -168,8 +168,6 @@ export function HomeJobCard({ job, staffLabel }: HomeJobCardProps) {
     }
   };
 
-  const displayCategoryLabel =
-    staffLabel || (job as any).displayCategory || job.jobCategory || "Staff";
 
   return (
     <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow duration-200">
@@ -267,7 +265,7 @@ export function HomeJobCard({ job, staffLabel }: HomeJobCardProps) {
             </div>
           </div>
 
-          {/* Bottom section with applicant count, time, and staff category label (replaces salary numbers) */}
+          {/* Bottom section with applicant count and time */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col gap-1">
               <span className="text-gray-600 text-sm font-medium">
@@ -277,11 +275,6 @@ export function HomeJobCard({ job, staffLabel }: HomeJobCardProps) {
                 <Clock className="w-3 h-3" />
                 <span>{jobData.postedTime}</span>
               </div>
-            </div>
-            <div className="text-right">
-              <span className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-[#1A1A1A] text-yellow-300 font-semibold text-xs tracking-wide shadow-xs">
-                {displayCategoryLabel}
-              </span>
             </div>
           </div>
         </Link>

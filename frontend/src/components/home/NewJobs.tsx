@@ -30,10 +30,8 @@ export function NewJobs() {
   return (
     <div className="bg-[#F7F6F2] rounded-3xl p-5 md:p-8 border border-gray-100 shadow-xs">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
-          <span className="bg-yellow-300 font-bold px-6 py-2.5 rounded-xl inline-block text-gray-900 text-lg shadow-xs">
-            New Jobs
-          </span>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+          New Jobs
         </h2>
       </div>
 
@@ -43,16 +41,12 @@ export function NewJobs() {
             <CardSkeleton key={index} />
           ))
         ) : jobs.length > 0 ? (
-          jobs.slice(0, 3).map((job, index) => {
-            const staffLabel = index === 0 ? "Office Staff" : "On Field Staff";
-            return (
-              <HomeJobCard
-                key={job._id}
-                job={job}
-                staffLabel={staffLabel}
-              />
-            );
-          })
+          jobs.slice(0, 3).map((job) => (
+            <HomeJobCard
+              key={job._id}
+              job={job}
+            />
+          ))
         ) : (
           <p className="col-span-full text-center text-gray-500 py-8">
             No new jobs available
