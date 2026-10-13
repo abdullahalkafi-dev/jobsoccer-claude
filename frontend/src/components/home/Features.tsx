@@ -68,6 +68,68 @@ export function Features() {
     },
   ];
 
+
+  // const features = [
+  //   {
+  //     icon: footbal,
+  //     title: "Specialized in Soccer Staffing",
+  //     lists: [
+  //       "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, and every connection is designed with the beautiful game in mind.",
+  //     ],
+  //   },
+  //   {
+  //     icon: brainIcon,
+  //     title: "AI-Powered Talent Matching",
+  //     lists: [
+  //       "Our smart algorithm analyzes profiles, skills, and requirements to connect the right candidates with the right employers, faster and more accurately.",
+  //     ],
+  //   },
+  //   {
+  //     icon: videoIcon,
+  //     title: "AI-Powered Video Interviews",
+  //     lists: [
+  //       "Go beyond the CV. Every candidate for a position answers the same soccer questions on video, explaining their methodology and approach. Our AI summarizes and scores each answer before the first meeting. Scores support, never replace, the employer’s judgment.",
+  //     ],
+  //   },
+  //   {
+  //     icon: security,
+  //     title: "Profile Quality Score",
+  //     lists: [
+  //       "Every profile is scored for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
+  //     ],
+  //   },
+  //   {
+  //     icon: job,
+  //     title: "AI-Powered Job Suggestions",
+  //     lists: [
+  //       "No more endless scrolling. JOBSOCCER delivers personalized job recommendations to players and staff based on their profile, experience, and preferences.",
+  //     ],
+  //   },
+  //   {
+  //     icon: chart,
+  //     title: "AI Market Insights",
+  //     lists: [
+  //       "Stay ahead of the game. Our AI tracks talent trends, in-demand roles, and regional opportunities, so clubs and candidates always know where the market is heading.",
+  //     ],
+  //   },
+  //   {
+  //     icon: global,
+  //     title: "Global Access & Visibility",
+  //     lists: [
+  //       "Your next opportunity shouldn’t depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league, and every level of the game.",
+  //     ],
+  //   },
+  //   {
+  //     icon: profile,
+  //     title: "Fair, Transparent, and Structured Process",
+  //     lists: [
+  //       "A clear, structured application process that reduces bias and gives every candidate an equal chance.",
+  //     ],
+  //   },
+  // ];
+
+
+
   return (
     <section className="bg-[#F7F6F2]">
       <div className="py-8 text-center bg-primary">

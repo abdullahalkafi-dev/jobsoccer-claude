@@ -1,4 +1,5 @@
 import { Candidates } from "@/components/home/Canditates";
+import { ConnectSection } from "@/components/home/ConnectSection";
 import { Discover } from "@/components/home/Discover";
 import { Features } from "@/components/home/Features";
 import FindYourNextJob from "@/components/home/FindYourNextJob";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <HeroSection />
       <JobSearch />
       <FindYourNextJob />
+      <ConnectSection />
       <Discover />
       <JobCategories />
       <Features />
@@ -22,6 +24,7 @@ export default function HomePage() {
       <StatsBanner />
       <HowItWorks />
       <GlobalProfile />
+
     </main>
   );
 }
