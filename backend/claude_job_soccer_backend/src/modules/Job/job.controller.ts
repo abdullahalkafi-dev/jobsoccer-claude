@@ -334,6 +334,23 @@ const getLastFourJobs = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Get homepage featured jobs (1 Office Staff + 2 On Field Staff)
+ * GET /api/v1/jobs/home-featured
+ * Semi-private: Authenticated users get isApplied/isSaved fields
+ */
+const getHomepageJobs = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const result = await JobService.getHomepageFeaturedJobs(userId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Homepage featured jobs retrieved successfully",
+    data: result,
+  });
+});
+
 export const JobController = {
   createJob,
   getAllJobs,
@@ -353,4 +370,6 @@ export const JobController = {
   expireOldJobs,
   getJobCountsByRole,
   getLastFourJobs,
+  getHomepageJobs,
 };
+

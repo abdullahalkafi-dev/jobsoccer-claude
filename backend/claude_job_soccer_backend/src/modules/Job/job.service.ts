@@ -8,6 +8,7 @@ import { SearchHistoryService, SearchEntityType } from "../searchHistory/searchH
 import { AI_SCORE_RANGES, AiScoreLevel, getDateFilterRange, DateFilter } from "./job.constants";
 import { SavedJob } from "../savedJobs/savesJobs.model";
 import { JobApply } from "../jobApply/jobApply.model";
+import { CandidateRole } from "../user/user.interface";
 
 
 /**
@@ -686,6 +687,97 @@ const getLastFourJobs = async (userId?: string) => {
   return jobsWithStatus;
 };
 
+/**
+ * Get homepage featured jobs (1 Office Staff + 2 On Field Staff)
+ * Returns array of 3 jobs in order: [Office Staff, On Field Staff, On Field Staff]
+ * Includes fallback to other active jobs if specific categories are sparse
+ * SEMI-PRIVATE: When authenticated, includes isApplied/isSaved fields
+ * 
+ * @param userId - Optional user ID for authenticated users
+ */
+const getHomepageFeaturedJobs = async (userId?: string) => {
+  const [officeJob, onFieldJobs, fallbackJobs, savedJobIds, appliedJobIds] = await Promise.all([
+    // 1st: latest active Office Staff job
+    Job.findOne({ status: "active", jobCategory: CandidateRole.OFFICE_STAFF })
+      .sort({ createdAt: -1 })
+      .populate("creator.creatorId", "firstName lastName email profileImage role")
+      .lean()
+      .exec(),
+
+    // 2nd & 3rd: up to 2 latest active On Field Staff jobs
+    Job.find({ status: "active", jobCategory: CandidateRole.ON_FIELD_STAFF })
+      .sort({ createdAt: -1 })
+      .limit(2)
+      .populate("creator.creatorId", "firstName lastName email profileImage role")
+      .lean()
+      .exec(),
+
+    // Fallback pool in case specific categories don't have enough active jobs
+    Job.find({ status: "active" })
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .populate("creator.creatorId", "firstName lastName email profileImage role")
+      .lean()
+      .exec(),
+
+    // Get saved job IDs if user is authenticated
+    userId
+      ? SavedJob.find({ userId: new Types.ObjectId(userId) })
+          .select("jobId")
+          .lean()
+          .exec()
+      : Promise.resolve([]),
+
+    // Get applied job IDs if user is authenticated
+    userId
+      ? JobApply.find({ candidateId: new Types.ObjectId(userId), isDeleted: false })
+          .select("jobId")
+          .lean()
+          .exec()
+      : Promise.resolve([]),
+  ]);
+
+  const usedIds = new Set<string>();
+  const featuredJobs: any[] = [];
+
+  // Slot 1: Office Staff
+  if (officeJob) {
+    usedIds.add(officeJob._id.toString());
+    featuredJobs.push({ ...officeJob, displayCategory: "Office Staff" });
+  }
+
+  // Slot 2 & 3: On Field Staff
+  for (const job of onFieldJobs) {
+    if (!usedIds.has(job._id.toString()) && featuredJobs.length < 3) {
+      usedIds.add(job._id.toString());
+      featuredJobs.push({ ...job, displayCategory: "On Field Staff" });
+    }
+  }
+
+  // Gracefully fill any remaining slots from fallback active jobs
+  for (const job of fallbackJobs) {
+    if (featuredJobs.length >= 3) break;
+    if (!usedIds.has(job._id.toString())) {
+      usedIds.add(job._id.toString());
+      const defaultCategory = featuredJobs.length === 0 ? "Office Staff" : "On Field Staff";
+      featuredJobs.push({ ...job, displayCategory: defaultCategory });
+    }
+  }
+
+  // Create Sets for O(1) lookup performance
+  const savedJobIdSet = new Set(savedJobIds.map(s => s.jobId.toString()));
+  const appliedJobIdSet = new Set(appliedJobIds.map(a => a.jobId.toString()));
+
+  // Add isApplied and isSaved fields to each job
+  const jobsWithStatus = featuredJobs.map(job => ({
+    ...job,
+    isApplied: appliedJobIdSet.has(job._id.toString()),
+    isSaved: savedJobIdSet.has(job._id.toString()),
+  }));
+
+  return jobsWithStatus;
+};
+
 // Export all service functions
 export const JobService = {
   createJob,
@@ -704,5 +796,7 @@ export const JobService = {
   expireOldJobs,
   getJobCountsByRole,
   getLastFourJobs,
+  getHomepageFeaturedJobs,
 };
+
 

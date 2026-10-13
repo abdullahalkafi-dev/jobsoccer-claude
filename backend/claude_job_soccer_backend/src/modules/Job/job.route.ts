@@ -73,6 +73,15 @@ router.get("/last-four", optionalAuth, JobController.getLastFourJobs);
 
 /**
  * GET /api/v1/job
+ * /home-featured
+ * Get 3 homepage featured jobs (1 Office Staff + 2 On Field Staff)
+ * Semi-private: Authenticated users get isApplied/isSaved fields
+ * Returns: Array of 3 featured job objects
+ */
+router.get("/home-featured", optionalAuth, JobController.getHomepageJobs);
+
+/**
+ * GET /api/v1/job
  * /active
  * Get only active jobs with filters
  */

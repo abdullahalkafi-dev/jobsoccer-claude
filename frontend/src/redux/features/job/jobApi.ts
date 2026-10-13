@@ -45,6 +45,15 @@ const jobApi = baseApi.injectEndpoints({
       keepUnusedDataFor: 300, // Cache for 5 minutes
     }),
 
+    getHomeFeaturedJobs: builder.query({
+      query: () => ({
+        url: "/job/home-featured",
+        method: "GET",
+      }),
+      providesTags: [{ type: "Job", id: "RECENT" }],
+      keepUnusedDataFor: 300,
+    }),
+
     getSingleJob: builder.query({
       query: (id: string) => ({
         url: `/job/${id}`,
@@ -109,6 +118,7 @@ export const {
   useGetJobsWithFiltersQuery,
   useLazyGetJobsWithFiltersQuery,
   useGetNewFourJobsQuery,
+  useGetHomeFeaturedJobsQuery,
   useGetSingleJobQuery,
   useLazyGetSingleJobQuery,
   useGetPopularSearchQuery,
