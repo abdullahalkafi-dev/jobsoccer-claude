@@ -219,8 +219,8 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
           >
             <Bookmark
               className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${isSaved
-                  ? "fill-yellow-400 stroke-yellow-400"
-                  : "hover:fill-yellow-400"
+                ? "fill-yellow-400 stroke-yellow-400"
+                : "hover:fill-yellow-400"
                 }`}
             />
           </div>
@@ -232,12 +232,16 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
           className="cursor-pointer block"
           title="View Job Details"
         >
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="inline-flex items-center rounded-full bg-yellow-300 px-3 py-1 text-xs font-semibold text-gray-900">
-              {jobData.position}
-            </span>
+          <div className="flex flex-col gap-2 mb-4">
+            <div>
+              <span className="inline-flex items-center rounded-full bg-yellow-300 px-3 py-1 text-xs font-semibold text-gray-900">
+                {jobData.position}
+              </span>
 
-            <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+            </div>
+
+
+            <div>     <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
               {jobData.contractType === "FullTime"
                 ? "Full Time"
                 : jobData.contractType === "PartTime"
@@ -246,11 +250,13 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
                     ? "Contract"
                     : "Not specified"}
             </span>
-            <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-              {index == 0 && "Office staff "}
-              {index == 1 && "On-field staff "}
-              {index == 2 && " On-field staff"}
-            </span>
+              <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                {index == 0 && "Office staff "}
+                {index == 1 && "On-field staff "}
+                {index == 2 && " On-field staff"}
+              </span>
+
+            </div>
           </div>
 
           {/* Applicant avatars */}

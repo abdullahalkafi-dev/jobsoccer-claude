@@ -8,7 +8,7 @@ const FindYourNextJob = () => {
         {/* Intro Mission Statement from Image 2 */}
         <div className="w-full text-left mb-8 lg:mb-10">
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-800 font-medium leading-relaxed">
-            <span className="font-bold text-gray-900 tracking-tight">JOBSOCCER</span> <span className="text-gray-600">is the recruitment platform built specifically for soccer. Using AI-powered matching, video analysis, and performance data, we help employers hire faster and more efficiently, while giving candidates worldwide the visibility and fair chance they deserve.</span>
+            <span className="font-bold text-gray-900 tracking-tight">JOBSOCCER</span> <span className="text-gray-600 text-sm sm:text-base">is the recruitment platform built specifically for soccer. Using AI-powered matching, video analysis, and performance data, we help employers hire faster and more efficiently, while giving candidates worldwide the visibility and fair chance they deserve.</span>
           </p>
         </div>
 
