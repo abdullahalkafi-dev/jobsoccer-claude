@@ -6,7 +6,7 @@ export function ConnectSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Section Heading */}
         <div className="max-w-4xl text-left mb-8 lg:mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-950 tracking-tight leading-[1.15]">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-950 tracking-tight leading-[1.15]">
             A whole world of soccer.
             <br />
             One place to connect.

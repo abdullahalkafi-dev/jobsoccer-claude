@@ -16,6 +16,7 @@ export type TNewJobPost = {
   salary: string;
   postedTime: string;
   applicantImages: StaticImageData[];
+
 };
 
 export function NewJobs() {
@@ -41,10 +42,11 @@ export function NewJobs() {
             <CardSkeleton key={index} />
           ))
         ) : jobs.length > 0 ? (
-          jobs.slice(0, 3).map((job) => (
+          jobs.slice(0, 3).map((job,index) => (
             <HomeJobCard
               key={job._id}
               job={job}
+              index={index}
             />
           ))
         ) : (

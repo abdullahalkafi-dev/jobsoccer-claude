@@ -60,7 +60,7 @@ export function Candidates() {
           </div>
 
           {/* Candidates Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4 md:gap-6">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, index) => (
                 <Skeleton
@@ -77,7 +77,7 @@ export function Candidates() {
                 No candidates available at the moment.
               </div>
             ) : (
-              homepageCandidates.map((candidate: ICandidate) => (
+              homepageCandidates.slice(0,3).map((candidate: ICandidate) => (
                 <CandidateCard key={candidate._id} candidate={candidate} />
               ))
             )}

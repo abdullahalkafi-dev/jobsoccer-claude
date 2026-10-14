@@ -30,9 +30,10 @@ import { Spinner } from "../ui/spinner";
 type HomeJobCardProps = {
   job: TJob;
   staffLabel?: string;
+  index: number
 };
 
-export function HomeJobCard({ job }: HomeJobCardProps) {
+export function HomeJobCard({ job, index }: HomeJobCardProps) {
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
@@ -217,11 +218,10 @@ export function HomeJobCard({ job }: HomeJobCardProps) {
             className="cursor-pointer hover:scale-110 transition-transform duration-200 shrink-0"
           >
             <Bookmark
-              className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${
-                isSaved
+              className={`w-7 h-7 hover:stroke-yellow-400 transition-colors ${isSaved
                   ? "fill-yellow-400 stroke-yellow-400"
                   : "hover:fill-yellow-400"
-              }`}
+                }`}
             />
           </div>
         </div>
@@ -236,14 +236,20 @@ export function HomeJobCard({ job }: HomeJobCardProps) {
             <span className="inline-flex items-center rounded-full bg-yellow-300 px-3 py-1 text-xs font-semibold text-gray-900">
               {jobData.position}
             </span>
+
             <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
               {jobData.contractType === "FullTime"
                 ? "Full Time"
                 : jobData.contractType === "PartTime"
-                ? "Part Time"
-                : jobData.contractType === "Contract"
-                ? "Contract"
-                : "Not specified"}
+                  ? "Part Time"
+                  : jobData.contractType === "Contract"
+                    ? "Contract"
+                    : "Not specified"}
+            </span>
+            <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+              {index == 0 && "Office staff "}
+              {index == 1 && "On-field staff "}
+              {index == 2 && " On-field staff"}
             </span>
           </div>
 
@@ -284,9 +290,8 @@ export function HomeJobCard({ job }: HomeJobCardProps) {
       <div className="border-t border-gray-200 pt-4 flex gap-4 items-center">
         <Button
           variant="outline"
-          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-            isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
-          }`}
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${isSaved ? "bg-green-50 border-green-500 text-green-700" : ""
+            }`}
           onClick={handleShortlistClick}
           disabled={isSavingLoading || isUnsavingLoading}
         >
@@ -305,9 +310,8 @@ export function HomeJobCard({ job }: HomeJobCardProps) {
           )}
         </Button>
         <Button
-          className={`flex-1 hover:scale-105 transition-transform duration-200 ${
-            isApplied ? "bg-green-500 text-white" : ""
-          }`}
+          className={`flex-1 hover:scale-105 transition-transform duration-200 ${isApplied ? "bg-green-500 text-white" : ""
+            }`}
           disabled={isApplied || isApplyingLoading}
           onClick={handleApplyClick}
         >

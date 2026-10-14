@@ -20,9 +20,10 @@ export default function HomePage() {
       {/* <Discover /> */}
       {/* <JobCategories /> */}
       <Features />
+      <Candidates />
       <HowItWorks />
       <GlobalProfile />
-      <Candidates />
+      
       {/* <StatsBanner /> */}
 
 
