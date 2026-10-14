@@ -9,124 +9,124 @@ import footbal from "@/assets/home/footbal.svg";
 import job from "@/assets/home/job.svg";
 
 export function Features() {
-  const features = [
-    {
-      icon: footbal,
-      title: "Specialized in Soccer Staffing",
-      lists: [
-        "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, every connection is designed with the beautiful game in mind.",
-      ],
-    },
-    {
-      icon: brainIcon,
-      title: "AI-Powered Talent Matching",
-      lists: [
-        "Our smart algorithm analyzes profiles, skills and requirements to connect the right candidates with the right employers faster and more accurately than any manual search.",
-      ],
-    },
-    {
-      icon: videoIcon,
-      title: "AI Video Interview Evaluation",
-      lists: [
-        "Go beyond the CV. Candidates upload their pre-video interviews that showcase their personality, communication and real-world skills, giving employers a true picture before the first meeting.",
-      ],
-    },
-    {
-      icon: security,
-      title: "AI Profile Quality Score",
-      lists: [
-        "Our AI evaluates every profile for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
-      ],
-    },
-    {
-      icon: job,
-      title: "AI Powered Job Suggestions",
-      lists: [
-        "No more endless scrolling. JOBSOCCER delivers personalized job recommendations directly to players and staff based on their profile, experience and preferences.",
-      ],
-    },
-    {
-      icon: chart,
-      title: "AI Data-Driven Market Insights",
-      lists: [
-        "Stay ahead of the game. Our AI tracks rising talent trends, in-demand roles and regional opportunities so clubs and candidates always know where the market is heading.",
-      ],
-    },
-    {
-      icon: global,
-      title: "Global Access & Visibility",
-      lists: [
-        "Your next opportunity shouldn't depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league and every level of the game.",
-      ],
-    },
-    {
-      icon: profile,
-      title: "Fair, Transparent and Structured Process",
-      lists: [
-        "A clear, structured application system that reduces bias, promo.",
-      ],
-    },
-  ];
-
-
   // const features = [
   //   {
   //     icon: footbal,
   //     title: "Specialized in Soccer Staffing",
   //     lists: [
-  //       "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, and every connection is designed with the beautiful game in mind.",
+  //       "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, every connection is designed with the beautiful game in mind.",
   //     ],
   //   },
   //   {
   //     icon: brainIcon,
   //     title: "AI-Powered Talent Matching",
   //     lists: [
-  //       "Our smart algorithm analyzes profiles, skills, and requirements to connect the right candidates with the right employers, faster and more accurately.",
+  //       "Our smart algorithm analyzes profiles, skills and requirements to connect the right candidates with the right employers faster and more accurately than any manual search.",
   //     ],
   //   },
   //   {
   //     icon: videoIcon,
-  //     title: "AI-Powered Video Interviews",
+  //     title: "AI Video Interview Evaluation",
   //     lists: [
-  //       "Go beyond the CV. Every candidate for a position answers the same soccer questions on video, explaining their methodology and approach. Our AI summarizes and scores each answer before the first meeting. Scores support, never replace, the employer’s judgment.",
+  //       "Go beyond the CV. Candidates upload their pre-video interviews that showcase their personality, communication and real-world skills, giving employers a true picture before the first meeting.",
   //     ],
   //   },
   //   {
   //     icon: security,
-  //     title: "Profile Quality Score",
+  //     title: "AI Profile Quality Score",
   //     lists: [
-  //       "Every profile is scored for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
+  //       "Our AI evaluates every profile for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
   //     ],
   //   },
   //   {
   //     icon: job,
-  //     title: "AI-Powered Job Suggestions",
+  //     title: "AI Powered Job Suggestions",
   //     lists: [
-  //       "No more endless scrolling. JOBSOCCER delivers personalized job recommendations to players and staff based on their profile, experience, and preferences.",
+  //       "No more endless scrolling. JOBSOCCER delivers personalized job recommendations directly to players and staff based on their profile, experience and preferences.",
   //     ],
   //   },
   //   {
   //     icon: chart,
-  //     title: "AI Market Insights",
+  //     title: "AI Data-Driven Market Insights",
   //     lists: [
-  //       "Stay ahead of the game. Our AI tracks talent trends, in-demand roles, and regional opportunities, so clubs and candidates always know where the market is heading.",
+  //       "Stay ahead of the game. Our AI tracks rising talent trends, in-demand roles and regional opportunities so clubs and candidates always know where the market is heading.",
   //     ],
   //   },
   //   {
   //     icon: global,
   //     title: "Global Access & Visibility",
   //     lists: [
-  //       "Your next opportunity shouldn’t depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league, and every level of the game.",
+  //       "Your next opportunity shouldn't depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league and every level of the game.",
   //     ],
   //   },
   //   {
   //     icon: profile,
-  //     title: "Fair, Transparent, and Structured Process",
+  //     title: "Fair, Transparent and Structured Process",
   //     lists: [
-  //       "A clear, structured application process that reduces bias and gives every candidate an equal chance.",
+  //       "A clear, structured application system that reduces bias, promo.",
   //     ],
   //   },
   // ];
+
+
+  const features = [
+    {
+      icon: footbal,
+      title: "Specialized in Soccer Staffing",
+      lists: [
+        "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, and every connection is designed with the beautiful game in mind.",
+      ],
+    },
+    {
+      icon: brainIcon,
+      title: "AI-Powered Talent Matching",
+      lists: [
+        "Our smart algorithm analyzes profiles, skills, and requirements to connect the right candidates with the right employers, faster and more accurately.",
+      ],
+    },
+    {
+      icon: videoIcon,
+      title: "AI-Powered Video Interviews",
+      lists: [
+        "Go beyond the CV. Every candidate for a position answers the same soccer questions on video, explaining their methodology and approach. Our AI summarizes and scores each answer before the first meeting. Scores support, never replace, the employer’s judgment.",
+      ],
+    },
+    {
+      icon: security,
+      title: "Profile Quality Score",
+      lists: [
+        "Every profile is scored for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
+      ],
+    },
+    {
+      icon: job,
+      title: "AI-Powered Job Suggestions",
+      lists: [
+        "No more endless scrolling. JOBSOCCER delivers personalized job recommendations to players and staff based on their profile, experience, and preferences.",
+      ],
+    },
+    {
+      icon: chart,
+      title: "AI Market Insights",
+      lists: [
+        "Stay ahead of the game. Our AI tracks talent trends, in-demand roles, and regional opportunities, so clubs and candidates always know where the market is heading.",
+      ],
+    },
+    {
+      icon: global,
+      title: "Global Access & Visibility",
+      lists: [
+        "Your next opportunity shouldn’t depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league, and every level of the game.",
+      ],
+    },
+    {
+      icon: profile,
+      title: "Fair, Transparent, and Structured Process",
+      lists: [
+        "A clear, structured application process that reduces bias and gives every candidate an equal chance.",
+      ],
+    },
+  ];
 
 
 

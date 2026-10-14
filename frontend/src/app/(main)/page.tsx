@@ -17,13 +17,14 @@ export default function HomePage() {
       <JobSearch />
       <FindYourNextJob />
       <ConnectSection />
-      <Discover />
-      <JobCategories />
+      {/* <Discover /> */}
+      {/* <JobCategories /> */}
       <Features />
-      <Candidates />
-      <StatsBanner />
       <HowItWorks />
       <GlobalProfile />
+      <Candidates />
+      {/* <StatsBanner /> */}
+
 
     </main>
   );
