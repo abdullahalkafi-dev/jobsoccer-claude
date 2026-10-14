@@ -37,7 +37,7 @@ export function Candidates() {
   return (
     <section className="py-8 lg:py-16 bg-white">
       {/* Header */}
-      <div className="py-8 text-center bg-primary">
+      <div className="py-8 mb-10 text-center bg-primary">
         <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-2">
           Find Your Dream Team
         </h2>
@@ -48,7 +48,7 @@ export function Candidates() {
       </div>
       <div className="container mx-auto px-4">
         {/* Candidates Container */}
-        <div className="bg-[#F7F6F2] rounded-b-2xl p-4 md:p-8">
+        <div className="bg-[#F7F6F2] rounded-2xl p-4 md:p-8">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900">Candidates</h3>
             <Button
