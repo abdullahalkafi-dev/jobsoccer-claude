@@ -223,7 +223,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
             {index == 2 && (
               <div className="flex text-sm text-gray-600 gap-2">
                 <div><span>Age:</span> 21</div>
-                <div><span>Height:</span> 6'0</div>
+                <div><span>Height:</span> 6&apos;0</div>
                 <div><span>Foot:</span> Right</div>
               </div>
             )}
