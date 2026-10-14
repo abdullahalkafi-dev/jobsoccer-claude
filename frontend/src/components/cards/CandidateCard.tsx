@@ -24,7 +24,7 @@ import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
 import userPlaceholder from "@/assets/user-placeholder.png";
 
-function CandidateCard({ candidate }: { candidate: ICandidate }) {
+function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: number }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
 
@@ -213,19 +213,46 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
           </div>
 
           {/* Location */}
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600">
-              {candidate.profile?.placeOfBirth}
-            </span>
+          <div className="flex flex-col gap-2 mb-3">
+            <div className="flex gap-1">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-600">
+                {candidate.profile?.placeOfBirth}
+              </span>
+            </div>
+            {index == 2 && (
+              <div className="flex text-sm text-gray-600 gap-2">
+                <div><span>Age:</span> 21</div>
+                <div><span>Height:</span> 6'0</div>
+                <div><span>Foot:</span> Right</div>
+              </div>
+            )}
+
+            {index == 2 && (
+              <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                <Image
+                  src="/icons/ai-icon.svg"
+                  alt="AI Rating"
+                  width={18}
+                  height={18}
+                  className="w-4.5 h-4.5 object-contain"
+                />
+                <span>
+                  <span className="text-sm text-gray-600">Ai Rating :</span>{" "}
+                  86/100
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Nationality */}
-          <div className="mb-3">
+          <div className="mb-3 flex flex-col">
             <span className="text-sm text-gray-600">
               <span className="font-medium">Nationality:</span>{" "}
               {candidate.profile?.nationality}
             </span>
+
+
           </div>
 
           <Link
@@ -254,11 +281,10 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               size="sm"
               onClick={handleShortlist}
               disabled={isShortlisting || isRemoving}
-              className={`w-full text-xs hover:scale-105 transition-transform duration-200 ${
-                isShortlisted
-                  ? "bg-green-50 border-green-500 text-green-700"
-                  : "bg-transparent"
-              }`}
+              className={`w-full text-xs hover:scale-105 transition-transform duration-200 ${isShortlisted
+                ? "bg-green-50 border-green-500 text-green-700"
+                : "bg-transparent"
+                }`}
             >
               {isShortlisting || isRemoving ? (
                 <>
@@ -268,9 +294,8 @@ function CandidateCard({ candidate }: { candidate: ICandidate }) {
               ) : (
                 <>
                   <Bookmark
-                    className={`w-3 h-3 mr-1 ${
-                      isShortlisted ? "fill-current" : ""
-                    }`}
+                    className={`w-3 h-3 mr-1 ${isShortlisted ? "fill-current" : ""
+                      }`}
                   />
                   {isShortlisted ? "Shortlisted" : "Shortlist"}
                 </>

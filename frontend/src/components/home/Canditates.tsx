@@ -77,8 +77,8 @@ export function Candidates() {
                 No candidates available at the moment.
               </div>
             ) : (
-              homepageCandidates.slice(0,3).map((candidate: ICandidate) => (
-                <CandidateCard key={candidate._id} candidate={candidate} />
+              homepageCandidates.slice(0,3).map((candidate: ICandidate,index:number) => (
+                <CandidateCard index={index} key={candidate._id} candidate={candidate} />
               ))
             )}
           </div>
