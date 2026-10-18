@@ -221,15 +221,15 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
               </span>
             </div>
             {index == 2 && (
+              <div className="flex w-fit flex-col gap-2">
               <div className="flex text-sm text-gray-600 gap-2">
                 <div><span>Age:</span> 21</div>
+                <span>|</span>
                 <div><span>Height:</span> 6&apos;0</div>
+                <span>|</span>
                 <div><span>Foot:</span> Right</div>
               </div>
-            )}
-
-            {index == 2 && (
-              <div className="flex items-center gap-1.5 text-sm text-gray-600">
+              <div className="flex items-center gap-1.5 border-t border-gray-400 pt-2 text-sm text-gray-600">
                 <Image
                   src="/icons/ai-icon.svg"
                   alt="AI Rating"
@@ -241,6 +241,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                   <span className="text-sm text-gray-600">Ai Rating :</span>{" "}
                   86/100
                 </span>
+              </div>
               </div>
             )}
           </div>
