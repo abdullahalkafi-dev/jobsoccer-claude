@@ -224,12 +224,12 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
               <div className="flex w-fit flex-col gap-2">
               <div className="flex text-sm text-gray-600 gap-2">
                 <div><span>Age:</span> 21</div>
-                <span>|</span>
+                <span className="text-gray-300">|</span>
                 <div><span>Height:</span> 6&apos;0</div>
-                <span>|</span>
+                <span  className="text-gray-300">|</span>
                 <div><span>Foot:</span> Right</div>
               </div>
-              <div className="flex items-center gap-1.5 border-t border-gray-400 pt-2 text-sm text-gray-600">
+              <div className="flex items-center gap-1.5 border-t border-gray-300 pt-2 text-sm text-gray-600">
                 <Image
                   src="/icons/ai-icon.svg"
                   alt="AI Rating"
