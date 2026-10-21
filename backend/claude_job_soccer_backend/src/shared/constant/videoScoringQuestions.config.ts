@@ -1,4 +1,5 @@
 import { CandidateRole } from "../../modules/user/user.interface";
+import { normalizeOnFieldPosition } from "./video.constant";
 
 /**
  * Video Scoring Questions Configuration
@@ -1228,11 +1229,11 @@ const ASSISTANT_COACH_QUESTIONS: IVideoScoringQuestionSet = {
 
 registerOnFieldStaffQuestions("Assistant Coach", ASSISTANT_COACH_QUESTIONS);
 
-// ─── Specific Forward Coach ──────────────────────────────────────────────────
+// ─── Specific Offensive Coach (legacy name: Specific Forward Coach) ──────────────────────────────────────────────────
 
 const SPECIFIC_FORWARD_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "Specific Forward Coach",
+  position: "Specific Offensive Coach",
   totalScore: 100,
   categories: [
     {
@@ -1358,7 +1359,7 @@ const SPECIFIC_FORWARD_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("Specific Forward Coach", SPECIFIC_FORWARD_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Specific Offensive Coach", SPECIFIC_FORWARD_COACH_QUESTIONS);
 
 // ─── Specific Defensive Coach ────────────────────────────────────────────────
 
@@ -1775,7 +1776,7 @@ export function getVideoScoringQuestions(
   }
 
   if (role === CandidateRole.ON_FIELD_STAFF && position) {
-    return ON_FIELD_STAFF_QUESTIONS.get(position) || null;
+    return ON_FIELD_STAFF_QUESTIONS.get(normalizeOnFieldPosition(position)) || null;
   }
 
   return null;
