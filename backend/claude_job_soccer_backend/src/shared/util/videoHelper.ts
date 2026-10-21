@@ -9,6 +9,7 @@ import {
   isOfficeStaff,
   validateOfficeStaffVideoCount,
 } from "../constant/videoRequirements.config";
+import { getMediaDurationSeconds } from "../ai/media/audioExtractor";
 
 /**
  * Convert absolute file path to relative path for storage
@@ -27,14 +28,14 @@ const getRelativePath = (absolutePath: string): string => {
 };
 
 /**
- * Get video duration - DISABLED (handled by frontend)
- * Returns 0 as duration will be validated on frontend
+ * Get video duration in whole seconds (ffprobe).
+ * Returns 0 when the duration cannot be read; limits are still enforced on the frontend.
  */
 export const getVideoDuration = async (
   filePath: string
 ): Promise<number> => {
-  // Duration validation is handled by frontend
-  return 0;
+  const seconds = await getMediaDurationSeconds(filePath);
+  return seconds === null ? 0 : Math.round(seconds);
 };
 
 /**
@@ -131,10 +132,9 @@ export const validateVideos = async (
     }
   }
 
-  // Duration validation removed - handled by frontend
-  // All videos will have duration set to 0
+  // Record the real duration (limits are enforced on the frontend)
   for (let i = 0; i < videoFiles.length; i++) {
-    (videoFiles[i] as any).duration = 0;
+    (videoFiles[i] as any).duration = await getVideoDuration(videoFiles[i].path);
   }
 
   return { isValid: true };
@@ -222,10 +222,9 @@ export const validatePlayerVideos = async (
     };
   }
 
-  // Duration validation removed - handled by frontend
-  // All videos will have duration set to 0
+  // Record the real duration (limits are enforced on the frontend)
   for (let i = 0; i < videoFiles.length; i++) {
-    (videoFiles[i] as any).duration = 0;
+    (videoFiles[i] as any).duration = await getVideoDuration(videoFiles[i].path);
   }
 
   return { isValid: true };
