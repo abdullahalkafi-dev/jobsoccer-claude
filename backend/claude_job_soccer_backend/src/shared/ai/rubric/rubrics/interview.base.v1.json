@@ -1,0 +1,44 @@
+{
+  "baseId": "interview.base.v1",
+  "description": "Shared parts of every client interview scoring guide (scale, consistency classes, output, oversight, fairness). Each position file extends this base and adds its own questions and rules.",
+  "scale": [
+    { "score": 4, "label": "Strong", "meaning": "Role-specific, clear and supported by a relevant example, process or evidence" },
+    { "score": 3, "label": "Good", "meaning": "Relevant and reasonably developed, but missing some depth or evidence" },
+    { "score": 2, "label": "Acceptable", "meaning": "Demonstrates basic understanding but remains generic or incomplete" },
+    { "score": 1, "label": "Weak", "meaning": "Vague, minimally relevant, impractical or unsupported" },
+    { "score": 0, "label": "Incorrect / concerning", "meaning": "Does not answer the question, contradicts the role, or reveals unsafe or unprofessional judgment" }
+  ],
+  "consistencyClassifications": [
+    { "id": "consistent", "label": "Consistent", "meaning": "The video supports and meaningfully expands the written response." },
+    { "id": "partially_consistent", "label": "Partially consistent", "meaning": "The central idea matches, but important details or evidence are missing." },
+    { "id": "contradictory", "label": "Contradictory", "meaning": "The video conflicts with a material statement in the questionnaire." },
+    { "id": "unsupported_claim", "label": "Unsupported claim", "meaning": "The candidate claims experience or competence without a relevant explanation or example." },
+    { "id": "role_mismatch", "label": "Role mismatch", "meaning": "The response may be positive generally but does not address the position or the question asked." },
+    { "id": "insufficient_evidence", "label": "Insufficient evidence", "meaning": "The content is too vague, incomplete or inaudible to evaluate confidently." }
+  ],
+  "outputRequirements": {
+    "perQuestion": ["questionId", "score (0-4)", "evidence quotation or paraphrase", "missing evidence", "rationale", "confidence (high/medium/low)", "red flags"],
+    "overall": ["total score", "percentage", "classification", "strongest areas", "main weaknesses", "AI summary"],
+    "scoreCalculation": "Sum scored question points. Report earned points / available maximum and separately count missing answers. Do not silently score missing answers as zero.",
+    "consistencyNote": "Only assess written/video consistency when both sources exist."
+  },
+  "humanOversight": "Flag safeguarding, discrimination, confidentiality, unsafe practice and materially inconsistent qualifications for qualified human review. Never automatically reject or hire based solely on the AI score.",
+  "fairness": "Do not score accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Do not infer unmentioned credentials or outcomes.",
+  "auditability": "Store rubric version, role, question ID, response evidence, score, confidence, model output and documented human corrections.",
+  "defaultBands": {
+    "72": [
+      { "min": 61, "max": 72, "label": "Strong evidence" },
+      { "min": 49, "max": 60, "label": "Good evidence" },
+      { "min": 36, "max": 48, "label": "Basic/acceptable evidence" },
+      { "min": 22, "max": 35, "label": "Weak evidence" },
+      { "min": 0, "max": 21, "label": "Insufficient or concerning evidence" }
+    ],
+    "60": [
+      { "min": 51, "max": 60, "label": "Strong evidence" },
+      { "min": 41, "max": 50, "label": "Good evidence" },
+      { "min": 30, "max": 40, "label": "Basic/acceptable evidence" },
+      { "min": 18, "max": 29, "label": "Weak evidence" },
+      { "min": 0, "max": 17, "label": "Insufficient or concerning evidence" }
+    ]
+  }
+}

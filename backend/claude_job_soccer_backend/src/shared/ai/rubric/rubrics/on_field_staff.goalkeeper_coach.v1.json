@@ -1,0 +1,466 @@
+{
+  "rubricId": "on_field_staff.goalkeeper_coach.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "GK Coach Final.docx",
+  "role": "On field staff",
+  "position": "GK Coach",
+  "displayName": "Goalkeeper Coach",
+  "clientRoleId": "goalkeeper_coach",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate goalkeeper-specific technical and tactical knowledge, training methodology, integration with the team model, communication, player development and professional judgment. Evaluate the quality and evidence in each response, not presentation style.",
+    "corePrinciple": "Strong answers connect goalkeeper development to realistic match demands and the team playing model, with individualized, evidence-based and player-centered processes."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score only against Goalkeeper Coach expectations, not Head Coach, general Assistant Coach or Office Staff criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish between a generally positive statement and demonstrated competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as acceptable or good, not automatically strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag contradictions between the written questionnaire and the video response."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer expertise, credentials or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reduce scores because of accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Evaluate content only, except when audio is impossible to assess."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward excessive confidence, length or technical vocabulary unless the content is relevant and accurate."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "49/72",
+    "percentage": "68.1%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Tactical alignment, contextual goalkeeper decisions and constructive communication",
+    "mainWeaknesses": "Limited outcome measurement, individualized development evidence and staff-integration detail",
+    "summary": "The fictional candidate demonstrates a practical understanding of goalkeeper coaching, particularly tactical alignment, contextual decision-making and communication. However, several responses lack measurable progression data, specific examples of staff integration and evidence of outcomes. Additional portfolio evidence, observed training and references are recommended to verify goalkeeper-development impact."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your background and pathway to becoming a goalkeeper coach?",
+          "evaluates": "Relevant goalkeeper-coaching preparation, experience and development.",
+          "strong": [
+            "Identifies relevant playing, coaching, education, licensing or mentoring experience.",
+            "Explains how experiences shaped a goalkeeper-specific methodology.",
+            "Shows continued development beyond having played as a goalkeeper."
+          ],
+          "acceptable": "Describes relevant experience but gives limited detail about responsibilities or learning.",
+          "weakOrConcerning": "Relies only on playing history, enthusiasm or reputation without goalkeeper-coaching evidence.",
+          "calibration": {
+            "response": "I played goalkeeper at academy level, completed a coaching course, and have coached youth keepers for three seasons. I review training footage to improve my sessions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant progression and ongoing review, but qualifications and a concrete coaching improvement are not specified."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the role and responsibilities of a goalkeeper coach within a technical staff?",
+          "evaluates": "Role clarity and contribution within an integrated technical staff.",
+          "strong": [
+            "Covers goalkeeper development, match preparation, review, welfare and readiness.",
+            "Explains collaboration with the head coach, assistants, medical and performance staff.",
+            "Recognizes that goalkeepers must be developed within the team model, not in isolation."
+          ],
+          "acceptable": "Identifies technical training and match preparation but gives an incomplete staff-integration process.",
+          "weakOrConcerning": "Defines the role only as shooting practice or acts independently of the head coach and team objectives.",
+          "calibration": {
+            "response": "I plan goalkeeper sessions, help with match preparation, and communicate with the head coach about what the team needs.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Appropriate duties, but welfare, staff coordination and match review processes are missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you align your work with the head coach and overall team objectives?",
+          "evaluates": "Alignment, communication and integration with the team's playing model.",
+          "strong": [
+            "Clarifies the head coach's principles, match plan and goalkeeper role.",
+            "Builds goalkeeper work into team sessions and weekly priorities.",
+            "Uses feedback and match evidence to adjust content and communication."
+          ],
+          "acceptable": "States that training follows team objectives but offers limited explanation.",
+          "weakOrConcerning": "Applies a fixed personal methodology without confirming the head coach's objectives.",
+          "calibration": {
+            "response": "I ask the head coach about our build-up and defensive line, then practice goalkeeper decisions that fit those ideas.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Clear alignment with team tactics, though match-evidence review and a specific integrated session are missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you analyze goalkeeper decision-making during matches?",
+          "evaluates": "Contextual analysis of goalkeeper choices rather than outcome-only judgment.",
+          "strong": [
+            "Considers information available, starting position, pressure, teammates, opponents and game state.",
+            "Separates decision quality from technical execution and final outcome.",
+            "Reviews the full sequence and realistic alternatives using video or agreed indicators."
+          ],
+          "acceptable": "Reviews key actions and choices but considers only some contextual factors.",
+          "weakOrConcerning": "Judges decisions only by goals conceded, saves made or whether an action succeeded.",
+          "calibration": {
+            "response": "I look at what the goalkeeper could see, the pressure on the ball and the passing options before deciding whether the choice was good.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Considers contextual information rather than outcomes alone, but does not show a full sequence or alternative-choice review."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you assess positioning and tactical awareness of a goalkeeper?",
+          "evaluates": "Goalkeeper positioning, perception and relationship to team structure.",
+          "strong": [
+            "Assesses position relative to ball, goal, defensive line, space, opponent and phase.",
+            "Evaluates scanning, anticipation, depth, angle, body orientation and adjustment timing.",
+            "Uses video and repeated situations rather than isolated screenshots."
+          ],
+          "acceptable": "Discusses angle, distance and starting position with some match context.",
+          "weakOrConcerning": "Uses one universal position regardless of team line, ball pressure or game situation.",
+          "calibration": {
+            "response": "I use video to check starting position, the ball angle and how the goalkeeper moves when our defensive line changes.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant positioning indicators and team context, but scanning and timing evidence are underdeveloped."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you evaluate a goalkeeper's contribution to team tactical organization?",
+          "evaluates": "Understanding of the goalkeeper as part of collective play.",
+          "strong": [
+            "Covers build-up, support angles, distribution, defensive-line management, space protection and transitions.",
+            "Assesses communication quality and effect, not volume alone.",
+            "Links goalkeeper actions to the team's in-possession and out-of-possession principles."
+          ],
+          "acceptable": "Mentions distribution and communication but gives limited collective detail.",
+          "weakOrConcerning": "Evaluates the goalkeeper almost entirely through saves, goals conceded or clean sheets.",
+          "calibration": {
+            "response": "I look at distribution and how the keeper communicates with defenders, not just saves.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Recognizes collective contribution but gives little detail on transitions, space protection or observable impact."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Coaching Methodology & Training Design",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you structure your goalkeeper training sessions throughout a week to reflect your methodology?",
+          "evaluates": "Weekly planning, session coherence and match relevance.",
+          "strong": [
+            "Explains objectives across recovery, development, match preparation and activation days.",
+            "Connects exercises to match demands and the team's weekly plan.",
+            "Considers workload, progression, decision-making, team integration and goalkeeper readiness."
+          ],
+          "acceptable": "Describes a logical weekly schedule but lacks progression, workload or team integration.",
+          "weakOrConcerning": "Uses repetitive isolated drills unrelated to match demands or recovery needs.",
+          "calibration": {
+            "response": "After a match we recover and review clips. Midweek we train handling, crosses and distribution, and near the match we keep it lighter.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Plausible weekly structure, but progression, workload monitoring and team integration are only partially described."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you individualize training based on goalkeeper profiles, age, and level?",
+          "evaluates": "Differentiated development and age-appropriate coaching.",
+          "strong": [
+            "Uses assessment to identify technical, tactical, physical, psychological and learning needs.",
+            "Adjusts complexity, volume, language, constraints and feedback to age and level.",
+            "Balances individual plans with shared team principles and long-term development."
+          ],
+          "acceptable": "Adjusts drills and explanations to the goalkeeper but gives limited assessment detail.",
+          "weakOrConcerning": "Uses identical content and standards for every goalkeeper or labels profiles without evidence.",
+          "calibration": {
+            "response": "Younger keepers need simpler tasks and more demonstrations. I increase complexity and pressure for experienced keepers.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic differentiation but lacks individual assessment and maturation or welfare considerations."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "What tools or indicators do you use to assess goalkeeper progression?",
+          "evaluates": "Objective monitoring and responsible interpretation of development.",
+          "strong": [
+            "Combines video, observation, training evidence, match behaviors and relevant physical or technical indicators.",
+            "Tracks decision quality and repeatable behaviors, not only outcomes.",
+            "Uses baselines, periodic review, goalkeeper feedback and contextual interpretation."
+          ],
+          "acceptable": "Uses video and selected performance indicators but lacks a consistent review process.",
+          "weakOrConcerning": "Relies only on clean sheets, save percentage, goals conceded or subjective impressions.",
+          "calibration": {
+            "response": "I compare training clips and match clips, and ask the goalkeeper to identify one area to improve each month.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Uses multiple evidence sources and review cycles, but lacks clear baselines and measurable decision indicators."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Game Principles & Communication",
+      "questions": [
+        {
+          "id": 10,
+          "text": "What are your key game principles for goalkeepers, and how do they integrate into the team's playing model?",
+          "evaluates": "Clarity of goalkeeper principles and integration with collective football.",
+          "strong": [
+            "Defines principles for build-up, support, space protection, crosses, shot situations, transitions and organization.",
+            "Explains how principles change with the team's structure and match context.",
+            "Shows how goalkeeper training and team training reinforce the same model."
+          ],
+          "acceptable": "Identifies several relevant principles but gives limited integration detail.",
+          "weakOrConcerning": "Lists techniques or preferred actions without linking them to team play or context.",
+          "calibration": {
+            "response": "My main principles are good positioning, communication, safe decisions on crosses and helping build from the back.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Sound principles but limited explanation of changing demands across phases and team structures."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you explain technical and tactical concepts to ensure goalkeeper understanding and execution?",
+          "evaluates": "Pedagogy, communication and transfer to performance.",
+          "strong": [
+            "Uses concise explanation, demonstration, questioning, video and guided practice.",
+            "Adapts communication to the goalkeeper's age, experience and learning needs.",
+            "Checks understanding and transfer under realistic pressure before progressing."
+          ],
+          "acceptable": "Explains, demonstrates and repeats concepts but gives limited verification detail.",
+          "weakOrConcerning": "Relies on lengthy instruction, punishment or repetition without checking understanding.",
+          "calibration": {
+            "response": "I demonstrate the movement, ask the goalkeeper what they saw and repeat it under some pressure.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Useful pedagogy and checking of understanding, but age adaptation and match transfer remain unproven."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "Describe a situation where you had to communicate a difficult message to a goalkeeper.",
+          "evaluates": "Emotional intelligence, honesty and player-centered communication.",
+          "strong": [
+            "Provides a specific situation, message, timing and private setting.",
+            "Uses evidence, empathy, clarity and an appropriate development plan.",
+            "Explains the goalkeeper's response, outcome and lesson learned."
+          ],
+          "acceptable": "Describes a reasonable approach but provides an incomplete situation or outcome.",
+          "weakOrConcerning": "Avoids the message, humiliates the goalkeeper publicly or communicates without support or evidence.",
+          "calibration": {
+            "response": "A goalkeeper was upset after losing the starting role. I spoke privately, explained the areas for improvement and agreed on training targets.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Specific respectful communication and a development plan, but the response and eventual outcome are missing."
+          },
+          "requiresRealSituation": true
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Leadership, Collaboration & Adaptability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you establish authority and trust as a goalkeeper coach within the staff and squad?",
+          "evaluates": "Credibility, consistency and professional relationships.",
+          "strong": [
+            "Sets clear standards while listening and treating goalkeepers fairly.",
+            "Demonstrates competence, consistency, confidentiality and follow-through.",
+            "Builds trust with the whole staff and goalkeeper group without creating a separate faction."
+          ],
+          "acceptable": "Emphasizes fairness, clarity and consistency but gives limited practical detail.",
+          "weakOrConcerning": "Relies on status, fear, favoritism or an exclusive relationship with one goalkeeper.",
+          "calibration": {
+            "response": "I keep the same standards for every goalkeeper and explain why we work on particular skills.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Fairness and clarity are evident, but trust-building with the wider staff and follow-through are not demonstrated."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Describe a moment when you had to make an unpopular decision regarding goalkeeper selection or focus.",
+          "evaluates": "Judgment, integrity and role boundaries in difficult decisions.",
+          "strong": [
+            "Clarifies whether the coach recommended or made the decision within the club structure.",
+            "Uses relevant evidence, team needs and transparent standards.",
+            "Communicates respectfully, manages consequences and reflects on the outcome."
+          ],
+          "acceptable": "Provides a reasonable decision approach but lacks a complete example or role clarity.",
+          "weakOrConcerning": "Uses favoritism, publicly compares goalkeepers or claims unilateral authority contrary to the staff structure.",
+          "calibration": {
+            "response": "I recommended another keeper start because his distribution better suited the opponent. The head coach made the final decision.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Respects selection authority and gives a relevant rationale, but lacks communication and follow-up details."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "Describe a match where your goalkeeper preparation did not work as expected. What adjustments did you make?",
+          "evaluates": "Accountability, adaptability and reflective practice.",
+          "strong": [
+            "Identifies a specific mismatch between preparation and match demands.",
+            "Takes appropriate responsibility and diagnoses tactical, technical, communication or workload causes.",
+            "Explains immediate and longer-term adjustments and their effect."
+          ],
+          "acceptable": "Acknowledges a problem and reasonable adjustment but provides limited outcome evidence.",
+          "weakOrConcerning": "Blames only the goalkeeper, claims preparation never fails or changes training without diagnosing the cause.",
+          "calibration": {
+            "response": "We expected lots of crosses, but the opponent played through balls instead. I adjusted our next sessions to focus on starting positions and sweeping.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Concrete tactical adaptation, though immediate match response and measured outcomes are missing."
+          },
+          "requiresRealSituation": true
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Evaluation & Vision",
+      "questions": [
+        {
+          "id": 16,
+          "text": "What do you consider to be your main strengths as a goalkeeper coach, and which areas are you improving?",
+          "evaluates": "Self-awareness and purposeful professional development.",
+          "strong": [
+            "Supports role-relevant strengths with examples.",
+            "Names a genuine improvement area and specific development actions.",
+            "Explains how development will benefit goalkeepers and staff."
+          ],
+          "acceptable": "Names relevant strengths and an improvement area but gives limited evidence or plan.",
+          "weakOrConcerning": "Claims no meaningful weakness, uses clichés or identifies strengths unrelated to the role.",
+          "calibration": {
+            "response": "I am strong at technical demonstrations. I need to improve my video analysis, so I have been learning to tag match clips.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Credible self-awareness and development action, but no evidence yet of improved coaching outcomes."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What has been the toughest professional challenge you have faced in this role, and how did you overcome it?",
+          "evaluates": "Resilience, accountability and problem-solving.",
+          "strong": [
+            "Provides a specific challenge, constraints and personal responsibility.",
+            "Explains actions, collaboration, outcome and learning.",
+            "Shows how the experience changed future goalkeeper-coaching practice."
+          ],
+          "acceptable": "Describes a relevant challenge and response but lacks outcome or reflection.",
+          "weakOrConcerning": "Blames players or colleagues, breaches confidentiality or shows no evidence of resolution.",
+          "calibration": {
+            "response": "I struggled when two goalkeepers had very different learning speeds. I split their practice targets and reviewed each separately.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant challenge and individualized response, but outcomes and lessons for future planning are limited."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "How do you measure success as a goalkeeper coach beyond clean sheets, and how has your approach evolved?",
+          "evaluates": "Development measurement and reflective evolution.",
+          "strong": [
+            "Uses repeatable behaviors such as decision quality, positioning, distribution, communication, team integration and training transfer.",
+            "Recognizes that clean sheets and goals conceded have multiple causes.",
+            "Explains concrete methodological changes based on evidence, feedback and experience."
+          ],
+          "acceptable": "Mentions development and team contribution but provides limited measurement detail or evolution.",
+          "weakOrConcerning": "Measures success only through clean sheets, saves, selection status or results.",
+          "calibration": {
+            "response": "I track better decisions on crosses, positioning and distribution over several games. I now use more game-like exercises instead of isolated repetitions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Strong role-relevant indicators and a clear methodological shift, but baselines and verified progress are absent."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

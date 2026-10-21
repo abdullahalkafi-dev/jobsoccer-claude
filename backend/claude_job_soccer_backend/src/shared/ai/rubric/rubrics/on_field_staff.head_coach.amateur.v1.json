@@ -1,0 +1,501 @@
+{
+  "rubricId": "on_field_staff.head_coach.amateur.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Head Coach Final.docx",
+  "role": "On field staff",
+  "position": "Head Coach",
+  "displayName": "Head Coach",
+  "level": "amateur",
+  "clientRoleId": "head_coach_amateur",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate the quality, relevance and evidentiary strength of each response for the Head Coach role. It must not search for one exact answer. The supplied responses are sample candidate responses, not universal model answers.",
+    "corePrinciple": "A high score requires more than correct terminology. Strong responses connect coaching knowledge to a clear process, relevant example, decision or observable outcome."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score the response against the Head Coach - Amateur Level role, not against Office Staff or another coaching position."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish between a generally positive statement and demonstrated competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as acceptable or good, not automatically strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag contradictions between the written questionnaire and the video response."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer expertise, credentials or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reduce scores because of accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Evaluate content only, except when audio is impossible to assess."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward excessive confidence, length or technical vocabulary unless the content is relevant and accurate."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "39/72",
+    "percentage": "54.2%",
+    "classification": "Basic / acceptable understanding, but insufficient depth",
+    "strongestAreas": "Teaching adaptation, trust building and constructive communication",
+    "mainWeaknesses": "Lack of specific examples, tactical detail, measurement methods and evidence of outcomes",
+    "summary": "The candidate demonstrates a generally appropriate amateur-level coaching orientation, particularly regarding player development, fairness and positive communication. However, most responses remain generic and unsupported by specific examples, processes or measurable outcomes. Additional evidence is required to confirm tactical expertise, in-game problem-solving and reflective leadership."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What key experiences most shaped your identity as a coach?",
+          "evaluates": "Coaching identity, self-awareness and the connection between experience and current practice.",
+          "strong": [
+            "Identifies specific coaching experiences, mentors, qualifications, teams or challenges.",
+            "Explains how those experiences influenced methodology or leadership.",
+            "Distinguishes playing experience from coaching competence.",
+            "Shows learning and evolution."
+          ],
+          "acceptable": "Mentions relevant playing or coaching experience but gives limited explanation.",
+          "weakOrConcerning": "Only mentions passion, reputation or playing history without connecting it to coaching practice.",
+          "calibration": {
+            "response": "I started coaching because of my passion for the game and experience as a player.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Relevant motivation, but it does not explain what specifically shaped the candidate's coaching identity."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How would you define your coaching mission beyond winning matches?",
+          "evaluates": "Player-centered philosophy and understanding of amateur football's developmental purpose.",
+          "strong": [
+            "Addresses technical, tactical, physical and psychological development.",
+            "Includes enjoyment, confidence, inclusion and long-term participation.",
+            "Recognizes character, responsibility, teamwork and a safe environment.",
+            "Balances development with competitive standards."
+          ],
+          "acceptable": "Focuses on improvement and enjoyment without explaining how these are achieved.",
+          "weakOrConcerning": "Focuses exclusively on winning, selection or personal recognition.",
+          "calibration": {
+            "response": "My goal is to help players improve and enjoy soccer.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Appropriate direction, but too general to demonstrate a complete coaching mission."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you measure success in your role within a club structure?",
+          "evaluates": "Accountability, understanding of organizational objectives and use of performance indicators.",
+          "strong": [
+            "Covers individual player and collective team development.",
+            "Uses defined objectives or observable indicators.",
+            "May consider retention, attendance, engagement, behavior and culture.",
+            "Connects performance to club methodology and stakeholder communication."
+          ],
+          "acceptable": "Mentions player and team improvement without defining how progress is measured.",
+          "weakOrConcerning": "Measures success only through results or league position.",
+          "calibration": {
+            "response": "Success for me is when players progress and the team improves together.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Correct direction, but no indicators or connection to the club structure are provided."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "What indicators do you use to judge whether a team's tactical plan is effective?",
+          "evaluates": "Tactical understanding and ability to analyze collective performance.",
+          "strong": [
+            "References the intended game model and match objectives.",
+            "Evaluates spacing, compactness, positioning and numerical relationships.",
+            "Considers progression, chance creation, defensive control and transitions.",
+            "Distinguishes execution problems from a flawed tactical plan.",
+            "Uses observation, video or match data appropriately."
+          ],
+          "acceptable": "Mentions organization and execution but lacks specific tactical indicators.",
+          "weakOrConcerning": "Judges effectiveness only by the result, effort or obedience.",
+          "calibration": {
+            "response": "I look at organization, effort, and whether players follow instructions.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Organization is relevant, but effort and compliance alone do not establish tactical effectiveness."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you verify that players can transfer tactical instructions from training to matches?",
+          "evaluates": "Training-to-match transfer and objective observation.",
+          "strong": [
+            "Defines observable behaviors before training or competition.",
+            "Uses realistic, game-related exercises.",
+            "Tracks whether behaviors appear under match pressure.",
+            "Uses video, statistics, staff observation or player feedback.",
+            "Adjusts future training based on the findings."
+          ],
+          "acceptable": "Observes whether trained principles appear during matches.",
+          "weakOrConcerning": "Relies only on general impressions or results.",
+          "calibration": {
+            "response": "I check if players apply in games what we practiced in training.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The principle is correct, but the response does not explain what is checked or how transfer is measured."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "What is your approach to reviewing performance data or video analysis with players?",
+          "evaluates": "Analytical ability, communication and age-appropriate feedback.",
+          "strong": [
+            "Selects a limited number of relevant moments or indicators.",
+            "Connects analysis to established objectives.",
+            "Balances positive actions with areas for improvement.",
+            "Uses questions and player reflection.",
+            "Translates findings into future training objectives.",
+            "Protects player dignity and avoids blame."
+          ],
+          "acceptable": "Reviews important moments and explains improvements.",
+          "weakOrConcerning": "Uses video mainly to assign blame or overwhelms players with information.",
+          "calibration": {
+            "response": "I review key moments from matches and explain what could be done better.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Relevant approach, but player involvement, positive reinforcement and follow-up are missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Methodology, Training & Playing Model",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you ensure your training methodology aligns with your match model?",
+          "evaluates": "Planning coherence and methodological knowledge.",
+          "strong": [
+            "Defines clear playing principles.",
+            "Converts them into weekly and session objectives.",
+            "Uses realistic exercises reflecting match situations.",
+            "Connects individual, unit and team development.",
+            "Adjusts training using match analysis."
+          ],
+          "acceptable": "Plans training around objectives expected during matches.",
+          "weakOrConcerning": "Selects unrelated drills or focuses mainly on fitness without tactical context.",
+          "calibration": {
+            "response": "I plan sessions around simple objectives we want to see in games.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The core connection is correct, although an example or planning process is missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "What principles guide your style of play, and how do you reinforce them daily?",
+          "evaluates": "Clarity of playing model and ability to coach it consistently.",
+          "strong": [
+            "Identifies concrete in-possession, out-of-possession and transition principles.",
+            "Explains why they fit the team.",
+            "Shows how exercises, interventions and reviews reinforce them.",
+            "Recognizes that principles can remain consistent while formations change."
+          ],
+          "acceptable": "Identifies general values or principles but gives limited football-specific detail.",
+          "weakOrConcerning": "Lists only abstract terms such as passion, discipline or hard work.",
+          "calibration": {
+            "response": "I focus on teamwork, discipline, and basic game understanding.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Useful values, but they do not clearly define a style of play."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "When players struggle with a tactical concept, how do you adapt your teaching approach?",
+          "evaluates": "Pedagogy, patience and differentiated instruction.",
+          "strong": [
+            "Simplifies the concept into smaller steps.",
+            "Uses demonstrations, visual aids, questioning or guided discovery.",
+            "Changes the exercise or reduces complexity.",
+            "Provides individual, unit or group support.",
+            "Checks understanding before progressing."
+          ],
+          "acceptable": "Simplifies, demonstrates and repeats the concept.",
+          "weakOrConcerning": "Repeats the same explanation, blames the player or uses punishment.",
+          "calibration": {
+            "response": "I explain it simply, demonstrate it, and repeat it in drills.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "A practical adaptation process is present, but the candidate does not explain how understanding is verified."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Leadership & Communication",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you build trust and credibility with players when you first join a team?",
+          "evaluates": "Leadership foundation, consistency and relationship management.",
+          "strong": [
+            "Establishes clear expectations and standards.",
+            "Listens to and learns about the players.",
+            "Treats players fairly and consistently.",
+            "Demonstrates competence and follows through on commitments.",
+            "Explains decisions and creates psychological and physical safety."
+          ],
+          "acceptable": "Emphasizes fairness, clarity and consistency.",
+          "weakOrConcerning": "Attempts to establish authority through fear, status or punishment.",
+          "calibration": {
+            "response": "I earn respect by being fair, clear, and consistent.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Strong foundational principles, although practical examples are missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "Tell us about a situation where you had to maintain standards despite resistance.",
+          "evaluates": "Integrity, conflict management and leadership under pressure.",
+          "strong": [
+            "Describes a specific situation and the standard involved.",
+            "Explains the source of resistance.",
+            "Shows calm, fair and proportionate action.",
+            "Communicates the reasoning without abandoning the standard.",
+            "Provides the outcome and lesson learned."
+          ],
+          "acceptable": "Explains a reasonable general approach but provides no real situation.",
+          "weakOrConcerning": "Avoids conflict, applies inconsistent discipline or responds aggressively.",
+          "calibration": {
+            "response": "I stay calm and explain my decision so players understand.",
+            "suggestedScore": 1,
+            "label": "Weak / incomplete",
+            "assessment": "The approach is reasonable, but the requested situation, action and outcome are absent."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 12,
+          "text": "How do you handle communication when emotions are high after a loss?",
+          "evaluates": "Emotional intelligence and post-match communication.",
+          "strong": [
+            "Assesses whether immediate discussion would be productive.",
+            "Allows an appropriate cooling-off period when necessary.",
+            "Avoids blame and emotional reactions.",
+            "Provides a concise, balanced message.",
+            "Conducts deeper evidence-based analysis later.",
+            "Protects dignity while maintaining accountability."
+          ],
+          "acceptable": "Encourages players, identifies positives and discusses improvement.",
+          "weakOrConcerning": "Publicly blames players, threatens consequences or gives an emotional tactical lecture immediately.",
+          "calibration": {
+            "response": "I encourage the team, highlight positives, and talk about improvements.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Balanced and constructive, but timing and accountability should be explained."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Adaptability & Problem Solving",
+      "questions": [
+        {
+          "id": 13,
+          "text": "Describe a time you had to change your tactical approach mid-match. What triggered it?",
+          "evaluates": "In-game analysis, decision-making and tactical adaptability.",
+          "strong": [
+            "Gives a specific match example.",
+            "Identifies the tactical trigger through observation.",
+            "Explains the adjustment and its intended effect.",
+            "Shows how the change was communicated.",
+            "Evaluates the result honestly."
+          ],
+          "acceptable": "Identifies reasonable changes and triggers but gives no specific example.",
+          "weakOrConcerning": "Changes formation without explaining the problem or desired effect.",
+          "calibration": {
+            "response": "If something isn't working, I change formation or instructions.",
+            "suggestedScore": 1,
+            "label": "Weak / incomplete",
+            "assessment": "No real situation, tactical trigger, specific adjustment or outcome is provided."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 14,
+          "text": "How do you maintain performance standards during difficult periods?",
+          "evaluates": "Resilience, leadership and process management.",
+          "strong": [
+            "Maintains clear, realistic standards.",
+            "Diagnoses causes of poor performance.",
+            "Uses controllable short-term objectives.",
+            "Adjusts training without reacting emotionally.",
+            "Supports confidence while preserving accountability.",
+            "Tracks improvement."
+          ],
+          "acceptable": "Maintains motivation and focuses on achievable goals.",
+          "weakOrConcerning": "Lowers all standards, blames players or relies only on motivational speeches.",
+          "calibration": {
+            "response": "I keep players motivated and focused on simple goals.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Appropriate but lacks diagnosis, monitoring and concrete actions."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How do you adapt your coaching when working with players of different learning styles?",
+          "evaluates": "Inclusive coaching and differentiated communication.",
+          "strong": [
+            "Uses verbal explanation, visual demonstration and practical repetition.",
+            "Asks questions to confirm understanding.",
+            "Provides individual feedback where needed.",
+            "Adjusts complexity, terminology and delivery.",
+            "Preserves common objectives and standards."
+          ],
+          "acceptable": "States that communication is adjusted to individual players.",
+          "weakOrConcerning": "Uses only one communication method or labels players negatively.",
+          "calibration": {
+            "response": "I adjust how I explain things depending on the player.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Correct principle, but no methods or examples are provided."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Staff Building & Evaluation",
+      "questions": [
+        {
+          "id": 16,
+          "text": "Which professional values guide your decisions as a head coach?",
+          "evaluates": "Ethics, professionalism and decision-making consistency.",
+          "strong": [
+            "Identifies integrity, fairness, respect, accountability and safeguarding.",
+            "Explains how values affect selection, discipline, communication and welfare.",
+            "Recognizes confidentiality and club policies.",
+            "Provides an example of applying a value under pressure."
+          ],
+          "acceptable": "Identifies relevant values without explaining their application.",
+          "weakOrConcerning": "Prioritizes loyalty, winning or personal authority above fairness and welfare.",
+          "calibration": {
+            "response": "I try to be honest, respectful, and organized.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Relevant values are named, but their application to decisions is not explained."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What lesson from a failure most improved your coaching practice?",
+          "evaluates": "Self-reflection, accountability and capacity to improve.",
+          "strong": [
+            "Identifies a specific failure or mistake.",
+            "Accepts appropriate personal responsibility.",
+            "Explains the analysis and lesson learned.",
+            "Describes a concrete change in practice.",
+            "Shows evidence that the change improved future performance."
+          ],
+          "acceptable": "Recognizes that failure should lead to analysis and better preparation.",
+          "weakOrConcerning": "Blames players, officials or circumstances and identifies no personal learning.",
+          "calibration": {
+            "response": "Losing games taught me to analyze mistakes and improve training.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows a learning mindset but does not identify a particular failure or actual change."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "What qualities do you prioritize when selecting staff members to work with you?",
+          "evaluates": "Staff construction, delegation and organizational judgment.",
+          "strong": [
+            "Prioritizes reliability, competence, integrity and communication.",
+            "Seeks alignment with club values and player development.",
+            "Values complementary expertise rather than identical personalities.",
+            "Welcomes constructive challenge.",
+            "Defines roles and considers qualifications and safeguarding."
+          ],
+          "acceptable": "Prioritizes reliability, positivity and player relationships.",
+          "weakOrConcerning": "Selects only friends, passive assistants or people who never challenge the head coach.",
+          "calibration": {
+            "response": "I look for staff who are reliable, positive, and good with players.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant qualities are present, but competence, complementary expertise and constructive challenge are missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}
