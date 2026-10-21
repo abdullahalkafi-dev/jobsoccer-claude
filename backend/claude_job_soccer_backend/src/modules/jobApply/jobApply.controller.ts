@@ -29,7 +29,10 @@ const applyToJob = catchAsync(async (req: Request, res: Response) => {
  */
 const getApplicationsByJob = catchAsync(async (req: Request, res: Response) => {
   const { jobId } = req.params as any;
-  const result = await JobApplyService.getApplicationsByJob(jobId, req.query);
+  const result = await JobApplyService.getApplicationsByJob(jobId, req.query, {
+    id: req.user.id,
+    userType: req.user.userType,
+  });
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -47,7 +50,10 @@ const getApplicationsByJob = catchAsync(async (req: Request, res: Response) => {
  */
 const getApplicantProfile = catchAsync(async (req: Request, res: Response) => {
   const { candidateId } = req.params as any;
-  const result = await JobApplyService.getApplicantProfile(candidateId);
+  const result = await JobApplyService.getApplicantProfile(candidateId, {
+    id: req.user.id,
+    userType: req.user.userType,
+  });
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
