@@ -24,6 +24,7 @@ import { ProfileViewRoutes } from "../modules/profileView/profileView.route";
 import { NotificationRoutes } from "../modules/notification/notification.route";
 import { AgentRatingRoutes } from "../modules/agentRating/agentRating.route";
 import { AgentHiringRoutes } from "../modules/agentHiring/agentHiring.route";
+import { AiEvaluationRoutes } from "../modules/aiEvaluation/aiEvaluation.route";
 
 const router: Router = express.Router();
 
@@ -127,6 +128,10 @@ const apiRoutes = [
   {
     path: "/agent-hiring",
     route: AgentHiringRoutes,
+  },
+  {
+    path: "/ai-evaluation",
+    route: AiEvaluationRoutes,
   },
 ];
 

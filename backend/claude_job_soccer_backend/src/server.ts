@@ -4,6 +4,7 @@ import config from "./config";
 import socketServer from "./socket/socketServer";
 import { logger } from "./shared/logger/logger";
 import { seedSuperAdmin } from "./shared/db/seedSuperAdmin";
+import { startAiBackgroundWork } from "./shared/ai/aiWorker";
 
 //uncaught exception
 process.on("uncaughtException", (error) => {
@@ -19,6 +20,11 @@ async function main() {
     
     // Seed super admin on startup
     await seedSuperAdmin();
+
+    // Background AI worker (interview assessments, job matching)
+    await startAiBackgroundWork().catch((error) =>
+      logger.error("AI worker could not start", { error: error.message })
+    );
 
     const port =
       typeof config.port === "number" ? config.port : Number(config.port);

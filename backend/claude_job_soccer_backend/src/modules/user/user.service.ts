@@ -25,6 +25,7 @@ import {
 
 // Import AI profile scoring
 import { generateProfileScore } from "../../shared/openai/profileScoring.service";
+import { AiEvaluationService, usesRubricScoring } from "../aiEvaluation/aiEvaluation.service";
 
 // Import Candidate DTOs
 import { AmateurPlayerCanDto } from "../candidate/amateurPlayerCan/amateurPlayerCan.dto";
@@ -479,19 +480,22 @@ const addUserProfile = async (payload: {
         );
         data.videos = onFieldProcessedVideos;
 
-        // AI Video Scoring
+        // AI Video Scoring (legacy, synchronous). Positions with a client scoring
+        // guide are assessed in the background after the profile is saved.
         let onFieldVideoScore: number | null = null;
-        try {
-          const onFieldScoreResult = await scoreStaffVideosFromUpload({
-            videoFiles,
-            role: CandidateRole.ON_FIELD_STAFF,
-            position: data.position,
-          });
-          if (onFieldScoreResult.totalScore > 0) {
-            onFieldVideoScore = onFieldScoreResult.totalScore;
+        if (!usesRubricScoring(CandidateRole.ON_FIELD_STAFF, data.position)) {
+          try {
+            const onFieldScoreResult = await scoreStaffVideosFromUpload({
+              videoFiles,
+              role: CandidateRole.ON_FIELD_STAFF,
+              position: data.position,
+            });
+            if (onFieldScoreResult.totalScore > 0) {
+              onFieldVideoScore = onFieldScoreResult.totalScore;
+            }
+          } catch (scoringError) {
+            logger.error("AI video scoring failed (non-blocking):", { error: scoringError });
           }
-        } catch (scoringError) {
-          logger.error("AI video scoring failed (non-blocking):", { error: scoringError });
         }
 
         validatedData = OnFieldStaffCanDto.createOnFieldStaffCanDto.parse(data);
@@ -734,6 +738,11 @@ const addUserProfile = async (payload: {
       StatusCodes.INTERNAL_SERVER_ERROR,
       "Failed to update user with profile ID"
     );
+  }
+
+  // Background interview assessment with the client's scoring guide
+  if (usesRubricScoring(user.role as string, data?.position)) {
+    await AiEvaluationService.requestEvaluationSafely(userId, "profile-created");
   }
 
   return {
@@ -1023,7 +1032,9 @@ const updateUserProfile = async (payload: {
   }
 
   // AI Video Scoring: re-score when videos are updated for staff roles
-  if (
+  if (videoFiles.length > 0 && usesRubricScoring(user.role as string, updatedProfile.position)) {
+    await AiEvaluationService.requestEvaluationSafely(userId, "videos-updated");
+  } else if (
     videoFiles.length > 0 &&
     (user.role === CandidateRole.ON_FIELD_STAFF ||
       user.role === CandidateRole.OFFICE_STAFF)
@@ -1216,9 +1227,12 @@ const updateProfileVideo = async (payload: {
   // Update the video at the specified index
   profile.videos[videoIndex] = newVideoData;
 
+  const assessInBackground = isStaff && usesRubricScoring(user.role as string, profile.position);
+
   // Re-score AI video if staff role (before save to avoid double write)
   if (
     isStaff &&
+    !assessInBackground &&
     (user.role === CandidateRole.ON_FIELD_STAFF ||
       user.role === CandidateRole.OFFICE_STAFF)
   ) {
@@ -1240,6 +1254,9 @@ const updateProfileVideo = async (payload: {
 
   // Save the updated profile (single write with video + score)
   await profile.save();
+  if (assessInBackground) {
+    await AiEvaluationService.requestEvaluationSafely(userId, "video-replaced");
+  }
 
   return {
     profile,
@@ -1353,9 +1370,12 @@ const addProfileVideo = async (payload: {
   }
   profile.videos.push(newVideoData);
 
+  const assessInBackground = isStaff && usesRubricScoring(user.role as string, profile.position);
+
   // Re-score AI video if staff role (before save to avoid double write)
   if (
     isStaff &&
+    !assessInBackground &&
     (user.role === CandidateRole.ON_FIELD_STAFF ||
       user.role === CandidateRole.OFFICE_STAFF)
   ) {
@@ -1376,6 +1396,9 @@ const addProfileVideo = async (payload: {
 
   // Save the updated profile (single write with video + score)
   await profile.save();
+  if (assessInBackground) {
+    await AiEvaluationService.requestEvaluationSafely(userId, "video-added");
+  }
 
   return {
     profile,
@@ -1468,7 +1491,9 @@ const deleteProfileVideo = async (payload: {
   await profile.save();
 
   // Re-score AI video if staff role and videos remain
-  if (
+  if (profile.videos.length > 0 && usesRubricScoring(user.role as string, profile.position)) {
+    await AiEvaluationService.requestEvaluationSafely(userId, "video-deleted");
+  } else if (
     (user.role === CandidateRole.ON_FIELD_STAFF ||
       user.role === CandidateRole.OFFICE_STAFF) &&
     profile.videos.length > 0
