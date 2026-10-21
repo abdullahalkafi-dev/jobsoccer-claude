@@ -7,6 +7,7 @@ import sharp from "sharp";
 import newFileName from "../util/filenameGenerator";
 import AppError from "../../errors/AppError";
 import { logger } from "../logger/logger";
+import { persistUploadedFiles } from "../storage";
 
 const fileUploadHandler = (req: Request, res: Response, next: NextFunction) => {
   // Create upload folder
@@ -260,6 +261,19 @@ const fileUploadHandler = (req: Request, res: Response, next: NextFunction) => {
           )
         );
       }
+    }
+
+    // After a successful response, copy the final files into the configured
+    // storage (MinIO/S3). Failed requests clean up their own files.
+    const uploadedPaths = Object.values(
+      (req.files as { [fieldname: string]: Express.Multer.File[] }) ?? {}
+    )
+      .flat()
+      .map((file) => file.path);
+    if (uploadedPaths.length > 0) {
+      res.on("finish", () => {
+        if (res.statusCode < 400) void persistUploadedFiles(uploadedPaths);
+      });
     }
 
     next();
