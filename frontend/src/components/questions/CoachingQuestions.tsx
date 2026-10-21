@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useGetInterviewQuestionsQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
 import { FieldStaffPosition } from "@/constants/video.constant";
 import {
   academyDirectorQuestions,
@@ -34,7 +37,11 @@ interface CoachingQuestionsProps {
 export function CoachingQuestions({
   fieldStaffPosition,
 }: CoachingQuestionsProps) {
-  let questions;
+  // Questions come from the client's scoring guide on the server, so candidates
+  // answer exactly what the AI assesses. The built-in lists are only a fallback.
+  const { data: guide } = useGetInterviewQuestionsQuery(fieldStaffPosition);
+
+  let questions: { section: string; questions: string[] }[];
   let title;
 
   switch (fieldStaffPosition) {
@@ -93,6 +100,14 @@ export function CoachingQuestions({
       title = "Interview Questionnaire (18 Questions)";
   }
 
+  if (guide) {
+    questions = guide.sections.map((section) => ({
+      section: `${section.id}. ${section.name}`,
+      questions: section.questions.map((q) => q.text),
+    }));
+    title = `${guide.displayName} – Interview Questionnaire (${guide.questionCount} Questions)`;
+  }
+
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
@@ -107,7 +122,10 @@ export function CoachingQuestions({
             <h4 className="font-semibold text-gray-800 text-sm">
               {section.section}
             </h4>
-            <ol className="list-decimal list-inside space-y-1 ml-2">
+            <ol
+              className="list-decimal list-inside space-y-1 ml-2"
+              start={questions.slice(0, sectionIndex).reduce((n, s) => n + s.questions.length, 0) + 1}
+            >
               {section.questions.map((question, questionIndex) => (
                 <li key={questionIndex} className="text-sm text-gray-700">
                   {question}

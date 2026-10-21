@@ -30,10 +30,25 @@ import VideoSection from "@/components/profile/VideoSection";
 import ProfileBanner from "@/components/profile/ProfileBanner";
 import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
+import InterviewAssessmentCard from "@/components/ai/InterviewAssessmentCard";
+import { useGetMyAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
+import { positionLabel } from "@/constants/selectOptions";
 
 export default function MyProfilePage() {
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
+
+  // Interview assessment (client scoring guide) for on-field staff; refreshes while it is being prepared
+  const isOnFieldStaff = currentUser?.role === "On field staff";
+  const [assessmentPolling, setAssessmentPolling] = useState(0);
+  const { data: assessment, isLoading: isLoadingAssessment } = useGetMyAssessmentQuery(undefined, {
+    skip: !isOnFieldStaff,
+    pollingInterval: assessmentPolling,
+  });
+  useEffect(() => {
+    const inProgress = assessment?.pending && assessment.pending.status !== "failed";
+    setAssessmentPolling(inProgress ? 15000 : 0);
+  }, [assessment?.pending]);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
@@ -331,7 +346,7 @@ export default function MyProfilePage() {
                   Position
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.position}
+                  {positionLabel(currentUser.profile.position)}
                 </p>
               </div>
             )}
@@ -592,6 +607,15 @@ export default function MyProfilePage() {
             )}
           </div>
         </div>
+
+        {/* -------------------------Interview Assessment----------------------- */}
+        {isOnFieldStaff && (
+          <InterviewAssessmentCard
+            data={assessment}
+            isLoading={isLoadingAssessment}
+            emptyText="Your interview assessment will appear here after you upload your interview video."
+          />
+        )}
 
         {/* -------------------------Analytics----------------------- */}
         <AnalyticsSection />

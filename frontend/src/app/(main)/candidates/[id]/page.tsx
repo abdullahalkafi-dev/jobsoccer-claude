@@ -23,11 +23,14 @@ import CertificateSection from "@/components/profile/CertificateSection";
 import EducationSection from "@/components/profile/EducationSection";
 import VideoSection from "@/components/profile/VideoSection";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
+import InterviewAssessmentCard from "@/components/ai/InterviewAssessmentCard";
+import { useGetCandidateAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
 import { useAppSelector } from "@/redux/hooks";
 import { StartChatButton } from "@/components/messaging/StartChatButton";
 import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateApi";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { positionLabel } from "@/constants/selectOptions";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -116,13 +119,19 @@ export default function UserProfilePage() {
       );
     }
   };
-  // ⚠️ TEMPORARY BYPASS: Set to true during client review/development so anyone (logged in or guest) can view candidate details without access request.
-  // To revert back to production restrictions, simply set TEMPORARY_BYPASS_ACCESS to false.
-  const TEMPORARY_BYPASS_ACCESS = true;
+  // Full profile and interview assessment only for the candidate, admins and
+  // connections the candidate accepted (access request). The temporary bypass
+  // used during the client review is switched off.
+  const TEMPORARY_BYPASS_ACCESS = false;
 
   const areFriends = friendshipData?.data?.areFriends || false;
   const isAdmin = (currentUser?.userType as string) === "admin" || currentUser?.role === "admin";
   const hasAccess = TEMPORARY_BYPASS_ACCESS || areFriends || isAdmin || isOwnProfile;
+
+  const isOnFieldStaffCandidate = userData?.data?.role === "On field staff";
+  const { data: assessment, isLoading: isLoadingAssessment } = useGetCandidateAssessmentQuery(userId, {
+    skip: !userId || !currentUser || !hasAccess || !isOnFieldStaffCandidate,
+  });
 
   // Handle friend request
   const handleRequestAccess = async () => {
@@ -333,7 +342,7 @@ export default function UserProfilePage() {
                       Position
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.position}
+                      {positionLabel(user.profile.position)}
                     </p>
                   </div>
                 )}
@@ -482,7 +491,7 @@ export default function UserProfilePage() {
                   </div>
                 )}
 
-                {user?.profile?.AiVideoVideoScore >= 0 && (
+                {typeof user?.profile?.AiVideoVideoScore === "number" && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                       Video AI Score
@@ -504,6 +513,11 @@ export default function UserProfilePage() {
                 </div>
               </div>
             </div>
+
+            {/* Interview assessment (client's overall section) */}
+            {isOnFieldStaffCandidate && (
+              <InterviewAssessmentCard data={assessment} isLoading={isLoadingAssessment} />
+            )}
 
             {/* Additional Sections */}
             {isOwnProfile && <AnalyticsSection />}
