@@ -1,0 +1,484 @@
+{
+  "rubricId": "on_field_staff.attacking_coach.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Attacking Coach Final.docx",
+  "role": "On field staff",
+  "position": "Specific Offensive Coach",
+  "displayName": "Attacking Coach",
+  "clientRoleId": "attacking_coach",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate response quality and evidence for the Attacking Coach role, including collective attacking organization, training design, player decision-making, communication and collaboration within the Head Coach's playing model.",
+    "corePrinciple": "Strong responses connect attacking principles to observable behaviors, representative training and evidence-based adjustments, without requiring one particular formation or philosophy."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score the response against the Attacking Coach role, not Head Coach, Forward Coach, generic Assistant Coach or Video Analyst criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish between a generally positive statement and demonstrated competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as acceptable or good, not automatically strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag contradictions between the written questionnaire and the video response."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer expertise, credentials or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reduce scores because of accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Evaluate content only, except when audio is impossible to assess."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward excessive confidence, length or technical vocabulary unless the content is relevant and accurate."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "46/72",
+    "percentage": "63.9%",
+    "classification": "Basic / acceptable understanding, with limited supporting evidence",
+    "strongestAreas": "Head Coach alignment, attacking decision-making, staff collaboration",
+    "mainWeaknesses": "Limited measured outcomes, detailed training progressions and concrete tactical adjustment examples",
+    "summary": "The fictional candidate demonstrates a generally appropriate understanding of the Attacking Coach role, particularly in aligning with the Head Coach, supporting attacking decision-making and collaborating with staff. However, the responses often lack detailed training progressions, verified tactical examples, and measurable evidence of improved attacking behavior. Follow-up should test game-model integration, representative session design and evaluation methods."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your background and pathway to becoming an Attacking Coach?",
+          "evaluates": "Relevant coaching preparation and progression into attacking specialization.",
+          "strong": [
+            "Identifies relevant coaching, playing, analysis, education or specialist-development experience.",
+            "Explains actual attacking responsibilities, team levels, age groups and progression over time.",
+            "Connects prior work to individual attacking actions, unit relationships and collective chance creation.",
+            "Shows continuing learning rather than relying only on having played as a forward or attacking midfielder."
+          ],
+          "acceptable": "Describes relevant experience but provides limited detail about responsibilities, environments or development.",
+          "weakOrConcerning": "Relies only on playing position, goals scored or licenses without explaining specialist coaching practice.",
+          "calibration": {
+            "response": "I coached academy teams for four years and began leading the attacking part of our sessions last season.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant experience and progression are described, but the candidate gives no specific development outcome."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the role and responsibilities of an Attacking Coach within a technical staff?",
+          "evaluates": "Role clarity, contribution and boundaries within the coaching team.",
+          "strong": [
+            "Defines support for attacking principles, player-role development, patterns, transitions, finishing and set-piece contribution as assigned.",
+            "Explains observation, planning, delivery, feedback and review responsibilities.",
+            "Recognizes that the Head Coach owns the overall model, selection and final tactical decisions.",
+            "Works with all players involved in attacking phases, not only forwards, and protects consistent staff messaging."
+          ],
+          "acceptable": "Identifies attacking training and tactical support but leaves workflow or authority boundaries unclear.",
+          "weakOrConcerning": "Describes only striker finishing, claims control of all attacking decisions or gives instructions that compete with the Head Coach.",
+          "calibration": {
+            "response": "I help the head coach improve our attacking organization, create exercises and give feedback to all attacking players.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Understands specialist support and wider player involvement; decision authority and review process are not explained."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you align your attacking work with the Head Coach's overall tactical vision?",
+          "evaluates": "Tactical alignment, communication and implementation discipline.",
+          "strong": [
+            "Clarifies the playing model, risk preferences, positional roles, match plan and current attacking priorities.",
+            "Translates the vision into observable behaviors by phase, zone, unit and role.",
+            "Plans content with the Head Coach and integrates specialist work into whole-team training.",
+            "Uses feedback and match evidence to adjust without promoting a competing attacking philosophy."
+          ],
+          "acceptable": "States that work follows the Head Coach's plan but gives limited detail about translation or integration.",
+          "weakOrConcerning": "Imposes a preferred attacking style regardless of the model or gives players conflicting positional and decision rules.",
+          "calibration": {
+            "response": "I ask the head coach about the match plan and build my sessions around those priorities.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Demonstrates alignment, but observable behaviors and coordination with whole-team sessions remain unclear."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you analyze attacking patterns and opponent defensive structures?",
+          "evaluates": "Tactical analysis, evidence quality and training relevance.",
+          "strong": [
+            "Reviews build-up, progression, final-third entry, box occupation, transitions, set pieces and key relationships.",
+            "Identifies opponent block height, pressing, line behavior, coverage, space and repeated vulnerabilities.",
+            "Uses repeated evidence across matches and game states rather than isolated clips.",
+            "Converts findings into prioritized attacking problems suited to the team's qualities and match plan."
+          ],
+          "acceptable": "Identifies relevant patterns and defensive weaknesses but gives limited validation, context or prioritization.",
+          "weakOrConcerning": "Uses one match or highlight, lists patterns without implications or overloads players with unfiltered information.",
+          "calibration": {
+            "response": "I review the opponent's back line and identify spaces we could attack.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Relevant observation, but no evidence of repeated patterns, match context or prioritization."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you teach decision-making in attacking situations?",
+          "evaluates": "Perception, option recognition and contextual attacking judgment.",
+          "strong": [
+            "Creates representative situations involving ball, space, teammates, opponents, goal and tactical purpose.",
+            "Coaches scanning, timing, risk, positioning, support and the relationship between pass, carry, movement and finish.",
+            "Uses questions, guided feedback, repetition and variable problems rather than predetermined solutions only.",
+            "Separates decision quality from technical execution and final outcome."
+          ],
+          "acceptable": "Uses realistic attacking practices and relevant choices but gives limited perception, variation or review detail.",
+          "weakOrConcerning": "Judges decisions only by goals or assists, prescribes one answer in every situation or removes decision-making through constant instruction.",
+          "calibration": {
+            "response": "I use small-sided games with defenders and ask players to decide when to pass, dribble or shoot.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Representative decision-making is evident, but scanning cues and assessment of decision quality are not described."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you train players to recognize and exploit space in different attacking phases?",
+          "evaluates": "Perception of space, coordinated movement and phase awareness.",
+          "strong": [
+            "Defines cues such as opponent pressure, line movement, body orientation, cover, ball position and teammate occupation.",
+            "Links cues to actions such as support, stretch, pin, rotate, run beyond, receive between lines or attack the box.",
+            "Trains space recognition in build-up, progression, final third and transition with representative opposition.",
+            "Checks timing and collective coordination, not movement in isolation."
+          ],
+          "acceptable": "Names relevant spaces and movements but gives limited cue recognition, progression or collective timing.",
+          "weakOrConcerning": "Uses fixed runs without reading defenders, treats space as static or focuses only on the player receiving the final pass.",
+          "calibration": {
+            "response": "We practice runs behind the defense and receiving between the lines depending on the defenders' position.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows useful spatial cues, but collective timing and phase-to-phase transfer are not fully explained."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Attacking Methodology & Training Design",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you structure attacking training sessions to develop individual and collective attacking behaviors?",
+          "evaluates": "Objective-led design, progression and transfer.",
+          "strong": [
+            "Starts with a clear attacking objective linked to the team model, match evidence or player need.",
+            "Progresses from targeted detail to representative unit and collective situations where appropriate.",
+            "Controls space, numbers, direction, scoring conditions, transitions and rest to create the intended problem.",
+            "Includes observation criteria, purposeful interventions and a transfer or review activity."
+          ],
+          "acceptable": "Describes a logical practice progression but gives limited constraint, load or transfer rationale.",
+          "weakOrConcerning": "Lists finishing drills without a tactical objective, isolates technique for the whole session or covers too many unrelated attacking topics.",
+          "calibration": {
+            "response": "We start with combinations, move to an opposed practice and finish with a game.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "A reasonable progression, but no clear tactical objective, constraints or review criteria are stated."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "What attacking principles guide your work - positioning, movement, spacing, finishing and creativity?",
+          "evaluates": "Coherent attacking framework and contextual freedom.",
+          "strong": [
+            "Defines width, depth, support, occupation, mobility, timing, balance and penetration in observable language.",
+            "Connects positioning and movement to ball location, opponent behavior and the team model.",
+            "Treats finishing as perception, decision, execution and box behavior rather than repetition alone.",
+            "Creates structure that supports creativity instead of scripting every action."
+          ],
+          "acceptable": "Explains several sound principles but gives limited hierarchy, interaction or practical application.",
+          "weakOrConcerning": "Uses slogans, relies only on freedom or rigid patterns, or equates attacking quality with possession and shots alone.",
+          "calibration": {
+            "response": "I value width, movement, support and letting players be creative.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Appropriate principles, but relationships between positioning, opponent behavior and finishing decisions are generic."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How do you adapt your attacking methodology to different age groups and competitive levels?",
+          "evaluates": "Developmental appropriateness and scalable complexity.",
+          "strong": [
+            "Adjusts language, field size, numbers, information load, role detail and feedback to age and experience.",
+            "Builds ball mastery, perception and simple relationships before demanding complex collective coordination.",
+            "Considers maturation, physical differences, training frequency and competition demands.",
+            "Maintains common principles while changing method, complexity and expected outcome."
+          ],
+          "acceptable": "Recognizes simpler youth work and greater senior detail but gives limited progression or welfare context.",
+          "weakOrConcerning": "Treats youth as smaller adults, imposes senior patterns or focuses on results and positional specialization too early.",
+          "calibration": {
+            "response": "With younger players I use simpler games, and with older players I introduce more tactical details.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Age adaptation is recognized, but maturation, information load and progression are not specified."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Game Model Integration & Communication",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you integrate attacking principles into the team's overall playing model?",
+          "evaluates": "Whole-model integration and connection between phases.",
+          "strong": [
+            "Links attacking organization to defensive balance, rest defense, counterpressing and response after loss.",
+            "Defines responsibilities in build-up, progression, final third and transition by role and game state.",
+            "Coordinates specialist training so it supports rather than competes with team objectives.",
+            "Uses common terminology and reviews execution over multiple matches."
+          ],
+          "acceptable": "Links attacking principles to the model but gives limited phase connection or implementation detail.",
+          "weakOrConcerning": "Treats attacking as a separate department, ignores balance after loss or contradicts defensive and transition principles.",
+          "calibration": {
+            "response": "Our attacking exercises follow the team's game model and we try to stay balanced when losing possession.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Connects attack and defensive balance, but lacks defined roles and measures of execution."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you communicate attacking concepts clearly to players to ensure understanding and execution?",
+          "evaluates": "Clarity, shared language and confirmation of learning.",
+          "strong": [
+            "Uses concise terminology, demonstrations, selected video and age-appropriate examples.",
+            "Limits messages to priority behaviors and explains the purpose behind them.",
+            "Checks understanding through player explanation, rehearsal and observed execution.",
+            "Adapts communication by role and language need without reducing creativity or humiliating errors."
+          ],
+          "acceptable": "Explains concepts clearly and demonstrates them but gives limited checking or adaptation.",
+          "weakOrConcerning": "Uses excessive jargon, long lectures, public blame or assumes players understand because they remain silent.",
+          "calibration": {
+            "response": "I demonstrate the movement, use short video clips and ask players to repeat it in training.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Clear communication tools are identified; the candidate does not describe checking understanding through player explanation."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How do you coordinate attacking organization across phases - build-up, final third, transitions and set pieces?",
+          "evaluates": "Phase-specific organization and attacking continuity.",
+          "strong": [
+            "Defines objectives, positioning, relationships and progression options in build-up.",
+            "Coordinates final-third occupation, chance creation, box arrival and protection against transition.",
+            "Trains reactions on regain, direct and controlled options, and reorganization when the first attack is unavailable.",
+            "Integrates attacking set-piece roles, second balls and transition after loss with responsible staff."
+          ],
+          "acceptable": "Covers the main phases but gives limited connection, role detail or progression.",
+          "weakOrConcerning": "Focuses only on final-third patterns, scripts phases without cues or ignores transitions and balance around set pieces.",
+          "calibration": {
+            "response": "We train building from the back, creating chances and counterattacking after regaining possession.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Several phases are named, but coordination, set-piece responsibilities and reactions after losing possession are missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Leadership, Collaboration & Adaptability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you collaborate with other specialist coaches to ensure tactical balance?",
+          "evaluates": "Staff integration, shared ownership and consistent messaging.",
+          "strong": [
+            "Uses regular planning to connect attacking, defensive, goalkeeper, set-piece and physical objectives.",
+            "Agrees terminology, priorities, session ownership and intervention roles.",
+            "Identifies tactical conflict or workload overlap and resolves it privately with the Head Coach.",
+            "Shares relevant observations while respecting specialist boundaries and confidentiality."
+          ],
+          "acceptable": "Describes collaboration and aligned planning but leaves ownership or conflict resolution unclear.",
+          "weakOrConcerning": "Works in isolation, competes for session time or protects attacking metrics at the expense of team balance and player availability.",
+          "calibration": {
+            "response": "I speak with the defensive and fitness coaches before training so our plans work together.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows staff collaboration; shared intervention roles and resolving conflicting objectives are not explained."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Describe a situation where an attacking plan failed. What adjustments did you make?",
+          "evaluates": "Accountability, diagnosis and tactical adaptation.",
+          "strong": [
+            "Provides a specific opponent, plan, expected behavior and observed problem.",
+            "Diagnoses structure, spacing, timing, player relationships, execution or opponent adaptation rather than blaming finishing alone.",
+            "Explains the adjustment, how it was communicated and its tactical trade-offs.",
+            "Reports the outcome and lesson without claiming certainty from a short result."
+          ],
+          "acceptable": "Describes a reasonable attacking adjustment but gives incomplete diagnosis, communication or outcome evidence.",
+          "weakOrConcerning": "Claims the plan never fails, blames missed chances exclusively or changes shape without explaining the underlying problem.",
+          "calibration": {
+            "response": "Against a low block, our crossing was ineffective, so we asked midfielders to make more runs into the box.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "A plausible adjustment is described, but the situation, communication, outcome and trade-offs lack detail."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 15,
+          "text": "How do you adapt your attacking work to different player profiles?",
+          "evaluates": "Individualization within collective principles.",
+          "strong": [
+            "Profiles movement, speed, receiving, combination, creativity, finishing, perception and physical qualities using evidence.",
+            "Preserves core principles while adjusting roles, relationships, starting positions or exercise constraints.",
+            "Develops forwards, wingers, attacking midfielders and other contributing players without rigid labeling.",
+            "Coordinates physical or medical limitations with responsible staff and avoids unsupported diagnosis."
+          ],
+          "acceptable": "Adapts roles or coaching detail to player strengths but gives limited evidence or collective trade-off analysis.",
+          "weakOrConcerning": "Forces identical behavior, builds the entire model around one player without balance or permanently labels players by perceived limitations.",
+          "calibration": {
+            "response": "Fast wingers get space to run, while technical players combine more in tight areas.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Recognizes differing profiles but risks fixed labels and provides no assessment evidence or collective trade-offs."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Evaluation & Development",
+      "questions": [
+        {
+          "id": 16,
+          "text": "What indicators do you use to evaluate attacking performance beyond goals scored?",
+          "evaluates": "Balanced measurement and contextual interpretation.",
+          "strong": [
+            "Uses chance quality, entries, box occupation, progression, line breaks, transition threat and set-piece execution.",
+            "Includes movement, spacing, support, decision quality, chance involvement and repeated principle execution through video.",
+            "Considers opponent structure, game state, possession strategy and sample size.",
+            "Avoids treating one metric as definitive or claiming direct causation."
+          ],
+          "acceptable": "Uses several relevant team and individual indicators but gives limited context, validation or connection to principles.",
+          "weakOrConcerning": "Measures only goals, shots or possession, rewards low-quality volume or ignores off-ball contribution and opponent context.",
+          "calibration": {
+            "response": "I look at entries into the box, quality of chances and whether our movement creates space.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Useful indicators beyond goals, but context, sample size and consistent tracking are not established."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What has been the toughest professional challenge you have faced as an Attacking Coach, and how did you overcome it?",
+          "evaluates": "Resilience, accountability and problem-solving.",
+          "strong": [
+            "Explains a specific challenge, constraints and personal responsibility.",
+            "Describes analysis, collaboration, decisions and communication.",
+            "Provides the outcome, remaining limitations and what was learned.",
+            "Shows how the lesson changed later methodology or staff practice."
+          ],
+          "acceptable": "Describes a relevant challenge and reasonable response but lacks outcome, accountability or reflection.",
+          "weakOrConcerning": "Blames players or colleagues, breaches confidentiality, avoids responsibility or provides no evidence of resolution.",
+          "calibration": {
+            "response": "Our team struggled to score for several weeks, so I changed the finishing exercises and talked to the head coach.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows initiative, but does not establish the root cause, results or a lasting lesson."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "How do you measure your effectiveness as an Attacking Coach, and how has your methodology evolved over time?",
+          "evaluates": "Evaluation discipline, learning and appropriate attribution.",
+          "strong": [
+            "Uses execution of agreed principles, player improvement, training transfer, staff feedback and decision usefulness.",
+            "Reviews patterns over time rather than attributing one scoring result directly to coaching.",
+            "Recognizes shared responsibility for attacking outcomes across players and staff.",
+            "Explains concrete methodological changes based on evidence, feedback or new contexts."
+          ],
+          "acceptable": "Mentions player and team improvement beyond goals but gives limited measurement or evolution detail.",
+          "weakOrConcerning": "Claims sole credit for scoring, measures only goals or cannot describe any evidence-based methodological change.",
+          "calibration": {
+            "response": "I review our attacking clips and coach feedback, then change exercises when players do not apply the ideas.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Demonstrates review and adaptation, but no longitudinal indicators or specific methodology evolution are given."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

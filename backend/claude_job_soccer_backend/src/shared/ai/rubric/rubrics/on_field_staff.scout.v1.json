@@ -1,0 +1,484 @@
+{
+  "rubricId": "on_field_staff.scout.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Scout Final.docx",
+  "role": "On field staff",
+  "position": "Scout",
+  "displayName": "Scout",
+  "clientRoleId": "scout",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate each response specifically for the Scout position in football. It must assess observation quality, tactical understanding, player projection, evidence triangulation, reporting, collaboration, bias control, confidentiality and professional judgment. There is no single required scouting platform, rating system, report format or preferred playing style.",
+    "corePrinciple": "A strong response explains not only what the scout sees, but how observations are contextualized, verified, compared with the recruitment brief, communicated with appropriate uncertainty and converted into a useful recommendation."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Scout expectations, not Agent, Head Coach, Sporting Director, Data Analyst or general Recruitment Administrator criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "Do not require one specific scouting platform, data provider, rating scale or report format; evaluate evidence quality and usefulness."
+    },
+    {
+      "id": "R3",
+      "rule": "For questions requesting a real situation, do not award 4/4 without the situation, action and outcome."
+    },
+    {
+      "id": "R4",
+      "rule": "Do not reward certainty, reputation, contacts or confident language unless supported by relevant observation and process."
+    },
+    {
+      "id": "R5",
+      "rule": "Reward repeated contextual evidence; do not require a player to fit one universal model or profile."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer qualifications, access, language ability, data proficiency, contacts or recruitment impact that the candidate did not demonstrate."
+    },
+    {
+      "id": "R7",
+      "rule": "Flag contradictions between the written questionnaire and video response, but do not treat a contradiction alone as proof of dishonesty."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward unsupported psychological diagnosis, medical conclusions, promises of future success or discriminatory player profiling."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "48/72",
+    "percentage": "66.7%",
+    "classification": "Basic / acceptable understanding, but insufficient depth",
+    "strongestAreas": "Role alignment, match observation, reporting and staff collaboration",
+    "mainWeaknesses": "Evidence triangulation, contextual comparisons and measurable scouting outcomes",
+    "summary": "The fictional candidate demonstrates sound general scouting knowledge, especially role alignment, match observation and communication with technical staff. The responses are less convincing on repeatable decision-making assessment, contextual comparisons and measurable evaluation of scouting outcomes. Further report samples and specific examples are needed to verify the quality and consistency of recommendations."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your scouting background and pathway to becoming a scout?",
+          "evaluates": "Relevant preparation, applied experience and progression into scouting.",
+          "strong": [
+            "Identifies relevant playing, coaching, analysis, recruitment, education, mentoring or scouting experience.",
+            "Explains actual competitions, age groups, regions, observation volume and responsibilities.",
+            "Connects prior work to player evaluation, reporting, recommendation and recruitment collaboration.",
+            "Shows continued learning rather than relying only on contacts, reputation or passion."
+          ],
+          "acceptable": "Describes relevant experience but provides limited detail about responsibilities, environments or progression.",
+          "weakOrConcerning": "Relies only on watching football or personal opinion, exaggerates experience, or cannot explain practical scouting work.",
+          "calibration": {
+            "response": "I observed youth and semi-professional matches, submitted short reports, and learned from senior scouts.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "What is your primary role and responsibility within a recruitment or technical department?",
+          "evaluates": "Role clarity, decision contribution and professional boundaries.",
+          "strong": [
+            "Defines identification, live or video observation, evidence collection, reporting and recommendation responsibilities.",
+            "Explains how the scout supports a wider recruitment process without claiming sole signing authority.",
+            "Recognizes role boundaries with coaches, analysts, medical, legal, safeguarding and executive staff.",
+            "Includes confidentiality, accurate records, conflicts of interest and timely communication."
+          ],
+          "acceptable": "Identifies player observation and reporting but leaves process boundaries or decision ownership unclear.",
+          "weakOrConcerning": "Describes only finding talent, claims unilateral authority, or ignores verification, confidentiality and departmental collaboration.",
+          "calibration": {
+            "response": "I identify players, watch matches and submit reports to the recruitment team; the club makes final decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you align your scouting priorities with club strategy and recruitment needs?",
+          "evaluates": "Strategic alignment, profiling and prioritization.",
+          "strong": [
+            "Clarifies squad plan, positional needs, playing model, pathway, budget, timeline and market constraints.",
+            "Converts club needs into observable and measurable profile criteria.",
+            "Prioritizes assignments and markets while distinguishing urgent needs from succession planning.",
+            "Updates priorities through regular feedback and records changes to the brief."
+          ],
+          "acceptable": "Describes following club profiles and communicating with staff but gives limited prioritization or review detail.",
+          "weakOrConcerning": "Scouts preferred players without a brief, ignores budget or pathway, or treats personal taste as club strategy.",
+          "calibration": {
+            "response": "I ask the club which positions and profiles it needs, then focus my scouting on those roles.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you evaluate a player's tactical intelligence during matches?",
+          "evaluates": "Contextual tactical observation and role understanding.",
+          "strong": [
+            "Observes positioning, scanning, spacing, timing, role execution and responses across game phases.",
+            "Considers information available to the player, team instructions, opponent behavior and game state.",
+            "Reviews repeated actions on and off the ball rather than isolated highlights.",
+            "Separates tactical understanding from technical success and validates impressions across viewings."
+          ],
+          "acceptable": "Identifies relevant tactical behaviors but provides limited context, repetition or validation.",
+          "weakOrConcerning": "Judges intelligence from one action, formation labels or possession alone, or ignores off-ball behavior and role instructions.",
+          "calibration": {
+            "response": "I look at positioning, awareness, off-ball movement and choices across different phases of play.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you assess decision-making quality in game situations?",
+          "evaluates": "Evaluation of choices, information and execution context.",
+          "strong": [
+            "Identifies realistic options available before the action and the cues the player could perceive.",
+            "Separates the quality of the decision from technical execution and final outcome.",
+            "Considers pressure, risk, score, zone, teammates, opponents and role expectations.",
+            "Looks for recurring decision patterns across different situations and matches."
+          ],
+          "acceptable": "Reviews choices and outcomes with some context but gives limited attention to alternatives or repeated evidence.",
+          "weakOrConcerning": "Labels decisions good or bad solely from the result, applies hindsight unfairly or ignores tactical instructions.",
+          "calibration": {
+            "response": "I judge whether a player chooses the right pass or action based on the match situation.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you identify tactical fit between a player and a team's playing model?",
+          "evaluates": "Translation of club principles into player-role requirements.",
+          "strong": [
+            "Defines the target role through observable behaviors in possession, defending, transitions and set plays.",
+            "Compares the player's current behaviors, physical capacity and decision profile with those requirements.",
+            "Distinguishes immediate fit, adaptable potential and fundamental mismatch.",
+            "Considers coaching context, teammates, competition level and possible role variation."
+          ],
+          "acceptable": "Links player qualities to the team model but gives limited evidence about role behaviors, adaptation or context.",
+          "weakOrConcerning": "Matches only by formation or position name, assumes past success transfers automatically, or ignores development potential.",
+          "calibration": {
+            "response": "I compare what a player does in possession and out of possession with the club's preferred style.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Scouting Methodology",
+      "questions": [
+        {
+          "id": 7,
+          "text": "What key attributes do you look for when evaluating a player's potential?",
+          "evaluates": "Balanced potential assessment and projection discipline.",
+          "strong": [
+            "Uses role- and age-specific technical, tactical, physical, psychological and learning indicators.",
+            "Distinguishes present performance from future potential and identifies the evidence behind each projection.",
+            "Considers development history, maturation where relevant, adaptability, environment and opportunity.",
+            "Expresses uncertainty and avoids deterministic claims from body type, one match or reputation."
+          ],
+          "acceptable": "Identifies several relevant attributes but provides limited age, role or projection context.",
+          "weakOrConcerning": "Uses a fixed checklist for every player, equates current dominance with potential, or makes unsupported claims about personality or future level.",
+          "calibration": {
+            "response": "I look for technique, game intelligence, physical qualities and the willingness to learn.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "Can you walk us through your scouting process from identifying a player to making a recommendation?",
+          "evaluates": "Workflow, evidence quality and traceable recommendation.",
+          "strong": [
+            "Explains brief creation, identification, background checks, repeated observation and report completion.",
+            "Uses live, video, data and internal consultation appropriately without requiring every source in every case.",
+            "Compares evidence to the role profile, records uncertainty and checks potential conflicts or eligibility issues.",
+            "Delivers a clear recommendation, risk summary and next step while preserving an audit trail."
+          ],
+          "acceptable": "Describes identification, observation and reporting but lacks verification, comparison or decision follow-through.",
+          "weakOrConcerning": "Recommends from highlights or one viewing, skips identity and eligibility checks, or cannot explain how evidence becomes a recommendation.",
+          "calibration": {
+            "response": "I identify a prospect, watch several matches, take notes, compare the player with the brief and recommend a next viewing.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "Do you have experience using data analytics or video analysis to support your scouting decisions?",
+          "evaluates": "Practical evidence triangulation and tool literacy.",
+          "strong": [
+            "Names tools or methods actually used and explains their role in filtering, observation, comparison or verification.",
+            "Selects metrics and video evidence relevant to position, role, league and age.",
+            "Checks sample size, provider definitions, footage limitations and contextual bias.",
+            "Uses data and video to challenge or refine observation rather than replace scouting judgment."
+          ],
+          "acceptable": "Describes relevant data or video use but gives limited detail about validation, context or decision impact.",
+          "weakOrConcerning": "Lists platforms without practical use, treats rankings as definitive, or claims proficiency and conclusions without evidence.",
+          "calibration": {
+            "response": "I use match clips and statistics to confirm what I see, especially passing and duel numbers.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Player Profile & Game Understanding",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you evaluate a player's potential for development and readiness to move to the next level?",
+          "evaluates": "Projection, readiness and risk differentiation.",
+          "strong": [
+            "Defines next-level demands and compares them with the player's current behaviors and development trajectory.",
+            "Assesses learning speed, consistency, adaptability, physical readiness, opportunity and support needs.",
+            "Distinguishes ready now, ready with a plan and longer-term potential.",
+            "States uncertainty and identifies evidence or further observation needed before progression."
+          ],
+          "acceptable": "Identifies current strengths, gaps and development potential but gives limited benchmarks or risk analysis.",
+          "weakOrConcerning": "Promises future success, equates one strong performance with readiness, or ignores transition, environment and support needs.",
+          "calibration": {
+            "response": "I look at the player's current level, consistency and whether they can handle a stronger league.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you analyze a player's profile - technical, tactical, physical and mental - in relation to a team's playing model?",
+          "evaluates": "Integrated multidimensional profiling without unsupported psychology.",
+          "strong": [
+            "Uses role-specific observable criteria across technical, tactical and physical dimensions.",
+            "Describes behavior, communication and response to adversity without diagnosing personality or mental health.",
+            "Explains interactions and trade-offs among qualities rather than scoring dimensions in isolation.",
+            "Links evidence to model demands, development priorities and potential risks."
+          ],
+          "acceptable": "Provides a balanced profile linked to team needs but gives limited interaction, evidence or behavioral precision.",
+          "weakOrConcerning": "Uses vague labels such as mentality without evidence, makes clinical claims, or ignores how qualities interact with the role.",
+          "calibration": {
+            "response": "I write down technical, tactical and physical strengths and describe the player's attitude from observable behavior.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How do you contextualize individual performance based on competition level, age and role?",
+          "evaluates": "Translation across environments and avoidance of raw-performance bias.",
+          "strong": [
+            "Considers opposition quality, team dominance, tactical responsibilities, minutes, game state and competition style.",
+            "Adjusts expectations for chronological age, training age and maturation where relevant.",
+            "Uses comparable role behaviors and repeated evidence rather than raw totals alone.",
+            "Identifies which qualities are likely to transfer and which require further verification."
+          ],
+          "acceptable": "Mentions competition, age and role adjustments but provides limited method for comparison or transfer.",
+          "weakOrConcerning": "Compares raw statistics across incompatible environments, penalizes context blindly or assumes youth dominance guarantees senior success.",
+          "calibration": {
+            "response": "I consider the player's age, the opposition and whether the team is strong or weak.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Communication, Collaboration & Adaptability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you present your scouting reports to coaches or technical staff to ensure clarity and usefulness?",
+          "evaluates": "Synthesis, audience adaptation and decision support.",
+          "strong": [
+            "Uses a concise structure covering role fit, evidence, strengths, risks, development needs and recommendation.",
+            "Separates observation, interpretation and projection, with confidence or uncertainty stated.",
+            "Adapts detail and language to coaches, recruitment staff and decision-makers.",
+            "Provides clips or data selectively and makes the next action clear."
+          ],
+          "acceptable": "Produces organized reports with relevant strengths and weaknesses but gives limited uncertainty, audience adaptation or next steps.",
+          "weakOrConcerning": "Uses excessive jargon, vague ratings, unsupported certainty or reports that do not answer the recruitment brief.",
+          "calibration": {
+            "response": "I give coaches a concise report with strengths, weaknesses, video clips and my recommendation.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Describe a situation where you had to communicate a complex or sensitive scouting opinion. How did you handle it?",
+          "evaluates": "Judgment, courage, confidentiality and professional disagreement.",
+          "strong": [
+            "Provides a specific player, recommendation conflict or sensitive context without unnecessary identifying detail.",
+            "Uses objective evidence, appropriate timing and a private professional channel.",
+            "Distinguishes facts, interpretation, uncertainty and personal responsibility.",
+            "Explains the response, outcome and lesson learned without attacking colleagues."
+          ],
+          "acceptable": "Describes a reasonable sensitive communication approach but gives incomplete context, outcome or reflection.",
+          "weakOrConcerning": "Avoids the issue, leaks confidential information, attacks a player or colleague, or presents an uncertain judgment as fact.",
+          "calibration": {
+            "response": "I once disagreed with a coach about a player and explained my opinion respectfully in private.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 15,
+          "text": "How do you collaborate with coaches and performance staff to align scouting with team needs?",
+          "evaluates": "Cross-functional collaboration and profile refinement.",
+          "strong": [
+            "Uses structured intake conversations to clarify role behaviors, development needs and non-negotiable constraints.",
+            "Shares observations with coaches, analysts, medical and performance staff through appropriate channels.",
+            "Invites challenge, updates profiles and identifies where specialist verification is required.",
+            "Protects decision roles, confidentiality and consistent candidate treatment."
+          ],
+          "acceptable": "Describes regular communication and shared profiles but leaves decision rights or specialist verification unclear.",
+          "weakOrConcerning": "Works in isolation, bypasses responsible staff, seeks private medical information or changes standards for favored players.",
+          "calibration": {
+            "response": "I discuss profiles with coaches and performance staff and adjust my reports based on their feedback.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Impact & Development",
+      "questions": [
+        {
+          "id": 16,
+          "text": "What do you consider to be your main strengths as a scout, and which areas are you actively working to improve?",
+          "evaluates": "Self-awareness, credibility and development planning.",
+          "strong": [
+            "Identifies role-relevant strengths supported by examples, report quality or feedback.",
+            "Names a genuine improvement area without disguising a strength or claiming expertise beyond scope.",
+            "Describes specific learning, calibration, mentoring or observation actions.",
+            "Connects development to more accurate, fair and useful recommendations."
+          ],
+          "acceptable": "Names relevant strengths and an improvement area but provides limited evidence or action plan.",
+          "weakOrConcerning": "Uses clichés, claims no weakness, exaggerates expertise or identifies development unrelated to scouting work.",
+          "calibration": {
+            "response": "My strength is spotting off-ball movement; I am working on improving the consistency of my reports.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant and shows practical scouting understanding, but needs more explicit examples, triangulation, measurable evidence or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What has been the toughest professional challenge you have faced as a scout, and how did you overcome it?",
+          "evaluates": "Resilience, accountability and ethical problem-solving.",
+          "strong": [
+            "Explains a specific challenge, constraints and personal responsibility.",
+            "Describes evidence gathering, communication, decisions and collaboration.",
+            "Provides the outcome, unresolved limitations and learning.",
+            "Shows how the experience changed later scouting practice or systems."
+          ],
+          "acceptable": "Describes a relevant challenge and reasonable response but lacks outcome, accountability or reflection.",
+          "weakOrConcerning": "Blames staff or players, breaches confidentiality, hides an error or cannot explain a concrete response.",
+          "calibration": {
+            "response": "I missed an important prospect because I had limited match footage, so I asked for more viewings.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "How do you measure the quality and effectiveness of your scouting work beyond player signings, and how has your methodology evolved over time?",
+          "evaluates": "Evaluation discipline, learning and avoidance of outcome bias.",
+          "strong": [
+            "Uses report accuracy, shortlist relevance, decision usefulness, calibration, process timeliness and later player-development evidence.",
+            "Recognizes that signings, minutes and outcomes depend on many factors beyond the scout.",
+            "Reviews false positives, false negatives, disagreements and confidence over time.",
+            "Explains concrete changes based on feedback, evidence, market needs or bias review."
+          ],
+          "acceptable": "Mentions feedback and player progression beyond signings but gives limited measurement or evolution detail.",
+          "weakOrConcerning": "Measures success only by completed transfers, claims sole credit for outcomes or cannot describe any methodological development.",
+          "calibration": {
+            "response": "I review whether my shortlisted players remain relevant and ask recruitment staff for feedback.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant but generic. It lacks sufficient scouting method, supporting evidence or contextual detail to demonstrate stronger competence."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

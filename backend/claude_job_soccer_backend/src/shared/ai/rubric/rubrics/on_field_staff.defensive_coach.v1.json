@@ -1,0 +1,484 @@
+{
+  "rubricId": "on_field_staff.defensive_coach.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Defensive Coach Final.docx",
+  "role": "On field staff",
+  "position": "Specific Defensive Coach",
+  "displayName": "Defensive Coach",
+  "clientRoleId": "defensive_coach",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate the quality, relevance and evidentiary strength of each response for the Defensive Coach role. It must not search for one exact answer. The supplied responses are sample candidate responses, not universal model answers.",
+    "corePrinciple": "A high score requires more than correct terminology. Strong responses connect coaching knowledge to a clear process, relevant example, decision or observable outcome."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score the response against the Defensive Coach role, not against Office Staff or another coaching position."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish between a generally positive statement and demonstrated competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as acceptable or good, not automatically strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag contradictions between the written questionnaire and the video response."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer expertise, credentials or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reduce scores because of accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Evaluate content only, except when audio is impossible to assess."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward excessive confidence, length or technical vocabulary unless the content is relevant and accurate."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "47/72",
+    "percentage": "65.3%",
+    "classification": "Basic / acceptable; evidence or depth is limited",
+    "strongestAreas": "Team-model alignment, defensive cues and collaborative communication",
+    "mainWeaknesses": "Limited measurable outcomes, player-specific progression and follow-up evidence",
+    "summary": "The fictional candidate demonstrates an appropriate understanding of defensive coaching, particularly tactical alignment with the Head Coach, pressing cues and collaboration with specialist staff. However, several responses remain general, with limited evidence of individualized progression, validated performance measures or sustained impact. Follow-up examples and practical coaching evidence are needed to verify the candidate's ability to implement and adapt defensive principles."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your background and pathway to becoming a Defensive Coach?",
+          "evaluates": "Relevant coaching preparation and progression into defensive specialization.",
+          "strong": [
+            "Identifies relevant coaching, playing, analysis, education or specialist-development experience.",
+            "Explains actual defensive responsibilities, team levels, age groups and progression over time.",
+            "Connects prior work to individual defending, unit organization and team defensive behavior.",
+            "Shows continuing learning rather than relying only on playing position or reputation."
+          ],
+          "acceptable": "Describes relevant experience but provides limited detail about responsibilities, environments or development.",
+          "weakOrConcerning": "Relies only on having played as a defender, lists licenses without application or exaggerates specialist experience.",
+          "calibration": {
+            "response": "I coached youth defenders for three seasons and learned from a senior coach. I now focus on defensive-unit sessions.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the role and responsibilities of a Defensive Coach within a technical staff?",
+          "evaluates": "Role clarity, contribution and boundaries within the coaching team.",
+          "strong": [
+            "Defines support for defensive principles, individual roles, unit work, transitions, pressing and set-piece contribution as assigned.",
+            "Explains observation, planning, delivery, feedback and review responsibilities.",
+            "Recognizes that the Head Coach owns the overall model, selection and final tactical decisions.",
+            "Coordinates with other coaches and protects consistent team messaging."
+          ],
+          "acceptable": "Identifies defensive training and tactical support but leaves workflow or authority boundaries unclear.",
+          "weakOrConcerning": "Describes taking control of all defending independently, contradicting the Head Coach or focusing only on defenders rather than team behavior.",
+          "calibration": {
+            "response": "I help with defensive positioning, pressing and feedback, while the Head Coach makes the final tactical decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you align your defensive work with the Head Coach's overall tactical vision?",
+          "evaluates": "Tactical alignment, communication and implementation discipline.",
+          "strong": [
+            "Clarifies the playing model, match plan, terminology, risk preferences and current priorities.",
+            "Translates the vision into observable behaviors by phase, line, unit and role.",
+            "Plans content with the Head Coach and integrates it into whole-team work.",
+            "Uses feedback and match evidence to adjust without promoting a competing defensive philosophy."
+          ],
+          "acceptable": "States that defensive work follows the Head Coach's plan but gives limited detail about translation or coordination.",
+          "weakOrConcerning": "Imposes a preferred block or pressing style regardless of the team model, or gives players conflicting instructions.",
+          "calibration": {
+            "response": "I discuss our defensive principles with the Head Coach before planning and use shared terms in training.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you analyze opponent attacking patterns and threats?",
+          "evaluates": "Opposition analysis, evidence quality and defensive relevance.",
+          "strong": [
+            "Reviews build-up, progression, chance creation, transitions, set pieces and key player relationships.",
+            "Looks for repeated behaviors across matches, game states, zones and opponent selections.",
+            "Separates patterns from isolated incidents and checks footage or data quality.",
+            "Converts findings into prioritized defensive tasks suited to the team's strengths and match plan."
+          ],
+          "acceptable": "Identifies opponent strengths and patterns with some supporting evidence but gives limited prioritization or validation.",
+          "weakOrConcerning": "Draws conclusions from one clip or match, lists threats without defensive implications or overwhelms players with information.",
+          "calibration": {
+            "response": "I watch opponents for patterns in their build-up and attacking transitions, then show the players selected clips.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you teach defensive decision-making and positioning?",
+          "evaluates": "Contextual learning, perception and actionable coaching.",
+          "strong": [
+            "Creates realistic situations involving ball, space, teammates, opponents, goal and tactical purpose.",
+            "Coaches scanning, distance, body orientation, timing, cover, pressure and risk decisions.",
+            "Uses questions, guided feedback, repetition and variable problems rather than fixed movements only.",
+            "Separates decision quality from execution outcome and adapts feedback to role and age."
+          ],
+          "acceptable": "Uses game-related exercises and clear positioning points but provides limited perception, variation or review detail.",
+          "weakOrConcerning": "Teaches positions as static spots, judges choices only by outcome or uses constant stopping and instruction that removes decision-making.",
+          "calibration": {
+            "response": "I use small-sided defending exercises to teach body shape, cover and timing, then discuss their decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you train players to recognize defensive triggers and cues?",
+          "evaluates": "Perception-action connection and collective coordination.",
+          "strong": [
+            "Defines observable cues such as pass direction, touch quality, pressure, body shape, support and field position.",
+            "Links cues to agreed actions such as press, cover, drop, squeeze, track or delay.",
+            "Trains cues progressively in representative situations with communication and shared timing.",
+            "Checks transfer under realistic speed, opposition and game-state variation."
+          ],
+          "acceptable": "Names relevant cues and actions but gives limited progression, collective timing or transfer assessment.",
+          "weakOrConcerning": "Uses memorized commands without perceptual context, introduces too many triggers or assumes all situations require the same response.",
+          "calibration": {
+            "response": "I teach players to press when an opponent receives facing their own goal and to provide cover behind the press.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Defensive Methodology & Training Design",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you structure defensive training sessions to develop individual and collective defensive behaviors?",
+          "evaluates": "Objective-led design, progression and integration.",
+          "strong": [
+            "Starts with a clear defensive objective linked to current needs and the team model.",
+            "Progresses from targeted individual or unit detail to representative collective situations where appropriate.",
+            "Controls space, numbers, direction, rules, transitions and rest to create the intended problem.",
+            "Includes observation criteria, coaching interventions and a final transfer or review activity."
+          ],
+          "acceptable": "Describes a logical warm-up, practice and game progression but gives limited load, constraint or transfer rationale.",
+          "weakOrConcerning": "Lists drills without objectives, isolates technique for the whole session or overloads players with disconnected defensive topics.",
+          "calibration": {
+            "response": "I begin with an individual defensive exercise, progress to unit defending and finish with a game.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "What defensive principles guide your work - positioning, duels, compactness and pressing?",
+          "evaluates": "Coherent defensive framework and contextual application.",
+          "strong": [
+            "Defines clear principles for protecting goal and central space, pressure, cover, balance, compactness and communication.",
+            "Explains duel behaviors without treating defending as duels alone.",
+            "Connects pressing, block height and line behavior to the team model and match context.",
+            "Clarifies trade-offs and adaptations rather than presenting universal rules."
+          ],
+          "acceptable": "Explains several sound defensive principles but gives limited hierarchy, interaction or context.",
+          "weakOrConcerning": "Uses slogans without observable behaviors, focuses only on aggression or requires one defensive solution for every situation.",
+          "calibration": {
+            "response": "I prioritize pressure, cover, compactness and communication, adapting the line to the match situation.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How do you adapt your defensive methodology to different age groups and competitive levels?",
+          "evaluates": "Developmental appropriateness and scalable complexity.",
+          "strong": [
+            "Adjusts language, field size, numbers, information load, role detail and feedback to age and experience.",
+            "Builds individual foundations before demanding complex collective coordination.",
+            "Considers maturation, physical differences, training frequency and competition demands.",
+            "Maintains common principles while changing method and complexity."
+          ],
+          "acceptable": "Recognizes the need for simpler youth work and greater senior detail but gives limited progression or welfare context.",
+          "weakOrConcerning": "Treats youth as smaller adults, imposes senior tactical complexity or avoids teaching defending until a certain age.",
+          "calibration": {
+            "response": "I simplify instructions and space for younger players and increase tactical detail for older groups.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Defensive Game Model & Communication",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you integrate defensive principles into the team's overall playing model?",
+          "evaluates": "Whole-model integration and connection between phases.",
+          "strong": [
+            "Links defending to attacking structure, rest defense, counterpressing, recovery and transition behavior.",
+            "Defines responsibilities by phase, zone, unit and game state within the Head Coach's model.",
+            "Coordinates training so defensive work supports rather than competes with attacking objectives.",
+            "Uses common terminology and reviews execution over multiple matches."
+          ],
+          "acceptable": "Links defensive principles to the team model but provides limited phase connection or implementation detail.",
+          "weakOrConcerning": "Treats defending as a separate department, focuses only on low-block behavior or contradicts attacking and transition principles.",
+          "calibration": {
+            "response": "I connect our defensive shape with what happens when we lose possession, working within the Head Coach's model.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you work on defensive organization in different phases - block, transition and set pieces?",
+          "evaluates": "Phase-specific organization and continuity.",
+          "strong": [
+            "Defines objectives, starting structure, roles and communication for organized defending.",
+            "Trains immediate reactions to loss, recovery priorities, delay, protection and reorganization.",
+            "Coordinates set-piece roles, second balls and transition after clearances with responsible staff.",
+            "Connects phases through realistic repetition rather than training each as an isolated script."
+          ],
+          "acceptable": "Covers block, transition and set-piece organization but gives limited connection, progression or role detail.",
+          "weakOrConcerning": "Focuses only on one phase, uses rigid choreography without cues or ignores transitions before and after set pieces.",
+          "calibration": {
+            "response": "I rehearse defensive blocks, counterattack recovery and set-piece marking during the week.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How do you communicate defensive concepts clearly to players to ensure understanding and execution?",
+          "evaluates": "Clarity, shared language and confirmation of learning.",
+          "strong": [
+            "Uses concise terminology, clear demonstrations, selected video and age-appropriate examples.",
+            "Limits messages to priority behaviors and explains why they matter.",
+            "Checks understanding through player explanation, rehearsal and observed execution.",
+            "Adapts communication by player role and language needs without humiliating mistakes."
+          ],
+          "acceptable": "Explains concepts clearly and demonstrates them but gives limited checking of understanding or adaptation.",
+          "weakOrConcerning": "Uses excessive jargon, long lectures, public blame or assumes players understand because they remain silent.",
+          "calibration": {
+            "response": "I demonstrate the action, explain two key points and ask players to repeat it in a game situation.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Leadership, Collaboration & Adaptability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you collaborate with other specialist coaches to ensure tactical balance?",
+          "evaluates": "Staff integration, shared ownership and consistent messaging.",
+          "strong": [
+            "Uses regular planning to connect defensive, attacking, goalkeeper, set-piece and physical objectives.",
+            "Agrees terminology, priorities, session ownership and intervention roles.",
+            "Identifies conflicts or overload and resolves them privately with the Head Coach.",
+            "Shares relevant observations while respecting specialist boundaries and confidentiality."
+          ],
+          "acceptable": "Describes regular collaboration and aligned planning but leaves ownership or conflict resolution unclear.",
+          "weakOrConcerning": "Works in isolation, competes for session time, contradicts other coaches publicly or protects defensive metrics at the expense of team performance.",
+          "calibration": {
+            "response": "I meet with attacking and goalkeeper coaches to coordinate the weekly focus and avoid conflicting instructions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Describe a situation where a defensive plan did not work as expected. What adjustments did you make?",
+          "evaluates": "Accountability, live diagnosis and adaptation.",
+          "strong": [
+            "Provides a specific opponent, plan, expected behavior and observed problem.",
+            "Diagnoses structure, distances, timing, personnel, communication or opponent adaptation rather than blaming effort alone.",
+            "Explains the adjustment, how it was communicated and its tactical trade-offs.",
+            "Reports the outcome and lesson without claiming certainty from a short result."
+          ],
+          "acceptable": "Describes a reasonable tactical adjustment but gives incomplete diagnosis, communication or outcome evidence.",
+          "weakOrConcerning": "Claims the plan never fails, blames players exclusively or changes shape without explaining the underlying problem.",
+          "calibration": {
+            "response": "In one match we were exposed behind our fullbacks. We dropped our line and adjusted the cover, which reduced those situations.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses a credible practical process. A documented follow-up or measurable outcome would strengthen this answer."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 15,
+          "text": "How do you adapt your defensive work when players have different profiles, strengths or limitations?",
+          "evaluates": "Individualization within collective principles.",
+          "strong": [
+            "Profiles speed, strength, mobility, perception, communication, duel qualities and role experience using evidence.",
+            "Preserves core principles while adjusting distances, cover, responsibilities, pairings or exercise constraints.",
+            "Creates individual development priorities without labeling players permanently.",
+            "Coordinates physical or medical restrictions with appropriate staff and avoids diagnosis."
+          ],
+          "acceptable": "Adapts roles or coaching detail to player strengths but gives limited evidence or collective trade-off analysis.",
+          "weakOrConcerning": "Forces identical behavior regardless of profile, hides players permanently or makes unsupported physical or psychological conclusions.",
+          "calibration": {
+            "response": "I adapt player responsibilities to their strengths, especially recovery speed and aerial ability.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Evaluation & Development",
+      "questions": [
+        {
+          "id": 16,
+          "text": "What indicators do you use to evaluate defensive performance beyond goals conceded?",
+          "evaluates": "Balanced measurement and contextual interpretation.",
+          "strong": [
+            "Uses chance quality allowed, entries, box protection, pressing outcomes, transition control, duels in context and set-piece execution.",
+            "Includes compactness, line coordination, recovery, communication and repeated principle execution through video observation.",
+            "Considers opponent quality, game state, possession strategy and sample size.",
+            "Avoids claiming that one metric proves defensive quality or causation."
+          ],
+          "acceptable": "Uses several relevant team and individual indicators but gives limited context, validation or connection to principles.",
+          "weakOrConcerning": "Measures only clean sheets, tackles or goals conceded, rewards passive defending automatically or uses metrics without video context.",
+          "calibration": {
+            "response": "I look at chances conceded, successful pressure and defensive errors alongside video, but have no formal baseline.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What has been the toughest professional challenge you have faced as a Defensive Coach, and how did you overcome it?",
+          "evaluates": "Resilience, accountability and problem-solving.",
+          "strong": [
+            "Explains a specific challenge, constraints and personal responsibility.",
+            "Describes analysis, collaboration, decisions and communication.",
+            "Provides the outcome, remaining limitations and what was learned.",
+            "Shows how the lesson changed later methodology or staff practice."
+          ],
+          "acceptable": "Describes a relevant challenge and reasonable response but lacks outcome, accountability or reflection.",
+          "weakOrConcerning": "Blames players or colleagues, breaches confidentiality, avoids responsibility or provides no evidence of resolution.",
+          "calibration": {
+            "response": "A difficult period of conceding late goals led me to improve communication and training intensity.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "How do you measure your effectiveness as a Defensive Coach, and how has your methodology evolved over time?",
+          "evaluates": "Evaluation discipline, learning and appropriate attribution.",
+          "strong": [
+            "Uses execution of agreed principles, player improvement, training transfer, staff feedback and decision usefulness.",
+            "Reviews patterns over time rather than attributing one result directly to coaching.",
+            "Recognizes shared responsibility for defensive outcomes across the staff and team.",
+            "Explains concrete methodological changes based on evidence, feedback or new contexts."
+          ],
+          "acceptable": "Mentions player and team improvement beyond results but gives limited measurement or evolution detail.",
+          "weakOrConcerning": "Claims sole credit for clean sheets, measures only goals conceded or cannot describe any evidence-based methodological change.",
+          "calibration": {
+            "response": "I judge my work through fewer recurring defensive mistakes and player feedback. My sessions now include more game scenarios.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The answer is relevant to the Defensive Coach role and addresses the question at a basic level. More specific evidence of implementation, feedback and measurable results is needed."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

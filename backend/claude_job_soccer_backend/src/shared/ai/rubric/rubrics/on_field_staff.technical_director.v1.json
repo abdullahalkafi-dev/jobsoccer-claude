@@ -1,0 +1,476 @@
+{
+  "rubricId": "on_field_staff.technical_director.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Technical Director Final.docx",
+  "role": "On field staff",
+  "position": "Technical Director",
+  "displayName": "Technical Director",
+  "clientRoleId": "technical_director",
+  "evaluationApproach": {
+    "summary": "The AI evaluates technical leadership, club-wide strategy, implementation governance, coach development, football methodology and professional judgment specifically for the Technical Director role.",
+    "corePrinciple": "Strong answers connect technical vision with standards, people, processes, decisions, evidence and measurable implementation across the club."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Technical Director responsibilities, not Head Coach, Sporting Director or Academy Director expectations."
+    },
+    {
+      "id": "R2",
+      "rule": "Do not require one playing formation or technical philosophy; assess coherence and implementation."
+    },
+    {
+      "id": "R3",
+      "rule": "A 4/4 on an experience-based question requires a specific situation, action and outcome."
+    },
+    {
+      "id": "R4",
+      "rule": "Do not infer qualifications, authority, safeguarding competence or measurable results not demonstrated."
+    },
+    {
+      "id": "R5",
+      "rule": "Evaluate response content, not accent, appearance, protected characteristics or video production quality."
+    },
+    {
+      "id": "R6",
+      "rule": "Flag material written/video contradictions for human review; do not equate a contradiction with dishonesty."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "44/72",
+    "percentage": "61.1%",
+    "classification": "Basic / acceptable understanding, but insufficient depth",
+    "strongestAreas": "Technical vision, age-appropriate alignment, seasonal planning and collaboration",
+    "mainWeaknesses": "Incomplete governance processes, limited validation of data and outcomes, and inconsistent follow-up",
+    "summary": "The candidate demonstrates a generally sound understanding of club-wide technical leadership, particularly in developing common playing principles, coordinating coaching staff and adapting methodology across age groups. However, the responses provide limited evidence of formal implementation governance, systematic coach evaluation, data validation and measurable project outcomes. Further examples and portfolio evidence are needed to establish the candidate's ability to deliver and monitor a club-wide technical strategy."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your professional background and pathway to becoming a Technical Director?",
+          "evaluates": "Relevant preparation, progression and readiness for technical leadership.",
+          "strong": [
+            "Identifies relevant coaching, academy, recruitment, methodology, education or football-management experience.",
+            "Explains progression into broader technical responsibility, including the scale and level of previous roles.",
+            "Connects prior responsibilities to club-wide leadership, coach development and technical decision-making.",
+            "Shows continued learning and does not rely only on job titles or years of service."
+          ],
+          "acceptable": "Describes relevant experience but gives limited detail about scope, responsibilities or progression.",
+          "weakOrConcerning": "Lists titles, qualifications or contacts without explaining actual responsibilities, results or relevance to the role.",
+          "calibration": {
+            "response": "I started as an academy coach, then coordinated age-group coaches for four seasons. I now support season planning and coach meetings, but I have not led an entire club-wide technical project.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Describes relevant experience but gives limited detail about scope, responsibilities or progression."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the role and responsibilities of a Technical Director within a football club?",
+          "evaluates": "Role clarity, governance and understanding of the Technical Director mandate.",
+          "strong": [
+            "Defines responsibility for technical vision, playing and development principles, methodology and long-term sporting alignment.",
+            "Explains oversight of coaches, player pathways, recruitment input, performance review and technical standards.",
+            "Distinguishes strategic technical authority from the Head Coach's day-to-day team selection and match management.",
+            "Recognizes reporting lines, resources, safeguarding, compliance and collaboration with club leadership."
+          ],
+          "acceptable": "Identifies strategy, methodology and staff oversight but leaves boundaries or governance unclear.",
+          "weakOrConcerning": "Describes only first-team coaching, claims unlimited authority, or reduces the role to administration or recruitment alone.",
+          "calibration": {
+            "response": "I see the role as defining the club's playing and development principles, supporting coaches, and checking that the pathway works. The head coach should make team selection decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Identifies strategy, methodology and staff oversight but leaves boundaries or governance unclear."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you balance strategic vision with day-to-day operational demands?",
+          "evaluates": "Prioritization, implementation discipline and ability to protect long-term objectives.",
+          "strong": [
+            "Translates the multi-year vision into seasonal priorities, milestones, owners and review routines.",
+            "Uses clear decision criteria to separate urgent, important and delegable work.",
+            "Maintains regular contact with teams and staff without taking over their operational roles.",
+            "Explains how short-term decisions are documented, reviewed and tested against the technical project."
+          ],
+          "acceptable": "Describes planning and delegation but provides limited detail about trade-offs, review or accountability.",
+          "weakOrConcerning": "Responds only to immediate problems, avoids operational realities, or changes long-term direction whenever short-term results fluctuate.",
+          "calibration": {
+            "response": "I set yearly priorities and meet staff monthly. When urgent problems arise, I discuss them with department leads, although I do not use a formal escalation framework.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Describes planning and delegation but provides limited detail about trade-offs, review or accountability."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Tactical Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you evaluate tactical consistency across all teams within the club?",
+          "evaluates": "Club-wide tactical observation and age-appropriate alignment.",
+          "strong": [
+            "Defines observable principles by phase of play rather than requiring identical formations.",
+            "Uses match observation, training visits, video, coach reviews and selected indicators across teams.",
+            "Allows age-, level- and context-appropriate variation while protecting core principles.",
+            "Compares patterns over time and turns findings into support actions rather than punishment."
+          ],
+          "acceptable": "Explains observation across teams and common principles but lacks clear indicators, cadence or allowance for age differences.",
+          "weakOrConcerning": "Equates consistency with one formation, judges from results alone, or imposes first-team complexity on all age groups.",
+          "calibration": {
+            "response": "I watch teams at different age levels and look for similar principles in possession and transitions. I allow younger teams simpler solutions, but my observation checklist is informal.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Explains observation across teams and common principles but lacks clear indicators, cadence or allowance for age differences."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you assess whether coaches are implementing the playing philosophy correctly?",
+          "evaluates": "Coach evaluation, evidence quality and developmental follow-through.",
+          "strong": [
+            "Uses agreed standards covering training design, coaching behaviors and match application.",
+            "Triangulates observations from training, matches, plans, player development evidence and coach self-review.",
+            "Provides specific feedback, support and reasonable improvement timelines.",
+            "Distinguishes misunderstanding, resource constraints and deliberate non-alignment before deciding action."
+          ],
+          "acceptable": "Uses observation and feedback but gives limited detail about standards, evidence or follow-up.",
+          "weakOrConcerning": "Judges coaches through wins, personal preference or isolated visits, or removes autonomy without explaining expected behaviors.",
+          "calibration": {
+            "response": "I attend practices and give coaches feedback on whether they use our principles. I have not yet developed a consistent follow-up or observation scoring system.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Uses observation and feedback but gives limited detail about standards, evidence or follow-up."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you analyze team and player performance data to guide technical decisions?",
+          "evaluates": "Data literacy, contextual interpretation and decision relevance.",
+          "strong": [
+            "Starts with a defined technical question and selects valid indicators linked to the playing or development model.",
+            "Combines quantitative data with video, observation, role expectations, age and competition context.",
+            "Checks data quality, sample size, uncertainty and possible bias before drawing conclusions.",
+            "Converts findings into a decision, test or review while avoiding false claims of causation."
+          ],
+          "acceptable": "Uses data and video to support decisions but provides limited explanation of validation, context or action.",
+          "weakOrConcerning": "Treats a metric as conclusive, ignores data quality or context, or uses data only to justify a decision already made.",
+          "calibration": {
+            "response": "I review video and passing or chance-creation statistics with coaches. I use them to spot problems, but I cannot describe a data-quality or sample-size checking process.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Uses data and video to support decisions but provides limited explanation of validation, context or action."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Technical Project & Methodology",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you structure and oversee the club's technical project throughout a season?",
+          "evaluates": "Season planning, governance and implementation control.",
+          "strong": [
+            "Defines objectives, principles, age-group priorities, staff responsibilities, resources and measurable milestones.",
+            "Builds a calendar for coach education, observation, player reviews, recruitment and technical meetings.",
+            "Uses simple documentation and dashboards that clarify ownership and progress.",
+            "Runs periodic reviews and records decisions, risks and corrective actions."
+          ],
+          "acceptable": "Describes a seasonal plan and regular meetings but omits ownership, milestones or review mechanisms.",
+          "weakOrConcerning": "Provides only a philosophy statement, operates reactively, or depends on informal communication with no accountable implementation.",
+          "calibration": {
+            "response": "I start with the club identity and age-group priorities, then build seasonal training themes, meetings and player reviews. Each coordinator reports progress to me.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Describes a seasonal plan and regular meetings but omits ownership, milestones or review mechanisms."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "What methodology do you use to align player development with team performance objectives?",
+          "evaluates": "Integration of individual development and competitive team needs.",
+          "strong": [
+            "Defines age- and role-appropriate competencies linked to the club model and player pathway.",
+            "Uses individual development plans, training objectives, playing opportunities and regular evidence-based reviews.",
+            "Balances current team contribution with longer-term learning rather than sacrificing one automatically.",
+            "Coordinates coaches, performance staff, recruitment and families where appropriate, with clear information boundaries."
+          ],
+          "acceptable": "Links individual plans to team objectives but provides limited detail about review, playing opportunity or trade-offs.",
+          "weakOrConcerning": "Prioritizes winning at all costs, promises progression, applies identical plans to every player or ignores individual development.",
+          "calibration": {
+            "response": "I encourage coaches to use individual development plans that link player needs with our team model. We review them each term, although playing-time trade-offs are handled case by case.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Links individual plans to team objectives but provides limited detail about review, playing opportunity or trade-offs."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How do you evaluate whether the technical project is being correctly implemented?",
+          "evaluates": "Implementation measurement, diagnosis and corrective action.",
+          "strong": [
+            "Defines leading and outcome indicators for coaching practice, player progression, pathway movement and model execution.",
+            "Uses planned audits, observations, staff and player feedback, documentation and longitudinal comparison.",
+            "Separates implementation failure from unrealistic objectives, insufficient resources or external context.",
+            "Agrees corrective actions, owners and deadlines, then verifies whether changes worked."
+          ],
+          "acceptable": "Uses reviews and selected indicators but lacks diagnostic depth or a clear corrective-action cycle.",
+          "weakOrConcerning": "Measures only league position, accepts reports without verification, or changes the project without identifying the actual implementation problem.",
+          "calibration": {
+            "response": "I hold quarterly meetings and check whether coaches have followed the planned themes. We look at results and feedback but do not yet assign owners to every corrective action.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Uses reviews and selected indicators but lacks diagnostic depth or a clear corrective-action cycle."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Playing Model & Communication",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you define the club's playing model and game principles across all teams and age groups?",
+          "evaluates": "Game-model design, clarity and developmental progression.",
+          "strong": [
+            "Defines principles for possession, defending, transitions and set plays in observable language.",
+            "Creates age-appropriate progressions and non-negotiable foundations without forcing identical tactics.",
+            "Connects the model to training methodology, recruitment profiles and player-development outcomes.",
+            "Tests the model against club identity, competitive context, staffing and available resources."
+          ],
+          "acceptable": "Describes common principles and age adaptation but gives limited detail about implementation or observability.",
+          "weakOrConcerning": "Confuses formation with playing model, copies another club without context, or mandates the same tactical detail for every age group.",
+          "calibration": {
+            "response": "I define principles for build-up, defending and transitions, with simpler cues for younger players. Teams can choose formations suited to their players.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Describes common principles and age adaptation but gives limited detail about implementation or observability."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you communicate the technical vision and expectations to coaches and staff?",
+          "evaluates": "Clarity, engagement and sustained organizational alignment.",
+          "strong": [
+            "Uses concise reference materials, induction, workshops, practical field examples and recurring technical meetings.",
+            "Adapts detail and language to each audience while keeping terminology consistent.",
+            "Invites questions and checks understanding through plans, observation and coach explanation.",
+            "Maintains two-way feedback, version control and clear communication when expectations change."
+          ],
+          "acceptable": "Uses meetings and documents to explain expectations but provides limited checking of understanding or follow-through.",
+          "weakOrConcerning": "Relies on a one-time presentation, communicates only through criticism, or assumes silence means alignment.",
+          "calibration": {
+            "response": "I use preseason workshops and a written guide to explain our approach. I visit sessions, but I need a better method to confirm that all coaches understood the expectations.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Uses meetings and documents to explain expectations but provides limited checking of understanding or follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "Describe a situation where you had to communicate a complex or sensitive technical decision.",
+          "evaluates": "Judgment, transparency, emotional intelligence and stakeholder management.",
+          "strong": [
+            "Provides a specific situation, affected stakeholders and decision constraints.",
+            "Separates verified facts, technical interpretation, uncertainty and final authority.",
+            "Uses appropriate timing, privacy, tone and consistent messaging.",
+            "Explains the response, outcome, follow-up and lesson learned."
+          ],
+          "acceptable": "Describes a reasonable communication approach but gives an incomplete situation, outcome or follow-up.",
+          "weakOrConcerning": "Avoids accountability, discloses confidential information, blames individuals publicly or presents a contested judgment as unquestionable fact.",
+          "calibration": {
+            "response": "When a coach disagreed with a proposed change, I met privately and explained why it mattered. We reached agreement, although I cannot provide the exact evidence or longer-term result.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Describes a reasonable communication approach but gives an incomplete situation, outcome or follow-up."
+          },
+          "requiresRealSituation": true
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Leadership, Collaboration & Adaptability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you collaborate with the Head Coach, academy staff, and management to align objectives?",
+          "evaluates": "Cross-functional governance, role boundaries and conflict prevention.",
+          "strong": [
+            "Establishes shared objectives, decision rights, meeting cadence, reporting lines and escalation routes.",
+            "Connects first-team needs, academy development and club strategy without allowing one area to dominate automatically.",
+            "Uses evidence and documented actions to resolve competing priorities.",
+            "Protects the Head Coach's operational authority while maintaining appropriate technical oversight."
+          ],
+          "acceptable": "Describes regular collaboration and shared planning but leaves decision rights or conflict resolution unclear.",
+          "weakOrConcerning": "Bypasses responsible staff, micromanages the Head Coach, isolates the academy or allows management pressure to replace technical judgment.",
+          "calibration": {
+            "response": "I meet the first-team head coach, academy leads and management to discuss priorities. We share plans but our decision rights are not always formally documented.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Describes regular collaboration and shared planning but leaves decision rights or conflict resolution unclear."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Describe a moment when your technical leadership influenced an important sporting decision.",
+          "evaluates": "Demonstrated leadership impact, evidence and appropriate attribution.",
+          "strong": [
+            "Explains the context, decision, stakeholders and personal responsibility.",
+            "Shows the evidence, consultation and trade-offs used to reach the recommendation.",
+            "Describes the decision and observable outcome without claiming sole credit.",
+            "Reflects on limitations, unintended effects or what would be improved."
+          ],
+          "acceptable": "Provides a relevant leadership example but lacks evidence, outcome or clarity about personal contribution.",
+          "weakOrConcerning": "Claims influence without evidence, takes sole credit for a collective decision or uses authority instead of a reasoned process.",
+          "calibration": {
+            "response": "I recommended changing an academy training schedule after coaches reported fatigue. The club accepted the recommendation; we did not collect enough follow-up evidence to isolate the impact.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Provides a relevant leadership example but lacks evidence, outcome or clarity about personal contribution."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "Describe a situation where the technical project needed adjustment due to results or context.",
+          "evaluates": "Adaptability without strategic drift.",
+          "strong": [
+            "Identifies a specific change in results, player profile, resources, staffing, competition or club context.",
+            "Diagnoses whether the issue concerns principles, implementation, timing or unrealistic assumptions.",
+            "Protects core objectives while changing methods, sequencing, resources or short-term priorities.",
+            "Communicates the adjustment, defines review criteria and explains the outcome or learning."
+          ],
+          "acceptable": "Describes a sensible adjustment but provides limited diagnosis, review criteria or outcome evidence.",
+          "weakOrConcerning": "Changes identity after a short result sequence, refuses any adjustment, or blames others without examining the project design and implementation.",
+          "calibration": {
+            "response": "After several teams struggled to implement the model, we simplified the training themes rather than changing the philosophy. I would now set clearer review measures.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "The response provides a relevant Technical Director perspective. Describes a sensible adjustment but provides limited diagnosis, review criteria or outcome evidence."
+          },
+          "requiresRealSituation": true
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Evaluation & Vision",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How do you measure the effectiveness and impact of the technical project beyond match results?",
+          "evaluates": "Balanced evaluation and understanding of contribution versus causation.",
+          "strong": [
+            "Uses indicators such as player progression, pathway movement, coach development, training quality, principle execution, retention and recruitment fit.",
+            "Combines quantitative trends, qualitative evidence and comparison over an appropriate period.",
+            "Recognizes that results have multiple causes and avoids attributing every change to the project.",
+            "Uses findings to improve priorities, resources and methodology."
+          ],
+          "acceptable": "Mentions player and coach development alongside results but gives limited measurement detail or review cadence.",
+          "weakOrConcerning": "Measures success only through wins and trophies, uses vanity metrics, or claims direct causation without supporting evidence.",
+          "calibration": {
+            "response": "I track player promotions, coach education participation and whether teams demonstrate our principles. We discuss trends, but I need more reliable baseline comparisons.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Mentions player and coach development alongside results but gives limited measurement detail or review cadence."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What has been the toughest professional challenge you have faced as a Technical Director?",
+          "evaluates": "Resilience, accountability and ethical problem-solving.",
+          "strong": [
+            "Explains a specific challenge, constraints, stakeholders and personal responsibility.",
+            "Describes a structured response, difficult decisions, communication and escalation where necessary.",
+            "Provides the outcome, unresolved limitations and what was learned.",
+            "Shows how the lesson changed later leadership or systems."
+          ],
+          "acceptable": "Describes a relevant challenge and reasonable response but lacks outcome, accountability or reflection.",
+          "weakOrConcerning": "Blames coaches or management exclusively, breaches confidentiality, avoids responsibility or cannot explain a concrete response.",
+          "calibration": {
+            "response": "The hardest challenge was staff resistance to a shared curriculum. I listened to concerns, introduced workshops and made some changes; adoption improved, though it was not formally measured.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Describes a relevant challenge and reasonable response but lacks outcome, accountability or reflection."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "How has your technical leadership and methodology evolved over the past three to five years?",
+          "evaluates": "Learning agility, evidence-based evolution and current relevance.",
+          "strong": [
+            "Identifies specific former assumptions or practices and what prompted reconsideration.",
+            "Describes concrete changes in leadership, coach support, planning, data use, methodology or player development.",
+            "Explains evidence, feedback or outcomes used to evaluate those changes.",
+            "Shows continued learning while maintaining a coherent technical identity."
+          ],
+          "acceptable": "Identifies relevant changes and learning but provides limited evidence of application or impact.",
+          "weakOrConcerning": "Uses generic statements about experience, cannot identify any meaningful change, or adopts trends without evaluation.",
+          "calibration": {
+            "response": "I have moved away from rigid formations toward shared principles and more coach discussion. Feedback from staff shaped the change, but I have limited evidence of its long-term effect.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "The response addresses the role but remains incomplete. Identifies relevant changes and learning but provides limited evidence of application or impact."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,444 @@
+{
+  "rubricId": "on_field_staff.academy_director.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Academy Director Final .docx",
+  "role": "On field staff",
+  "position": "Academy Director",
+  "displayName": "Academy Director",
+  "clientRoleId": "academy_director",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate Academy Director candidates on long-term player development, academy governance, technical standards, coach development, safeguarding, pathway design, staff collaboration and evidence of implementation. Do not substitute Head Coach or Director of Coaching criteria.",
+    "corePrinciple": "Strong answers connect academy philosophy to observable age-appropriate development standards, coach support, reliable player progression measures and accountable organizational leadership."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score the response against the Academy Director role, not against Office Staff or another coaching position."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish between a generally positive statement and demonstrated competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as acceptable or good, not automatically strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag contradictions between the written questionnaire and the video response."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer expertise, credentials or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reduce scores because of accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Evaluate content only, except when audio is impossible to assess."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward excessive confidence, length or technical vocabulary unless the content is relevant and accurate."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "46/72",
+    "percentage": "63.9%",
+    "classification": "Basic / acceptable; evidence or depth is limited",
+    "strongestAreas": "Academy philosophy, coach collaboration, age-group alignment",
+    "mainWeaknesses": "Safeguarding governance detail, longitudinal player metrics, coach quality assurance, 90-day implementation specificity",
+    "summary": "The fictional candidate demonstrates a credible foundation in academy philosophy, age-group alignment and coach collaboration. However, many answers remain insufficiently detailed about quality-assurance systems, objective progression measures, safeguarding governance and implementation ownership. Request examples of an academy operating plan, coach reviews, player development evidence and first-90-day milestones."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Definition",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your professional pathway and the experiences that prepared you to lead an academy?",
+          "evaluates": "Leadership preparation and relevant academy responsibility.",
+          "strong": [
+            "Names roles, academy sizes and age groups.",
+            "Explains decisions owned, outcomes and lessons.",
+            "Distinguishes playing from management experience."
+          ],
+          "acceptable": "Relevant background but little detail on responsibility or results.",
+          "weakOrConcerning": "Relies on reputation or credentials without leadership evidence.",
+          "calibration": {
+            "response": "I led the U13-U17 program for four years, helped revise coach plans and chaired monthly reviews, although I have not managed the full academy budget.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How would you define the mission of an academy director within a modern football organization?",
+          "evaluates": "Long-term mission, welfare and strategic alignment.",
+          "strong": [
+            "Balances player development, education, safeguarding and pathway outcomes.",
+            "Aligns club identity and resources.",
+            "Defines measurable goals and governance."
+          ],
+          "acceptable": "Describes player development and club identity without operational measures.",
+          "weakOrConcerning": "Defines success only as winning or selling players.",
+          "calibration": {
+            "response": "The mission is to develop players and coaches, create a clear route through age groups and protect enjoyment and welfare, with progress reviewed every season.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "What leadership principles guide your decisions when managing a long-term development structure?",
+          "evaluates": "Ethical leadership and consistent decision-making.",
+          "strong": [
+            "Gives clear values, transparent decisions, consultation, safeguarding and conflict management.",
+            "Illustrates trade-offs with an example."
+          ],
+          "acceptable": "Names reasonable values but lacks a concrete decision process.",
+          "weakOrConcerning": "Favors short-term results or arbitrary authority.",
+          "calibration": {
+            "response": "I value fairness, communication and consistency. I consult coaches and explain difficult decisions, but I have not formalized an appeal process.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Technical & Development Expertise",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you ensure technical and tactical standards are consistent across all age groups?",
+          "evaluates": "Curriculum alignment with age-appropriate progression.",
+          "strong": [
+            "Defines academy-wide principles, age-band objectives and shared language.",
+            "Uses observations, coach support and review without rigid uniform drills."
+          ],
+          "acceptable": "Has a shared curriculum but limited quality assurance.",
+          "weakOrConcerning": "Requires identical tactics and sessions for every age.",
+          "calibration": {
+            "response": "We use a progression matrix for receiving, scanning and team principles, and coaches discuss age-specific objectives each month.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you evaluate whether training sessions meet development objectives?",
+          "evaluates": "Training quality assurance and learning evidence.",
+          "strong": [
+            "Sets observable session objectives, observes practice, reviews player behavior and coach reflection.",
+            "Checks retention and match transfer."
+          ],
+          "acceptable": "Uses observation and feedback without repeatable indicators.",
+          "weakOrConcerning": "Judges sessions only by energy or drill completion.",
+          "calibration": {
+            "response": "I watch sessions, compare the practice with the weekly objective and give coaches feedback. I would like a more consistent follow-up form.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "What indicators do you use to measure real player progression?",
+          "evaluates": "Longitudinal and multidimensional player evaluation.",
+          "strong": [
+            "Uses individual baselines, technical/tactical behaviors, maturation context, retention, match transfer and regular review.",
+            "Avoids raw-result bias."
+          ],
+          "acceptable": "Lists several indicators without benchmarks or validity checks.",
+          "weakOrConcerning": "Equates progression with wins, goals or physical size.",
+          "calibration": {
+            "response": "We compare individual plans every term, use coach observations and video examples, and consider decision-making as well as physical changes.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Academy Philosophy & Methodology",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you design and implement a unified development philosophy across the academy?",
+          "evaluates": "Philosophy translated into a working operating model.",
+          "strong": [
+            "Engages stakeholders, documents age-band principles, pilots implementation, trains coaches and audits adoption.",
+            "Revises with evidence."
+          ],
+          "acceptable": "States a clear philosophy but limited implementation plan.",
+          "weakOrConcerning": "Imposes slogans with no coach support or follow-up.",
+          "calibration": {
+            "response": "I would first agree on three or four core principles with staff, write age-group objectives and introduce monthly coaching meetings.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you maintain consistency while allowing coaches freedom to express their coaching identity?",
+          "evaluates": "Standards and appropriate autonomy.",
+          "strong": [
+            "Separates non-negotiable developmental principles from flexible methods.",
+            "Sets review criteria and constructive escalation."
+          ],
+          "acceptable": "Supports flexibility but does not define boundaries.",
+          "weakOrConcerning": "Demands identical sessions or allows contradictory practices.",
+          "calibration": {
+            "response": "I expect the same player-development outcomes, but coaches can choose exercises and feedback styles that fit their group.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "What principles guide your long-term player development model?",
+          "evaluates": "Age-appropriate, holistic and individualized development.",
+          "strong": [
+            "Accounts for maturation, learning rates, opportunity, welfare, technical/tactical and psychosocial development.",
+            "Sets progression checkpoints."
+          ],
+          "acceptable": "Mentions long-term development but little differentiation.",
+          "weakOrConcerning": "Specializes early or excludes late developers solely on current performance.",
+          "calibration": {
+            "response": "We avoid judging players from one season, review their individual plans and consider late maturation before changing their pathway.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Staff Leadership & Coach Development",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you recruit, mentor, and evaluate academy coaches?",
+          "evaluates": "Coach selection and development governance.",
+          "strong": [
+            "Defines role criteria, structured interviews, safeguarding verification, observations, mentoring, documented reviews and fair feedback."
+          ],
+          "acceptable": "Describes recruitment and mentoring but no clear evaluation cycle.",
+          "weakOrConcerning": "Uses contacts alone or ignores safeguarding.",
+          "calibration": {
+            "response": "I interview for teaching ability, observe trial sessions and pair new coaches with experienced mentors; formal evaluation is twice a year.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "What tools or methods do you use to monitor coaching quality?",
+          "evaluates": "Reliable coaching-quality monitoring.",
+          "strong": [
+            "Uses observation rubrics, session plans, player learning, coach reflection, stakeholder feedback and follow-up.",
+            "Avoids win-only measures."
+          ],
+          "acceptable": "Uses observation but lacks calibration or tracking.",
+          "weakOrConcerning": "Ranks coaches only by results or popularity.",
+          "calibration": {
+            "response": "I review plans and observe sessions, then discuss what players actually learned; I have not yet used a shared scoring rubric.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How do you support coaches in their professional growth and licensing pathway?",
+          "evaluates": "Continuing professional development and support.",
+          "strong": [
+            "Creates individual development plans, mentoring, protected learning time, certification support and checks application in sessions."
+          ],
+          "acceptable": "Encourages courses and mentorship without follow-up.",
+          "weakOrConcerning": "Treats licenses as sufficient proof of competence.",
+          "calibration": {
+            "response": "We offer monthly workshops and help staff identify licensing options, then ask them to share one practical learning point.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Player Pathway & Performance Model",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you structure player progression from grassroots to elite level?",
+          "evaluates": "Transparent and inclusive player pathway.",
+          "strong": [
+            "Defines age-appropriate milestones, selection reviews, multiple routes, late-development opportunities and transition support."
+          ],
+          "acceptable": "Describes age-group promotion but little evidence or inclusion.",
+          "weakOrConcerning": "Uses fixed early labels or guarantees professional outcomes.",
+          "calibration": {
+            "response": "We use age-group reviews and occasional training with older teams, while keeping options open for players who develop later.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "How do you integrate technical, tactical, physical, and mental development into one system?",
+          "evaluates": "Interdisciplinary planning and scope boundaries.",
+          "strong": [
+            "Coordinates staff around individual plans and workload.",
+            "Respects specialist expertise, welfare, confidentiality and measurable goals."
+          ],
+          "acceptable": "Names all dimensions but lacks integration processes.",
+          "weakOrConcerning": "Makes clinical claims or runs conflicting workloads.",
+          "calibration": {
+            "response": "Our technical and physical staff meet with coaches each term and align player priorities; mental support is referred to qualified professionals.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How do you manage transitions between age groups and competitive levels?",
+          "evaluates": "Continuity and player welfare during transitions.",
+          "strong": [
+            "Uses readiness evidence, handover notes, player/family communication, trial periods, support and follow-up."
+          ],
+          "acceptable": "Uses coach meetings and trials but limited structured monitoring.",
+          "weakOrConcerning": "Promotes solely by size or leaves players unsupported.",
+          "calibration": {
+            "response": "Coaches share development notes and invite selected players to train up before a move, with a review after several weeks.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific reasoning with some practical detail; stronger verification, outcomes or implementation evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Organizational Leadership & Impact",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How do you collaborate with technical staff, performance departments, and club leadership?",
+          "evaluates": "Governance, communication and accountability.",
+          "strong": [
+            "Defines decision rights, regular reporting, shared objectives, confidentiality and conflict resolution across departments."
+          ],
+          "acceptable": "Describes regular meetings without escalation or governance detail.",
+          "weakOrConcerning": "Works independently or shares private player data inappropriately.",
+          "calibration": {
+            "response": "I hold regular technical meetings and report priorities to club leadership; responsibilities are usually clear but not always documented.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What metrics do you use to evaluate academy success beyond match results?",
+          "evaluates": "Balanced academy-level performance measurement.",
+          "strong": [
+            "Tracks player retention, progression, development-plan outcomes, coach growth, safeguarding, education and equitable access.",
+            "Checks context."
+          ],
+          "acceptable": "Uses progression and retention but limited attribution or benchmarks.",
+          "weakOrConcerning": "Measures only trophies or transfers.",
+          "calibration": {
+            "response": "I track retention, player promotions and coach education, and would like better evidence of individual learning over multiple years.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "If appointed today, what would be your priorities during your first 90 days?",
+          "evaluates": "Prioritization, listening and feasible implementation.",
+          "strong": [
+            "Provides 30/60/90-day sequence: stakeholder audit, safeguarding and resource review, baseline measures, quick wins, governance and communication."
+          ],
+          "acceptable": "Offers sensible priorities but lacks timelines or owners.",
+          "weakOrConcerning": "Promises immediate overhaul without understanding context.",
+          "calibration": {
+            "response": "First I would meet staff and review the pathway, then observe sessions and identify two or three priorities before proposing changes.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates a plausible general approach but does not provide enough operational detail, evidence or follow-up to justify a higher score."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}
