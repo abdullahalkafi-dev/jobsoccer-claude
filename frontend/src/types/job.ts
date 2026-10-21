@@ -80,7 +80,17 @@ export interface TJobApplication {
   applicantProfileImage: string | null;
   candidateId: string;
   candidateRole: string;
-  aiMatchPercentage: number;
+  aiMatchPercentage: number | null;
+  /** Background job match (v2): queued / processing / completed / failed */
+  aiMatchStatus?: "queued" | "processing" | "completed" | "failed" | null;
+  aiMatchReasons?: {
+    metRequirements: string[];
+    missingRequirements: string[];
+    summary: string;
+    confidence: "high" | "medium" | "low";
+    usedResume: boolean;
+    usedInterview: boolean;
+  } | null;
   resumeUrl: string | null;
   appliedAt: string;
   createdAt: string;
