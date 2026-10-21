@@ -1,3 +1,4 @@
+import { normalizeOnFieldPosition, TPosition } from "../../../shared/constant/video.constant";
 import { z } from "zod";
 
 const createOnFieldStaffCanDto = z.object({
@@ -25,20 +26,10 @@ const createOnFieldStaffCanDto = z.object({
     boyOrGirl: z.enum(["Boy", "Girl"]).optional().nullable().transform(() => undefined),
     socialMedia: z.string().trim().min(1, "Social media is required").optional(),
     agent: z.string().trim().min(1, "Agent is required").optional(),
-    position: z.enum([
-        "Head Coach",
-        "Assistant Coach",
-        "GK Coach",
-        "Mental Coach",
-        "Video Analyst Coach",
-        "Specific Offensive Coach", //!TODO  it mean  "Specific Forward Coach"
-        "Specific Defensive Coach",
-        "Specific Technical Coach",
-        "Scout",
-        "Technical Director",
-        "Academy Director",
-        "Director of Coaching",
-    ]),
+    position: z.preprocess(
+        (value) => (typeof value === "string" ? normalizeOnFieldPosition(value) : value),
+        z.enum(TPosition)
+    ),
     // Videos will be handled separately through file upload
     videos: z.array(
         z.object({

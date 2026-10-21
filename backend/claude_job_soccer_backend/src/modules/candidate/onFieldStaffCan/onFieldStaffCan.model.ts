@@ -1,20 +1,10 @@
 import { model, Schema } from "mongoose";
 import { countryList } from "../../../shared/constant/country.constant";
+import {
+  LEGACY_POSITION_ALIASES,
+  TPosition,
+} from "../../../shared/constant/video.constant";
 
-enum TPosition {
-  HEAD_COACH = "Head Coach", 
-  ASSISTANT_COACH = "Assistant Coach",  
-  GK_COACH = "GK Coach",  
-  MENTAL_COACH = "Mental Coach", 
-  VIDEO_ANALYST_COACH = "Video Analyst Coach",  
-  SPECIFIC_FORWARD_COACH = "Specific Forward Coach", 
-  SPECIFIC_DEFENSIVE_COACH = "Specific Defensive Coach",  
-  SPECIFIC_TECHNICAL_COACH = "Specific Technical Coach", 
-  SCOUT = "Scout", 
-  TECHNICAL_DIRECTOR = "Technical Director", 
-  ACADEMY_DIRECTOR = "Academy Director",
-  DIRECTOR_OF_COACHING = "Director of Coaching", 
-}
 
 
 export type TOnFieldStaffCan = {
@@ -63,7 +53,8 @@ const onFieldStaffCanSchema = new Schema<TOnFieldStaffCan>(
      category: { type: String, required: false, trim: true },
     position: {
       type: String,
-      enum: Object.values(TPosition),
+      // legacy spellings stay valid so existing documents still save
+      enum: [...Object.values(TPosition), ...Object.keys(LEGACY_POSITION_ALIASES)],
       required: true,
     },
     videos: [

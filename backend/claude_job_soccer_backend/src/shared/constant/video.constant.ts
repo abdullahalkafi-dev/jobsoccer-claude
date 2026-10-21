@@ -36,6 +36,18 @@ export enum TPosition {
   DIRECTOR_OF_COACHING = "Director of Coaching",
 }
 
+/**
+ * Old spellings of on-field positions that may still arrive from clients or
+ * stored data. They are accepted and mapped to the TPosition value.
+ */
+export const LEGACY_POSITION_ALIASES: Record<string, TPosition> = {
+  "Specific Forward Coach": TPosition.SPECIFIC_OFFENSIVE_COACH,
+};
+
+/** Map a position string to its TPosition value (legacy spellings included). */
+export const normalizeOnFieldPosition = (position: string): string =>
+  LEGACY_POSITION_ALIASES[position] ?? position;
+
 // Player Position Enum (for video context)
 export enum PlayerRole {
   PROFESSIONAL_PLAYER = "Professional Player",
