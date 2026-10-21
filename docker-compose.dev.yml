@@ -12,6 +12,47 @@ services:
     networks:
       - jobsoccer_dev_network
 
+  # S3-compatible file storage (local development only).
+  # Console: http://localhost:9001  API: http://localhost:9000
+  minio:
+    # MinIO no longer publishes public images; this uses the locally available one
+    # (RELEASE.2025-09-07). Any S3-compatible server works: set MINIO_IMAGE.
+    image: ${MINIO_IMAGE:-minio/minio:latest}
+    container_name: jobsoccer_minio_dev
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-jobsoccer}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-jobsoccer-dev-secret}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_dev_data:/data
+    networks:
+      - jobsoccer_dev_network
+
+  # Local MongoDB for testing without touching the real database.
+  # Start with: docker compose -f docker-compose.dev.yml --profile localdb up -d mongo
+  # URL: mongodb://localhost:27017/jobsoccer_local?replicaSet=rs0&directConnection=true
+  mongo:
+    image: mongo:7.0
+    container_name: jobsoccer_mongo_dev
+    profiles: ["localdb"]
+    restart: always
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_dev_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]}).ok }"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    networks:
+      - jobsoccer_dev_network
+
   backend:
     build:
       context: ./backend/claude_job_soccer_backend
@@ -20,6 +61,15 @@ services:
     restart: always
     env_file:
       - ./backend/claude_job_soccer_backend/.env
+    environment:
+      # Storage stays on local disk unless STORAGE_DRIVER=s3 is set
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      S3_ENDPOINT: http://minio:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      S3_BUCKET: ${S3_BUCKET:-jobsoccer}
+      S3_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-jobsoccer}
+      S3_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-jobsoccer-dev-secret}
+      S3_FORCE_PATH_STYLE: "true"
     ports:
       - "8000:8000"
     volumes:
@@ -28,6 +78,7 @@ services:
       - ./uploads:/app/uploads
     depends_on:
       - redis
+      - minio
     networks:
       - jobsoccer_dev_network
 
@@ -67,6 +118,8 @@ services:
 
 volumes:
   redis_dev_data:
+  minio_dev_data:
+  mongo_dev_data:
 
 networks:
   jobsoccer_dev_network:

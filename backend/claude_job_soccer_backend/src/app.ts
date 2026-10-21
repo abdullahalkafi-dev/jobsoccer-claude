@@ -11,6 +11,7 @@ import { requestIdMiddleware } from "./shared/middlewares/requestIdAdder";
 import winstonLogger from "./shared/logger/winstonExpressLogger";
 // import { logger } from "./shared/logger/logger";
 import { stripeWebhook } from "./modules/subscription/subscription.webhook";
+import { serveFromStorage } from "./shared/middlewares/storedFileServer";
 
 const app: express.Application = express();
 
@@ -86,9 +87,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 //file retrieval - Static files with CORS headers
-app.use("/images", cors(corsOptions), express.static("uploads/images"));
-app.use("/videos", cors(corsOptions), express.static("uploads/videos"));
-app.use("/docs", cors(corsOptions), express.static("uploads/docs"));
+// Local disk first; files that only exist in MinIO/S3 get a signed redirect
+app.use("/images", cors(corsOptions), express.static("uploads/images"), serveFromStorage("images"));
+app.use("/videos", cors(corsOptions), express.static("uploads/videos"), serveFromStorage("videos"));
+app.use("/docs", cors(corsOptions), express.static("uploads/docs"), serveFromStorage("docs"));
 app.use(express.static("uploads"));
 app.get("/health", (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({

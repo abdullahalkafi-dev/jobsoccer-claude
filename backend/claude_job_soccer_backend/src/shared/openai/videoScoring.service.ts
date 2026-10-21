@@ -6,6 +6,7 @@ import {
   removeTempFile as cleanupTempFile,
 } from "../ai/media/audioExtractor";
 import { openai } from "./openai.config";
+import { getLocalCopy } from "../storage";
 import { CandidateRole } from "../../modules/user/user.interface";
 import { logger } from "../logger/logger";
 import {
@@ -349,17 +350,30 @@ export async function scoreStaffVideosFromStored(params: {
 
   const questionSet = getVideoScoringQuestions(role, position)!;
 
-  // Resolve relative paths to absolute
-  const filePaths = videoUrls.map((url) =>
-    path.join(process.cwd(), "uploads", url)
-  );
+  // Local copy when present, otherwise a temporary download from storage (MinIO/S3)
+  const copies = (
+    await Promise.all(
+      videoUrls.map((url) =>
+        getLocalCopy(url).catch((error) => {
+          logger.warn(`Stored video not found: ${url}`, { error: error.message });
+          return null;
+        })
+      )
+    )
+  ).filter((copy): copy is NonNullable<typeof copy> => copy !== null);
+  const filePaths = copies.map((copy) => copy.path);
 
   logger.info(
     `Starting video re-scoring for ${role} - ${position} (${filePaths.length} videos)`
   );
 
   // Step 1: Transcribe all videos
-  const transcript = await transcribeAllVideos(filePaths);
+  let transcript: string;
+  try {
+    transcript = await transcribeAllVideos(filePaths);
+  } finally {
+    copies.forEach((copy) => copy.release());
+  }
   if (!transcript.trim()) {
     logger.warn("Empty transcript — cannot score videos");
     return { totalScore: 0, categoryScores: {}, brief: "No speech detected in videos", transcriptLength: 0 };
