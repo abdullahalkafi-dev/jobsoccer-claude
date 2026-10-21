@@ -10,6 +10,7 @@ import {
   Settings,
   LogOut,
   BadgeCheck,
+  Brain,
 } from "lucide-react";
 import {
   Sidebar,
@@ -41,6 +42,7 @@ const navLinks: NavLink[] = [
   { href: "/users", label: "Users", icon: Users },
   { href: "/payments", label: "Payments", icon: CreditCard },
   { href: "/verifications", label: "Verifications", icon: BadgeCheck },
+  { href: "/ai-reviews", label: "AI Reviews", icon: Brain },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
