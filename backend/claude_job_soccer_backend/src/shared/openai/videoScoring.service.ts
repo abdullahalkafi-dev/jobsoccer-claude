@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { execSync, exec } from "child_process";
-import { promisify } from "util";
-
-const execAsync = promisify(exec);
-import os from "os";
+import {
+  extractAudio,
+  isFfmpegAvailable,
+  removeTempFile as cleanupTempFile,
+} from "../ai/media/audioExtractor";
 import { openai } from "./openai.config";
 import { CandidateRole } from "../../modules/user/user.interface";
 import { logger } from "../logger/logger";
@@ -39,70 +39,6 @@ const SCORING_MAX_TOKENS = 1000;
 // Max file size for Whisper API (25MB) — after audio extraction, files are ~2-5MB
 const MAX_WHISPER_FILE_SIZE = 25 * 1024 * 1024;
 
-// ─── Audio Extraction ────────────────────────────────────────────────────────
-
-/**
- * Check if ffmpeg is available on the system.
- */
-let _ffmpegAvailable: boolean | null = null;
-function isFfmpegAvailable(): boolean {
-  if (_ffmpegAvailable !== null) return _ffmpegAvailable;
-  try {
-    execSync("ffmpeg -version", { stdio: "ignore" });
-    _ffmpegAvailable = true;
-  } catch {
-    _ffmpegAvailable = false;
-    logger.warn("ffmpeg not found — video files will be sent directly to Whisper (may fail for large files)");
-  }
-  return _ffmpegAvailable;
-}
-
-/**
- * Extract audio from a video file using ffmpeg (async — does not block event loop).
- * Converts to mp3 at 64kbps mono — produces ~0.5MB per minute.
- * Returns the path to the extracted audio file, or null if extraction fails.
- */
-async function extractAudio(videoPath: string): Promise<string | null> {
-  if (!isFfmpegAvailable()) return null;
-
-  try {
-    const tempDir = os.tmpdir();
-    const audioFileName = `whisper_${Date.now()}_${Math.random().toString(36).slice(2)}.mp3`;
-    const audioPath = path.join(tempDir, audioFileName);
-
-    // Extract audio: mono, 64kbps mp3 — optimized for speech
-    await execAsync(
-      `ffmpeg -i "${videoPath}" -vn -ac 1 -ab 64k -ar 16000 -f mp3 "${audioPath}" -y`,
-      { timeout: 60000 } // 60s timeout
-    );
-
-    if (fs.existsSync(audioPath)) {
-      const stats = fs.statSync(audioPath);
-      logger.info(
-        `Audio extracted: ${(stats.size / 1024 / 1024).toFixed(2)}MB from ${path.basename(videoPath)}`
-      );
-      return audioPath;
-    }
-    return null;
-  } catch (error: any) {
-    logger.error(`Failed to extract audio from ${videoPath}:`, {
-      error: error.message,
-    });
-    return null;
-  }
-}
-
-/**
- * Clean up a temporary audio file.
- */
-function cleanupTempFile(filePath: string): void {
-  try {
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  } catch {
-    // ignore cleanup errors
-  }
-}
-
 // ─── Transcription ───────────────────────────────────────────────────────────
 
 /**
@@ -126,7 +62,7 @@ async function transcribeVideo(filePath: string): Promise<string> {
   let tempAudioPath: string | null = null;
 
   const stats = fs.statSync(absolutePath);
-  if (stats.size > MAX_WHISPER_FILE_SIZE || isFfmpegAvailable()) {
+  if (stats.size > MAX_WHISPER_FILE_SIZE || (await isFfmpegAvailable())) {
     // Always extract audio if ffmpeg is available (cheaper & faster upload)
     tempAudioPath = await extractAudio(absolutePath);
     if (tempAudioPath) {
