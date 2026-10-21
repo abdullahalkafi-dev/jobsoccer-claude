@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQuery,
-  tagTypes: ["user", "verification"],
+  tagTypes: ["user", "verification", "aiReview"],
   endpoints: (builder) => ({
     //user registration API
     getUserRegister: builder.query({
@@ -182,6 +182,50 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["verification"],
     }),
+
+    ///----------------- AI interview assessments -----------------///
+    //assessments flagged for a person to check
+    getAiReviewQueue: builder.query({
+      query: ({ page = 1, limit = 20 }: { page?: number; limit?: number } = {}) => ({
+        url: `/ai-evaluation/review-queue?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      providesTags: ["aiReview"],
+    }),
+
+    //full assessment of one candidate (admin view)
+    getCandidateAssessment: builder.query({
+      query: (userId: string) => ({
+        url: `/ai-evaluation/candidate/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["aiReview"],
+    }),
+
+    //record a human review or score correction
+    addAiCorrection: builder.mutation({
+      query: ({
+        id,
+        body,
+      }: {
+        id: string;
+        body: { questionId?: number; newScore?: number | null; reviewStatus?: "reviewed" | "needs_follow_up"; reason: string };
+      }) => ({
+        url: `/ai-evaluation/${id}/corrections`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["aiReview"],
+    }),
+
+    //queue a new assessment from the candidate's current videos
+    rescoreCandidate: builder.mutation({
+      query: (userId: string) => ({
+        url: `/ai-evaluation/candidate/${userId}/rescore`,
+        method: "POST",
+      }),
+      invalidatesTags: ["aiReview"],
+    }),
   }),
 });
 
@@ -195,4 +239,8 @@ export const {
   useGetUserDetailsQuery,
   useGetVerificationRequestsQuery,
   useUpdateVerificationStatusMutation,
+  useGetAiReviewQueueQuery,
+  useGetCandidateAssessmentQuery,
+  useAddAiCorrectionMutation,
+  useRescoreCandidateMutation,
 } = baseApi;
