@@ -32,6 +32,10 @@ const candidateResumeSchema = new Schema<TCandidateResume>(
       default: false,
       index: true,
     },
+    // Text read from the PDF for AI job matching (cached)
+    extractedText: { type: String },
+    textStatus: { type: String, enum: ["ok", "no_text_layer"] },
+    textExtractedAt: { type: Date },
   },
   { timestamps: true, versionKey: false }
 );

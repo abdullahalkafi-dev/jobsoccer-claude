@@ -8,6 +8,9 @@ export type TCandidateResume = {
   resumeFileName: string;
   resumeUrl: string;
   isActive: boolean; // Mark which resume is currently active/primary
+  extractedText?: string; // text read from the PDF for AI job matching
+  textStatus?: "ok" | "no_text_layer";
+  textExtractedAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 };

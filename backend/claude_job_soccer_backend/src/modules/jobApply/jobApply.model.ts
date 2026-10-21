@@ -29,6 +29,13 @@ const jobApplySchema = new Schema<TJobApply>(
     resumeUrl: {
       type: String,
     },
+    // Job match v2 (background): status, reasons and errors
+    aiMatchStatus: {
+      type: String,
+      enum: ["queued", "processing", "completed", "failed"],
+    },
+    aiMatchDetails: { type: Schema.Types.Mixed },
+    aiMatchError: { type: String },
     isDeleted: {
       type: Boolean,
       default: false,

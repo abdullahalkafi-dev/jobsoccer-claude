@@ -15,6 +15,9 @@ import { CandidateLicenseAndCertification } from "../candidateLicensesAndCertifi
 import { CandidateEducationService } from "../candidateEducation/candidateEducation.service";
 import { CandidateLicensesAndCertificationService } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.service";
 import { getCandidateModel } from "../../shared/util/getCandidateModel";
+import { FriendList } from "../friendlist/friendlist.model";
+import { UserType } from "../user/user.interface";
+import { isJobMatchV2Enabled, JobMatchService } from "./jobMatch.service";
 
 /**
  * Calculate total years of experience from experience records
@@ -180,12 +183,12 @@ const applyToJob = async (
   }
   // For player roles, only use profile data (no experience, education, certifications)
 
-  // Calculate AI match score between job and candidate
-  const aiMatchPercentage = await calculateJobMatchScore(
-    job,
-    enrichedCandidateData,
-    candidate.role as string
-  );
+  // Job match v2 runs in the background (resume + interview assessment);
+  // otherwise the original synchronous match is used.
+  const matchInBackground = isJobMatchV2Enabled();
+  const aiMatchPercentage = matchInBackground
+    ? undefined
+    : await calculateJobMatchScore(job, enrichedCandidateData, candidate.role as string);
 
   // Check if job has a required AI score threshold
   //TODO: Temporarily disable AI score threshold check
@@ -203,10 +206,8 @@ const applyToJob = async (
     application = await JobApply.findByIdAndUpdate(
       existingApplication._id,
       {
-        appliedAt: new Date(),
-        aiMatchPercentage,
-        resumeUrl,
-        isDeleted: false,
+        $set: { appliedAt: new Date(), resumeUrl, isDeleted: false, ...(aiMatchPercentage !== undefined && { aiMatchPercentage }) },
+        ...(matchInBackground && { $unset: { aiMatchPercentage: 1, aiMatchDetails: 1, aiMatchStatus: 1 } }),
       },
       { new: true }
     );
@@ -225,6 +226,11 @@ const applyToJob = async (
   // Increment job application count
   await Job.updateOne({ _id: jobId }, { $inc: { applicationCount: 1 } });
 
+  if (matchInBackground) {
+    await JobMatchService.queueMatch(application!._id.toString()).catch(() => undefined);
+    application = await JobApply.findById(application!._id);
+  }
+
   return application!.toObject();
 };
 
@@ -235,7 +241,8 @@ const applyToJob = async (
  */
 const getApplicationsByJob = async (
   jobId: string,
-  query: Record<string, any>
+  query: Record<string, any>,
+  viewer?: { id: string; userType: string }
 ) => {
   // Validate job ID
   if (!Types.ObjectId.isValid(jobId)) {
@@ -246,6 +253,10 @@ const getApplicationsByJob = async (
   const job = await Job.findById(jobId);
   if (!job) {
     throw new AppError(StatusCodes.NOT_FOUND, "Job not found");
+  }
+  // Only the employer who posted the job (or an admin) sees its applicants
+  if (viewer && viewer.userType !== UserType.ADMIN && job.creator.creatorId.toString() !== viewer.id) {
+    throw new AppError(StatusCodes.FORBIDDEN, "You can only view applicants of your own jobs");
   }
 
   // Pagination
@@ -288,7 +299,18 @@ const getApplicationsByJob = async (
     applicantProfileImage: app.candidateId.profileImage,
     candidateId: app.candidateId._id,
     candidateRole: app.candidateId.role,
-    aiMatchPercentage: app.aiMatchPercentage || null,
+    aiMatchPercentage: app.aiMatchPercentage ?? null,
+    aiMatchStatus: app.aiMatchStatus ?? (app.aiMatchPercentage !== undefined ? "completed" : null),
+    aiMatchReasons: app.aiMatchDetails
+      ? {
+          metRequirements: app.aiMatchDetails.metRequirements,
+          missingRequirements: app.aiMatchDetails.missingRequirements,
+          summary: app.aiMatchDetails.summary,
+          confidence: app.aiMatchDetails.confidence,
+          usedResume: app.aiMatchDetails.usedResume,
+          usedInterview: app.aiMatchDetails.usedInterview,
+        }
+      : null,
     resumeUrl: app.resumeUrl || null,
     appliedAt: app.appliedAt,
     createdAt: app.createdAt,
@@ -309,10 +331,35 @@ const getApplicationsByJob = async (
  * Get applicant profile details with necessary info
  * Returns full candidate profile based on their role
  */
-const getApplicantProfile = async (candidateId: string) => {
+/**
+ * Who may open an applicant's full profile: the candidate, an admin, an employer
+ * the candidate applied to, or a connection the candidate accepted.
+ */
+const canViewApplicant = async (viewer: { id: string; userType: string }, candidateId: string): Promise<boolean> => {
+  if (viewer.userType === UserType.ADMIN || viewer.id === candidateId) return true;
+  const ownJobIds = await Job.find({ "creator.creatorId": viewer.id }).distinct("_id");
+  if (ownJobIds.length && (await JobApply.exists({ candidateId, jobId: { $in: ownJobIds }, isDeleted: false }))) {
+    return true;
+  }
+  return !!(await FriendList.exists({
+    status: "accepted",
+    $or: [
+      { senderId: viewer.id, receiverId: candidateId },
+      { senderId: candidateId, receiverId: viewer.id },
+    ],
+  }));
+};
+
+const getApplicantProfile = async (
+  candidateId: string,
+  viewer?: { id: string; userType: string }
+) => {
   // Validate candidate ID
   if (!Types.ObjectId.isValid(candidateId)) {
     throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate ID");
+  }
+  if (viewer && !(await canViewApplicant(viewer, candidateId))) {
+    throw new AppError(StatusCodes.FORBIDDEN, "This candidate has not applied to your jobs or shared their profile with you");
   }
 
   // Get user/candidate basic info
@@ -335,9 +382,7 @@ const getApplicantProfile = async (candidateId: string) => {
   const educations = await CandidateEducationService.getAllEducationsByUser(
     candidateId
   );
-  const experiences = await CandidateEducationService.getAllEducationsByUser(
-    candidateId
-  );
+  const experiences = await CandidateExperience.find({ userId: candidateId }).lean();
   const certifications =
     await CandidateLicensesAndCertificationService.getAllLicensesAndCertificationsByUser(
       candidateId
