@@ -5,6 +5,15 @@ import socketServer from "./socket/socketServer";
 import { logger } from "./shared/logger/logger";
 import { seedSuperAdmin } from "./shared/db/seedSuperAdmin";
 import { startAiBackgroundWork } from "./shared/ai/aiWorker";
+import { assertSafeEnvironment } from "./shared/safety/envGuard";
+
+// Refuse to start a dev/staging process against the client's production database
+try {
+  assertSafeEnvironment();
+} catch (error) {
+  logger.error((error as Error).message);
+  process.exit(1);
+}
 
 //uncaught exception
 process.on("uncaughtException", (error) => {

@@ -1,0 +1,110 @@
+# Staging stack (dev.jobsoccer.com) - runs the `ai-workflow` branch next to the live site.
+# Separate project name, containers, network, volume and ports from docker-compose.prod.yml.
+# Ports bind to 127.0.0.1; Nginx exposes dev / api-dev / admin-dev (see deploy/staging/nginx).
+# Live site ports: 3000 / 8000 / 4000. Staging ports: 3100 / 8100 / 4100.
+#
+# Run from /var/www/jobsoccer-staging (a separate clone; never from the live folder):
+#   docker compose -f docker-compose.staging.yml up -d --build
+name: jobsoccer_staging
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: jobsoccer_redis_staging
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_staging_data:/data
+    networks:
+      - jobsoccer_staging_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  backend:
+    build:
+      context: ./backend/claude_job_soccer_backend
+      dockerfile: Dockerfile
+    container_name: jobsoccer_backend_staging
+    restart: unless-stopped
+    env_file:
+      - ./backend/claude_job_soccer_backend/.env
+    environment:
+      - NODE_ENV=production
+      - APP_ENV=staging
+      - PORT=8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "127.0.0.1:8100:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    mem_limit: 1g
+    networks:
+      - jobsoccer_staging_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_URL: https://api-dev.jobsoccer.com
+        NEXT_PUBLIC_HOSTNAME: api-dev.jobsoccer.com
+        NEXT_PUBLIC_PORT: "8000"
+        NEXT_PUBLIC_SOCKET_URL: https://api-dev.jobsoccer.com
+    container_name: jobsoccer_frontend_staging
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "127.0.0.1:3100:3000"
+    mem_limit: 512m
+    networks:
+      - jobsoccer_staging_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  admin_dashboard:
+    build:
+      context: ./admin_dashboard
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: https://api-dev.jobsoccer.com
+        NEXT_PUBLIC_HOSTNAME: api-dev.jobsoccer.com
+        NEXT_PUBLIC_PORT: "8000"
+    container_name: jobsoccer_dashboard_staging
+    restart: unless-stopped
+    env_file:
+      - ./admin_dashboard/.env
+    ports:
+      - "127.0.0.1:4100:4000"
+    mem_limit: 512m
+    networks:
+      - jobsoccer_staging_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis_staging_data:
+
+networks:
+  jobsoccer_staging_network:
+    driver: bridge
