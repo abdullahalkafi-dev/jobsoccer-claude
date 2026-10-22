@@ -164,8 +164,20 @@ const searchCandidates = async (
 };
 
 /**
+ * Candidates shown first on the home page (manual list, no DB field).
+ * Edit this list to change who is featured; the rest follow in a fixed order.
+ */
+const PINNED_FEATURED_CANDIDATE_IDS = [
+  "9d7b48a1d2396fea4042422d", // Jesse Montana - On field staff
+  "9f27b9693b6ab15a2a8363d7", // María González - Office Staff
+  "8cfb63a228e5356eb4235651", // Tyler Brooks - College/University Player
+].map((id) => new Types.ObjectId(id));
+
+const FEATURED_PER_CATEGORY = 4;
+
+/**
  * Get featured candidates grouped by category
- * Returns max 4 candidates per category
+ * Returns max 4 candidates per category, pinned candidates first, then oldest first
  * When authenticated, includes relationship fields for each candidate
  */
 const getFeaturedCandidates = async (userId?: string) => {
@@ -182,15 +194,33 @@ const getFeaturedCandidates = async (userId?: string) => {
 
   await Promise.all(
     categories.map(async (category) => {
-      const users = await User.find({
+      const baseFilter = {
         userType: "candidate",
         role: category,
         isDeleted: { $ne: true },
         profileId: { $exists: true, $ne: null },
-        _id: { $ne: userId ? new Types.ObjectId(userId) : undefined }, // Exclude self if authenticated
+      };
+      const notSelf = userId ? { $ne: new Types.ObjectId(userId) } : undefined; // Exclude self if authenticated
+
+      // Pinned candidates first (in list order), then the rest in a fixed order
+      const pinnedUsers = (
+        await User.find({
+          ...baseFilter,
+          _id: { $in: PINNED_FEATURED_CANDIDATE_IDS, ...notSelf },
+        }).lean()
+      ).sort(
+        (a, b) =>
+          PINNED_FEATURED_CANDIDATE_IDS.findIndex((id) => id.equals(a._id)) -
+          PINNED_FEATURED_CANDIDATE_IDS.findIndex((id) => id.equals(b._id))
+      );
+      const otherUsers = await User.find({
+        ...baseFilter,
+        _id: { $nin: PINNED_FEATURED_CANDIDATE_IDS, ...notSelf },
       })
-        .limit(4)
+        .sort({ _id: 1 })
+        .limit(FEATURED_PER_CATEGORY - pinnedUsers.length)
         .lean();
+      const users = [...pinnedUsers, ...otherUsers].slice(0, FEATURED_PER_CATEGORY);
 
       // Batch fetch relationship data for performance (only if user is authenticated)
       let shortlistMap = new Map<string, boolean>();
