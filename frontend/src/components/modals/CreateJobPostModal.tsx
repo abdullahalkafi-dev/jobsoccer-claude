@@ -46,7 +46,7 @@ const jobCategories = [
   { value: "Amateur Player", label: "Amateur Player" },
   { value: "High School Player", label: "High School Player" },
   { value: "College/University Player", label: "College/University Player" }, 
-  { value: "On field staff", label: "On Field Staff" },
+  { value: "On field staff", label: "On-Field Staff" },
   { value: "Office Staff", label: "Office Staff" },
 ];
 

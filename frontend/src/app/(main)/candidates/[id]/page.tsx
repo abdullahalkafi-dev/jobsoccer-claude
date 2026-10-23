@@ -1,5 +1,6 @@
 "use client";
 
+import { roleLabel } from "@/constants/selectOptions";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -157,7 +158,7 @@ export default function UserProfilePage() {
     ? `${BASE_URL}${user.bannerImage}`
     : null;
 
-  const displayRole = user?.role;
+  const displayRole = roleLabel(user?.role);
 
   // Get verification status
   const verificationStatus = user?.adminVerificationStatus;
