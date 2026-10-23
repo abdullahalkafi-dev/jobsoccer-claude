@@ -1,5 +1,6 @@
 "use client";
 
+import { roleLabel } from "@/constants/selectOptions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -166,7 +167,7 @@ export default function MyProfilePage() {
     ? `${BASE_URL}${currentUser.bannerImage}`
     : null;
 
-  const displayRole = currentUser?.role;
+  const displayRole = roleLabel(currentUser?.role);
 
   // Handle loading state
   useEffect(() => {
