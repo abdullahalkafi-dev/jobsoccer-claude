@@ -6,10 +6,10 @@ enum TPosition {
   COMMUNITY_MANAGER = "Community Manager",
   DATA_ANALYST = "Data Analyst",
   DIGITAL_MARKETING = "Digital Marketing",
-  MEDICAL_STAFF = "Medical Staff",
-  PERFORMANCE_STAFF = "Performance Staff",
-  EQUIPMENT_STAFF = "Equipment Staff",
-  SALES = "Sales",
+  EVENT_MANAGER = "Event Manager",
+  NUTRITIONIST = "Nutritionist",
+  PR_COMMUNICATIONS_MANAGER = "PR & Communications Manager",
+  TEAM_MANAGER = "Team Manager",
 }
 
 
