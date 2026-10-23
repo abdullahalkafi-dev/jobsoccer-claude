@@ -46,7 +46,7 @@ function CandidatesPage() {
   const candidateSections: CandidateSectionConfig[] = useMemo(
     () => [
       {
-        title: "On Field Staff",
+        title: "On-Field Staff",
         dataKey: "Onfieldstaff",
         searchRole: CandidateRole.ON_FIELD_STAFF,
       },

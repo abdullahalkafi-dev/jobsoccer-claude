@@ -208,6 +208,11 @@ export const availabilityOptions = ["Now", "Soon", "Later"] as const;
 export type TAvailability = (typeof availabilityOptions)[number];
 
 // Office Staff Position options
+// The stored role value is "On field staff"; the client writes "On-Field Staff".
+// Display only: the stored value is used in permission checks and must not change.
+export const roleLabel = (role?: string | null): string =>
+  role === "On field staff" ? "On-Field Staff" : role ?? "";
+
 export const officeStaffPositionOptions = [
   "Administrative Director",
   "Community Manager",
