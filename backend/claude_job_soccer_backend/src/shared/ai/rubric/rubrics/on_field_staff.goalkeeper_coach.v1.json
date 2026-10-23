@@ -5,7 +5,7 @@
   "extends": "interview.base.v1",
   "sourceFile": "GK Coach Final.docx",
   "role": "On field staff",
-  "position": "GK Coach",
+  "position": "Goalkeeper Coach",
   "displayName": "Goalkeeper Coach",
   "clientRoleId": "goalkeeper_coach",
   "evaluationApproach": {

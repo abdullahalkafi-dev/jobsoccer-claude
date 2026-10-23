@@ -34,7 +34,6 @@ import {
   weightUnitOptions,
   officeStaffPositionOptions,
   fieldStaffPositionOptions,
-  positionLabel,
   amaturePlayerNationalTeamCategoryOptions,
   professionalPlayerNationalTeamCategoryOptions,
 } from "@/constants/selectOptions";
@@ -360,7 +359,7 @@ export default function EditProfileModal({
                       <SelectContent>
                         {fieldStaffPositionOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {positionLabel(item)}
+                            {item}
                           </SelectItem>
                         ))}
                       </SelectContent>

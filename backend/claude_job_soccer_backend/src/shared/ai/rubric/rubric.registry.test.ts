@@ -82,11 +82,11 @@ describe("rubric registry", () => {
     }
   });
 
-  it("uses the amateur guide for Head Coach and the legacy Forward spelling still resolves", () => {
+  it("uses the amateur guide for Head Coach and finds Attacking Coach by its final name", () => {
     expect(resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position: "Head Coach" })?.rubricId).toBe(
       "on_field_staff.head_coach.amateur.v1"
     );
-    expect(resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position: "Specific Forward Coach" })?.displayName).toBe(
+    expect(resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position: "Attacking Coach" })?.displayName).toBe(
       "Attacking Coach"
     );
     expect(resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position: "Head Coach", level: "professional" })).toBeNull();

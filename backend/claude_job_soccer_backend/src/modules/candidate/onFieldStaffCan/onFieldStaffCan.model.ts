@@ -1,9 +1,6 @@
 import { model, Schema } from "mongoose";
 import { countryList } from "../../../shared/constant/country.constant";
-import {
-  LEGACY_POSITION_ALIASES,
-  TPosition,
-} from "../../../shared/constant/video.constant";
+import { TPosition } from "../../../shared/constant/video.constant";
 
 
 
@@ -53,8 +50,7 @@ const onFieldStaffCanSchema = new Schema<TOnFieldStaffCan>(
      category: { type: String, required: false, trim: true },
     position: {
       type: String,
-      // legacy spellings stay valid so existing documents still save
-      enum: [...Object.values(TPosition), ...Object.keys(LEGACY_POSITION_ALIASES)],
+      enum: Object.values(TPosition),
       required: true,
     },
     videos: [

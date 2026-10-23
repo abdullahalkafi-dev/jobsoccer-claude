@@ -19,9 +19,9 @@ export function SpecificCoachVideoForm({
   fieldStaffPosition,
 }: IVideoFormProps & {
   fieldStaffPosition:
-    | FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH
-    | FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH
-    | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH;
+    | FieldStaffPosition.DEFENSIVE_COACH
+    | FieldStaffPosition.ATTACKING_COACH
+    | FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH;
 }) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 

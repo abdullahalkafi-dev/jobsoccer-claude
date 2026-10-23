@@ -20,7 +20,6 @@ import {
   availabilityOptions,
   countryList,
   fieldStaffPositionOptions,
-  positionLabel,
   genderOptions,
 } from "@/constants/selectOptions";
 
@@ -178,7 +177,7 @@ export function FieldStaffProfessionalInfoForm({
                 <SelectContent>
                   {fieldStaffPositionOptions.map((pos) => (
                     <SelectItem key={pos} value={pos}>
-                      {positionLabel(pos)}
+                      {pos}
                     </SelectItem>
                   ))}
                 </SelectContent>

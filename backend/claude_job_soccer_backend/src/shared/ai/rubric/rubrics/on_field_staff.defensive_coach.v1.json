@@ -5,7 +5,7 @@
   "extends": "interview.base.v1",
   "sourceFile": "Defensive Coach Final.docx",
   "role": "On field staff",
-  "position": "Specific Defensive Coach",
+  "position": "Defensive Coach",
   "displayName": "Defensive Coach",
   "clientRoleId": "defensive_coach",
   "evaluationApproach": {

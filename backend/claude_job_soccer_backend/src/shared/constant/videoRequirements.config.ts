@@ -32,8 +32,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [TPosition.GK_COACH]: {
-    position: TPosition.GK_COACH,
+  [TPosition.GOALKEEPER_COACH]: {
+    position: TPosition.GOALKEEPER_COACH,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -52,8 +52,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [TPosition.VIDEO_ANALYST_COACH]: {
-    position: TPosition.VIDEO_ANALYST_COACH,
+  [TPosition.VIDEO_ANALYST]: {
+    position: TPosition.VIDEO_ANALYST,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -62,8 +62,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [TPosition.SPECIFIC_OFFENSIVE_COACH]: {
-    position: TPosition.SPECIFIC_OFFENSIVE_COACH,
+  [TPosition.ATTACKING_COACH]: {
+    position: TPosition.ATTACKING_COACH,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -72,8 +72,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [TPosition.SPECIFIC_DEFENSIVE_COACH]: {
-    position: TPosition.SPECIFIC_DEFENSIVE_COACH,
+  [TPosition.DEFENSIVE_COACH]: {
+    position: TPosition.DEFENSIVE_COACH,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -82,8 +82,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [TPosition.SPECIFIC_TECHNICAL_COACH]: {
-    position: TPosition.SPECIFIC_TECHNICAL_COACH,
+  [TPosition.TECHNICAL_DEVELOPMENT_COACH]: {
+    position: TPosition.TECHNICAL_DEVELOPMENT_COACH,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -174,8 +174,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [OfficeStaffPosition.MEDICAL_STAFF]: {
-    position: OfficeStaffPosition.MEDICAL_STAFF,
+  [OfficeStaffPosition.EVENT_MANAGER]: {
+    position: OfficeStaffPosition.EVENT_MANAGER,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -184,8 +184,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [OfficeStaffPosition.PERFORMANCE_STAFF]: {
-    position: OfficeStaffPosition.PERFORMANCE_STAFF,
+  [OfficeStaffPosition.NUTRITIONIST]: {
+    position: OfficeStaffPosition.NUTRITIONIST,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -194,8 +194,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [OfficeStaffPosition.EQUIPMENT_STAFF]: {
-    position: OfficeStaffPosition.EQUIPMENT_STAFF,
+  [OfficeStaffPosition.PR_COMMUNICATIONS_MANAGER]: {
+    position: OfficeStaffPosition.PR_COMMUNICATIONS_MANAGER,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [
@@ -204,8 +204,8 @@ export const VIDEO_REQUIREMENTS: Record<string, IPositionVideoConfig> = {
     ],
   },
 
-  [OfficeStaffPosition.SALES]: {
-    position: OfficeStaffPosition.SALES,
+  [OfficeStaffPosition.TEAM_MANAGER]: {
+    position: OfficeStaffPosition.TEAM_MANAGER,
     totalVideos: 2,
     maxDuration: 180,
     requiredVideoTypes: [

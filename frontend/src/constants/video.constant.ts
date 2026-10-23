@@ -16,16 +16,16 @@ export enum VideoType {
 
 export enum FieldStaffPosition {
   ASSISTANT_COACH = "Assistant Coach",
-  SPECIFIC_DEFENSIVE_COACH = "Specific Defensive Coach",
+  DEFENSIVE_COACH = "Defensive Coach",
   DIRECTOR_OF_COACHING = "Director of Coaching",
-  SPECIFIC_OFFENSIVE_COACH = "Specific Offensive Coach",
-  GK_COACH = "GK Coach",
+  ATTACKING_COACH = "Attacking Coach",
+  GOALKEEPER_COACH = "Goalkeeper Coach",
   HEAD_COACH = "Head Coach",
   MENTAL_COACH = "Mental Coach",
   SCOUT = "Scout",
-  SPECIFIC_TECHNICAL_COACH = "Specific Technical Coach",
+  TECHNICAL_DEVELOPMENT_COACH = "Technical Development Coach",
   TECHNICAL_DIRECTOR = "Technical Director",
-  VIDEO_ANALYST_COACH = "Video Analyst Coach",
+  VIDEO_ANALYST = "Video Analyst",
   ACADEMY_DIRECTOR = "Academy Director",
 }
 
@@ -36,8 +36,8 @@ export enum OfficeStaffPosition {
   COMMUNITY_MANAGER = "Community Manager",
   DATA_ANALYST = "Data Analyst",
   DIGITAL_MARKETING = "Digital Marketing",
-  MEDICAL_STAFF = "Medical Staff",
-  PERFORMANCE_STAFF = "Performance Staff",
-  EQUIPMENT_STAFF = "Equipment Staff",
-  SALES = "Sales",
+  EVENT_MANAGER = "Event Manager",
+  NUTRITIONIST = "Nutritionist",
+  PR_COMMUNICATIONS_MANAGER = "PR & Communications Manager",
+  TEAM_MANAGER = "Team Manager",
 }

@@ -5,7 +5,7 @@
   "extends": "interview.base.v1",
   "sourceFile": "Video Analysis Final.docx",
   "role": "On field staff",
-  "position": "Video Analyst Coach",
+  "position": "Video Analyst",
   "displayName": "Video Analyst",
   "evaluationApproach": {
     "summary": "The AI must evaluate each response specifically for the Video Analyst position, considering tactical understanding, analytical process, evidence quality, communication, workflow and professional judgment. No single software platform or tactical opinion is required.",
