@@ -53,6 +53,7 @@ export interface ICandidate {
   profileImage: string | null;
   userType: string;
   profile: Profile;
+  aiProfileScore?: number | null;
   isShortlisted?: boolean;
   friendRequestStatus?: {
     status: "pending" | "accepted" | "rejected";
