@@ -1,5 +1,4 @@
 import { CandidateRole } from "../../modules/user/user.interface";
-import { normalizeOnFieldPosition } from "./video.constant";
 
 /**
  * Video Scoring Questions Configuration
@@ -437,11 +436,11 @@ const MENTAL_COACH_QUESTIONS: IVideoScoringQuestionSet = {
 
 registerOnFieldStaffQuestions("Mental Coach", MENTAL_COACH_QUESTIONS);
 
-// ─── Video Analyst Coach ─────────────────────────────────────────────────────
+// ─── Video Analyst ─────────────────────────────────────────────────────
 
-const VIDEO_ANALYST_COACH_QUESTIONS: IVideoScoringQuestionSet = {
+const VIDEO_ANALYST_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "Video Analyst Coach",
+  position: "Video Analyst",
   totalScore: 100,
   categories: [
     {
@@ -567,7 +566,7 @@ const VIDEO_ANALYST_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("Video Analyst Coach", VIDEO_ANALYST_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Video Analyst", VIDEO_ANALYST_QUESTIONS);
 
 // ─── Director of Coaching ────────────────────────────────────────────────────
 
@@ -701,11 +700,11 @@ const DIRECTOR_OF_COACHING_QUESTIONS: IVideoScoringQuestionSet = {
 
 registerOnFieldStaffQuestions("Director of Coaching", DIRECTOR_OF_COACHING_QUESTIONS);
 
-// ─── GK Coach ────────────────────────────────────────────────────────────────
+// ─── Goalkeeper Coach ────────────────────────────────────────────────────────────────
 
-const GK_COACH_QUESTIONS: IVideoScoringQuestionSet = {
+const GOALKEEPER_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "GK Coach",
+  position: "Goalkeeper Coach",
   totalScore: 100,
   categories: [
     {
@@ -831,7 +830,7 @@ const GK_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("GK Coach", GK_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Goalkeeper Coach", GOALKEEPER_COACH_QUESTIONS);
 
 // ─── Head Coach ──────────────────────────────────────────────────────────────
 
@@ -1229,11 +1228,11 @@ const ASSISTANT_COACH_QUESTIONS: IVideoScoringQuestionSet = {
 
 registerOnFieldStaffQuestions("Assistant Coach", ASSISTANT_COACH_QUESTIONS);
 
-// ─── Specific Offensive Coach (legacy name: Specific Forward Coach) ──────────────────────────────────────────────────
+// ─── Attacking Coach ──────────────────────────────────────────────────
 
-const SPECIFIC_FORWARD_COACH_QUESTIONS: IVideoScoringQuestionSet = {
+const ATTACKING_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "Specific Offensive Coach",
+  position: "Attacking Coach",
   totalScore: 100,
   categories: [
     {
@@ -1359,13 +1358,13 @@ const SPECIFIC_FORWARD_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("Specific Offensive Coach", SPECIFIC_FORWARD_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Attacking Coach", ATTACKING_COACH_QUESTIONS);
 
-// ─── Specific Defensive Coach ────────────────────────────────────────────────
+// ─── Defensive Coach ────────────────────────────────────────────────
 
-const SPECIFIC_DEFENSIVE_COACH_QUESTIONS: IVideoScoringQuestionSet = {
+const DEFENSIVE_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "Specific Defensive Coach",
+  position: "Defensive Coach",
   totalScore: 100,
   categories: [
     {
@@ -1491,13 +1490,13 @@ const SPECIFIC_DEFENSIVE_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("Specific Defensive Coach", SPECIFIC_DEFENSIVE_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Defensive Coach", DEFENSIVE_COACH_QUESTIONS);
 
-// ─── Specific Technical Coach ────────────────────────────────────────────────
+// ─── Technical Development Coach ────────────────────────────────────────────────
 
-const SPECIFIC_TECHNICAL_COACH_QUESTIONS: IVideoScoringQuestionSet = {
+const TECHNICAL_DEVELOPMENT_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   role: CandidateRole.ON_FIELD_STAFF,
-  position: "Specific Technical Coach",
+  position: "Technical Development Coach",
   totalScore: 100,
   categories: [
     {
@@ -1623,7 +1622,7 @@ const SPECIFIC_TECHNICAL_COACH_QUESTIONS: IVideoScoringQuestionSet = {
   ],
 };
 
-registerOnFieldStaffQuestions("Specific Technical Coach", SPECIFIC_TECHNICAL_COACH_QUESTIONS);
+registerOnFieldStaffQuestions("Technical Development Coach", TECHNICAL_DEVELOPMENT_COACH_QUESTIONS);
 
 // ─── Academy Director ────────────────────────────────────────────────────────
 
@@ -1776,7 +1775,7 @@ export function getVideoScoringQuestions(
   }
 
   if (role === CandidateRole.ON_FIELD_STAFF && position) {
-    return ON_FIELD_STAFF_QUESTIONS.get(normalizeOnFieldPosition(position)) || null;
+    return ON_FIELD_STAFF_QUESTIONS.get(position) || null;
   }
 
   return null;

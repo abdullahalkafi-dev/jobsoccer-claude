@@ -5,7 +5,7 @@
   "extends": "interview.base.v1",
   "sourceFile": "Technical Player Development Final .docx",
   "role": "On field staff",
-  "position": "Specific Technical Coach",
+  "position": "Technical Development Coach",
   "displayName": "Technical Development Coach",
   "clientRoleId": "technical_development_coach",
   "evaluationApproach": {

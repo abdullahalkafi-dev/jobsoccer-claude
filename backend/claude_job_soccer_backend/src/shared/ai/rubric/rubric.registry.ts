@@ -1,4 +1,3 @@
-import { normalizeOnFieldPosition } from "../../constant/video.constant";
 import { Rubric, RubricBase, rubricBaseSchema, RubricFile, rubricFileSchema } from "./rubric.schema";
 
 // Imported (not read from disk) so tsc copies the JSON into dist/ and the Docker image.
@@ -108,7 +107,7 @@ export const getRubric = (rubricId: string): Rubric | null => registry.get(rubri
  * Highest version wins.
  */
 export const resolveRubric = (params: { role: string; position: string; level?: string | null }): Rubric | null => {
-  const position = normalizeOnFieldPosition(params.position);
+  const position = params.position;
   const candidates = listRubrics()
     .filter((r) => r.role === params.role && r.position === position)
     .sort((a, b) => b.version - a.version);

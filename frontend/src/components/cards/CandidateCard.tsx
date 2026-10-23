@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
 import userPlaceholder from "@/assets/user-placeholder.png";
-import { positionLabel } from "@/constants/selectOptions";
 import { getProfileQualityScore } from "@/utils/profileQualityScore";
 
 function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: number }) {
@@ -210,7 +209,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 </h4>
               </Link>
               <p className="text-xs text-gray-500 capitalize">
-                {positionLabel(candidate.profile.position)}
+                {candidate.profile.position}
               </p>
             </div>
           </div>

@@ -30,7 +30,6 @@ import { StartChatButton } from "@/components/messaging/StartChatButton";
 import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateApi";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { positionLabel } from "@/constants/selectOptions";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -342,7 +341,7 @@ export default function UserProfilePage() {
                       Position
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {positionLabel(user.profile.position)}
+                      {user.profile.position}
                     </p>
                   </div>
                 )}

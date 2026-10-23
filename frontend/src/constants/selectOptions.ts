@@ -213,10 +213,10 @@ export const officeStaffPositionOptions = [
   "Community Manager",
   "Data Analyst",
   "Digital Marketing",
-  "Medical Staff",
-  "Performance Staff",
-  "Equipment Staff",
-  "Sales",
+  "Event Manager",
+  "Nutritionist",
+  "PR & Communications Manager",
+  "Team Manager",
 ] as const;
 export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
 
@@ -224,32 +224,18 @@ export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
 export const fieldStaffPositionOptions = [
   "Head Coach",
   "Assistant Coach",
-  "GK Coach",
+  "Goalkeeper Coach",
   "Mental Coach",
-  "Video Analyst Coach",
-  "Specific Offensive Coach",
-  "Specific Defensive Coach",
-  "Specific Technical Coach",
+  "Video Analyst",
+  "Attacking Coach",
+  "Defensive Coach",
+  "Technical Development Coach",
   "Scout",
   "Technical Director",
   "Academy Director",
   "Director of Coaching",
 ] as const;
 export type TFieldStaffPosition = (typeof fieldStaffPositionOptions)[number];
-
-// Names used in the client's scoring documents. Stored values stay unchanged;
-// only what users see is renamed.
-const POSITION_DISPLAY_NAMES: Record<string, string> = {
-  "GK Coach": "Goalkeeper Coach",
-  "Video Analyst Coach": "Video Analyst",
-  "Specific Offensive Coach": "Attacking Coach",
-  "Specific Forward Coach": "Attacking Coach",
-  "Specific Defensive Coach": "Defensive Coach",
-  "Specific Technical Coach": "Technical Development Coach",
-};
-
-export const positionLabel = (position?: string | null): string =>
-  position ? POSITION_DISPLAY_NAMES[position] ?? position : "";
 
 // Player Position options
 export const playerPositionOptions = [

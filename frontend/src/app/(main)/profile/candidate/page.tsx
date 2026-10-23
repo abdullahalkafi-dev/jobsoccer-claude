@@ -32,7 +32,6 @@ import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
 import InterviewAssessmentCard from "@/components/ai/InterviewAssessmentCard";
 import { useGetMyAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
-import { positionLabel } from "@/constants/selectOptions";
 
 export default function MyProfilePage() {
   // Get user data from Redux store
@@ -346,7 +345,7 @@ export default function MyProfilePage() {
                   Position
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {positionLabel(currentUser.profile.position)}
+                  {currentUser.profile.position}
                 </p>
               </div>
             )}

@@ -325,32 +325,32 @@ export default function CandidateProfilePage() {
           />
         );
 
-      case FieldStaffPosition.GK_COACH:
+      case FieldStaffPosition.GOALKEEPER_COACH:
       case FieldStaffPosition.MENTAL_COACH:
-      case FieldStaffPosition.VIDEO_ANALYST_COACH:
+      case FieldStaffPosition.VIDEO_ANALYST:
         return (
           <GKCoachVideoForm
             {...baseVideoProps}
             fieldStaffPosition={
               fieldStaffPosition as
-                | FieldStaffPosition.GK_COACH
+                | FieldStaffPosition.GOALKEEPER_COACH
                 | FieldStaffPosition.MENTAL_COACH
-                | FieldStaffPosition.VIDEO_ANALYST_COACH
+                | FieldStaffPosition.VIDEO_ANALYST
             }
           />
         );
 
-      case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
-      case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
-      case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
+      case FieldStaffPosition.ATTACKING_COACH:
+      case FieldStaffPosition.DEFENSIVE_COACH:
+      case FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH:
         return (
           <SpecificCoachVideoForm
             {...baseVideoProps}
             fieldStaffPosition={
               fieldStaffPosition as
-                | FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH
-                | FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH
-                | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH
+                | FieldStaffPosition.ATTACKING_COACH
+                | FieldStaffPosition.DEFENSIVE_COACH
+                | FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH
             }
           />
         );
