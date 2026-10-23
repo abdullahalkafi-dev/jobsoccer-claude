@@ -24,10 +24,12 @@ import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
 import userPlaceholder from "@/assets/user-placeholder.png";
 import { positionLabel } from "@/constants/selectOptions";
+import { getProfileQualityScore } from "@/utils/profileQualityScore";
 
 function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: number }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const qualityScore = getProfileQualityScore(candidate);
 
   const dispatch = useAppDispatch();
   const shortlistedIds = useAppSelector(
@@ -221,28 +223,36 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 {candidate.profile?.placeOfBirth}
               </span>
             </div>
-            {index == 2 && (
+            {(index == 2 || qualityScore !== null) && (
               <div className="flex w-fit flex-col gap-2">
-              <div className="flex text-sm text-gray-600 gap-2">
-                <div><span>Age:</span> 21</div>
-                <span className="text-gray-300">|</span>
-                <div><span>Height:</span> 6&apos;0</div>
-                <span  className="text-gray-300">|</span>
-                <div><span>Foot:</span> Right</div>
-              </div>
-              <div className="flex items-center gap-1.5 border-t border-gray-300 pt-2 text-sm text-gray-600">
-                <Image
-                  src="/icons/ai-icon.svg"
-                  alt="AI Rating"
-                  width={18}
-                  height={18}
-                  className="w-4.5 h-4.5 object-contain"
-                />
-                <span>
-                  <span className="text-sm text-gray-600">Ai Rating :</span>{" "}
-                  86/100
-                </span>
-              </div>
+              {index == 2 && (
+                <div className="flex text-sm text-gray-600 gap-2">
+                  <div><span>Age:</span> 21</div>
+                  <span className="text-gray-300">|</span>
+                  <div><span>Height:</span> 6&apos;0</div>
+                  <span  className="text-gray-300">|</span>
+                  <div><span>Foot:</span> Right</div>
+                </div>
+              )}
+              {qualityScore !== null && (
+                <div
+                  className={`flex items-center gap-1.5 text-sm text-gray-600 ${
+                    index == 2 ? "border-t border-gray-300 pt-2" : ""
+                  }`}
+                >
+                  <Image
+                    src="/icons/ai-icon.svg"
+                    alt="Profile quality score"
+                    width={18}
+                    height={18}
+                    className="w-4.5 h-4.5 object-contain"
+                  />
+                  <span>
+                    <span className="text-sm text-gray-600">Profile quality score :</span>{" "}
+                    {qualityScore}/100
+                  </span>
+                </div>
+              )}
               </div>
             )}
           </div>
