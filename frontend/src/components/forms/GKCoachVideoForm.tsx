@@ -19,9 +19,9 @@ export function GKCoachVideoForm({
   fieldStaffPosition,
 }: IVideoFormProps & {
   fieldStaffPosition:
-    | FieldStaffPosition.GK_COACH
+    | FieldStaffPosition.GOALKEEPER_COACH
     | FieldStaffPosition.MENTAL_COACH
-    | FieldStaffPosition.VIDEO_ANALYST_COACH;
+    | FieldStaffPosition.VIDEO_ANALYST;
 }) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 

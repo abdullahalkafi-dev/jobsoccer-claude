@@ -213,10 +213,10 @@ export const officeStaffPositionOptions = [
   "Community Manager",
   "Data Analyst",
   "Digital Marketing",
-  "Medical Staff",
-  "Performance Staff",
-  "Equipment Staff",
-  "Sales",
+  "Event Manager",
+  "Nutritionist",
+  "PR & Communications Manager",
+  "Team Manager",
 ] as const;
 export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
 
@@ -224,12 +224,12 @@ export type TOfficeStaffPosition = (typeof officeStaffPositionOptions)[number];
 export const fieldStaffPositionOptions = [
   "Head Coach",
   "Assistant Coach",
-  "GK Coach",
+  "Goalkeeper Coach",
   "Mental Coach",
-  "Video Analyst Coach",
-  "Specific Offensive Coach",
-  "Specific Defensive Coach",
-  "Specific Technical Coach",
+  "Video Analyst",
+  "Attacking Coach",
+  "Defensive Coach",
+  "Technical Development Coach",
   "Scout",
   "Technical Director",
   "Academy Director",

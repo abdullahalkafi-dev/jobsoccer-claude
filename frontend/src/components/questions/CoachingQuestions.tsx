@@ -19,12 +19,12 @@ interface CoachingQuestionsProps {
   fieldStaffPosition:
     | FieldStaffPosition.HEAD_COACH
     | FieldStaffPosition.ASSISTANT_COACH
-    | FieldStaffPosition.GK_COACH
+    | FieldStaffPosition.GOALKEEPER_COACH
     | FieldStaffPosition.MENTAL_COACH
-    | FieldStaffPosition.VIDEO_ANALYST_COACH
-    | FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH
-    | FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH
-    | FieldStaffPosition.SPECIFIC_TECHNICAL_COACH
+    | FieldStaffPosition.VIDEO_ANALYST
+    | FieldStaffPosition.DEFENSIVE_COACH
+    | FieldStaffPosition.ATTACKING_COACH
+    | FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH
     | FieldStaffPosition.SCOUT
     | FieldStaffPosition.TECHNICAL_DIRECTOR
     | FieldStaffPosition.DIRECTOR_OF_COACHING
@@ -46,7 +46,7 @@ export function CoachingQuestions({
       questions = assistantCoachQuestions;
       title = "Assistant Coach – Evaluation Questionnaire (18 Questions)";
       break;
-    case FieldStaffPosition.GK_COACH:
+    case FieldStaffPosition.GOALKEEPER_COACH:
       questions = gkCoachQuestions;
       title = "Goalkeeper Coach – Interview Questionnaire (18 Questions)";
       break;
@@ -54,21 +54,21 @@ export function CoachingQuestions({
       questions = mentalCoachQuestions;
       title = "Mental Coach – Interview Questionnaire (18 Questions)";
       break;
-    case FieldStaffPosition.VIDEO_ANALYST_COACH:
+    case FieldStaffPosition.VIDEO_ANALYST:
       questions = videoAnalystQuestions;
       title = "Video Analyst – Interview Questionnaire (18 Questions)";
       break;
-    case FieldStaffPosition.SPECIFIC_DEFENSIVE_COACH:
+    case FieldStaffPosition.DEFENSIVE_COACH:
       questions = defensiveCoachQuestions;
       title =
         "Defensive Specific Coach – Interview Questionnaire (18 Questions)";
       break;
-    case FieldStaffPosition.SPECIFIC_OFFENSIVE_COACH:
+    case FieldStaffPosition.ATTACKING_COACH:
       questions = offensiveCoachQuestions;
       title =
         "Attacking Specific Coach – Interview Questionnaire (18 Questions)";
       break;
-    case FieldStaffPosition.SPECIFIC_TECHNICAL_COACH:
+    case FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH:
       questions = technicalCoachQuestions;
       title = "Technical Coach – Interview Questionnaire (18 Questions)";
       break;

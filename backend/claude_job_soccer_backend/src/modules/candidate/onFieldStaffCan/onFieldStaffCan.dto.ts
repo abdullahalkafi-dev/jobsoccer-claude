@@ -28,12 +28,12 @@ const createOnFieldStaffCanDto = z.object({
     position: z.enum([
         "Head Coach",
         "Assistant Coach",
-        "GK Coach",
+        "Goalkeeper Coach",
         "Mental Coach",
-        "Video Analyst Coach",
-        "Specific Offensive Coach", //!TODO  it mean  "Specific Forward Coach"
-        "Specific Defensive Coach",
-        "Specific Technical Coach",
+        "Video Analyst",
+        "Attacking Coach", //!TODO  it mean  "Attacking Coach"
+        "Defensive Coach",
+        "Technical Development Coach",
         "Scout",
         "Technical Director",
         "Academy Director",
