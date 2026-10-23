@@ -128,7 +128,9 @@ export default function UserProfilePage() {
   const isAdmin = (currentUser?.userType as string) === "admin" || currentUser?.role === "admin";
   const hasAccess = TEMPORARY_BYPASS_ACCESS || areFriends || isAdmin || isOwnProfile;
 
-  const isOnFieldStaffCandidate = userData?.data?.role === "On field staff";
+  // Interview assessment applies to on-field and office staff
+  const isOnFieldStaffCandidate =
+    userData?.data?.role === "On field staff" || userData?.data?.role === "Office Staff";
   const { data: assessment, isLoading: isLoadingAssessment } = useGetCandidateAssessmentQuery(userId, {
     skip: !userId || !currentUser || !hasAccess || !isOnFieldStaffCandidate,
   });

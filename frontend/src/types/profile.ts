@@ -66,6 +66,7 @@ export type TProfessionalClubEmployerProfile = z.infer<
 >;
 
 export interface IVideoFormProps {
+  position?: string;
   onNext: (data: TVideo) => void;
   onPrev: () => void;
   initialData?: Partial<TVideo>;

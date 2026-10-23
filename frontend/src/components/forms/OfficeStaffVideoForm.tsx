@@ -8,8 +8,10 @@ import { IndividualVideoUpload } from "../form/fields/IndividualVideoUpload";
 import { VideoType } from "@/constants/video.constant";
 import { videoSchema } from "@/shchemas/profileValidation";
 import { IVideoFormProps, IVideoMap, TVideo } from "@/types/profile";
+import { GuideQuestions } from "../questions/GuideQuestions";
 
 export function OfficeStaffVideoForm({
+  position,
   onNext,
   onPrev,
   initialData,
@@ -108,6 +110,7 @@ export function OfficeStaffVideoForm({
       isNextDisabled={!hasAllRequiredVideos}
       isLoading={isLoading}
     >
+      <GuideQuestions position={position} />
       <form className="space-y-8">
         <div className="space-y-6">
           {/* Video 1 - Required */}
