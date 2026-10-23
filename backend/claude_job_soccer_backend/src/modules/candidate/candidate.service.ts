@@ -134,6 +134,7 @@ const searchCandidates = async (
         profileImage: user.profileImage,
         userType: user.userType,
         profile,
+        aiProfileScore: user.aiProfileScore ?? null,
         // Relationship fields (only present when user is authenticated)
         ...(userId && {
           isShortlisted: shortlistMap.get(userId_str) || false,
@@ -290,6 +291,7 @@ const getFeaturedCandidates = async (userId?: string) => {
             profileImage: user.profileImage,
             userType: user.userType,
             profile,
+            aiProfileScore: user.aiProfileScore ?? null,
             // Relationship fields (only present when user is authenticated)
             ...(userId && {
               isShortlisted: shortlistMap.get(userId_str) || false,
