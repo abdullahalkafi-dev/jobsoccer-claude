@@ -15,6 +15,16 @@ import scout from "./rubrics/on_field_staff.scout.v1.json";
 import technicalDevelopmentCoach from "./rubrics/on_field_staff.technical_development_coach.v1.json";
 import technicalDirector from "./rubrics/on_field_staff.technical_director.v1.json";
 import videoAnalyst from "./rubrics/on_field_staff.video_analyst.v1.json";
+import assistantCoachAmateurV2 from "./rubrics/on_field_staff.assistant_coach.amateur.v2.json";
+import mentalCoachV2 from "./rubrics/on_field_staff.mental_coach.v2.json";
+import administrativeDirector from "./rubrics/office_staff.administrative_director.v1.json";
+import communityManager from "./rubrics/office_staff.community_manager.v1.json";
+import dataAnalyst from "./rubrics/office_staff.data_analyst.v1.json";
+import digitalMarketing from "./rubrics/office_staff.digital_marketing.v1.json";
+import eventManager from "./rubrics/office_staff.event_manager.v1.json";
+import nutritionist from "./rubrics/office_staff.nutritionist.v1.json";
+import prCommunicationsManager from "./rubrics/office_staff.pr_communications_manager.v1.json";
+import teamManager from "./rubrics/office_staff.team_manager.v1.json";
 
 const BASES: unknown[] = [interviewBase];
 
@@ -31,6 +41,18 @@ const RUBRIC_FILES: unknown[] = [
   technicalDevelopmentCoach,
   technicalDirector,
   videoAnalyst,
+  // 2026-10-23: 18-question versions of the two 15-question guides (v1 stays for old evaluations)
+  assistantCoachAmateurV2,
+  mentalCoachV2,
+  // 2026-10-23: office staff guides. Not used for scoring yet (no questionnaire for office staff in the app).
+  administrativeDirector,
+  communityManager,
+  dataAnalyst,
+  digitalMarketing,
+  eventManager,
+  nutritionist,
+  prCommunicationsManager,
+  teamManager,
 ];
 
 /** Merge a position file with its base; validated, so a broken file fails at startup. */

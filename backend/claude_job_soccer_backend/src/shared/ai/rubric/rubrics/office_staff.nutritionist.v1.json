@@ -1,0 +1,466 @@
+{
+  "rubricId": "office_staff.nutritionist.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Nutritionist Final.docx",
+  "role": "Office Staff",
+  "position": "Nutritionist",
+  "displayName": "Nutritionist",
+  "clientRoleId": "nutritionist",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate Nutritionist candidates on evidence-informed sports nutrition, youth safeguarding, practical fueling, hydration, interdisciplinary collaboration, ethical boundaries and clear communication. Licensing and permitted scope vary by jurisdiction; never infer clinical authority from the title alone.",
+    "corePrinciple": "Strong answers provide age-appropriate, feasible, evidence-informed nutrition support while respecting professional scope, confidentiality, consent and referral responsibilities."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Nutritionist responsibilities, not Head Coach, physician, clinical dietitian or performance coach duties."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish generic healthy-eating advice from soccer-specific, safe, practical and individualized support."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic responses as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material written/video contradictions for human review, not automatic rejection."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer registration, clinical privileges, prescribing authority, anti-doping competence or verified outcomes."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate job-relevant content, not accent, appearance, age, gender, ethnicity, disability or video quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward unsupported clinical claims, restrictive plans, jargon or response length."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "51/72",
+    "percentage": "70.8%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Youth welfare, fueling basics, hydration, professional boundaries and collaboration",
+    "mainWeaknesses": "Outcome measurement, individualized follow-up, formal planning and evidence of results",
+    "summary": "The fictional candidate demonstrates a sound general approach to soccer fueling, youth welfare, communication and professional boundaries. Responses appropriately emphasize collaboration with qualified clinicians and safeguarding. However, evidence of program outcomes, formal monitoring, individualized follow-up and first-90-day milestones remains limited. A recruiter should verify qualifications and request examples of player education plans, travel protocols and measurable follow-up."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background, Role Understanding & Professional Scope",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What qualifications, experience and scope of practice prepare you to support soccer players?",
+          "evaluates": "Credentials, experience and professional boundaries.",
+          "strong": [
+            "Identifies training, applicable registration or licensure and relevant age groups.",
+            "Explains supervised experience and referral boundaries.",
+            "Provides a concrete example of soccer-related work."
+          ],
+          "acceptable": "Describes relevant background but limited role-specific examples.",
+          "weakOrConcerning": "Claims medical or clinical authority without appropriate credentials.",
+          "calibration": {
+            "response": "I studied nutrition and supported an academy wellness program for two seasons; clinical issues were referred to a registered dietitian.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the nutritionist's role within a soccer club or academy?",
+          "evaluates": "Role clarity and multidisciplinary contribution.",
+          "strong": [
+            "Explains education, practical fueling and hydration support.",
+            "Coordinates with qualified medical and performance staff.",
+            "Respects consent, privacy and scope of practice."
+          ],
+          "acceptable": "Recognizes education and collaboration but not clear decision rights.",
+          "weakOrConcerning": "Promises diagnosis or treatment outside permitted scope.",
+          "calibration": {
+            "response": "I help players understand everyday fueling and communicate general plans with coaches and medical staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How would you assess a new player's nutrition needs before giving guidance?",
+          "evaluates": "Initial screening and individualized assessment.",
+          "strong": [
+            "Gathers age, training load, routines, food access, preferences and allergies.",
+            "Uses consent and safeguarding procedures for minors.",
+            "Recognizes red flags requiring qualified clinical referral."
+          ],
+          "acceptable": "Asks about food and training but omits important context.",
+          "weakOrConcerning": "Prescribes restrictive diets without assessment or appropriate oversight.",
+          "calibration": {
+            "response": "I begin with training schedules, meal routines, allergies and family context and refer medical concerns.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Soccer Fueling, Hydration & Recovery",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you adapt fueling guidance to training intensity, position and match schedules?",
+          "evaluates": "Soccer-specific fueling and periodization.",
+          "strong": [
+            "Connects energy and carbohydrate availability to workload.",
+            "Plans practical timing around sessions and recovery.",
+            "Avoids unsupported position stereotypes and adjusts for individual needs."
+          ],
+          "acceptable": "Provides sensible pre- and post-session advice but little individualization.",
+          "weakOrConcerning": "Uses a single rigid meal plan for all players.",
+          "calibration": {
+            "response": "I suggest more substantial fueling around double-session days and work with staff to understand weekly demands.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "What approach would you use to educate players about hydration and heat-related risk?",
+          "evaluates": "Hydration education and safety.",
+          "strong": [
+            "Considers climate, session duration, sweat losses and access to fluids.",
+            "Teaches practical hydration habits without universal fluid prescriptions.",
+            "Recognizes symptoms needing urgent medical attention or referral."
+          ],
+          "acceptable": "Mentions water and electrolytes but limited monitoring or escalation.",
+          "weakOrConcerning": "Dismisses heat illness or encourages excessive fluid intake.",
+          "calibration": {
+            "response": "I encourage players to bring water, discuss heat conditions and alert medical staff to concerning symptoms.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you support recovery nutrition during congested match schedules?",
+          "evaluates": "Recovery planning and practical delivery.",
+          "strong": [
+            "Considers energy, carbohydrate, protein and fluid replacement in context.",
+            "Accounts for travel, appetite, access and individual needs.",
+            "Checks adherence and adjusts with relevant staff."
+          ],
+          "acceptable": "Names recovery foods but little scheduling or evaluation.",
+          "weakOrConcerning": "Promises instant recovery from supplements or ignores food availability.",
+          "calibration": {
+            "response": "I coordinate practical postmatch meal options and encourage players to eat and drink soon after play.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Youth Nutrition, Safety & Individualization",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How would you approach nutrition for youth players at different stages of growth and maturation?",
+          "evaluates": "Youth development and age-appropriate safeguarding.",
+          "strong": [
+            "Prioritizes adequate nourishment, growth and healthy relationships with food.",
+            "Avoids body-shaming, weight targets and premature restriction.",
+            "Involves caregivers appropriately and refers clinical concerns."
+          ],
+          "acceptable": "Recognizes growth needs but lacks detailed safeguarding process.",
+          "weakOrConcerning": "Promotes aggressive weight cutting or public weigh-ins for minors.",
+          "calibration": {
+            "response": "I focus on consistent meals and energy for growing players, involving families and avoiding weight-focused messaging.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you identify potential low energy availability or disordered-eating warning signs?",
+          "evaluates": "Recognition and referral boundaries.",
+          "strong": [
+            "Recognizes concerning changes in energy, injury, recovery, mood or eating behavior.",
+            "Uses nonjudgmental communication and confidentiality.",
+            "Refers promptly to qualified clinicians rather than diagnosing independently."
+          ],
+          "acceptable": "Recognizes concerns but gives limited escalation pathway.",
+          "weakOrConcerning": "Attempts to diagnose or treat eating disorders without qualifications.",
+          "calibration": {
+            "response": "I watch for persistent fatigue and concerning food behaviors and bring concerns privately to the qualified medical team.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How would you address allergies, cultural food practices and different financial resources?",
+          "evaluates": "Inclusive and safe practical planning.",
+          "strong": [
+            "Checks allergies and medically necessary restrictions through appropriate channels.",
+            "Respects religious, cultural and personal food choices.",
+            "Offers accessible options without compromising safety."
+          ],
+          "acceptable": "Mentions substitutions but lacks a structured safety check.",
+          "weakOrConcerning": "Ignores allergies or pressures players to abandon cultural preferences.",
+          "calibration": {
+            "response": "I ask about allergies and preferences and offer low-cost food options that fit family routines.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Education, Collaboration & Ethical Judgment",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How would you build a nutrition education program for players, parents and coaches?",
+          "evaluates": "Education design and stakeholder communication.",
+          "strong": [
+            "Sets age-appropriate learning goals and separates audiences.",
+            "Uses clear, evidence-informed workshops and practical examples.",
+            "Collects feedback and measures learning or behavior change."
+          ],
+          "acceptable": "Suggests workshops but limited measurement.",
+          "weakOrConcerning": "Relies on shaming, fear or unverified claims.",
+          "calibration": {
+            "response": "I would run short player sessions and parent Q&As with simple meal examples and feedback forms.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How would you coordinate nutrition guidance with coaches, medical staff and performance specialists?",
+          "evaluates": "Interdisciplinary coordination.",
+          "strong": [
+            "Clarifies responsibilities, consent and information sharing.",
+            "Aligns support with training loads and medical guidance.",
+            "Documents handovers and resolves conflicting instructions."
+          ],
+          "acceptable": "Describes regular meetings but few decision boundaries.",
+          "weakOrConcerning": "Shares sensitive health information without authorization.",
+          "calibration": {
+            "response": "I join planning meetings and coordinate general fueling advice, leaving medical prescriptions to licensed staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "What would you do if a coach demanded rapid weight loss from a youth player?",
+          "evaluates": "Ethics, safeguarding and professional judgment.",
+          "strong": [
+            "Prioritizes player welfare and avoids harmful weight pressure.",
+            "Declines unsafe requests and documents concerns appropriately.",
+            "Escalates to safeguarding or qualified clinical leads."
+          ],
+          "acceptable": "Expresses concern but gives no clear escalation.",
+          "weakOrConcerning": "Implements crash diets or conceals coercion.",
+          "calibration": {
+            "response": "I would not create a rapid weight-loss plan; I would explain the risk and refer the issue to the safeguarding and medical leads.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Logistics, Supplements & Evaluation",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How would you organize food and hydration arrangements for away matches or tournaments?",
+          "evaluates": "Travel logistics and food safety.",
+          "strong": [
+            "Plans meal timing, access, allergies and food safety.",
+            "Coordinates vendors, budgets, contingencies and staff responsibilities.",
+            "Communicates practical options to players and families."
+          ],
+          "acceptable": "Lists snacks and water but limited contingency planning.",
+          "weakOrConcerning": "Overlooks allergies, safe storage or travel constraints.",
+          "calibration": {
+            "response": "I would confirm meal options and allergies ahead of travel and keep backup snacks and water available.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "How would you respond when a player asks whether they should use a supplement?",
+          "evaluates": "Supplement risk assessment and scope.",
+          "strong": [
+            "Explains food-first approach and evidence limitations.",
+            "Checks age, medical context, anti-doping and contamination risks.",
+            "Refers individualized decisions to qualified medical or sports-dietetic staff."
+          ],
+          "acceptable": "Advises caution but does not explain anti-doping or referral.",
+          "weakOrConcerning": "Recommends unverified supplements or guarantees safety.",
+          "calibration": {
+            "response": "I discuss food-first choices and refer supplement decisions to the team physician or sports dietitian.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How do you assess whether your nutrition education is helping player performance and wellbeing?",
+          "evaluates": "Measurement and appropriate attribution.",
+          "strong": [
+            "Defines process and learning measures such as access, knowledge and adherence.",
+            "Considers athlete wellbeing and avoids inappropriate weight-based targets.",
+            "Acknowledges performance is multifactorial and reviews feedback."
+          ],
+          "acceptable": "Tracks participation but limited outcomes or context.",
+          "weakOrConcerning": "Claims nutrition alone caused team wins or uses harmful body metrics.",
+          "calibration": {
+            "response": "I track attendance and feedback, but I have not yet established a reliable follow-up measure of behavior change.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows a basic relevant approach but lacks follow-up evidence, implementation detail or clear measurement."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Adaptability, Data Ethics & Professional Planning",
+      "questions": [
+        {
+          "id": 16,
+          "text": "Describe a time you had to adjust your guidance because a player could not follow the original plan.",
+          "evaluates": "Adaptability and real-world problem solving.",
+          "strong": [
+            "Gives a specific barrier and respects player circumstances.",
+            "Offers feasible alternatives with player involvement.",
+            "Describes follow-up and what changed."
+          ],
+          "acceptable": "Offers alternatives but no documented outcome.",
+          "weakOrConcerning": "Blames the player or insists on unrealistic compliance.",
+          "calibration": {
+            "response": "A player could not eat before early training, so we explored portable breakfast options; I did not formally track the result.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows a basic relevant approach but lacks follow-up evidence, implementation detail or clear measurement."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 17,
+          "text": "What professional standards guide your use of player data, confidentiality and evidence?",
+          "evaluates": "Data privacy, ethics and scientific literacy.",
+          "strong": [
+            "Protects personal and youth health information under applicable rules.",
+            "Uses evidence-based sources and avoids overstating certainty.",
+            "Documents consent, access and referrals appropriately."
+          ],
+          "acceptable": "Recognizes confidentiality and evidence but few procedures.",
+          "weakOrConcerning": "Shares health details or promotes unsupported treatments.",
+          "calibration": {
+            "response": "I use approved channels and avoid sharing private information with coaching staff without appropriate authorization.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Shows relevant practical and ethical judgment, but stronger outcome evidence, verified experience or detailed procedures would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "What would your priorities be during your first 90 days, and how would you review progress?",
+          "evaluates": "Implementation planning and reflective improvement.",
+          "strong": [
+            "Sequences stakeholder meetings, needs assessment and safeguarding review.",
+            "Defines achievable 30/60/90-day actions and responsible owners.",
+            "Uses baseline measures and feedback to adjust priorities."
+          ],
+          "acceptable": "Provides sensible priorities but few specific milestones.",
+          "weakOrConcerning": "Promises immediate individualized plans without assessment or approvals.",
+          "calibration": {
+            "response": "I would meet the staff, assess food access and routines, then offer basic education sessions and review feedback.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows a basic relevant approach but lacks follow-up evidence, implementation detail or clear measurement."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

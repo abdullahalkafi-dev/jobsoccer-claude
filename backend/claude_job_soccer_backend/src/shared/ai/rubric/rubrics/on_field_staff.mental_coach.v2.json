@@ -1,0 +1,466 @@
+{
+  "rubricId": "on_field_staff.mental_coach.v2",
+  "version": 2,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Mental Coach Final Updated .docx",
+  "role": "On field staff",
+  "position": "Mental Coach",
+  "displayName": "Mental Coach",
+  "clientRoleId": "mental_coach",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate each answer specifically for a Mental Coach working in soccer. It should assess evidence-informed mental-performance practice, soccer application, developmental appropriateness, ethical boundaries, collaboration, impact measurement and referral judgment. It must not assume that a mental coach is a licensed clinical psychologist.",
+    "corePrinciple": "A strong answer demonstrates practical performance support while protecting player autonomy, confidentiality, safety and clinical boundaries. Confidence or motivational language cannot replace qualifications, process and ethical judgment."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Mental Coach expectations, not Mental Coach, therapist, psychologist or general Office Staff criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "Do not infer clinical licensure, protected titles or authority from confidence, certificates or self-description."
+    },
+    {
+      "id": "R3",
+      "rule": "For questions requesting a real example, do not award 4/4 without the situation, action and outcome."
+    },
+    {
+      "id": "R4",
+      "rule": "Reward evidence-informed, individualized and soccer-relevant practice rather than motivational language alone."
+    },
+    {
+      "id": "R5",
+      "rule": "A clinically concerning disclosure should trigger referral or safeguarding procedures, not diagnosis by the scoring AI."
+    },
+    {
+      "id": "R6",
+      "rule": "Flag contradictions between questionnaire and video, but do not treat contradiction alone as proof of dishonesty."
+    },
+    {
+      "id": "R7",
+      "rule": "Do not reward promises of guaranteed confidence, selection, recovery, performance or mental-health outcomes."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not score accent, grammar, appearance, age, gender, ethnicity, disability or production quality. Evaluate content."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic/acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "48/72",
+    "percentage": "66.7%",
+    "classification": "Basic / acceptable; evidence or depth is limited",
+    "strongestAreas": "Soccer-specific preparation routines; role boundaries; autonomy and respectful collaboration",
+    "mainWeaknesses": "Assessment validity; safeguarding details; structured measurement and follow-up evidence",
+    "summary": "The candidate demonstrates a reasonable understanding of soccer-specific mental-performance support, particularly attention routines, autonomy and clinical boundaries. However, several answers lack structured assessment, consent documentation, safeguarding detail and measurable follow-up. Additional evidence is needed to verify qualifications, confidentiality procedures, intervention outcomes and referral readiness."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Understanding",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Can you describe your background and training in mental performance or sport psychology?",
+          "evaluates": "Relevant education, supervised experience, credentials and scope awareness.",
+          "strong": [
+            "Clearly distinguishes formal education, certifications, supervised practice and continuing development.",
+            "Connects training to evidence-informed mental-performance work.",
+            "Accurately states professional scope and does not imply clinical licensure that is not held."
+          ],
+          "acceptable": "Describes relevant training and experience but provides limited detail about supervision, application or scope.",
+          "weakOrConcerning": "Relies only on personal experience or motivational ability, misrepresents credentials, or claims authority to diagnose or treat without appropriate qualification.",
+          "calibration": {
+            "response": "I completed a sport-performance coaching course and have worked with academy players on focus routines. I am not a clinical psychologist.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant scope awareness and experience; supervision, specific qualifications and practical outcomes remain unclear."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "What is your experience working with soccer players or team staff specifically?",
+          "evaluates": "Soccer-context experience and understanding of the performance environment.",
+          "strong": [
+            "Describes specific age groups, levels, roles and forms of intervention.",
+            "Understands soccer demands such as selection, errors, playing time, injury, team hierarchy and match pressure.",
+            "Explains collaboration and outcomes without breaching confidentiality."
+          ],
+          "acceptable": "Shows relevant athlete or team experience but limited soccer-specific depth.",
+          "weakOrConcerning": "Provides only generic wellness experience, name-drops clients, or discloses identifiable confidential information.",
+          "calibration": {
+            "response": "I supported youth soccer players during trial periods and helped them create routines after mistakes.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant soccer setting and intervention; limited detail about ages, staff coordination and observed change."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How do you define the role of a mental coach within a soccer environment?",
+          "evaluates": "Role clarity, performance contribution and ethical boundaries.",
+          "strong": [
+            "Defines development of mental skills, self-regulation, learning and performance habits.",
+            "Supports players and staff while respecting coaching, medical and clinical responsibilities.",
+            "Explains consent, confidentiality, safeguarding and referral boundaries."
+          ],
+          "acceptable": "Defines mental-skills support and performance preparation but gives incomplete boundary detail.",
+          "weakOrConcerning": "Presents the role as therapy, diagnosis, team discipline, guaranteed performance improvement or motivational speaking alone.",
+          "calibration": {
+            "response": "I help players develop concentration and confidence while referring mental-health concerns to qualified professionals.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Appropriate role definition and referral boundary; consent, confidentiality and safeguarding process are underdeveloped."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Methodology & Approach",
+      "questions": [
+        {
+          "id": 4,
+          "text": "What is your general methodology when working with players (individual vs collective)?",
+          "evaluates": "Coherent, flexible and evidence-informed intervention design.",
+          "strong": [
+            "Begins with needs, context, goals and informed agreement rather than a fixed program.",
+            "Explains appropriate individual and group formats, confidentiality limits and stakeholder roles.",
+            "Uses a cycle of assessment, intervention, practice, feedback and review."
+          ],
+          "acceptable": "Describes individual and group work with reasonable activities but limited process or review detail.",
+          "weakOrConcerning": "Applies one fixed method to all players or shares individual disclosures in group settings.",
+          "calibration": {
+            "response": "I meet players individually to discuss goals and run group workshops on preparation, then review how they feel.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Basic individual and group approach; missing informed agreement, structured intervention cycle and review indicators."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you assess a player's mental profile at the start of your work?",
+          "evaluates": "Responsible assessment, interpretation and avoidance of unsupported profiling.",
+          "strong": [
+            "Uses interview, observation, performance context, self-report and validated tools when qualified to use them.",
+            "Explains consent, purpose, limitations, cultural context and secure handling of information.",
+            "Treats the profile as a working hypothesis and establishes measurable goals with the player."
+          ],
+          "acceptable": "Uses conversation and questionnaires to identify needs but gives limited validity or privacy detail.",
+          "weakOrConcerning": "Diagnoses from a brief questionnaire, labels personality as fixed, uses unvalidated tests as fact, or shares results without consent.",
+          "calibration": {
+            "response": "I ask about pressure situations and use a short self-report questionnaire to understand their needs.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Useful initial discussion but limited tool validity, consent, privacy and contextual interpretation."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "Which mental skills do you prioritize most in soccer (e.g. confidence, focus, resilience, emotional control), and why?",
+          "evaluates": "Prioritization based on player and performance demands.",
+          "strong": [
+            "Avoids a universal ranking and links priorities to role, age, context and identified needs.",
+            "Explains relevant skills such as attentional control, confidence, emotional regulation, coping and communication.",
+            "Connects each skill to observable soccer behavior and trainable routines."
+          ],
+          "acceptable": "Names relevant mental skills and gives general soccer reasons.",
+          "weakOrConcerning": "Selects skills based only on personal preference, uses vague concepts, or promises elimination of normal emotions.",
+          "calibration": {
+            "response": "I focus on attention and coping with mistakes because players must reset quickly after losing the ball.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Soccer-relevant priorities and rationale; lacks individual selection criteria and concrete training progression."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Application in Soccer Context",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you adapt your work according to age groups (youth, academy, senior players)?",
+          "evaluates": "Developmental appropriateness, safeguarding and contextual adaptation.",
+          "strong": [
+            "Adjusts language, session length, autonomy, examples and expectations to development stage.",
+            "Explains safeguarding, parental or guardian involvement and confidentiality limits for minors.",
+            "Recognizes different identity, education, selection, contract and transition pressures."
+          ],
+          "acceptable": "Adapts communication and exercises by age but gives limited safeguarding or developmental detail.",
+          "weakOrConcerning": "Uses adult methods unchanged with children, excludes required safeguarding, or promises confidentiality beyond lawful and safety limits.",
+          "calibration": {
+            "response": "With younger players I use short games and simple language; with senior players I use more detailed reflection.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Age-appropriate adaptation is identified; safeguarding, guardians and confidentiality limits are not addressed."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you handle pressure-related issues such as competition stress, selection anxiety, or fear of failure?",
+          "evaluates": "Applied coping support, normalization and appropriate escalation.",
+          "strong": [
+            "Assesses triggers, intensity, function, context and effect on performance.",
+            "Uses appropriate skills such as preparation routines, breathing, attention cues, reframing, exposure or reflection.",
+            "Normalizes pressure, tracks response and refers when symptoms exceed scope or indicate risk."
+          ],
+          "acceptable": "Offers relevant coping strategies and follow-up but gives limited assessment or referral detail.",
+          "weakOrConcerning": "Dismisses distress, guarantees anxiety removal, uses punishment or pressure, or treats severe symptoms outside competence.",
+          "calibration": {
+            "response": "We identify stressful moments, practice breathing and use a simple reset cue during training.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Plausible practical routine; intensity assessment, monitoring and escalation pathways need more detail."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "Can you give an example of how you prepare a player mentally for an important match or trial?",
+          "evaluates": "Practical preparation, individualization and transfer to performance.",
+          "strong": [
+            "Provides a specific situation, identified need and collaborative plan.",
+            "Uses realistic routines, controllable goals, attention cues and scenario rehearsal integrated with normal preparation.",
+            "Explains implementation, outcome and learning without claiming certainty or guaranteed selection."
+          ],
+          "acceptable": "Provides a relevant preparation routine but limited individualization or outcome evidence.",
+          "weakOrConcerning": "Relies only on motivational speeches, introduces unfamiliar techniques immediately before the event, or promises a result.",
+          "calibration": {
+            "response": "Before a trial, I asked a winger to choose two controllable goals and practice a reset cue in training. The player reported feeling more prepared afterward.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Specific context, routine and self-report outcome; lacks systematic follow-up and independent behavioral evidence."
+          },
+          "requiresRealSituation": true
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Collaboration & Integration",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you collaborate with coaches, technical staff, and medical staff?",
+          "evaluates": "Interdisciplinary collaboration, consent and information boundaries.",
+          "strong": [
+            "Clarifies roles, referral routes, meeting cadence and shared performance objectives.",
+            "Obtains appropriate consent and shares only necessary, agreed information.",
+            "Coordinates support while preserving player trust and escalating safety concerns appropriately."
+          ],
+          "acceptable": "Communicates with staff and aligns support but gives limited consent or information-sharing detail.",
+          "weakOrConcerning": "Shares private session content routinely, works in isolation, overrides medical decisions or becomes a source of team surveillance.",
+          "calibration": {
+            "response": "I speak with coaches about general performance goals and keep individual conversations private unless there is a safety concern.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Good confidentiality instincts and collaboration; consent procedures and referral coordination remain unspecified."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you ensure your mental coaching aligns with the team's game model and performance objectives?",
+          "evaluates": "Integration of mental skills with football behaviors and team demands.",
+          "strong": [
+            "Clarifies game principles and identifies related mental demands in training and matches.",
+            "Embeds cues, routines and reflection into football tasks rather than separating all mental work.",
+            "Balances team objectives with individual welfare and avoids using psychology to enforce unquestioning compliance."
+          ],
+          "acceptable": "Connects mental skills to team objectives but gives limited behavioral or integration detail.",
+          "weakOrConcerning": "Uses generic motivation unrelated to the game model or treats mental coaching as a tool to control players.",
+          "calibration": {
+            "response": "I link attention cues to the team pressing and transition principles and practice them on the field.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Clear connection between mental skills and soccer actions; little detail on checking transfer or balancing welfare."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "What boundaries do you set between mental coaching and clinical psychology?",
+          "evaluates": "Scope of practice, referral judgment and safety.",
+          "strong": [
+            "Clearly distinguishes performance coaching from diagnosis and treatment of mental disorders.",
+            "Recognizes warning signs, crisis procedures, safeguarding duties and referral pathways to licensed clinicians.",
+            "Explains confidentiality and its limits, documentation, consent and coordinated care."
+          ],
+          "acceptable": "Recognizes that clinical issues require referral but gives limited process detail.",
+          "weakOrConcerning": "Claims to treat clinical disorders without proper credentials, discourages clinical care, promises absolute confidentiality or lacks a crisis/referral process.",
+          "calibration": {
+            "response": "I do not diagnose mental disorders. If I notice serious concerns, I recommend a licensed clinician and follow club safeguarding procedures.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Appropriate scope distinction; missing detailed risk-response steps, consent and documentation."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Evaluation & Impact",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you measure the effectiveness of your mental coaching work?",
+          "evaluates": "Ethical outcome measurement and understanding of contribution versus causation.",
+          "strong": [
+            "Sets collaborative goals and uses multiple indicators such as self-report, observable routines, behavior, adherence and stakeholder feedback.",
+            "Uses baselines, periodic review and contextual interpretation.",
+            "Avoids claiming that mental coaching alone caused match results or selection outcomes."
+          ],
+          "acceptable": "Uses player feedback and behavioral or performance indicators but lacks a structured baseline or review process.",
+          "weakOrConcerning": "Measures success only through wins, goals or testimonials, or guarantees direct causal impact.",
+          "calibration": {
+            "response": "I ask players to rate confidence before and after a program and gather feedback from coaches.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Basic outcome measures; no clear baseline design, behavior indicators, periodic review or attribution caution."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "Can you share an example of a situation where your intervention had a clear impact on performance or behavior?",
+          "evaluates": "Applied impact, evidence and appropriate attribution.",
+          "strong": [
+            "Provides the situation, goal, intervention, observed change and follow-up.",
+            "Protects identity and confidentiality while giving enough evidence to assess contribution.",
+            "Acknowledges other influences, uncertainty and lessons learned."
+          ],
+          "acceptable": "Provides a relevant example but lacks baseline, follow-up or clarity about contribution.",
+          "weakOrConcerning": "Reveals a player's identity or sensitive information, claims sole credit, or provides an unsupported success story.",
+          "calibration": {
+            "response": "One player used a pre-match routine and reported feeling calmer after several weeks.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Plausible change but limited baseline, intervention detail, follow-up and evidence of contribution."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 15,
+          "text": "How do you adapt your approach when a player is resistant or not fully engaged?",
+          "evaluates": "Autonomy support, alliance-building and adaptive practice.",
+          "strong": [
+            "Explores reasons for resistance without labeling or coercion.",
+            "Revisits consent, goals, readiness, format, cultural factors and the player's preferred level of involvement.",
+            "Adjusts methods, respects refusal, documents appropriately and refers or pauses when needed."
+          ],
+          "acceptable": "Uses listening and method adjustment but gives limited attention to consent or stopping criteria.",
+          "weakOrConcerning": "Forces participation, reports resistance as disobedience, manipulates selection pressure or breaches confidentiality to gain compliance.",
+          "calibration": {
+            "response": "I listen to why the player is hesitant, offer a different exercise and do not force participation.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Respects autonomy and adapts approach; could better explain consent review, stopping criteria and documentation."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professional Development & Accountability",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How do you support a player returning from injury while respecting the medical team's responsibilities?",
+          "evaluates": "Coordination, return-to-play boundaries and player welfare.",
+          "strong": [
+            "Confirms clearance and restrictions with the authorized medical team and the player.",
+            "Uses appropriate confidence and attention routines without making medical decisions.",
+            "Monitors distress and refers clinical concerns to qualified professionals."
+          ],
+          "acceptable": "Offers general emotional support and coordinates with staff, but gives limited detail on medical boundaries.",
+          "weakOrConcerning": "Pressures the player to return, contradicts clinical advice or promises recovery.",
+          "calibration": {
+            "response": "I check the agreed medical plan and help the player use gradual confidence routines without pushing a return date.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Appropriate collaboration and restraint; the answer lacks an example of monitoring and escalation."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "How do you protect confidential information when reporting progress to a club or academy?",
+          "evaluates": "Consent, privacy, proportional reporting and safeguarding.",
+          "strong": [
+            "Explains consent, data minimization and confidentiality limits before work begins.",
+            "Shares only agreed performance-level insights and stores sensitive notes securely.",
+            "Uses safeguarding exceptions and referral channels appropriately."
+          ],
+          "acceptable": "Recognizes privacy and consent but offers an incomplete reporting process.",
+          "weakOrConcerning": "Shares private disclosures with coaches by default or guarantees absolute secrecy.",
+          "calibration": {
+            "response": "I share broad goals with the coach, not personal details, and ask the player before discussing individual progress.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Recognizes confidentiality but omits storage, documentation, and safeguarding exceptions."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "How do you review and improve your own mental-coaching methods over a season?",
+          "evaluates": "Reflective practice, supervision, continuing education and improvement.",
+          "strong": [
+            "Uses feedback, outcome trends and structured reflection to review methods.",
+            "Seeks qualified supervision or consultation where appropriate.",
+            "Adapts interventions while recording limitations and lessons learned."
+          ],
+          "acceptable": "Describes professional learning and feedback but lacks a systematic review process.",
+          "weakOrConcerning": "Assumes methods always work, rejects feedback or relies on testimonials alone.",
+          "calibration": {
+            "response": "After each block I review player feedback, discuss patterns with a supervisor and adjust my exercises.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "A useful improvement cycle; clearer outcome measures and documented learning would strengthen it."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

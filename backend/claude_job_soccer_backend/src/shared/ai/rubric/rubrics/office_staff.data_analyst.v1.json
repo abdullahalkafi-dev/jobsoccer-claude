@@ -1,0 +1,470 @@
+{
+  "rubricId": "office_staff.data_analyst.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Data Analysis Final.docx",
+  "role": "Office Staff",
+  "position": "Data Analyst",
+  "displayName": "Data Analyst",
+  "clientRoleId": "data_analyst",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate each response specifically for the Data Analyst position, emphasizing data quality, reproducibility, appropriate analytical methods, soccer-context interpretation, uncertainty, communication, privacy and decision support. Do not substitute Video Analyst, Data Engineer, coach or scout criteria.",
+    "corePrinciple": "Strong answers connect a clearly defined question to reliable data, a suitable method, validation, limitations and an actionable interpretation for the relevant stakeholder."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Data Analyst expectations, not Video Analyst, Data Engineer, Head Coach, scout or general Office Staff criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish software familiarity and statistical terminology from demonstrated analytical competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic responses as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material contradictions between written and video answers for human review, without assuming dishonesty."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer coding ability, data access, qualifications, model performance, ownership or impact not stated by the candidate."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate job-relevant content only; do not score accent, grammar, appearance, age, gender, ethnicity, disability or video production quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward model complexity, confidence, jargon or response length without sound method and supporting evidence."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "49/72",
+    "percentage": "68.1%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Data quality, stakeholder communication, contextual metrics, analytical integrity",
+    "mainWeaknesses": "Model validation, impact measurement, uncertainty reporting, documented error prevention",
+    "summary": "The fictional candidate demonstrates a credible understanding of data validation, stakeholder reporting, role-appropriate metrics and analytical integrity. Several answers remain generic about model validation, uncertainty, incident prevention and measurement of downstream impact. Further evidence from reproducible work samples and validated analysis is needed to assess technical depth."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background, Role Understanding and Analytical Mindset",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Tell us about your data-analysis experience and the soccer, sports or business questions you have worked on.",
+          "evaluates": "Relevant analytical experience and transferable preparation.",
+          "strong": [
+            "Identifies datasets, tools, stakeholders, questions and personal responsibilities.",
+            "Explains the scale and quality limitations of the data.",
+            "Connects analysis to a decision, action or measurable outcome."
+          ],
+          "acceptable": "Provides relevant experience but limited ownership, method, evidence or outcome detail.",
+          "weakOrConcerning": "Lists tools or courses without demonstrating analysis, exaggerates ownership or cannot explain how the work was used.",
+          "calibration": {
+            "response": "I have worked with academy registration and match-event datasets for two seasons, using spreadsheets and SQL to prepare reports for staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "What is the role of a Data Analyst within a soccer organization?",
+          "evaluates": "Role clarity and organizational understanding.",
+          "strong": [
+            "Explains data collection, validation, analysis, interpretation, reporting and decision support.",
+            "Connects work to performance, recruitment, operations or commercial objectives as assigned.",
+            "Distinguishes quantitative analysis from video coding, coaching decisions and data engineering."
+          ],
+          "acceptable": "Identifies reports and statistics but omits quality control, interpretation or stakeholder decision support.",
+          "weakOrConcerning": "Defines the role only as producing numbers, watching matches or telling coaches what decisions to make.",
+          "calibration": {
+            "response": "A data analyst makes information reliable, investigates questions and communicates evidence to the people who make football and business decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "Describe an analytical project you completed. What was the question, method, result, limitation and impact?",
+          "evaluates": "End-to-end ownership, evidence and reflection.",
+          "strong": [
+            "States a clear question, data source, method and success criterion.",
+            "Explains personal decisions and validates the result.",
+            "Reports the finding, limitation, stakeholder use and lesson honestly."
+          ],
+          "acceptable": "Describes a relevant project but omits some method, validation, limitation, impact or ownership detail.",
+          "weakOrConcerning": "Presents correlation as causation, cannot explain the method or claims impact without evidence.",
+          "calibration": {
+            "response": "I examined player attendance and retention by age group, cleaned records and found differences, but did not formally test the intervention's impact.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Data Acquisition, Quality and Governance",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you collect, clean and validate data before beginning an analysis?",
+          "evaluates": "Data-quality methodology and reproducibility.",
+          "strong": [
+            "Defines source, fields, units, identifiers, time period and expected ranges.",
+            "Checks completeness, duplicates, missingness, outliers, consistency and source changes.",
+            "Documents transformations and preserves raw data or an auditable version."
+          ],
+          "acceptable": "Uses reasonable cleaning and validation steps but provides limited documentation or reproducibility detail.",
+          "weakOrConcerning": "Starts analysis without checking quality, silently deletes inconvenient values or overwrites the only source file.",
+          "calibration": {
+            "response": "I verify field definitions, duplicates, missing records and ranges, then keep a copy of the original and log cleaning steps.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "What would you do if data from two providers or internal systems did not match?",
+          "evaluates": "Reconciliation and source judgment.",
+          "strong": [
+            "Compares definitions, collection methods, timestamps, units, scope and update rules.",
+            "Quantifies the discrepancy and identifies the authoritative owner or use case.",
+            "Documents the decision and communicates uncertainty rather than forcing agreement."
+          ],
+          "acceptable": "Would investigate and consult source owners but provides limited comparison or documentation detail.",
+          "weakOrConcerning": "Chooses the preferred number without investigation, averages incompatible data or hides the discrepancy.",
+          "calibration": {
+            "response": "I compare dates, units, definitions and collection methods, document differences and ask the data owners which source is authoritative.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How would you design a reliable workflow for recurring match, player or organizational reporting?",
+          "evaluates": "Automation, controls and operational reliability.",
+          "strong": [
+            "Defines inputs, owners, schedule, validation, transformations, outputs and failure alerts.",
+            "Uses version control, data dictionaries, access controls and reproducible logic.",
+            "Plans review, handover, exception handling and monitoring for source changes."
+          ],
+          "acceptable": "Describes an organized repeatable workflow but limited controls, documentation or failure handling.",
+          "weakOrConcerning": "Relies on undocumented manual steps, one individual or copied spreadsheets with no validation.",
+          "calibration": {
+            "response": "I would schedule ingestion, validation and report generation with checks for missing files and a clear handover procedure.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Analytical Methods and Soccer Interpretation",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you choose metrics for evaluating a player, team or organizational objective?",
+          "evaluates": "Metric selection and contextual judgment.",
+          "strong": [
+            "Starts with the decision or question rather than available metrics.",
+            "Defines population, role, position, competition, minutes, time period and relevant context.",
+            "Uses multiple complementary indicators and explains limitations."
+          ],
+          "acceptable": "Selects relevant metrics and some context but provides limited definition, comparison logic or limitation.",
+          "weakOrConcerning": "Uses one headline metric, ignores role and sample size or selects metrics only because they are available.",
+          "calibration": {
+            "response": "I begin with the actual decision, then choose several role-appropriate indicators and check sample size and match context.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "A team's results have declined. How would you use data to investigate possible causes?",
+          "evaluates": "Problem framing, hypothesis testing and soccer reasoning.",
+          "strong": [
+            "Breaks the issue into performance, opponent, availability, game-state and process hypotheses.",
+            "Checks sample size, schedule strength, expected versus actual outcomes and metric stability.",
+            "Uses data to narrow questions and collaborates with video and technical staff for context."
+          ],
+          "acceptable": "Reviews several relevant trends but provides limited hypothesis structure, context or validation.",
+          "weakOrConcerning": "Assumes one cause from a simple trend, ignores context or presents data as a substitute for football analysis.",
+          "calibration": {
+            "response": "I would compare recent trends, opponents, game states and player availability, and ask video staff to check alternative explanations.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding, but lacks specific validation, measurement, reproducibility or documented follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How would you compare players or teams fairly across different positions, leagues, age groups or playing time?",
+          "evaluates": "Benchmarking, normalization and bias awareness.",
+          "strong": [
+            "Defines comparable groups and minimum sample requirements.",
+            "Adjusts or contextualizes for role, minutes, possession, competition level, age and team style as relevant.",
+            "Uses percentiles, rates, uncertainty or models appropriately and explains residual limitations."
+          ],
+          "acceptable": "Uses rates and relevant comparison groups but provides limited context or uncertainty treatment.",
+          "weakOrConcerning": "Compares raw totals directly, mixes incompatible populations or produces a universal ranking without limitations.",
+          "calibration": {
+            "response": "I use per-90 rates, role-specific groups and competition context, though I am still improving my uncertainty reporting.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Reporting, Communication and Decision Support",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How would you explain a complex analytical finding to coaches, executives, scouts or non-technical staff?",
+          "evaluates": "Communication, audience adaptation and decision support.",
+          "strong": [
+            "Begins with the question, conclusion, confidence and practical implication.",
+            "Uses clear visuals and plain language while preserving important limitations.",
+            "Adapts detail to the audience and checks understanding."
+          ],
+          "acceptable": "Communicates clearly and uses visuals but provides limited decision context, uncertainty or audience adaptation.",
+          "weakOrConcerning": "Uses jargon, overwhelms the audience, hides uncertainty or presents the model as unquestionable.",
+          "calibration": {
+            "response": "I start with the decision and use two or three simple visuals, explain limitations and tailor details to the audience.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "Walk us through your process for building a dashboard or recurring analytical report.",
+          "evaluates": "Reporting design, usability and quality control.",
+          "strong": [
+            "Defines audience, decisions, metric definitions, refresh frequency and ownership.",
+            "Prioritizes essential information, filters, comparisons and exception signals.",
+            "Tests accuracy and usability, documents definitions and reviews whether the report drives action."
+          ],
+          "acceptable": "Builds a logical report with relevant metrics but limited user testing, governance or follow-up.",
+          "weakOrConcerning": "Starts with visual design, includes every available metric or publishes without validating calculations.",
+          "calibration": {
+            "response": "I ask stakeholders what decisions they need, define the metrics and refresh schedule, test calculations and collect feedback.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "What would you do if your analysis conflicted with a coach's, scout's or manager's observation?",
+          "evaluates": "Professional challenge, triangulation and humility.",
+          "strong": [
+            "Clarifies definitions and the decision being discussed.",
+            "Rechecks data, method, sample and assumptions and asks for the observation's context.",
+            "Uses video or additional evidence where appropriate and presents uncertainty respectfully.",
+            "Documents the conclusion without forcing false agreement."
+          ],
+          "acceptable": "Would review both perspectives and discuss respectfully but provides limited verification or resolution process.",
+          "weakOrConcerning": "Dismisses domain expertise, changes the result to satisfy authority or defends the model without review.",
+          "calibration": {
+            "response": "I would recheck definitions and sample size, then discuss the coach's observations and look for video or contextual evidence.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Collaboration, Ethics and Professional Development",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you collaborate with video analysts, coaches, scouts, medical, recruitment and business staff?",
+          "evaluates": "Cross-functional contribution and role boundaries.",
+          "strong": [
+            "Clarifies the question, definitions, owner, deadline, evidence and decision rights.",
+            "Combines quantitative findings with relevant video, domain or operational context.",
+            "Provides reproducible outputs and closes the feedback loop."
+          ],
+          "acceptable": "Communicates and shares analysis with stakeholders but provides limited role clarity or follow-through.",
+          "weakOrConcerning": "Works in isolation, treats other expertise as inferior or allows stakeholders to redefine results without evidence.",
+          "calibration": {
+            "response": "I clarify the question and owner, share reproducible results with video and coaching staff, and incorporate feedback.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "What would you do if asked to remove an unfavorable result, manipulate a metric or use data beyond its approved purpose?",
+          "evaluates": "Analytical integrity, privacy and escalation.",
+          "strong": [
+            "Identifies accuracy, consent, privacy, fairness and reputational risks.",
+            "Clarifies the request, refuses manipulation and offers a valid alternative analysis.",
+            "Documents the issue and follows appropriate governance or escalation procedures."
+          ],
+          "acceptable": "Recognizes the concern and would seek guidance but provides limited documentation or alternative action.",
+          "weakOrConcerning": "Changes the analysis to satisfy leadership, conceals findings or reuses personal data without authorization.",
+          "calibration": {
+            "response": "I would not remove an unfavorable finding; I would document concerns, propose a legitimate sensitivity check and escalate improper requests.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a credible data-analysis approach but needs stronger verification, implementation detail, outcome evidence or explicit treatment of limitations to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How do you maintain your analytical skills and ensure reliable delivery when tools, data sources or deadlines change?",
+          "evaluates": "Learning mindset, adaptability and operational reliability.",
+          "strong": [
+            "Uses structured learning, documentation, peer review and validation rather than chasing tools.",
+            "Tests source or method changes before production and communicates impact early.",
+            "Plans version control, backups, handover and realistic deadlines."
+          ],
+          "acceptable": "Shows learning and adaptation with basic reliability practices but limited change-control detail.",
+          "weakOrConcerning": "Uses new tools without validation, depends on one undocumented workflow or misses deadlines without early communication.",
+          "calibration": {
+            "response": "I read technical notes, practice SQL and review colleagues' work, but I have not fully formalized change-control tests.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding, but lacks specific validation, measurement, reproducibility or documented follow-through."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Model Validation, Accountability and Results",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How would you test whether an analytical model or new metric is reliable before it is used in recruitment or player evaluation?",
+          "evaluates": "Model validation, uncertainty and decision risk.",
+          "strong": [
+            "Defines the decision, target, reference standard and relevant population before testing.",
+            "Uses appropriate validation, holdout or out-of-sample checks and examines missingness, bias and uncertainty.",
+            "Tests robustness across positions, ages, competition levels or time periods when relevant.",
+            "Explains limitations, documentation and human review before operational use."
+          ],
+          "acceptable": "Proposes testing against past data and expert feedback but lacks a clear validation design or uncertainty analysis.",
+          "weakOrConcerning": "Deploys a model because its accuracy looks high without checking leakage, bias or decision consequences.",
+          "calibration": {
+            "response": "I would compare model results with known cases and ask coaches to review them, but I have not run a proper holdout evaluation.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding, but lacks specific validation, measurement, reproducibility or documented follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "Describe an analytical error, failed assumption or unexpected result you encountered. How did you investigate and correct it?",
+          "evaluates": "Accountability, troubleshooting and learning from errors.",
+          "strong": [
+            "Describes a specific analytical issue and its potential impact on users or decisions.",
+            "Traces the problem through source data, definitions, transformations, code and assumptions.",
+            "Corrects and validates outputs, informs affected stakeholders and documents changes.",
+            "Explains a preventive control or learning applied to later work."
+          ],
+          "acceptable": "Describes an error and reasonable fix but omits impact assessment, validation or prevention.",
+          "weakOrConcerning": "Conceals errors, blames others exclusively or changes results without an audit trail.",
+          "calibration": {
+            "response": "Once I found duplicate match records inflating a metric; I corrected the join and informed the report owner, though I did not document prevention.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding, but lacks specific validation, measurement, reproducibility or documented follow-through."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "How do you evaluate the impact of your analytical work and decide what to improve in your next reporting cycle?",
+          "evaluates": "Outcome measurement, stakeholder feedback and continuous improvement.",
+          "strong": [
+            "Defines useful adoption, decision quality, timeliness, data reliability or process measures.",
+            "Collects stakeholder feedback and distinguishes analyst contribution from broader organizational outcomes.",
+            "Reviews baselines, limitations and whether recommendations led to useful decisions.",
+            "Describes a concrete change to methods, documentation or delivery based on evidence."
+          ],
+          "acceptable": "Mentions dashboard use and stakeholder feedback but gives limited baseline or follow-up.",
+          "weakOrConcerning": "Measures success only by number of dashboards, charts or model complexity.",
+          "calibration": {
+            "response": "I check whether people use the reports and ask for feedback, but I have not measured decision improvements against a baseline.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding, but lacks specific validation, measurement, reproducibility or documented follow-through."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

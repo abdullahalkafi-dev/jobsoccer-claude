@@ -42,3 +42,7 @@ Thumbs.db
 AGENTS.md
 Agents.md
 agents.md
+
+# Python cache
+__pycache__/
+*.pyc

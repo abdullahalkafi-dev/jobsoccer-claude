@@ -1,0 +1,466 @@
+{
+  "rubricId": "office_staff.event_manager.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Event Manager Final.docx",
+  "role": "Office Staff",
+  "position": "Event Manager",
+  "displayName": "Event Manager",
+  "clientRoleId": "event_manager",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate Event Manager responses for planning, budgets, logistics, event-day execution, stakeholder coordination, safeguarding, emergency preparedness and measurable outcomes. Do not apply Head Coach, Team Manager or PR Manager criteria.",
+    "corePrinciple": "Strong answers connect an event objective to a realistic plan, assigned responsibilities, risk controls, clear communication and verifiable outcomes."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Event Manager duties, not Head Coach, Team Manager or general marketing criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish familiarity with soccer events from demonstrated operational ownership and reliable event delivery."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material written/video contradictions for human review; contradiction alone does not establish dishonesty."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer event budgets, licenses, safeguarding qualifications, supplier contracts or outcomes not evidenced in the response."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate job-relevant content only, not accent, grammar, appearance, age, gender, ethnicity, disability or video production quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward event scale, popularity or confidence without specific evidence of personal responsibility and safe execution."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "51/72",
+    "percentage": "70.8%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Event planning, vendor coordination, matchday execution, safety awareness and stakeholder communication",
+    "mainWeaknesses": "Volunteer performance follow-up, outcome measurement, 90-day milestones and documented controls",
+    "summary": "The fictional candidate demonstrates a generally sound approach to soccer event planning, stakeholder communication, supplier coordination and operational safety. Responses are practical, particularly around matchday preparation and incident escalation. However, several answers lack measurable performance indicators, documented volunteer-management controls and a detailed first-90-day plan. Human reviewers should request event schedules, budgets, risk assessments and examples of post-event reports."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Event Management Role",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What experience has prepared you to manage events for a soccer club, academy or sporting organization?",
+          "evaluates": "Relevant event experience, ownership and learning.",
+          "strong": [
+            "Names event types, scale, stakeholders and own responsibilities.",
+            "Explains an operational challenge, action and verifiable outcome.",
+            "Identifies lessons and limits of own authority."
+          ],
+          "acceptable": "Relevant experience without clear ownership or outcomes.",
+          "weakOrConcerning": "Relies only on enthusiasm or takes credit for others' work.",
+          "calibration": {
+            "response": "I coordinated academy tournament registration and volunteer schedules for two seasons, though I did not control the entire event budget.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the Event Manager's responsibilities within a soccer organization?",
+          "evaluates": "Role clarity and collaboration.",
+          "strong": [
+            "Explains planning, logistics, budget, vendors, safety and event experience.",
+            "Defines decisions, approvals and relationships with club leadership and technical staff.",
+            "Separates event delivery from coaching and selection decisions."
+          ],
+          "acceptable": "Describes logistics but misses governance or participant welfare.",
+          "weakOrConcerning": "Claims authority over coaching decisions or disregards safety.",
+          "calibration": {
+            "response": "I coordinate the event plan, vendors and communication so teams and families have a reliable experience, while coaches handle sporting decisions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "What makes a soccer event successful beyond attendance or revenue?",
+          "evaluates": "Balanced objectives and event quality.",
+          "strong": [
+            "Defines sporting and organizational purpose and audience needs.",
+            "Considers safety, accessibility, participant satisfaction and partner obligations.",
+            "Identifies measurable service, financial and operational outcomes."
+          ],
+          "acceptable": "Mentions satisfaction and attendance but limited measurement.",
+          "weakOrConcerning": "Equates success only with ticket sales or publicity.",
+          "calibration": {
+            "response": "I look at whether matches start on time, participants feel safe, partners receive what was promised and the budget stays under control.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Event Strategy, Planning & Budgeting",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How would you develop an event plan for a two-day youth soccer tournament?",
+          "evaluates": "Structured planning and sequencing.",
+          "strong": [
+            "Defines scope, participants, venues, match schedule, permits and dependencies.",
+            "Assigns owners, deadlines, budget and communications checkpoints.",
+            "Plans safeguarding, weather and operational contingencies."
+          ],
+          "acceptable": "Outlines sensible tasks but lacks dependencies or risk review.",
+          "weakOrConcerning": "Starts promoting before securing essential venue or approvals.",
+          "calibration": {
+            "response": "I would confirm the fields and age groups, build a timeline, assign registration and vendor tasks and prepare a rain plan.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you create and monitor an event budget?",
+          "evaluates": "Budget ownership and financial control.",
+          "strong": [
+            "Forecasts fixed and variable costs, revenue and contingency.",
+            "Uses quotations, approvals and committed-versus-actual tracking.",
+            "Reports variances and protects financial records."
+          ],
+          "acceptable": "Lists costs and tracks spending but lacks control detail.",
+          "weakOrConcerning": "Commits funds without approval or ignores cash-flow risks.",
+          "calibration": {
+            "response": "I estimate field rental, officials, equipment and staff costs, then track invoices and report differences to the director.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How would you choose a venue and confirm it is suitable for a soccer event?",
+          "evaluates": "Venue due diligence and accessibility.",
+          "strong": [
+            "Assesses pitch quality, capacity, parking, access, sanitation and equipment.",
+            "Checks permissions, insurance, emergency access and accessibility.",
+            "Documents inspections, contractual requirements and backup options."
+          ],
+          "acceptable": "Checks fields and capacity but omits important compliance checks.",
+          "weakOrConcerning": "Books a venue without verifying safety or permissions.",
+          "calibration": {
+            "response": "I would inspect the fields, parking, restrooms and entry routes, confirm availability and ask the facility manager about emergency access.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Logistics, Vendors & Matchday Operations",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How do you coordinate referees, vendors, transport, equipment and event staff?",
+          "evaluates": "Supplier coordination and accountability.",
+          "strong": [
+            "Defines scopes, schedules, contacts, deliverables and approvals.",
+            "Uses confirmations, checklists and escalation routes.",
+            "Verifies readiness and documents changes."
+          ],
+          "acceptable": "Coordinates contacts and schedules but lacks service controls.",
+          "weakOrConcerning": "Assumes suppliers will arrive without confirmation.",
+          "calibration": {
+            "response": "I maintain one contact sheet, written schedules and a checklist for officials, equipment and vendors, with a backup contact for key services.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How would you organize registrations, credentials, schedules and participant information?",
+          "evaluates": "Registration workflows and data protection.",
+          "strong": [
+            "Designs clear registration and verification steps.",
+            "Controls access to minors' and families' information.",
+            "Communicates schedules and updates through approved channels."
+          ],
+          "acceptable": "Describes a workable registration system but limited privacy controls.",
+          "weakOrConcerning": "Shares youth data publicly or fails to verify participants.",
+          "calibration": {
+            "response": "I use a central registration list, check team rosters before the event and send schedule updates through designated team contacts.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "What is your matchday operating plan from setup to final departure?",
+          "evaluates": "Event-day operational execution.",
+          "strong": [
+            "Defines opening checks, staff briefings, check-in and field readiness.",
+            "Uses a command structure, communication channels and issue log.",
+            "Includes closing, incident records and venue handover."
+          ],
+          "acceptable": "Covers setup and check-in but not complete closeout.",
+          "weakOrConcerning": "Has no clear responsibility for emergencies or field readiness.",
+          "calibration": {
+            "response": "I arrive early for field checks, brief volunteers, verify referees and run check-in, then collect equipment and close with the facility.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Stakeholder Communication & Experience",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How would you communicate important event information to clubs, coaches, parents and sponsors?",
+          "evaluates": "Stakeholder-specific communication.",
+          "strong": [
+            "Tailors logistics and updates to distinct audiences.",
+            "Uses accurate, accessible and consistent approved information.",
+            "Sets contact points, timing and confirmation methods."
+          ],
+          "acceptable": "Explains announcements but limited audience-specific follow-up.",
+          "weakOrConcerning": "Issues conflicting instructions or discloses private information.",
+          "calibration": {
+            "response": "I send clubs the match schedule, parents the arrival and parking details, and sponsors their activation timetable.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How do you handle complaints or disputes involving parents, teams or officials?",
+          "evaluates": "Conflict resolution and fair escalation.",
+          "strong": [
+            "Listens, documents facts and applies published procedures.",
+            "Maintains boundaries and protects staff and participant welfare.",
+            "Escalates disciplinary or safeguarding issues to authorized officials."
+          ],
+          "acceptable": "Responds calmly but lacks documented process.",
+          "weakOrConcerning": "Promises unauthorized rulings or publicly confronts complainants.",
+          "calibration": {
+            "response": "I listen to the concern, check the event rules and refer referee decisions or serious behavior to the authorized event lead.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How would you deliver value to sponsors and partners without disrupting the event?",
+          "evaluates": "Partner activation and contractual delivery.",
+          "strong": [
+            "Clarifies deliverables, locations, approvals and brand restrictions.",
+            "Coordinates setup and protects player safety and event flow.",
+            "Documents fulfillment and gathers partner feedback."
+          ],
+          "acceptable": "Plans branding and hospitality but limited verification.",
+          "weakOrConcerning": "Promises exposure or access not approved in contracts.",
+          "calibration": {
+            "response": "I would agree on signage and announcements in advance, check placement before opening and share a short delivery recap.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Risk Management, Safeguarding & Problem Solving",
+      "questions": [
+        {
+          "id": 13,
+          "text": "A thunderstorm interrupts matches. What actions would you take?",
+          "evaluates": "Emergency response and operational judgment.",
+          "strong": [
+            "Follows venue and governing-body lightning and weather procedures.",
+            "Prioritizes evacuation, clear authority and reliable updates.",
+            "Documents restart or cancellation decisions and contingencies."
+          ],
+          "acceptable": "Would stop play and communicate but lacks detailed protocol.",
+          "weakOrConcerning": "Continues play despite an official safety warning.",
+          "calibration": {
+            "response": "I would suspend activities, direct teams to approved shelter, follow the venue safety officer and update clubs before any restart.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "How do you protect minors and manage consent, medical emergencies and confidential information at events?",
+          "evaluates": "Safeguarding and scope of responsibility.",
+          "strong": [
+            "Verifies safeguarding protocols, appropriate supervision and consent.",
+            "Coordinates emergency medical response through qualified personnel.",
+            "Limits access to personal and medical data and records incidents appropriately."
+          ],
+          "acceptable": "Recognizes safeguarding and medical escalation but limited specifics.",
+          "weakOrConcerning": "Publishes youth medical details or bypasses emergency procedures.",
+          "calibration": {
+            "response": "I would use approved photo permissions, restrict roster access and contact the designated safeguarding or medical lead when an issue occurs.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "What would you do if a key supplier failed to arrive just before the event begins?",
+          "evaluates": "Contingency planning and rapid prioritization.",
+          "strong": [
+            "Assesses criticality and activates preapproved backups.",
+            "Communicates implications and seeks authorized spending decisions.",
+            "Records the issue and protects participant safety."
+          ],
+          "acceptable": "Finds alternatives but lacks approval or prioritization process.",
+          "weakOrConcerning": "Makes unsafe substitutions or hides disruption.",
+          "calibration": {
+            "response": "I would contact the backup supplier, inform the operations lead and adjust the schedule if the missing service affected safe delivery.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a practical event-management approach, but stronger documented outcomes, operational detail or evidence would be required for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Evaluation, Leadership & Professional Development",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How do you lead and brief volunteers or temporary event staff?",
+          "evaluates": "People coordination and delegation.",
+          "strong": [
+            "Defines roles, shifts, reporting lines and escalation paths.",
+            "Provides training on service, safeguarding and safety basics.",
+            "Checks understanding and adjusts staffing based on demand."
+          ],
+          "acceptable": "Assigns tasks and briefs staff but limited performance follow-up.",
+          "weakOrConcerning": "Leaves volunteers unsupervised in sensitive roles.",
+          "calibration": {
+            "response": "I assign stations, share a short briefing sheet and use radio check-ins, although I have not used formal post-shift reviews.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant understanding but lacks sufficiently specific measurement, documented follow-through or complete operational controls."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "How would you evaluate an event and demonstrate its value to the organization?",
+          "evaluates": "Measurement, reporting and improvement.",
+          "strong": [
+            "Sets pre-event targets for finance, service, safety and experience.",
+            "Collects reliable attendance, costs, incident and satisfaction evidence.",
+            "Compares outcomes with baseline and proposes actionable improvements."
+          ],
+          "acceptable": "Tracks attendance and feedback but limited baseline or attribution.",
+          "weakOrConcerning": "Reports only positive numbers or ignores incidents.",
+          "calibration": {
+            "response": "I would review turnout, costs and complaints and ask teams for feedback, but I have not yet developed consistent performance benchmarks.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant understanding but lacks sufficiently specific measurement, documented follow-through or complete operational controls."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "Describe an event mistake you learned from. What would be your priorities during your first 90 days in this role?",
+          "evaluates": "Reflection, accountability and initial priorities.",
+          "strong": [
+            "Owns a specific mistake, correction and preventive control.",
+            "Sets 30/60/90-day listening, audit, planning and implementation milestones.",
+            "Defines owners and measures progress without premature promises."
+          ],
+          "acceptable": "Offers sensible lessons and priorities but limited milestones.",
+          "weakOrConcerning": "Blames others or promises a complete overhaul without review.",
+          "calibration": {
+            "response": "I once sent a schedule before the referee list was final, so now I use an approval checklist. In my first months I would audit processes and improve event templates.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant understanding but lacks sufficiently specific measurement, documented follow-through or complete operational controls."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}
