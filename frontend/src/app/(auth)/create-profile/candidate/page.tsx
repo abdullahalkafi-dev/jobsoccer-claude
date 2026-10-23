@@ -307,7 +307,12 @@ export default function CandidateProfilePage() {
 
     // Office staff
     if (userRole === CandidateRole.OFFICE_STAFF) {
-      return <OfficeStaffVideoForm {...baseVideoProps} />;
+      return (
+        <OfficeStaffVideoForm
+          {...baseVideoProps}
+          position={(formData.professionalInfo as TOfficeStaffProfessionalInfo | undefined)?.position}
+        />
+      );
     }
 
     // On Field staff positions

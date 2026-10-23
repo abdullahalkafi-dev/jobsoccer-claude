@@ -39,7 +39,8 @@ export default function MyProfilePage() {
   const currentUser = useAppSelector((state) => state.auth.user);
 
   // Interview assessment (client scoring guide) for on-field staff; refreshes while it is being prepared
-  const isOnFieldStaff = currentUser?.role === "On field staff";
+  // Interview assessment applies to on-field and office staff
+  const isOnFieldStaff = currentUser?.role === "On field staff" || currentUser?.role === "Office Staff";
   const [assessmentPolling, setAssessmentPolling] = useState(0);
   const { data: assessment, isLoading: isLoadingAssessment } = useGetMyAssessmentQuery(undefined, {
     skip: !isOnFieldStaff,

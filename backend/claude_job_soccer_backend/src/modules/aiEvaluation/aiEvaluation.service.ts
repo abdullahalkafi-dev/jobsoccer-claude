@@ -28,7 +28,10 @@ type Viewer = { id: string; userType: string };
 
 /** True when this candidate is scored with a client scoring guide (new pipeline). */
 export const usesRubricScoring = (role: string, position?: string | null): boolean =>
-  aiConfig.evalEnabled && role === CandidateRole.ON_FIELD_STAFF && !!position && !!resolveRubric({ role, position });
+  aiConfig.evalEnabled &&
+  (role === CandidateRole.ON_FIELD_STAFF || role === CandidateRole.OFFICE_STAFF) &&
+  !!position &&
+  !!resolveRubric({ role, position });
 
 // The interview video holds the answers; other videos may add to them.
 const videoOrder = (type?: string) => (type === VideoType.PRE_RECORDED_INTERVIEW ? 0 : 1);
@@ -379,10 +382,14 @@ const listForReview = async (query: { page?: string; limit?: string }) => {
 
 /** Questions shown to candidates for a position (from the client's scoring guide). */
 const getQuestions = (position: string, level?: string) => {
-  const rubric = resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position, level });
+  // Position names are unique across on-field and office staff
+  const rubric =
+    resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position, level }) ??
+    resolveRubric({ role: CandidateRole.OFFICE_STAFF, position, level });
   if (!rubric) throw new AppError(StatusCodes.NOT_FOUND, "No scoring guide for this position");
   return {
     rubricId: rubric.rubricId,
+    role: rubric.role,
     position: rubric.position,
     displayName: rubric.displayName,
     level: rubric.level ?? null,

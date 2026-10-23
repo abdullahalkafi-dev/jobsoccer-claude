@@ -610,19 +610,22 @@ const addUserProfile = async (payload: {
         );
         data.videos = officeStaffProcessedVideos;
 
-        // AI Video Scoring
+        // AI Video Scoring (legacy, synchronous). Positions with a client scoring
+        // guide are assessed in the background after the profile is saved.
         let officeVideoScore: number | null = null;
-        try {
-          const officeScoreResult = await scoreStaffVideosFromUpload({
-            videoFiles,
-            role: CandidateRole.OFFICE_STAFF,
-            position: data.position,
-          });
-          if (officeScoreResult.totalScore > 0) {
-            officeVideoScore = officeScoreResult.totalScore;
+        if (!usesRubricScoring(CandidateRole.OFFICE_STAFF, data.position)) {
+          try {
+            const officeScoreResult = await scoreStaffVideosFromUpload({
+              videoFiles,
+              role: CandidateRole.OFFICE_STAFF,
+              position: data.position,
+            });
+            if (officeScoreResult.totalScore > 0) {
+              officeVideoScore = officeScoreResult.totalScore;
+            }
+          } catch (scoringError) {
+            logger.error("AI video scoring failed (non-blocking):", { error: scoringError });
           }
-        } catch (scoringError) {
-          logger.error("AI video scoring failed (non-blocking):", { error: scoringError });
         }
 
         validatedData = OfficeStaffCanDto.createOfficeStaffCanDto.parse(data);
