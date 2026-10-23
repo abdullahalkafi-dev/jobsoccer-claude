@@ -1,0 +1,466 @@
+{
+  "rubricId": "office_staff.pr_communications_manager.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "PR & Communication Manager Final.docx",
+  "role": "Office Staff",
+  "position": "PR & Communications Manager",
+  "displayName": "PR & Communications Manager",
+  "clientRoleId": "pr_communications_manager",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate each response for the PR & Communications Manager position, emphasizing strategy, media relations, factual accuracy, crisis response, reputation, safeguarding, stakeholder communication and measurable outcomes. Do not apply Head Coach, Digital Marketing or Community Manager criteria.",
+    "corePrinciple": "Strong answers demonstrate accurate, audience-aware communication, clear approvals, credible examples, ethical boundaries, crisis readiness and evidence of impact."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against PR & Communications Manager responsibilities, not Head Coach, Digital Marketing or Community Manager expectations."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish social media familiarity from demonstrated media relations, strategic messaging and crisis communications competence."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material contradictions between written and video claims for human review, not automatic rejection."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer media relationships, crisis authority, legal expertise, safeguarding credentials or campaign outcomes not stated."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate relevant content only, not accent, grammar, appearance, age, gender, ethnicity, disability or video production quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward confidence, publicity volume, jargon or response length without reliable evidence."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "52/72",
+    "percentage": "72.2%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Message accuracy, media relations, editorial approvals, stakeholder communication and integrity",
+    "mainWeaknesses": "Formal impact measurement, detailed crisis protocols, measurable 90-day milestones",
+    "summary": "The fictional candidate demonstrates a credible understanding of PR strategy, media relations, message accuracy, stakeholder coordination and ethical communication. Responses are generally practical, particularly regarding approvals and reputation protection. However, there is insufficient evidence of formal impact measurement, detailed crisis protocols and measurable 90-day objectives. A human reviewer should request published work samples, media outcomes, a crisis scenario exercise and a communications plan."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background, Role Understanding & Professional Judgment",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What professional experiences have prepared you to manage public relations and communications for a soccer organization?",
+          "evaluates": "Relevant experience and ownership.",
+          "strong": [
+            "Identifies campaigns, audiences, channels and personal responsibilities.",
+            "Provides an example with objective, action and outcome.",
+            "Acknowledges lessons and the limits of personal contribution."
+          ],
+          "acceptable": "Describes relevant exposure but few specific outcomes.",
+          "weakOrConcerning": "Relies on enthusiasm, reputation or generic media familiarity.",
+          "calibration": {
+            "response": "I coordinated club announcements and local media outreach for two seasons, although I did not lead the entire communications budget.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How do you define the responsibilities and boundaries of a PR and Communications Manager?",
+          "evaluates": "Role clarity and organizational accountability.",
+          "strong": [
+            "Distinguishes PR strategy, media relations, internal communications and marketing.",
+            "Explains approvals, spokesperson authority and confidentiality.",
+            "Connects communications to organizational goals and stakeholder trust."
+          ],
+          "acceptable": "Identifies media and messaging duties without clear governance.",
+          "weakOrConcerning": "Assumes the role can release confidential or unapproved statements.",
+          "calibration": {
+            "response": "I help the club communicate clearly with fans, families, sponsors and journalists while obtaining approval for official positions.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How would you learn an organization's identity and translate it into consistent public messaging?",
+          "evaluates": "Brand understanding and message development.",
+          "strong": [
+            "Reviews club mission, audiences, history and existing communications.",
+            "Defines core messages, tone and practical editorial guidelines.",
+            "Tests alignment with leadership and measures understanding."
+          ],
+          "acceptable": "Proposes consistent messages but no research or testing.",
+          "weakOrConcerning": "Copies another club's identity or makes unsupported promises.",
+          "calibration": {
+            "response": "I would review club materials, interview leadership and develop three key messages, then check drafts against them.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Communication Strategy & Brand Positioning",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How would you develop a seasonal communications strategy for a soccer club or academy?",
+          "evaluates": "Strategic planning and prioritization.",
+          "strong": [
+            "Sets measurable goals for audiences and club priorities.",
+            "Maps channels, calendar, owners, approvals and resources.",
+            "Defines evaluation points and contingency capacity."
+          ],
+          "acceptable": "Suggests content calendar and goals but limited ownership or measurement.",
+          "weakOrConcerning": "Plans only promotional posts without stakeholder or risk considerations.",
+          "calibration": {
+            "response": "I would build a season calendar around registrations, matches, community programs and club milestones with monthly reviews.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How do you adapt the same announcement for players, parents, supporters, sponsors and journalists?",
+          "evaluates": "Audience-specific communication.",
+          "strong": [
+            "Identifies distinct information needs and accessibility requirements.",
+            "Keeps facts consistent while adapting format, detail and channel.",
+            "Uses clear calls to action and checks comprehension."
+          ],
+          "acceptable": "Recognizes audience differences but lacks validation.",
+          "weakOrConcerning": "Changes material facts between audiences or uses jargon without explanation.",
+          "calibration": {
+            "response": "For parents I emphasize practical dates and actions, while journalists receive verified context and a contact person.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "How do you establish a content approval process that is timely but protects accuracy and the club's reputation?",
+          "evaluates": "Editorial governance and accuracy.",
+          "strong": [
+            "Defines owners, fact-checks, approvals and publishing rights.",
+            "Sets timelines, version control and correction procedures.",
+            "Escalates sensitive, legal, youth or reputational matters."
+          ],
+          "acceptable": "Mentions proofreading and approval but lacks escalation rules.",
+          "weakOrConcerning": "Publishes sensitive statements without verification or authorization.",
+          "calibration": {
+            "response": "I draft from confirmed facts, send sensitive items to the designated approver and keep the final approved version.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Media Relations, Content & Stakeholder Engagement",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How would you build and maintain productive relationships with local, national and soccer-specific media?",
+          "evaluates": "Media relations and relationship management.",
+          "strong": [
+            "Maps relevant journalists and legitimate news interests.",
+            "Provides accurate timely materials and responsive follow-up.",
+            "Respects editorial independence and tracks quality of coverage."
+          ],
+          "acceptable": "Suggests media lists and outreach but few relationship-building details.",
+          "weakOrConcerning": "Offers favors for coverage or pressures journalists to suppress facts.",
+          "calibration": {
+            "response": "I maintain a journalist contact list and share concise verified releases, then follow up with relevant interview opportunities.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "Describe how you would prepare a coach or club executive for a media interview or press conference.",
+          "evaluates": "Spokesperson preparation and message discipline.",
+          "strong": [
+            "Clarifies objectives, key facts, likely difficult questions and boundaries.",
+            "Conducts practice with clear truthful answers and escalation cues.",
+            "Coordinates accessibility, timing and post-interview follow-up."
+          ],
+          "acceptable": "Prepares talking points but limited risk rehearsal.",
+          "weakOrConcerning": "Coaches the spokesperson to mislead or disclose confidential information.",
+          "calibration": {
+            "response": "I would prepare three key points, rehearse likely questions and agree what information the speaker cannot discuss.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How would you coordinate communications for a major club announcement, partnership or event?",
+          "evaluates": "Campaign execution and cross-channel coordination.",
+          "strong": [
+            "Defines audience, release sequence, stakeholders and embargoes.",
+            "Coordinates approvals, visuals, media outreach and accessibility.",
+            "Tracks delivery, corrections and stakeholder response."
+          ],
+          "acceptable": "Provides reasonable timeline but limited contingency detail.",
+          "weakOrConcerning": "Announces unconfirmed partnerships or ignores stakeholder permissions.",
+          "calibration": {
+            "response": "I would align the announcement with leadership and the partner, prepare a release and social posts and brief staff before publication.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Crisis Communication & Reputation Management",
+      "questions": [
+        {
+          "id": 10,
+          "text": "A damaging allegation about the club begins spreading online. What would you do in the first hour?",
+          "evaluates": "Crisis triage and factual response.",
+          "strong": [
+            "Verifies the issue, identifies potential safety and legal implications.",
+            "Escalates to authorized leadership and preserves evidence.",
+            "Avoids speculation, coordinates holding statement and monitoring."
+          ],
+          "acceptable": "Would investigate and communicate but lacks first-hour priorities.",
+          "weakOrConcerning": "Speculates, attacks complainants or deletes evidence.",
+          "calibration": {
+            "response": "I would alert the club lead, verify what is known, avoid repeating rumors and prepare a short holding statement for approval.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How would you handle an inaccurate news story or misleading social media claim about the organization?",
+          "evaluates": "Corrections and reputation management.",
+          "strong": [
+            "Separates factual errors from criticism or opinion.",
+            "Documents verified facts and requests proportionate corrections.",
+            "Avoids censorship threats and records response effectiveness."
+          ],
+          "acceptable": "Would contact the outlet politely but lacks evidence plan.",
+          "weakOrConcerning": "Threatens critics or misrepresents disputed facts as settled.",
+          "calibration": {
+            "response": "I would gather the source facts, contact the reporter with corrections and publish clarification if the issue affects stakeholders.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "How would you communicate during a serious incident involving a player, especially a minor?",
+          "evaluates": "Safeguarding, privacy and incident communication.",
+          "strong": [
+            "Prioritizes welfare and authorized safeguarding escalation.",
+            "Protects identity, medical details and confidential records.",
+            "Coordinates factual, minimal statements with qualified leadership."
+          ],
+          "acceptable": "Recognizes privacy and escalation but lacks concrete protocols.",
+          "weakOrConcerning": "Names a minor, reveals health details or conducts unauthorized investigation.",
+          "calibration": {
+            "response": "I would refer the matter to safeguarding and leadership, avoid identifying details and share only approved information.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Collaboration, Ethics & Safeguarding",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you coordinate messaging with coaches, administration, marketing, sponsors and senior leadership?",
+          "evaluates": "Cross-functional alignment and ownership.",
+          "strong": [
+            "Clarifies spokesperson, approvals and decision rights.",
+            "Uses briefings, shared calendars and single source of verified facts.",
+            "Resolves conflicting priorities without bypassing safeguards."
+          ],
+          "acceptable": "Describes regular meetings but limited decision ownership.",
+          "weakOrConcerning": "Issues conflicting messages or promises unauthorized commitments.",
+          "calibration": {
+            "response": "I hold short planning meetings and circulate approved messaging so different departments use the same facts.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "What would you do if a senior colleague asked you to hide important facts or publish a statement you knew was misleading?",
+          "evaluates": "Integrity and professional escalation.",
+          "strong": [
+            "Identifies ethical, legal and reputational consequences.",
+            "Declines fabrication and proposes accurate alternatives.",
+            "Documents and escalates concerns through proper channels."
+          ],
+          "acceptable": "Recognizes the problem but lacks a clear action plan.",
+          "weakOrConcerning": "Knowingly fabricates information or conceals material safety issues.",
+          "calibration": {
+            "response": "I would explain the risks, suggest accurate wording and escalate if I were pressured to publish false claims.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How would you ensure communications are inclusive, accessible and appropriate for young players and families?",
+          "evaluates": "Audience protection, inclusion and consent.",
+          "strong": [
+            "Checks youth photo and media permissions and applicable safeguarding rules.",
+            "Uses accessible formats and clear, respectful language.",
+            "Reviews representation, translation needs and complaint channels."
+          ],
+          "acceptable": "Recognizes inclusion and consent but limited procedures.",
+          "weakOrConcerning": "Uses images of minors without authorization or discriminatory language.",
+          "calibration": {
+            "response": "I would verify consent for player images and keep parent-facing information straightforward and accessible.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Measurement, Adaptability & Professional Development",
+      "questions": [
+        {
+          "id": 16,
+          "text": "Which metrics would you use to judge whether PR and communications are actually effective?",
+          "evaluates": "Outcome measurement and attribution.",
+          "strong": [
+            "Separates reach from trust, comprehension, action and quality of coverage.",
+            "Sets baselines and audience-specific objectives.",
+            "Explains limitations and links insights to decisions."
+          ],
+          "acceptable": "Uses coverage and engagement metrics but limited outcome analysis.",
+          "weakOrConcerning": "Treats impressions or publicity volume as proof of trust.",
+          "calibration": {
+            "response": "I would track relevant media coverage, website actions and feedback, though I have not yet measured changes in trust.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding but lacks a specific measurement plan, implementation detail or convincing evidence of results."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "Tell us about a communications mistake or campaign that underperformed. What did you change?",
+          "evaluates": "Accountability and learning.",
+          "strong": [
+            "Gives a specific error or unmet objective and own contribution.",
+            "Describes correction, transparent communication and results.",
+            "Introduces a repeatable improvement or control."
+          ],
+          "acceptable": "Describes a problem and response but limited outcome evidence.",
+          "weakOrConcerning": "Blames others or conceals errors.",
+          "calibration": {
+            "response": "Once an event announcement had an outdated registration link; I corrected it and began checking links before release.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant role-specific approach, but independently verified outcomes, detailed process or stronger supporting evidence would be needed for 4/4."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 18,
+          "text": "What would your first 90 days look like as PR and Communications Manager, and how would you evaluate progress?",
+          "evaluates": "Implementation planning and reflective leadership.",
+          "strong": [
+            "Sequences stakeholder listening, channel and risk audit, then priorities.",
+            "Defines 30/60/90-day owners, deliverables and indicators.",
+            "Balances quick wins with approvals, safeguarding and longer-term planning."
+          ],
+          "acceptable": "Gives sensible priorities but few milestones or baselines.",
+          "weakOrConcerning": "Promises a full rebrand immediately without understanding the club.",
+          "calibration": {
+            "response": "I would meet staff, audit channels and key messages, then build a content calendar and review the main communication gaps.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Shows basic relevant understanding but lacks a specific measurement plan, implementation detail or convincing evidence of results."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

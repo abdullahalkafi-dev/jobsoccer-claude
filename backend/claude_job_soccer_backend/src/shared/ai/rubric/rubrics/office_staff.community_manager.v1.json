@@ -1,0 +1,482 @@
+{
+  "rubricId": "office_staff.community_manager.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Community Manager Final.docx",
+  "role": "Office Staff",
+  "position": "Community Manager",
+  "displayName": "Community Manager",
+  "clientRoleId": "community_manager",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate Community Manager responses for member engagement, constructive communication, service quality, moderation, reputation, feedback reporting, safeguarding and ethical judgment. Do not substitute Digital Marketing, customer support-only, On-Field Staff or communications-director criteria.",
+    "corePrinciple": "Strong responses connect community understanding to practical processes, appropriate boundaries, evidence, member trust, meaningful engagement and organizational outcomes."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Community Manager responsibilities, not Digital Marketing, On-Field Staff, public relations or customer-support-only criteria."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish platform familiarity and sociability from demonstrated community-management skills and responsible judgment."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic answers as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material written/video contradictions for human review; do not automatically infer dishonesty."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer permissions, safeguarding training, platform access, ownership or results that the candidate did not state."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate job-relevant content only; do not score accent, grammar, appearance, age, gender, ethnicity, disability or video production quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward follower count, popularity, confidence or jargon unless connected to community quality and verified outcomes."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "49/72",
+    "percentage": "68.1%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Stakeholder communication, moderation judgment, ethical conduct, community strategy",
+    "mainWeaknesses": "Member retention measurement, service-level standards, event risk planning, verified outcomes",
+    "summary": "The fictional candidate demonstrates a credible community-service mindset, sensible moderation judgment and awareness of stakeholder needs. Responses show practical engagement ideas and ethical boundaries, but several lack reliable outcome evidence, formal support service standards, retention measurement and documented event or development processes. Human reviewers should request examples of actual initiatives, moderation decisions and community reporting."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background, Role Understanding and Motivation",
+      "questions": [
+        {
+          "id": 1,
+          "text": "Tell us about your community-management, customer-engagement, communications, or soccer-industry experience.",
+          "evaluates": "Relevant experience and transferable preparation.",
+          "strong": [
+            "Identifies specific communities, audiences, platforms, membership sizes or environments.",
+            "Explains actual responsibilities, level of access and personal contribution.",
+            "Connects prior work to engagement, support, moderation, retention or trust.",
+            "Distinguishes community management from content publishing alone."
+          ],
+          "acceptable": "Provides relevant experience but limited detail about responsibilities, scale, outcomes or personal contribution.",
+          "weakOrConcerning": "Relies only on being active on social media or being a soccer fan and cannot connect experience to community responsibilities.",
+          "calibration": {
+            "response": "I moderated a soccer academy's online parent and coach community for two seasons, answered questions and helped coordinate updates, but I did not own the overall strategy.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "Why do you want to manage a community within a soccer organization or platform?",
+          "evaluates": "Motivation, service mindset and soccer-sector awareness.",
+          "strong": [
+            "Shows genuine interest in helping members and strengthening the organization.",
+            "Recognizes the different needs of players, parents, coaches, clubs, academies and partners.",
+            "Connects career goals to realistic contribution and continuous learning."
+          ],
+          "acceptable": "Shows positive motivation but gives generic reasons or limited understanding of the community's different stakeholders.",
+          "weakOrConcerning": "Focuses mainly on access, status, followers, famous players, personal promotion or authority over members.",
+          "calibration": {
+            "response": "I enjoy connecting families and coaches with reliable information, and I want to make participation more useful than simply following a page.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "What do you believe are the main responsibilities of a Community Manager?",
+          "evaluates": "Role clarity and realistic expectations.",
+          "strong": [
+            "Includes listening, engagement, moderation, member support, content coordination, feedback collection and reporting.",
+            "Connects community activity to trust, retention, reputation and organizational goals.",
+            "Recognizes safeguarding, escalation, confidentiality and cross-department coordination."
+          ],
+          "acceptable": "Identifies posting, replying and engagement but omits important support, moderation, reporting or governance responsibilities.",
+          "weakOrConcerning": "Defines the role only as posting content, gaining followers or defending the organization online.",
+          "calibration": {
+            "response": "I would listen to members, answer questions, support events, enforce community rules and share recurring concerns with the team.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Community Strategy and Engagement",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How would you build a 90-day community plan for a soccer platform entering a new market?",
+          "evaluates": "Community strategy and structured execution.",
+          "strong": [
+            "Audits audiences, needs, language, channels, existing sentiment, risks and baseline activity.",
+            "Defines objectives, member segments, engagement programs, calendar, owners and service standards.",
+            "Includes onboarding, feedback loops, reporting, testing and review points.",
+            "Connects activity to acquisition, activation, participation, retention or advocacy."
+          ],
+          "acceptable": "Provides a logical activity plan but limited audience evidence, ownership, service standards or measurement.",
+          "weakOrConcerning": "Starts posting immediately without audience research, objectives, moderation rules, support process or success measures.",
+          "calibration": {
+            "response": "I would review local audience needs, set goals for onboarding and participation, and plan a monthly content and feedback calendar.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How would you encourage meaningful participation from players, parents, coaches, clubs and other community members?",
+          "evaluates": "Inclusive engagement and relationship building.",
+          "strong": [
+            "Identifies different motivations and barriers for each group.",
+            "Uses relevant formats such as questions, education, recognition, events, peer exchange or feedback sessions.",
+            "Creates clear participation pathways and responds consistently.",
+            "Avoids manipulating engagement or favoring only highly visible members."
+          ],
+          "acceptable": "Suggests relevant engagement activities but provides limited segmentation, follow-up or inclusion detail.",
+          "weakOrConcerning": "Relies on giveaways, controversy or repeated promotional posts and cannot explain how participation becomes meaningful.",
+          "calibration": {
+            "response": "I would run position-specific discussions for coaches and parent Q&As, then invite members to share questions and practical advice.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "Describe a community initiative you managed. What was the objective, your role, the execution, the result and the lesson?",
+          "evaluates": "Ownership, evidence and reflective practice.",
+          "strong": [
+            "Provides a specific situation, objective, audience and starting point.",
+            "Explains personal actions, collaboration, constraints and decisions.",
+            "Uses relevant participation, response, sentiment, retention, support or conversion evidence.",
+            "States the outcome honestly and explains a concrete lesson."
+          ],
+          "acceptable": "Describes a relevant initiative but omits some ownership, measurement, outcome or learning detail.",
+          "weakOrConcerning": "Uses \"we\" without clarifying personal contribution, offers vanity metrics only, or cannot describe a real initiative.",
+          "calibration": {
+            "response": "I helped organize an online coach discussion that drew good attendance, but I cannot give a reliable measure of repeat participation.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant awareness, but specific evidence, measurement, implementation or follow-up is missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Communication, Content and Moderation",
+      "questions": [
+        {
+          "id": 7,
+          "text": "How would you adapt the same message for players, parents, coaches, clubs, academies and commercial partners?",
+          "evaluates": "Audience-specific communication and brand consistency.",
+          "strong": [
+            "Keeps one accurate core message while adapting tone, detail, format, channel and call to action.",
+            "Recognizes different decision roles, knowledge levels and concerns.",
+            "Uses age-appropriate communication and appropriate parental or organizational context for minors.",
+            "Maintains brand and policy consistency."
+          ],
+          "acceptable": "Recognizes the need to adapt communication but gives limited examples or governance detail.",
+          "weakOrConcerning": "Uses the same message for everyone, relies on stereotypes, pressure or inappropriate direct communication with minors.",
+          "calibration": {
+            "response": "I would keep the core facts the same but use simpler language for parents, technical details for coaches and a business focus for clubs.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you decide what community content to create, publish, reshare or decline?",
+          "evaluates": "Editorial judgment, relevance and content governance.",
+          "strong": [
+            "Uses community needs, organizational objectives, channel purpose and evidence.",
+            "Checks accuracy, rights, consent, safeguarding, accessibility, tone and approval requirements.",
+            "Balances educational, participatory, service and promotional content.",
+            "Reviews performance and member feedback to improve future choices."
+          ],
+          "acceptable": "Uses a reasonable content process but provides limited approval, rights, safeguarding or learning detail.",
+          "weakOrConcerning": "Publishes primarily for frequency or reach, copies content without permission, or cannot explain when content should be declined.",
+          "calibration": {
+            "response": "I check accuracy, relevance, permissions and tone before publishing, and I try to balance useful advice with announcements.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How would you moderate disagreement, abusive behavior, misinformation or conflict within the community?",
+          "evaluates": "Moderation judgment, fairness and de-escalation.",
+          "strong": [
+            "Uses published rules and applies them consistently.",
+            "Separates disagreement from abuse, threat, discrimination, misinformation or safeguarding risk.",
+            "De-escalates calmly, preserves evidence and uses proportionate action.",
+            "Moves sensitive matters to appropriate private or formal channels and escalates when required."
+          ],
+          "acceptable": "Would respond calmly and apply rules but provides limited evidence handling, proportionality or escalation detail.",
+          "weakOrConcerning": "Argues publicly, deletes criticism automatically, humiliates members, ignores threats or applies rules based on personal preference.",
+          "calibration": {
+            "response": "I would refer to published rules, de-escalate calmly, preserve evidence of abuse and escalate serious threats to the right staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Member Support, Analytics and Organizational Impact",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How would you manage a high volume of questions, complaints and requests across several community channels?",
+          "evaluates": "Support organization, prioritization and service quality.",
+          "strong": [
+            "Uses intake, tagging, priority levels, templates, ownership, response targets and escalation paths.",
+            "Prioritizes safety, account access, payment, privacy and time-sensitive issues appropriately.",
+            "Maintains context and avoids duplicate or contradictory responses.",
+            "Tracks recurring issues and updates resources or processes."
+          ],
+          "acceptable": "Provides an organized response approach but lacks clear priority, ownership, escalation or learning systems.",
+          "weakOrConcerning": "Responds only to easy or public messages, loses cases between channels, promises outcomes without authority or ignores unresolved issues.",
+          "calibration": {
+            "response": "I would categorize requests by urgency and use templates, but we have not established formal response-time targets.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant awareness, but specific evidence, measurement, implementation or follow-up is missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "Which indicators would you use to evaluate community health and your contribution to organizational goals?",
+          "evaluates": "Measurement literacy and impact awareness.",
+          "strong": [
+            "Combines participation, response quality, resolution, sentiment, retention, activation and member feedback as appropriate.",
+            "Separates reach or volume from meaningful community outcomes.",
+            "Defines baselines, segments, reporting periods and limitations.",
+            "Explains how findings change priorities, content, support or product decisions."
+          ],
+          "acceptable": "Names several relevant indicators but does not fully connect them to objectives, baselines or decisions.",
+          "weakOrConcerning": "Uses follower count, likes or message volume as universal proof of success and cannot explain community quality or organizational impact.",
+          "calibration": {
+            "response": "I would look at returning members, useful discussions, response quality and sentiment rather than likes alone.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "Community sentiment declines after a product change or controversial decision. How would you diagnose the situation and respond?",
+          "evaluates": "Issue analysis, reputation management and feedback coordination.",
+          "strong": [
+            "Verifies facts and identifies affected groups, themes, severity, reach and misinformation.",
+            "Aligns with responsible departments before communicating commitments.",
+            "Acknowledges concerns, provides accurate updates and creates a visible feedback route.",
+            "Monitors response, escalates risk and reports lessons without suppressing legitimate criticism."
+          ],
+          "acceptable": "Would listen, coordinate and communicate calmly but provides limited diagnosis, update cadence or follow-through detail.",
+          "weakOrConcerning": "Becomes defensive, argues with members, deletes legitimate criticism, speculates, promises an unapproved solution or stays silent without escalation.",
+          "calibration": {
+            "response": "I would collect the main complaints, verify what changed, work with product staff and communicate an accurate update without deleting criticism.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Collaboration, Ethics and Professional Reliability",
+      "questions": [
+        {
+          "id": 13,
+          "text": "How do you communicate community feedback to leadership, marketing, customer support, product and soccer staff?",
+          "evaluates": "Cross-department collaboration and insight translation.",
+          "strong": [
+            "Organizes feedback by theme, frequency, severity, audience and evidence.",
+            "Distinguishes individual opinions from recurring patterns.",
+            "Protects personal information and shares actionable context with clear owners.",
+            "Closes the loop with the community when appropriate."
+          ],
+          "acceptable": "Shares useful summaries with relevant departments but provides limited prioritization, privacy or follow-up process.",
+          "weakOrConcerning": "Forwards screenshots without context, exposes personal data, exaggerates isolated comments or filters feedback to protect personal performance.",
+          "calibration": {
+            "response": "I summarize common concerns for marketing, product and support colleagues and share the themes in regular meetings.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 14,
+          "text": "What would you do if asked to hide legitimate criticism, create fake engagement, disclose member information or make a misleading public statement?",
+          "evaluates": "Integrity, professional challenge and escalation.",
+          "strong": [
+            "Identifies accuracy, privacy, trust, legal and reputational risks.",
+            "Challenges the request respectfully and explains the concern.",
+            "Offers a truthful alternative, documents the issue and follows escalation procedures.",
+            "Refuses materially deceptive, unsafe or unauthorized action."
+          ],
+          "acceptable": "Recognizes the concern and would seek guidance but provides limited escalation, documentation or alternative action.",
+          "weakOrConcerning": "Follows the request because leadership approved it, creates fake accounts, manipulates sentiment or shares information without authorization.",
+          "calibration": {
+            "response": "I would not create fake accounts or reveal private member information; I would explain the concern and escalate if necessary.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How would you protect minors, confidential information and account access while remaining reliable during evenings, weekends or high-activity periods?",
+          "evaluates": "Safeguarding, security, boundaries and operational reliability.",
+          "strong": [
+            "Uses role-based access, secure credentials, approved tools and factual records.",
+            "Follows youth-contact, consent, safeguarding, privacy and escalation procedures.",
+            "Sets realistic coverage, handover and emergency arrangements without claiming constant availability.",
+            "Communicates conflicts early and maintains professional boundaries."
+          ],
+          "acceptable": "Shows basic safeguarding, privacy, account-security and reliability awareness but lacks a complete coverage or escalation process.",
+          "weakOrConcerning": "Shares passwords, contacts minors inappropriately, promises secrecy, stores personal data casually, works without boundaries or has no handover process.",
+          "calibration": {
+            "response": "I would use approved accounts and permissions, follow safeguarding rules and organize weekend coverage with clear handovers.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Provides a relevant, plausible approach but needs additional evidence of ownership, impact, follow-through or formal procedures to reach 4/4."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Community Development, Adaptability & Results",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How would you help new community members become active participants and remain engaged over time?",
+          "evaluates": "Member onboarding, retention and long-term community development.",
+          "strong": [
+            "Identifies distinct newcomer needs, expectations and barriers across soccer stakeholder groups.",
+            "Designs welcome resources, introductions, clear participation opportunities and appropriate boundaries.",
+            "Tracks activation, repeat participation, feedback and retention by segment rather than follower count alone.",
+            "Adjusts the approach based on member feedback and safeguarding requirements."
+          ],
+          "acceptable": "Suggests welcome messages and regular activities but lacks segmentation, measurement or feedback loops.",
+          "weakOrConcerning": "Assumes member growth guarantees engagement or pressures users into activity without regard for consent or relevance.",
+          "calibration": {
+            "response": "I would welcome new members with clear guidance and invite them into relevant discussions, although I have not yet tracked retention cohorts.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant awareness, but specific evidence, measurement, implementation or follow-up is missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "How would you plan and evaluate an online or in-person community event involving players, parents, coaches and clubs?",
+          "evaluates": "Community event coordination, inclusion, risk management and impact.",
+          "strong": [
+            "Defines the purpose, intended audiences, accessible format, resources, roles and success criteria.",
+            "Coordinates communications, registration, permissions, safeguarding, privacy and contingencies with authorized staff.",
+            "Facilitates constructive interaction and follows clear moderation and escalation procedures.",
+            "Collects participant feedback and measures relevant participation, satisfaction and follow-up outcomes."
+          ],
+          "acceptable": "Gives a workable event plan but omits some ownership, safeguarding, accessibility or evaluation details.",
+          "weakOrConcerning": "Runs youth activities without required permissions, ignores safety procedures or judges success solely by attendance.",
+          "calibration": {
+            "response": "I would plan a parent-and-coach information event with registration, roles and feedback forms, but I have limited experience with formal contingency plans.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant awareness, but specific evidence, measurement, implementation or follow-up is missing."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "How do you evaluate your own effectiveness as a Community Manager and improve your skills when results fall short?",
+          "evaluates": "Professional accountability, reflective learning and adaptability.",
+          "strong": [
+            "Links individual work to relevant member-service, trust, engagement and retention outcomes.",
+            "Seeks feedback from members and internal teams and acknowledges limitations in attribution.",
+            "Identifies a specific skills gap or unsuccessful initiative and takes corrective action.",
+            "Reviews subsequent evidence to determine whether the change improved community outcomes."
+          ],
+          "acceptable": "Names relevant metrics and professional development goals but provides limited examples or follow-up.",
+          "weakOrConcerning": "Blames members for weak results, hides criticism or cannot describe any learning or corrective action.",
+          "calibration": {
+            "response": "I compare engagement and response trends and ask colleagues for feedback, though my personal development goals are not yet documented.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Demonstrates basic relevant awareness, but specific evidence, measurement, implementation or follow-up is missing."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}

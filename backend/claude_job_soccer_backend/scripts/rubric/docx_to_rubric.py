@@ -17,6 +17,18 @@ FILES = {
     "Technical Director Final.docx": ("technical_director", "Technical Director", None),
     "Technical Player Development Final .docx": ("technical_development_coach", "Specific Technical Coach", None),
     "Video Analysis Final.docx": ("video_analyst", "Video Analyst Coach", None),
+    # 2026-10-23: client sent 18-question versions of the two 15-question guides (new version 2)
+    "Amateur Assistant Coach Updated .docx": ("assistant_coach", "Assistant Coach", "amateur", "On field staff", 2),
+    "Mental Coach Final Updated .docx": ("mental_coach", "Mental Coach", None, "On field staff", 2),
+    # 2026-10-23: office staff guides (Nutritionist and Team Manager are labelled "On-Field Support Staff" in the client's files; kept under Office Staff until the client confirms)
+    "Administrative Director Final.docx": ("administrative_director", "Administrative Director", None, "Office Staff", 1),
+    "Community Manager Final.docx": ("community_manager", "Community Manager", None, "Office Staff", 1),
+    "Data Analysis Final.docx": ("data_analyst", "Data Analyst", None, "Office Staff", 1),
+    "Digital Marketing Final.docx": ("digital_marketing", "Digital Marketing", None, "Office Staff", 1),
+    "Event Manager Final.docx": ("event_manager", "Event Manager", None, "Office Staff", 1),
+    "Nutritionist Final.docx": ("nutritionist", "Nutritionist", None, "Office Staff", 1),
+    "PR & Communication Manager Final.docx": ("pr_communications_manager", "PR & Communications Manager", None, "Office Staff", 1),
+    "Team Manager Final.docx": ("team_manager", "Team Manager", None, "Office Staff", 1),
 }
 DISPLAY = {"assistant_coach": "Amateur Assistant Coach", "director_of_coaching": "Director of Coaching", "head_coach": "Head Coach"}
 REAL = re.compile(r"\b(describe a (time|situation|match|challenge|case|decision)|give an example|share an example|an example of|tell us about a|a situation where|a time when|toughest|most difficult|from a failure)\b", re.I)
@@ -37,7 +49,10 @@ def after(t):
 
 
 def convert(fname):
-    key, position, level = FILES[fname]
+    key, position, level, *extra = FILES[fname]
+    role = extra[0] if extra else "On field staff"
+    version = extra[1] if len(extra) > 1 else 1
+    prefix = "office_staff" if role == "Office Staff" else "on_field_staff"
     bl = [(k, s, (clean(t) if k == "p" else [[clean(c) for c in r] for r in t])) for k, s, t in blocks(os.path.join(SRC, fname))]
     title = next((t for k, s, t in bl if k == "p" and s == "Title" and t != "Jobsoccer"), None)
     if not title:
@@ -136,12 +151,12 @@ def convert(fname):
     bands = [{"min": int(a), "max": int(b), "label": lab.strip()} for a, b, lab in re.findall(r"(\d+)\s*-\s*(\d+)\s*:\s*([^|.]+)", bands_text or "")]
     level_suffix = f".{level}" if level else ""
     rubric = {
-        "rubricId": f"on_field_staff.{key}{level_suffix}.v1",
-        "version": 1,
+        "rubricId": f"{prefix}.{key}{level_suffix}.v{version}",
+        "version": version,
         "status": "draft-from-client-doc",
         "extends": "interview.base.v1",
         "sourceFile": fname,
-        "role": "On field staff",
+        "role": role,
         "position": position,
         "displayName": display,
     }

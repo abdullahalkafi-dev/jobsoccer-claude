@@ -1,0 +1,466 @@
+{
+  "rubricId": "office_staff.team_manager.v1",
+  "version": 1,
+  "status": "draft-from-client-doc",
+  "extends": "interview.base.v1",
+  "sourceFile": "Team Manager Final.docx",
+  "role": "Office Staff",
+  "position": "Team Manager",
+  "displayName": "Team Manager",
+  "clientRoleId": "team_manager",
+  "evaluationApproach": {
+    "summary": "The AI must evaluate each response specifically for the Team Manager position: scheduling, travel, eligibility, matchday operations, equipment, communication, safeguarding, administration and professional judgment. Do not apply Head Coach, technical staff or club General Manager criteria.",
+    "corePrinciple": "Strong answers explain the operational task, verification method, responsible parties, contingency, communication and measurable outcome, while respecting the limits of the Team Manager role."
+  },
+  "maxScorePerQuestion": 4,
+  "maxTotalScore": 72,
+  "mandatoryRules": [
+    {
+      "id": "R1",
+      "rule": "Score against Team Manager responsibilities, not Head Coach, sporting director or general club executive expectations."
+    },
+    {
+      "id": "R2",
+      "rule": "For questions requesting a real situation or example, do not award 4/4 unless the response includes the situation, the candidate's action and the outcome."
+    },
+    {
+      "id": "R3",
+      "rule": "Distinguish enthusiasm and friendliness from demonstrated logistical reliability, documentation and welfare judgment."
+    },
+    {
+      "id": "R4",
+      "rule": "Treat relevant but generic responses as Acceptable or Good, not automatically Strong."
+    },
+    {
+      "id": "R5",
+      "rule": "Flag material differences between written and video claims for human review, not automatic rejection."
+    },
+    {
+      "id": "R6",
+      "rule": "Do not infer safeguarding certification, medical qualifications, budget authority or operational outcomes not stated."
+    },
+    {
+      "id": "R7",
+      "rule": "Evaluate job-related response content, not accent, grammar, appearance, disability, age, gender, ethnicity or video production quality."
+    },
+    {
+      "id": "R8",
+      "rule": "Do not reward confidence, popularity or length without reliable role-specific evidence."
+    }
+  ],
+  "bands": [
+    {
+      "min": 61,
+      "max": 72,
+      "label": "Strong evidence"
+    },
+    {
+      "min": 49,
+      "max": 60,
+      "label": "Good evidence"
+    },
+    {
+      "min": 36,
+      "max": 48,
+      "label": "Basic / acceptable evidence"
+    },
+    {
+      "min": 22,
+      "max": 35,
+      "label": "Weak evidence"
+    },
+    {
+      "min": 0,
+      "max": 21,
+      "label": "Insufficient or concerning evidence"
+    }
+  ],
+  "calibrationOverall": {
+    "totalScore": "50/72",
+    "percentage": "69.4%",
+    "classification": "Good evidence; some development areas",
+    "strongestAreas": "Scheduling, matchday preparation, role boundaries, communication and safeguarding awareness",
+    "mainWeaknesses": "Formal performance measures, equipment controls, verified outcomes and 30/60/90-day milestones",
+    "summary": "The fictional candidate demonstrates sound practical awareness of team scheduling, matchday preparation, stakeholder communication and professional boundaries. However, several responses lack formal monitoring, equipment controls, emergency preparation detail and measurable evidence of improvements. Human reviewers should request a sample season calendar, matchday checklist, travel plan and safeguarding procedures."
+  },
+  "sections": [
+    {
+      "id": "A",
+      "name": "Background & Role Understanding",
+      "questions": [
+        {
+          "id": 1,
+          "text": "What experiences have prepared you to manage a soccer team, and what responsibilities did you personally handle?",
+          "evaluates": "Relevant experience and ownership.",
+          "strong": [
+            "Identifies specific teams, age groups, competitions and responsibilities.",
+            "Distinguishes own contribution from the work of coaches and administrators.",
+            "Provides an example of a logistical challenge and its outcome."
+          ],
+          "acceptable": "Describes relevant exposure without clear scope or results.",
+          "weakOrConcerning": "Relies only on enthusiasm or playing experience.",
+          "calibration": {
+            "response": "I coordinated travel and weekly schedules for an U17 team for two seasons and communicated changes to parents, but I did not control the budget.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 2,
+          "text": "How would you define the Team Manager's responsibilities and boundaries within a club?",
+          "evaluates": "Role clarity and accountability.",
+          "strong": [
+            "Distinguishes operations from coaching, medical and selection decisions.",
+            "Explains accountability to club leadership and relevant staff.",
+            "Identifies confidentiality, welfare and administrative obligations."
+          ],
+          "acceptable": "Understands logistics and communication but omits boundaries.",
+          "weakOrConcerning": "Claims authority over tactics, medical decisions or selection.",
+          "calibration": {
+            "response": "I support coaches with logistics, equipment and information and direct technical questions back to the coaching staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 3,
+          "text": "How would you measure whether you are performing the Team Manager role effectively?",
+          "evaluates": "Operational performance measurement.",
+          "strong": [
+            "Defines timeliness, accuracy, preparedness and stakeholder service measures.",
+            "Collects feedback and logs recurring issues.",
+            "Uses results to improve processes rather than relying on match results."
+          ],
+          "acceptable": "Mentions organization and satisfaction without concrete indicators.",
+          "weakOrConcerning": "Judges performance only by wins or popularity.",
+          "calibration": {
+            "response": "I look at whether events run on time, families get accurate information and coaches have what they need; I have not tracked formal KPIs.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Reasonable general understanding, but lacks concrete controls, measures or a sufficiently developed example."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Planning, Scheduling & Team Logistics",
+      "questions": [
+        {
+          "id": 4,
+          "text": "How do you build and maintain a reliable season calendar covering practices, games, travel and deadlines?",
+          "evaluates": "Scheduling discipline.",
+          "strong": [
+            "Collects authoritative league, facility and club schedules.",
+            "Uses one controlled calendar with owners, update rules and alerts.",
+            "Plans buffers and verifies conflicts with stakeholders."
+          ],
+          "acceptable": "Uses a calendar and reminders but lacks controls.",
+          "weakOrConcerning": "Shares unverified dates or has no change process.",
+          "calibration": {
+            "response": "I combine league and coach calendars, publish a weekly update and check facility changes each Thursday.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 5,
+          "text": "How would you coordinate transportation, accommodation and meals for an away tournament?",
+          "evaluates": "Travel planning and safeguarding.",
+          "strong": [
+            "Confirms headcounts, permissions, travel rules and accessibility needs.",
+            "Builds itineraries, supplier contacts, contingencies and budgets.",
+            "Coordinates welfare and supervision requirements with authorized staff."
+          ],
+          "acceptable": "Has a sensible itinerary but limited contingency or safeguarding detail.",
+          "weakOrConcerning": "Leaves minors without authorized supervision or ignores permissions.",
+          "calibration": {
+            "response": "I would book buses and rooms early, collect travel details and share an itinerary, but I would need the club safeguarding officer to review supervision.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 6,
+          "text": "What system would you use to manage equipment, uniforms and other team resources?",
+          "evaluates": "Inventory and resource controls.",
+          "strong": [
+            "Maintains inventory, issue logs, sizes and replenishment thresholds.",
+            "Clarifies purchasing approval and storage responsibilities.",
+            "Checks matchday readiness and tracks losses or shortages."
+          ],
+          "acceptable": "Uses a checklist but limited inventory or cost tracking.",
+          "weakOrConcerning": "Makes unapproved purchases or repeatedly overlooks safety-critical items.",
+          "calibration": {
+            "response": "I keep a kit checklist and record issued uniforms, then check supplies before each match.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Reasonable general understanding, but lacks concrete controls, measures or a sufficiently developed example."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Matchday Operations & Administration",
+      "questions": [
+        {
+          "id": 7,
+          "text": "Describe your pre-match and matchday checklist from arrival through departure.",
+          "evaluates": "Matchday execution.",
+          "strong": [
+            "Confirms venue, kickoff, transport, roster and accreditation.",
+            "Coordinates equipment, facilities, officials and communications.",
+            "Documents incidents and completes post-match handover."
+          ],
+          "acceptable": "Covers core tasks but lacks contingencies or post-event checks.",
+          "weakOrConcerning": "Fails to verify player eligibility or safety arrangements.",
+          "calibration": {
+            "response": "I confirm times and venue, check jerseys and water, distribute the roster and make sure everyone knows the departure plan.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 8,
+          "text": "How do you verify registrations, eligibility, consent forms and league paperwork?",
+          "evaluates": "Administrative accuracy and compliance.",
+          "strong": [
+            "Checks applicable rules, deadlines, identities and approved permissions.",
+            "Maintains secure version-controlled records and escalation paths.",
+            "Reconciles discrepancies before submission and preserves an audit trail."
+          ],
+          "acceptable": "Checks documents but lacks formal verification or access controls.",
+          "weakOrConcerning": "Submits false details or ignores missing consent.",
+          "calibration": {
+            "response": "I use a shared deadline register and verify registrations against the league portal, escalating unclear eligibility to club administration.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 9,
+          "text": "How would you handle a last-minute venue change or cancellation on matchday?",
+          "evaluates": "Operational response and escalation.",
+          "strong": [
+            "Verifies change with an authoritative source.",
+            "Coordinates alternatives and notifies all affected groups through approved channels.",
+            "Confirms receipt, documents decisions and considers safeguarding."
+          ],
+          "acceptable": "Communicates quickly but lacks confirmation or contingency.",
+          "weakOrConcerning": "Spreads rumors or leaves families without reliable updates.",
+          "calibration": {
+            "response": "I would confirm the change with the league, alert the coach and families and request acknowledgments, then update the calendar.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Communication & Player Welfare",
+      "questions": [
+        {
+          "id": 10,
+          "text": "How do you communicate different types of information to coaches, players, parents and club administrators?",
+          "evaluates": "Audience-aware communication.",
+          "strong": [
+            "Defines clear channels, timing and contact owners.",
+            "Separates public logistics from confidential personal matters.",
+            "Checks understanding and keeps a consistent written record."
+          ],
+          "acceptable": "Communicates clearly but lacks confidentiality or escalation protocols.",
+          "weakOrConcerning": "Shares sensitive player information broadly.",
+          "calibration": {
+            "response": "I use a weekly logistics message for families and direct messages for individual issues; coaches approve sporting announcements.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 11,
+          "text": "How would you respond to a parent who disputes playing time or team selection?",
+          "evaluates": "Conflict management and role boundaries.",
+          "strong": [
+            "Listens respectfully and explains role limits.",
+            "Refers technical decisions to the responsible coach through club policy.",
+            "Records and escalates harassment or safeguarding concerns appropriately."
+          ],
+          "acceptable": "Keeps calm but does not clearly explain escalation.",
+          "weakOrConcerning": "Promises selection changes or argues publicly.",
+          "calibration": {
+            "response": "I would acknowledge the concern and direct the parent to the coach using the club communication process, without discussing other players.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 12,
+          "text": "What steps would you take to support player welfare and confidentiality, especially for minors?",
+          "evaluates": "Safeguarding and privacy.",
+          "strong": [
+            "Understands safeguarding reporting and approved supervision procedures.",
+            "Uses least-privilege access to medical, contact and personal information.",
+            "Escalates concerns to trained officers rather than investigating independently."
+          ],
+          "acceptable": "Recognizes privacy and welfare but lacks precise reporting steps.",
+          "weakOrConcerning": "Dismisses concerns or shares medical and youth data without permission.",
+          "calibration": {
+            "response": "I keep player contact and medical details restricted and would report concerns to the club safeguarding lead, not try to resolve them alone.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Adaptability, Risk & Problem Solving",
+      "questions": [
+        {
+          "id": 13,
+          "text": "Tell us about a serious operational mistake you made. How did you correct it?",
+          "evaluates": "Accountability and learning.",
+          "strong": [
+            "Provides a specific error and its practical consequences.",
+            "Takes responsibility, alerts stakeholders and fixes the issue.",
+            "Introduces a control to prevent recurrence."
+          ],
+          "acceptable": "Describes a problem but not measurable correction.",
+          "weakOrConcerning": "Conceals mistakes or blames others exclusively.",
+          "calibration": {
+            "response": "I once sent an outdated kickoff time, corrected it immediately and began checking messages against the official schedule before sending.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": true
+        },
+        {
+          "id": 14,
+          "text": "How would you prepare for a medical incident or other emergency during a team event?",
+          "evaluates": "Emergency readiness and scope boundaries.",
+          "strong": [
+            "Knows the emergency action plan, venue access and qualified responder contacts.",
+            "Confirms emergency information and required supervision are available securely.",
+            "Escalates immediately and does not exceed first-aid qualifications."
+          ],
+          "acceptable": "Mentions calling emergency services but lacks preparation.",
+          "weakOrConcerning": "Attempts unauthorized medical treatment or delays escalation.",
+          "calibration": {
+            "response": "I would check the emergency plan and contact list beforehand, call the qualified responder and emergency services when needed, and notify the right staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 15,
+          "text": "How do you prioritize when multiple urgent requests arrive before a game?",
+          "evaluates": "Prioritization under pressure.",
+          "strong": [
+            "Ranks player safety, compliance and time-critical tasks first.",
+            "Delegates appropriately and informs stakeholders of constraints.",
+            "Uses checklists and follows up on unresolved tasks."
+          ],
+          "acceptable": "Prioritizes broadly but lacks escalation or delegation.",
+          "weakOrConcerning": "Focuses on low-value tasks while safety or eligibility is unresolved.",
+          "calibration": {
+            "response": "I deal with safety and roster issues first, then transport and equipment, and tell the coach what may be delayed.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Professionalism, Collaboration & Evaluation",
+      "questions": [
+        {
+          "id": 16,
+          "text": "How do you work with coaches, medical staff, administrators and external partners without creating confusion?",
+          "evaluates": "Cross-functional coordination.",
+          "strong": [
+            "Clarifies responsibilities and decision rights.",
+            "Uses concise handovers, shared plans and approved communication channels.",
+            "Escalates conflicts and protects confidential information."
+          ],
+          "acceptable": "Describes teamwork without clear ownership.",
+          "weakOrConcerning": "Overrides qualified staff or sends conflicting instructions.",
+          "calibration": {
+            "response": "I confirm who approves each request and send a short weekly operational update; urgent medical questions go to the designated staff.",
+            "suggestedScore": 3,
+            "label": "Good",
+            "assessment": "Relevant and practical answer, but lacks independently verified outcomes or complete procedural detail for a strong rating."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 17,
+          "text": "What ethical and professional standards guide your handling of money, records and team relationships?",
+          "evaluates": "Integrity and professional judgment.",
+          "strong": [
+            "Follows expense authorization and recordkeeping rules.",
+            "Treats families and players fairly without favoritism.",
+            "Protects confidential information and reports conflicts of interest."
+          ],
+          "acceptable": "Names honesty and fairness but gives limited controls.",
+          "weakOrConcerning": "Misuses team funds, shares data or offers preferential access.",
+          "calibration": {
+            "response": "I keep receipts, get approval before purchases and avoid sharing personal information, but I have not managed formal audits.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Reasonable general understanding, but lacks concrete controls, measures or a sufficiently developed example."
+          },
+          "requiresRealSituation": false
+        },
+        {
+          "id": 18,
+          "text": "If appointed, what would be your priorities during your first 30, 60 and 90 days?",
+          "evaluates": "Implementation planning and continuous improvement.",
+          "strong": [
+            "Audits schedules, registration, safeguarding and logistical workflows.",
+            "Builds stakeholder relationships and introduces measurable quick wins.",
+            "Assigns owners, reviews results and documents handover procedures."
+          ],
+          "acceptable": "Offers useful priorities without timelines or success measures.",
+          "weakOrConcerning": "Promises immediate changes without understanding club rules.",
+          "calibration": {
+            "response": "I would meet coaches and administration, review schedules and registrations, then create a standard checklist; I would need to define milestones.",
+            "suggestedScore": 2,
+            "label": "Acceptable",
+            "assessment": "Reasonable general understanding, but lacks concrete controls, measures or a sufficiently developed example."
+          },
+          "requiresRealSituation": false
+        }
+      ]
+    }
+  ]
+}
