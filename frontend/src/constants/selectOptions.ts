@@ -203,9 +203,6 @@ export type TCountry = (typeof countryList)[number];
 export const genderOptions = ["Male", "Female"] as const;
 export type TGender = (typeof genderOptions)[number];
 
-// Availability options
-export const availabilityOptions = ["Now", "Soon", "Later"] as const;
-export type TAvailability = (typeof availabilityOptions)[number];
 
 // Office Staff Position options
 // The stored role value is "On field staff"; the client writes "On-Field Staff".

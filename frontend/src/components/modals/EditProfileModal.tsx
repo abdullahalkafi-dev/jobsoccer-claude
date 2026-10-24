@@ -24,7 +24,6 @@ import { useEffect } from "react";
 import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import {
-  availabilityOptions,
   countryList,
   divisionLevelOptions,
   footOptions,
@@ -475,26 +474,14 @@ export default function EditProfileModal({
 
                 {/* Availability */}
                 <FormField
-                  label="Availability (optional)"
+                  label="Available from (optional)"
                   error={errors.availability?.message}
                 >
-                  <Select
-                    defaultValue={initialData?.availability}
-                    onValueChange={(value) =>
-                      setValue("availability", value, { shouldValidate: true })
-                    }
-                  >
-                    <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select availability" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availabilityOptions.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    {...register("availability")}
+                    placeholder="Ex. Immediately, or January 2027"
+                    className="bg-gray-50 border-0"
+                  />
                 </FormField>
 
                 {/* Foot - Only for players */}

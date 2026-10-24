@@ -26,7 +26,7 @@ export const personalInfoSchema = z.object({
 // Amateur player Professional Information Schema
 export const amateurPlayerProfessionalInfoSchema = z.object({
   gender: z.enum(["Male", "Female"]),
-  availability: z.enum(["Now", "Soon", "Later"]).optional(),
+  availability: z.string().optional(),
   height: z.object({
     size: z.number().min(1, "Height is required"),
     unit: z.enum(["cm", "m", "in", "ft"]),
