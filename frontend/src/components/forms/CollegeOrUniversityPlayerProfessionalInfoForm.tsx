@@ -17,7 +17,6 @@ import {
 import { collegeOrUniversityPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
 import { TCollegeOrUniversityPlayerProfessionalInfo } from "@/types/profile";
 import {
-  availabilityOptions,
   countryList,
   footOptions,
   genderOptions,
@@ -109,29 +108,14 @@ export function CollegeOrUniversityPlayerProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Availability (optional)"
+              label="Available from (optional)"
               error={errors.availability?.message}
             >
-              <Select
-                onValueChange={(value) =>
-                  setValue(
-                    "availability",
-                    value as unknown as TCollegeOrUniversityPlayerProfessionalInfo["availability"],
-                    { shouldValidate: true, shouldDirty: true }
-                  )
-                }
-              >
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select availability" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availabilityOptions.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                {...register("availability")}
+                placeholder="Ex. Immediately, or January 2027"
+                className="bg-gray-50 border-0"
+              />
             </FormField>
 
             {/* Height */}

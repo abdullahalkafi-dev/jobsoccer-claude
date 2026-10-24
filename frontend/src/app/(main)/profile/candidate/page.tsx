@@ -133,7 +133,7 @@ export default function MyProfilePage() {
       return (
         <Button
           variant="outline"
-          className="rounded-full bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
+          className="bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
         >
           <Clock size={20} height={20} /> Verification Pending
         </Button>
@@ -144,7 +144,7 @@ export default function MyProfilePage() {
       return (
         <Button
           variant="outline"
-          className="rounded-full bg-red-50 border-red-200 text-red-700"
+          className="bg-red-50 border-red-200 text-red-700"
           onClick={handleRequestVerification}
           disabled={isRequestingVerification}
         >
@@ -158,7 +158,6 @@ export default function MyProfilePage() {
     return (
       <Button
         variant="outline"
-        className="rounded-full"
         onClick={handleRequestVerification}
         disabled={isRequestingVerification}
       >
@@ -239,14 +238,14 @@ export default function MyProfilePage() {
 
           <div className="flex gap-2 flex-wrap mt-4">
             {displayRole && (
-              <Badge className="bg-yellow-300 border-yellow-200 px-4 rounded-full">
+              <Badge className="bg-yellow-300 border-yellow-200 px-4 h-9 rounded-md">
                 {displayRole}
               </Badge>
             )}
             {renderVerificationBadge()}
             <Button
               variant="outline"
-              className="flex items-center rounded-full"
+              className="flex items-center"
               onClick={() => setIsUploadModalOpen(true)}
             >
               <Upload size={20} height={20} />
@@ -278,6 +277,17 @@ export default function MyProfilePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             {/* Personal Information Fields */}
+            {currentUser?.profile?.position && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  Position
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.position}
+                </p>
+              </div>
+            )}
+
             {currentUser?.profile?.dateOfBirth && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
@@ -341,17 +351,6 @@ export default function MyProfilePage() {
               </div>
             )}
 
-            {currentUser?.profile?.position && (
-              <div>
-                <label className="text-sm text-gray-500 mb-1 block">
-                  Position
-                </label>
-                <p className="text-gray-900 font-medium">
-                  {currentUser.profile.position}
-                </p>
-              </div>
-            )}
-
             {currentUser?.profile?.height && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
@@ -390,7 +389,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.availability && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Availability
+                  Available from
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.availability}

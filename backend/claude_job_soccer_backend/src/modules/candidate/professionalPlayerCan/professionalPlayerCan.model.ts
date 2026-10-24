@@ -23,11 +23,6 @@ enum TPosition {
   FORWARD = "Forward",
   STRIKER = "Striker",
 }
-enum TAvailability {
-  NOW = "Now",
-  SOON = "Soon",
-  LATER = "Later",
-}
 
 enum TFoot {
   RIGHT = "Right",
@@ -48,7 +43,7 @@ export type TProfessionalPlayerCan = {
   position: TPosition;
   agent?: string;
   country: (typeof countryList)[number];
-  availability: TAvailability;
+  availability: string;
   weight: { size: number; unit: string };
   nationalTeamGames: string;
   socialMedia: string;
@@ -94,7 +89,6 @@ const professionalPlayerCanSchema = new Schema<TProfessionalPlayerCan>(
         },
         availability: {
             type: String,
-            enum: Object.values(TAvailability),
             required: false,
         },
         weight: {

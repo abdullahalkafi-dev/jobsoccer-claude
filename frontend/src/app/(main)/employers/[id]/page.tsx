@@ -229,12 +229,12 @@ export default function EmployerDetailsPage() {
 
             <div className="flex flex-wrap gap-2">
               {displayRole && (
-                <Badge className="bg-yellow-300  border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                <Badge className="bg-yellow-300  border-yellow-200 px-3 sm:px-4 h-9 rounded-md text-xs sm:text-sm">
                   {displayRole}
                 </Badge>
               )}
               {employer?.profile?.clubName && (
-                <Badge className="bg-green-100 text-green-800 border-green-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                <Badge className="bg-green-100 text-green-800 border-green-200 px-3 sm:px-4 h-9 rounded-md text-xs sm:text-sm">
                   {employer.profile.clubName}
                 </Badge>
               )}
@@ -324,6 +324,18 @@ export default function EmployerDetailsPage() {
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.clubName}
+                </p>
+              </div>
+            )}
+
+            {/* FIFA license number (agents) */}
+            {employer?.profile?.fifaLicenseNumber && (
+              <div>
+                <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                  License number
+                </label>
+                <p className="text-gray-900 font-medium text-sm sm:text-base">
+                  {employer.profile.fifaLicenseNumber}
                 </p>
               </div>
             )}

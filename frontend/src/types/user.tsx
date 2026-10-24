@@ -83,6 +83,7 @@ export interface IEmployer {
     level: string;
     website: string;
     clubContact: string;
+    fifaLicenseNumber?: string;
     clubDescription: string;
     __v: number;
   };
