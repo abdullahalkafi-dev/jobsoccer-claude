@@ -47,7 +47,7 @@ const createAmateurPlayerCanDto = z.object({
   ]),
   agent: z.string().trim().min(1, "Agent is required").optional(),
   country: z.string().min(1, "Country is required"),
-  availability: z.enum(["Now", "Soon", "Later"]).optional(),
+  availability: z.string().trim().max(200).optional(),
   weight: z.object({
     size: z.number().positive("Weight must be positive"),
     unit: z.enum(["kg", "lb"]),

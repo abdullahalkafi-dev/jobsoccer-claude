@@ -13,11 +13,6 @@ enum TPosition {
   FORWARD = "Forward",
   STRIKER = "Striker",
 }
-enum TAvailability {
-  NOW = "Now",
-  SOON = "Soon",
-  LATER = "Later",
-}
 
 enum TFoot {
   RIGHT = "Right",
@@ -38,7 +33,7 @@ export type TCollegeOrUniversity = {
   agent?: string;
   socialMedia: string;
   satOrAct?: string;
-  availability: TAvailability;
+  availability: string;
   weight: { size: number; unit: string };
   collegeOrUniversity: string;
   foot: TFoot;
@@ -78,7 +73,6 @@ const collegeOrUniversitySchema = new Schema<TCollegeOrUniversity>(
     satOrAct: { type: String, required:false, trim: true },
     availability: {
       type: String,
-      enum: Object.values(TAvailability),
       required: false,
     },
     weight: {

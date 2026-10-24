@@ -225,7 +225,7 @@ export default function EmployerProfilePage() {
 
           <div className="flex gap-2 flex-wrap mt-4">
             {displayRole && (
-              <Badge className="bg-yellow-300 border-yellow-200 px-4 rounded-full">
+              <Badge className="bg-yellow-300 border-yellow-200 px-4 h-9 rounded-md">
                 {displayRole}
               </Badge>
             )}
@@ -275,6 +275,18 @@ export default function EmployerProfilePage() {
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.clubName}
+                </p>
+              </div>
+            )}
+
+            {/* FIFA license number (agents) */}
+            {currentUser?.profile?.fifaLicenseNumber && (
+              <div>
+                <label className="text-sm text-gray-500 mb-1 block">
+                  License number
+                </label>
+                <p className="text-gray-900 font-medium">
+                  {currentUser.profile.fifaLicenseNumber}
                 </p>
               </div>
             )}
