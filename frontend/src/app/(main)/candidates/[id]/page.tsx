@@ -31,6 +31,7 @@ import { StartChatButton } from "@/components/messaging/StartChatButton";
 import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateApi";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ResumeDownloadButton from "@/components/profile/ResumeDownloadButton";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -252,9 +253,12 @@ export default function UserProfilePage() {
 
           <div className="flex gap-2 flex-wrap mt-3 sm:mt-4">
                 {displayRole && (
-                <Badge className="bg-yellow-300 border-yellow-200 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm">
+                <Badge className="bg-yellow-300 border-yellow-200 px-3 sm:px-4 h-9 rounded-md text-xs sm:text-sm">
                   {displayRole}
                 </Badge>
+              )}
+              {hasAccess && (
+                <ResumeDownloadButton userId={userId} enabled={!!currentUser} />
               )}
               {!hasAccess && verificationStatus?.status === "approved" && (
                 <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
@@ -317,6 +321,17 @@ export default function UserProfilePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4 sm:gap-y-6">
                 {/* Personal Information Fields */}
+                {user?.profile?.position && (
+                  <div>
+                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
+                      Position
+                    </label>
+                    <p className="text-gray-900 font-medium text-sm sm:text-base">
+                      {user.profile.position}
+                    </p>
+                  </div>
+                )}
+
                 {user?.profile?.nationality && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
@@ -334,17 +349,6 @@ export default function UserProfilePage() {
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.gender}
-                    </p>
-                  </div>
-                )}
-
-                {user?.profile?.position && (
-                  <div>
-                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Position
-                    </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.position}
                     </p>
                   </div>
                 )}
@@ -385,7 +389,7 @@ export default function UserProfilePage() {
                 {user?.profile?.availability && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Availability
+                      Available from
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.availability}

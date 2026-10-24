@@ -38,7 +38,7 @@ const createCollegeOrUniversityCanDto = z.object({
     agent: z.string().trim().min(1, "Agent is required").optional(),
     socialMedia: z.string().trim().min(1, "Social media is required").optional(),
     satOrAct: z.string().trim().min(1, "SAT or ACT is required").optional(),
-    availability: z.enum(["Now", "Soon", "Later"]).optional(),
+    availability: z.string().trim().max(200).optional(),
     weight: z.object({
         size: z.number().positive("Weight must be positive"),
         unit: z.enum(["kg", "lb"]),
