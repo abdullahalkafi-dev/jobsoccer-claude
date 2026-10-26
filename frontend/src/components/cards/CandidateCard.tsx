@@ -241,13 +241,13 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 >
                   <Image
                     src="/icons/ai-icon.svg"
-                    alt="Profile quality score"
+                    alt="Profile Quality Score"
                     width={18}
                     height={18}
                     className="w-4.5 h-4.5 object-contain"
                   />
                   <span>
-                    <span className="text-sm text-gray-600">Profile quality score :</span>{" "}
+                    <span className="text-sm text-gray-600">Profile Quality Score:</span>{" "}
                     {qualityScore}/100
                   </span>
                 </div>

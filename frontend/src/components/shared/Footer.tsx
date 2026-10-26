@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo_footer.png";
 import { Mail } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 
@@ -15,13 +15,13 @@ export function Footer() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center"
+              className="flex items-center justify-center md:justify-start"
               aria-label="Job Soccer Logo"
             >
               <Image
                 src={logo}
-                alt="Job Soccer Logo"
-                className="w-16"
+                alt="JOBSOCCER.COM - Where soccer careers begin"
+                className="w-40"
               />
             </Link>
           </div>
