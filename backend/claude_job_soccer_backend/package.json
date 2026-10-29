@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "storage:migrate": "tsc && node dist/scripts/migrateUploadsToStorage.js",
-    "ai:eval": "tsc && node dist/scripts/aiEval.js"
+    "ai:eval": "tsc && node dist/scripts/aiEval.js",
+    "e2e:flow": "tsc && node dist/e2e/run.js"
   },
   "keywords": [],
   "author": "",
