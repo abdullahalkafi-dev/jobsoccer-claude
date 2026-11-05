@@ -116,7 +116,6 @@ const getSentFriendRequests = catchAsync(
  */
 const getFriends = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  console.log(userId!, req.query);
 
   const result = await FriendListService.getFriends(userId!, req.query);
 

@@ -3,6 +3,7 @@ import catchAsync from "../../shared/util/catchAsync";
 import { STRIPE_PRICES } from "./subscription.constant";
 import { createCheckoutSession, SubscriptionServices } from "./subscription.service";
 import AppError from "../../errors/AppError";
+import { logger } from "../../shared/logger/logger";
 
 const checkout = catchAsync(async (req: Request, res: Response) => {
   const { interval } = req.body;
@@ -16,7 +17,7 @@ const checkout = catchAsync(async (req: Request, res: Response) => {
   const priceId = (STRIPE_PRICES as any)[interval];
 
   if (!priceId) return res.status(400).json({ error: "Invalid interval" });
- console.log(`
+ logger.debug(`
   passed controller [ line 12 ]
   `);
   const url = await createCheckoutSession(req.user.id, priceId);

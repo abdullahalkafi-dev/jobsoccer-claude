@@ -41,7 +41,6 @@ export const messageSocketHandlers = (
       try {
         const userId = socket.data.userId;
 
-        console.log(payload);
 
         if (!userId) {
           const error = { message: "Unauthorized: User not authenticated" };

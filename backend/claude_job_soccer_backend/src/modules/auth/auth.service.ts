@@ -80,7 +80,6 @@ const createUser = async (user: TCreateUser) => {
       );
 
       if (user.loginProvider === LoginProvider.LINKEDIN) {
-        console.log("login provider under create user data", LoginProvider.LINKEDIN);
         if (existingUser) {
           // Return existing user for LinkedIn
           const accessToken = jwtHelper.createToken(
@@ -148,7 +147,6 @@ const createUser = async (user: TCreateUser) => {
           (config.jwt.jwt_secret as Secret) || "JWT_SECRET",
           config.jwt.jwt_expire_in || "1d"
         );
-        console.log({ accessToken, user: newUser[0] });
 
         return { accessToken, user: newUser[0] };
       } else {
@@ -228,7 +226,6 @@ const createUser = async (user: TCreateUser) => {
         );
 
         const otp = generateOTP();
-        console.log(otp, "otp");
         logger.info("mail sending for account verification",{email: newUser[0].email, otp: otp});
         const emailHtml = emailTemplate.createAccount({
           email: newUser[0].email,
@@ -293,7 +290,6 @@ const loginUser = async (payload: TLoginData) => {
         (config.jwt.jwt_secret as Secret) || "JWT_SECRET",
         config.jwt.jwt_expire_in || "1d"
       );
-      console.log({ accessToken, user: existingUser });
       return { accessToken, user: existingUser };
     } else {
 
@@ -379,7 +375,6 @@ const forgetPasswordToDB = async (email: string) => {
 
   //send mail
   const otp = generateOTP();
-  console.log(otp, "otp");
   const value = {
     otp,
     email: isExistUser.email,
@@ -409,7 +404,6 @@ const forgetPasswordToDB = async (email: string) => {
 //verify email
 const verifyEmailToDB = async (payload: TVerifyEmail) => {
   const { email, oneTimeCode } = payload;
-  console.log(oneTimeCode, "new code");
   const isExistUser = await User.findOne({ email });
   if (!isExistUser) {
     throw new AppError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
@@ -517,7 +511,6 @@ const changePasswordToDB = async (
   user: JwtPayload,
   payload: TChangePassword
 ) => {
-  console.log(user, payload);
   const { currentPassword, newPassword } = payload;
   const isExistUser = await User.findById(user.id).select("authId");
   let authEntry = await Auth.findById(isExistUser?.authId);
@@ -607,7 +600,6 @@ const resendOtp = async ({
 
   //send mail
   const otp = generateOTP();
-  console.log(otp, "otp");
   const value = {
     otp,
     email: isExistUser.email,

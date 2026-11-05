@@ -4,6 +4,7 @@ import config from "../config";
 import { Secret } from "jsonwebtoken";
 import { messageSocketHandlers } from "../modules/message/message.socket";
 import { userRoom } from "./emitToUser";
+import { logger } from "../shared/logger/logger";
 
 interface ISocketUser {
   userId: string;
@@ -74,7 +75,7 @@ const socketInit = (io: Server) => {
       return;
     }
 
-    console.log(`✅ User connected: ${userId} (Socket: ${socket.id})`);
+    logger.debug(`✅ User connected: ${userId} (Socket: ${socket.id})`);
 
     // One room per user: services push live events (video / assessment / score updates) with emitToUser().
     socket.join(userRoom(userId));
@@ -111,7 +112,7 @@ const socketInit = (io: Server) => {
 
     // Handle disconnection
     socket.on("disconnect", (reason: string) => {
-      console.log(`❌ User disconnected: ${userId} (Reason: ${reason})`);
+      logger.debug(`❌ User disconnected: ${userId} (Reason: ${reason})`);
 
       // Remove user from online users
       onlineUsers.delete(socket.id);
@@ -124,7 +125,7 @@ const socketInit = (io: Server) => {
 
     // Handle manual disconnect request
     socket.on("manual_disconnect", () => {
-      console.log(`🔌 User manually disconnected: ${userId}`);
+      logger.debug(`🔌 User manually disconnected: ${userId}`);
       socket.disconnect();
     });
 
@@ -166,7 +167,7 @@ const socketInit = (io: Server) => {
     });
   });
 
-  console.log("🚀 Socket.IO initialized successfully");
+  logger.debug("🚀 Socket.IO initialized successfully");
 };
 
 export default socketInit;
