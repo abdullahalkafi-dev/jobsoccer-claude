@@ -35,9 +35,8 @@ const router = express.Router();
  *   - minSalary: number (jobs with max salary >= this value)
  *   - maxSalary: number (jobs with min salary <= this value)
  * 
- *   AI SCORE RANGE:
- *   - minRequiredAiScore: number (0-100)
- *   - maxRequiredAiScore: number (0-100)
+ *   PREMIUM:
+ *   - premium: "true" (only premium opportunities) | "false" (hide them)
  * 
  *   PAGINATION & SORTING:
  *   - page: number (default: 1)
@@ -197,6 +196,25 @@ router.post("/:id/apply", auth(), JobController.incrementApplicationCount);
 /**
  * ADMIN ROUTES
  */
+
+/**
+ * GET /api/v1/job/admin/list
+ * Every job with its employer for the premium switch (admin only)
+ * Query: page, limit, searchTerm, status, premium ("true" | "false")
+ */
+router.get("/admin/list", auth(UserType.ADMIN), JobController.listJobsForAdmin);
+
+/**
+ * PATCH /api/v1/job/admin/:id/premium
+ * Mark or unmark a job as a premium opportunity (admin only)
+ * Body: { isPremium: boolean }
+ */
+router.patch(
+  "/admin/:id/premium",
+  auth(UserType.ADMIN),
+  validateRequest(JobValidation.setPremiumDto),
+  JobController.setJobPremium
+);
 
 /**
  * POST /api/v1/job

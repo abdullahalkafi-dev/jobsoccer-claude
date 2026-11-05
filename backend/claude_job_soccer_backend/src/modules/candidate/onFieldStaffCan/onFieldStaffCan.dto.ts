@@ -1,4 +1,4 @@
-import { TPosition } from "../../../shared/constant/video.constant";
+import { OnFieldStaffPosition } from "../../../shared/constant/position.constant";
 import { z } from "zod";
 
 const createOnFieldStaffCanDto = z.object({
@@ -25,18 +25,7 @@ const createOnFieldStaffCanDto = z.object({
     gender: z.enum(["Male", "Female","Other"]),
     socialMedia: z.string().trim().min(1, "Social media is required").optional(),
     agent: z.string().trim().min(1, "Agent is required").optional(),
-    position: z.enum(TPosition),
-    // Videos will be handled separately through file upload
-    videos: z.array(
-        z.object({
-            videoType: z.string().min(1, "Video type is required"),
-            url: z.string().min(1, "Video URL is required"),
-            duration: z.number().min(0, "Duration must be non-negative"), // Duration validation handled by frontend
-            title: z.string().optional(),
-            description: z.string().optional(),
-            uploadedAt: z.date().optional(),
-        })
-    ).optional(),
+    position: z.enum(OnFieldStaffPosition),
 });
 
 const updateOnFieldStaffCanDto = createOnFieldStaffCanDto.partial();

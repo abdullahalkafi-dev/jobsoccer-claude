@@ -70,8 +70,14 @@ const userSchema = new Schema<TBaseUser>(
     },
     stripeCustomerId: {type:String,default:null},
     activeSubscriptionId: { type: Schema.Types.ObjectId, ref: "Subscription" },
-    aiProfileScore: { type: Number, default: 0 },
-    AiVideoVideoScore: { type: Number, default: 0 },
+    // Candidates only. Calculated by the profileQuality module (rules + AI), never edited by hand.
+    profileQuality: { type: Schema.Types.Mixed, default: undefined },
+    interviewScore: { type: Number, default: null },
+    videoConsent: {
+      aiAt: { type: Date },
+      playersAt: { type: Date },
+      version: { type: String },
+    },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -91,6 +97,8 @@ userSchema.index({ firstName: "text", lastName: "text" });
 // Compound indexes for employer queries optimization
 userSchema.index({ userType: 1, isDeleted: 1, profileId: 1, role: 1, createdAt: -1 });
 userSchema.index({ isDeleted: 1 });
+// Search ranks candidates by Profile Quality Score.
+userSchema.index({ userType: 1, role: 1, "profileQuality.score": -1 });
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("email")) {

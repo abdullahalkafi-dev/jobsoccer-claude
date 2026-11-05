@@ -48,7 +48,7 @@ export const rubricFileSchema = z
     extends: z.string().optional(),
     sourceFile: z.string().min(1),
     role: z.string().min(1),
-    /** Value stored on the profile (TPosition). */
+    /** Value stored on the profile (OnFieldStaffPosition). */
     position: z.string().min(1),
     /** Name used in the client's document; shown to users. */
     displayName: z.string().min(1),

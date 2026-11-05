@@ -5,6 +5,8 @@ import socketServer from "./socket/socketServer";
 import { logger } from "./shared/logger/logger";
 import { seedSuperAdmin } from "./shared/db/seedSuperAdmin";
 import { startAiBackgroundWork } from "./shared/ai/aiWorker";
+import { registerAiEvaluationListeners } from "./modules/aiEvaluation/aiEvaluation.listeners";
+import { ProfileQualityService } from "./modules/profileQuality/profileQuality.service";
 import { assertSafeEnvironment } from "./shared/safety/envGuard";
 
 // Refuse to start a dev/staging process against the client's production database
@@ -30,10 +32,15 @@ async function main() {
     // Seed super admin on startup
     await seedSuperAdmin();
 
-    // Background AI worker (interview assessments, job matching)
+    // Events -> queues (a request only emits; workers do the slow part)
+    registerAiEvaluationListeners();
+    ProfileQualityService.registerListeners();
+
+    // Background workers (interview assessments, captions, job matching, profile quality)
     await startAiBackgroundWork().catch((error) =>
       logger.error("AI worker could not start", { error: error.message })
     );
+    ProfileQualityService.startStaleRecalculationSchedule();
 
     const port =
       typeof config.port === "number" ? config.port : Number(config.port);

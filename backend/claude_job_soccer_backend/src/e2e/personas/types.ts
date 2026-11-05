@@ -40,7 +40,8 @@ export interface RoleScenario {
   rubricId: string;
   questionCount: number;
   /** Required videos in upload order; the interview video (index 0) carries the answers. */
-  videoTypes: string[];
+  /** Videos the role uploads, interview first (see modules/video/video.config.ts). */
+  videoKinds: string[];
   /** Required profile fields (same for every persona). */
   profileBase: Record<string, string>;
   personas: Persona[];

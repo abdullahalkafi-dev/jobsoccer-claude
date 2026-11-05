@@ -25,6 +25,10 @@ import { NotificationRoutes } from "../modules/notification/notification.route";
 import { AgentRatingRoutes } from "../modules/agentRating/agentRating.route";
 import { AgentHiringRoutes } from "../modules/agentHiring/agentHiring.route";
 import { AiEvaluationRoutes } from "../modules/aiEvaluation/aiEvaluation.route";
+import { ProfileRoutes } from "../modules/profile/profile.route";
+import { VideoRoutes } from "../modules/video/video.route";
+import { ProfileQualityRoutes } from "../modules/profileQuality/profileQuality.route";
+import { CredentialVerificationRoutes } from "../modules/credentialVerification/credentialVerification.route";
 
 const router: Router = express.Router();
 
@@ -132,6 +136,22 @@ const apiRoutes = [
   {
     path: "/ai-evaluation",
     route: AiEvaluationRoutes,
+  },
+  {
+    path: "/profile",
+    route: ProfileRoutes,
+  },
+  {
+    path: "/videos",
+    route: VideoRoutes,
+  },
+  {
+    path: "/profile-quality",
+    route: ProfileQualityRoutes,
+  },
+  {
+    path: "/credential-verification",
+    route: CredentialVerificationRoutes,
   },
 ];
 

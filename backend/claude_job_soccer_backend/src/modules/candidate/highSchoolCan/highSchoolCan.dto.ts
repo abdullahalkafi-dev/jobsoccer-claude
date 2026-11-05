@@ -47,16 +47,7 @@ const createHighSchoolCanDto = z.object({
     league: z.string().trim().min(1, "League is required"),
     schoolName: z.string().trim().min(1, "School name is required"),
     gpa: z.string().trim().min(1, "GPA is required").optional(),
-    country: z.string().min(1, "Country is required"),
-    // Videos will be handled separately through file upload (2 Highlights videos required)
-    videos: z.array(
-        z.object({
-            url: z.string().min(1, "Video URL is required"),
-            duration: z.number().min(0, "Duration must be non-negative"), // Duration validation handled by frontend
-            title: z.string().min(1, "Video title is required"),
-            uploadedAt: z.date().optional(),
-        })
-    ).optional(),
+    country: z.string().min(1, "Country is required"),
 });
 
 const updateHighSchoolCanDto = createHighSchoolCanDto.partial();

@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import { profileChangedPlugin } from "../../shared/events/profileChangedPlugin";
+import { verificationFields } from "../credentialVerification/credentialVerification.fields";
 import { TCandidateExperience } from "./candidateExperience.interface";
 
 const candidateExperienceSchema = new Schema<TCandidateExperience>(
@@ -65,12 +67,18 @@ const candidateExperienceSchema = new Schema<TCandidateExperience>(
   { timestamps: true, versionKey: false }
 );
 
+// Supporting document + admin verification (feeds the Profile Quality "Verification" points)
+candidateExperienceSchema.add(verificationFields);
+
 // Index for efficiently finding user's experience records
 candidateExperienceSchema.index({ userId: 1, createdAt: -1 });
 // Index for finding experience by profile
 candidateExperienceSchema.index({ profileId: 1, startYear: -1 });
 // Index for currently working positions
 candidateExperienceSchema.index({ userId: 1, isCurrentlyWorking: 1 });
+
+// Recalculate the Profile Quality Score when this changes
+candidateExperienceSchema.plugin(profileChangedPlugin, "experience");
 
 export const CandidateExperience = model<TCandidateExperience>(
   "CandidateExperience",

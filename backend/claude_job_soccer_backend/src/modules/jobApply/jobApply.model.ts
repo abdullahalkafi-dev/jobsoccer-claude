@@ -20,7 +20,7 @@ const jobApplySchema = new Schema<TJobApply>(
       default: Date.now,
       required: true,
     },
-    aiMatchPercentage: {
+    matchScore: {
       type: Number,
       min: 0,
       max: 100,
@@ -30,12 +30,12 @@ const jobApplySchema = new Schema<TJobApply>(
       type: String,
     },
     // Job match v2 (background): status, reasons and errors
-    aiMatchStatus: {
+    matchStatus: {
       type: String,
       enum: ["queued", "processing", "completed", "failed"],
     },
-    aiMatchDetails: { type: Schema.Types.Mixed },
-    aiMatchError: { type: String },
+    matchDetails: { type: Schema.Types.Mixed },
+    matchError: { type: String },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -56,7 +56,7 @@ const jobApplySchema = new Schema<TJobApply>(
 jobApplySchema.index({ jobId: 1, candidateId: 1 }, { unique: true });
 
 // 2. Get all applications for a job, sorted by AI match
-jobApplySchema.index({ jobId: 1, isDeleted: 1, aiMatchPercentage: -1 });
+jobApplySchema.index({ jobId: 1, isDeleted: 1, matchScore: -1 });
 
 // 3. Get all applications for a job, sorted by date
 jobApplySchema.index({ jobId: 1, isDeleted: 1, appliedAt: -1 });

@@ -3,6 +3,7 @@ import { jwtHelper } from "../shared/util/jwtHelper";
 import config from "../config";
 import { Secret } from "jsonwebtoken";
 import { messageSocketHandlers } from "../modules/message/message.socket";
+import { userRoom } from "./emitToUser";
 
 interface ISocketUser {
   userId: string;
@@ -32,14 +33,6 @@ const socketInit = (io: Server) => {
         socket.handshake.query.token ||
         socket.handshake.query.Authorization;
 
-      console.log("🔍 Socket authentication attempt:", {
-        hasAuthToken: !!socket.handshake.auth.token,
-        hasHeaderAuth: !!socket.handshake.headers.authorization,
-        hasQueryToken: !!socket.handshake.query.token,
-        hasQueryAuth: !!socket.handshake.query.Authorization,
-        tokenReceived: !!token
-      });
-
       if (!token) {
         return next(new Error("Authentication error: No token provided"));
       }
@@ -53,8 +46,6 @@ const socketInit = (io: Server) => {
         config.jwt.jwt_secret as Secret
       );
 
-      console.log("✅ Token verified, decoded payload:", decoded);
-
       // Attach user data to socket (handle both 'id' and 'userId' from JWT)
       socket.data.userId = decoded.userId || decoded.id;
       socket.data.userType = decoded.userType || decoded.role;
@@ -62,17 +53,13 @@ const socketInit = (io: Server) => {
     
 
       if (!socket.data.userId) {
-        console.error("❌ No userId found in decoded token:", decoded);
+        console.error("❌ Socket token has no userId");
         return next(new Error("Authentication error: Invalid token payload"));
       }
 
       next();
     } catch (error: any) {
-      console.error("❌ Socket authentication error:", {
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      });
+      console.error("❌ Socket authentication error:", error.message);
       next(new Error("Authentication error: Invalid token"));
     }
   });
@@ -88,6 +75,9 @@ const socketInit = (io: Server) => {
     }
 
     console.log(`✅ User connected: ${userId} (Socket: ${socket.id})`);
+
+    // One room per user: services push live events (video / assessment / score updates) with emitToUser().
+    socket.join(userRoom(userId));
 
     // Add user to online users
     onlineUsers.set(socket.id, {

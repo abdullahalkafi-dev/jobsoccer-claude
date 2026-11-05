@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { profileChangedPlugin } from "../../shared/events/profileChangedPlugin";
 import { TCandidateResume } from "./candidateResume.interface";
 
 const candidateResumeSchema = new Schema<TCandidateResume>(
@@ -44,6 +45,9 @@ const candidateResumeSchema = new Schema<TCandidateResume>(
 candidateResumeSchema.index({ userId: 1, createdAt: -1 });
 // Index for finding active resume
 candidateResumeSchema.index({ userId: 1, isActive: 1 });
+
+// Recalculate the Profile Quality Score when this changes
+candidateResumeSchema.plugin(profileChangedPlugin, "resume");
 
 export const CandidateResume = model<TCandidateResume>(
   "CandidateResume",

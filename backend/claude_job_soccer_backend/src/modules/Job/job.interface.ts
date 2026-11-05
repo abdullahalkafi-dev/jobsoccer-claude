@@ -30,7 +30,8 @@ export interface IJob {
     min: number;
     max: number;
   };
-  requiredAiScore?: number;
+  /** Premium opportunity (set by an admin only). */
+  isPremium?: boolean;
   experience: ExperienceLevel;
   requirements: string;
   responsibilities: string;

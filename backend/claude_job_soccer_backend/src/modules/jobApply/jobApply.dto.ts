@@ -18,7 +18,7 @@ const getApplicationsByJobDto = z.object({
     page: z.string().optional(),
     limit: z.string().optional(),
     sortBy: z
-      .enum(["aiMatchPercentage", "-aiMatchPercentage", "appliedAt", "-appliedAt"])
+      .enum(["matchScore", "-matchScore", "appliedAt", "-appliedAt"])
       .optional(),
   }),
 });

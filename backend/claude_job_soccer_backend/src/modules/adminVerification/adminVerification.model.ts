@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { profileChangedPlugin } from "../../shared/events/profileChangedPlugin";
 import { TAdminVerification, VerificationStatus } from "./adminVerification.interface";
 
 const adminVerificationSchema = new Schema<TAdminVerification>(
@@ -40,6 +41,9 @@ adminVerificationSchema.index({ status: 1, userType: 1, createdAt: -1 });
 
 // Ensure only one verification request per user
 adminVerificationSchema.index({ userId: 1 }, { unique: true });
+
+// Recalculate the Profile Quality Score when this changes
+adminVerificationSchema.plugin(profileChangedPlugin, "identity");
 
 export const AdminVerification = model<TAdminVerification>(
   "AdminVerification",

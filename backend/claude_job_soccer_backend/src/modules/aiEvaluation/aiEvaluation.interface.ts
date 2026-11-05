@@ -1,13 +1,17 @@
 import { Types } from "mongoose";
 import { EvaluationReport } from "../../shared/ai/evaluation/evaluation.types";
 import { UsageRecord } from "../../shared/ai/client/openaiClient";
+import { TSetupCheck } from "../../shared/ai/frameCheck/frameCheck";
+import { TCaptionSegment } from "../../shared/ai/transcription/transcriber";
 
 export const AI_EVALUATION_STATUS = ["queued", "transcribing", "evaluating", "completed", "failed"] as const;
 export type TAiEvaluationStatus = (typeof AI_EVALUATION_STATUS)[number];
 
 export type TAiEvaluationVideo = {
   url: string;
-  videoType?: string;
+  kind?: string;
+  /** Id of the video on the candidate profile. */
+  videoId?: string;
   sha256?: string;
   durationSeconds?: number | null;
   transcriptChars?: number;
@@ -42,6 +46,8 @@ export type TAiEvaluation = {
   isLatest: boolean;
   videos: TAiEvaluationVideo[];
   transcript?: string;
+  detectedLanguage?: string;
+  setupCheck?: TSetupCheck;
   report?: EvaluationReport;
   rawModelOutput?: string;
   /** Model that produced the report. */
@@ -63,6 +69,8 @@ export type TAiTranscript = {
   model: string;
   language: string;
   text: string;
+  detectedLanguage?: string;
+  segments?: TCaptionSegment[];
   durationSeconds?: number | null;
   createdAt?: Date;
 };

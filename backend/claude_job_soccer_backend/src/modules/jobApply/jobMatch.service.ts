@@ -1,7 +1,7 @@
 import { aiConfig } from "../../shared/ai/ai.config";
 import { evaluateJobMatch } from "../../shared/ai/jobMatch/jobMatchEvaluator";
-import { enqueueAiJob } from "../../shared/ai/queue/aiQueue";
-import { extractStoredResumeText } from "../../shared/ai/resume/resumeText";
+import { enqueueJob } from "../../shared/ai/queue/aiQueue";
+import { getResumeText } from "../candidateResume/resumeText.service";
 import { logger } from "../../shared/logger/logger";
 import { getCandidateModel } from "../../shared/util/getCandidateModel";
 import { AiEvaluation } from "../aiEvaluation/aiEvaluation.model";
@@ -10,17 +10,13 @@ import { getRubric } from "../../shared/ai/rubric/rubric.registry";
 import { CandidateEducation } from "../candidateEducation/candidateEducation.model";
 import { CandidateExperience } from "../candidateExperience/candidateExperience.model";
 import { CandidateLicenseAndCertification } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.model";
-import { CandidateResume } from "../candidateResume/candidateResume.model";
 import { Job } from "../Job/job.model";
 import { User } from "../user/user.model";
 import { JobApply } from "./jobApply.model";
 
-/** Job match v2 runs in the background when AI_EVAL_ENABLED (opt out with AI_JOB_MATCH_V2=false). */
-export const isJobMatchV2Enabled = (): boolean => aiConfig.evalEnabled && process.env.AI_JOB_MATCH_V2 !== "false";
-
 // Personal details the match must not use (fairness) and fields with no meaning for a match.
 const PROFILE_EXCLUDED = new Set([
-  "_id", "createdAt", "updatedAt", "videos", "AiVideoVideoScore", "dateOfBirth", "placeOfBirth", "gender",
+  "_id", "createdAt", "updatedAt", "videos", "dateOfBirth", "placeOfBirth", "gender",
   "boyOrGirl", "phoneNumber", "socialMedia", "nationality", "height", "weight", "profileImage",
 ]);
 const JOB_FIELDS = [
@@ -32,37 +28,17 @@ const RECORD_EXCLUDED = new Set(["_id", "userId", "profileId", "createdAt", "upd
 const pick = (obj: Record<string, any>, exclude: Set<string>) =>
   Object.fromEntries(Object.entries(obj).filter(([k]) => !exclude.has(k)));
 
-/** Resume text for the application, cached on the resume record. */
-const getResumeText = async (userId: string, resumeUrl?: string | null): Promise<string | null> => {
-  if (!resumeUrl) return null;
-  const resume = await CandidateResume.findOne({ userId, resumeUrl });
-  if (resume?.extractedText !== undefined && resume.textStatus) return resume.extractedText || null;
-  try {
-    const result = await extractStoredResumeText(resumeUrl);
-    if (resume) {
-      resume.extractedText = result.text;
-      resume.textStatus = result.status;
-      resume.textExtractedAt = new Date();
-      await resume.save();
-    }
-    return result.status === "ok" ? result.text : null;
-  } catch (error: any) {
-    logger.warn(`Could not read resume ${resumeUrl}`, { error: error.message });
-    return null;
-  }
-};
-
 /** Mark the application for background matching and queue it. */
 const queueMatch = async (applicationId: string): Promise<void> => {
-  await JobApply.updateOne({ _id: applicationId }, { $set: { aiMatchStatus: "queued" }, $unset: { aiMatchError: 1 } });
-  await enqueueAiJob("match-job-application", { id: applicationId });
+  await JobApply.updateOne({ _id: applicationId }, { $set: { matchStatus: "queued" }, $unset: { matchError: 1 } });
+  await enqueueJob("jobMatch", { id: applicationId }, { jobId: `match-${applicationId}` });
 };
 
 const processMatch = async (applicationId: string, isFinalAttempt = true): Promise<void> => {
   const application = await JobApply.findById(applicationId);
-  if (!application || application.isDeleted || application.aiMatchStatus === "completed") return;
+  if (!application || application.isDeleted || application.matchStatus === "completed") return;
   try {
-    application.aiMatchStatus = "processing";
+    application.matchStatus = "processing";
     await application.save();
 
     const [job, user] = await Promise.all([
@@ -104,9 +80,9 @@ const processMatch = async (applicationId: string, isFinalAttempt = true): Promi
         : null,
     });
 
-    application.aiMatchPercentage = result.output.score;
-    application.aiMatchStatus = "completed";
-    application.aiMatchDetails = {
+    application.matchScore = result.output.score;
+    application.matchStatus = "completed";
+    application.matchDetails = {
       ...result.output,
       usedResume: !!resumeText,
       usedInterview: !!interviewReport,
@@ -114,23 +90,23 @@ const processMatch = async (applicationId: string, isFinalAttempt = true): Promi
       costUsd: result.usage.reduce((n, u) => n + (u.estimatedCostUsd ?? 0), 0),
       matchedAt: new Date(),
     };
-    application.aiMatchError = undefined;
+    application.matchError = undefined;
     await application.save();
   } catch (error: any) {
     // Never store a fake 0: the percentage stays empty and the status shows the failure.
-    application.aiMatchStatus = isFinalAttempt ? "failed" : "queued";
-    application.aiMatchError = error.message;
+    application.matchStatus = isFinalAttempt ? "failed" : "queued";
+    application.matchError = error.message;
     await application.save();
     throw error;
   }
 };
 
 const requeuePending = async (): Promise<number> => {
-  if (!isJobMatchV2Enabled()) return 0;
-  const pending = await JobApply.find({ isDeleted: false, aiMatchStatus: { $in: ["queued", "processing"] } })
+  if (!aiConfig.evalEnabled) return 0;
+  const pending = await JobApply.find({ isDeleted: false, matchStatus: { $in: ["queued", "processing"] } })
     .select("_id")
     .lean();
-  for (const p of pending) await enqueueAiJob("match-job-application", { id: p._id.toString() });
+  for (const p of pending) await enqueueJob("jobMatch", { id: p._id.toString() }, { jobId: `match-${p._id}` });
   return pending.length;
 };
 

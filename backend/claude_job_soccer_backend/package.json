@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "storage:migrate": "tsc && node dist/scripts/migrateUploadsToStorage.js",
     "ai:eval": "tsc && node dist/scripts/aiEval.js",
-    "e2e:flow": "tsc && node dist/e2e/run.js"
+    "e2e:flow": "tsc && node dist/e2e/run.js",
+    "migrate:data-model": "tsc && node dist/scripts/migrateToNewDataModel.js"
   },
   "keywords": [],
   "author": "",
@@ -54,6 +55,8 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
     "@types/compression": "^1.8.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",

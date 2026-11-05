@@ -91,6 +91,8 @@ if (process.env.NODE_ENV !== "production") {
 app.use("/images", cors(corsOptions), express.static("uploads/images"), serveFromStorage("images"));
 app.use("/videos", cors(corsOptions), express.static("uploads/videos"), serveFromStorage("videos"));
 app.use("/docs", cors(corsOptions), express.static("uploads/docs"), serveFromStorage("docs"));
+// English captions (WebVTT) of uploaded videos
+app.use("/captions", cors(corsOptions), express.static("uploads/captions"), serveFromStorage("captions"));
 app.use(express.static("uploads"));
 app.get("/health", (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({

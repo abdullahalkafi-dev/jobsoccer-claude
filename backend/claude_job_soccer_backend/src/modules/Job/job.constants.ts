@@ -1,25 +1,4 @@
 /**
- * AI Score Level Ranges
- * These ranges map user-friendly labels to percentage ranges
- * You can easily adjust these values as needed
- */
-export const AI_SCORE_RANGES = {
-  Low: { min: 10, max: 30 },
-  Medium: { min: 31, max: 50 },
-  Good: { min: 51, max: 80 },
-  High: { min: 81, max: 100 },
-} as const;
-
-export type AiScoreLevel = keyof typeof AI_SCORE_RANGES;
-
-/**
- * Helper function to get AI score range from level
- */
-export const getAiScoreRange = (level: AiScoreLevel) => {
-  return AI_SCORE_RANGES[level];
-};
-
-/**
  * Date Filter Options
  * Filters jobs based on when they were created
  */

@@ -46,6 +46,7 @@ const CONTENT_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".pdf": "application/pdf",
+  ".vtt": "text/vtt",
 };
 
 export const contentTypeFor = (key: string): string =>
