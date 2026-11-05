@@ -2,19 +2,19 @@ import { User } from "../user/user.model";
 import { PaymentHistory } from "../paymentHistory/paymentHistory.model";
 import mongoose from "mongoose";
 import { CandidateRole, EmployerRole } from "../user/user.interface";
-import { AmateurPlayerCan } from "../candidate/amateurPlayerCan/amateurPlayerCan.model";
-import { ProfessionalPlayerCan } from "../candidate/professionalPlayerCan/professionalPlayerCan.model";
-import { OnFieldStaffCan } from "../candidate/onFieldStaffCan/onFieldStaffCan.model";
-import { OfficeStaffCan } from "../candidate/officeStaffCan/officeStaffCan.model";
-import { HighSchoolCan } from "../candidate/highSchoolCan/highSchoolCan.model";
-import { CollegeOrUniversity } from "../candidate/collegeOrUniversityCan/collegeOrUniversityCan.model";
-import { AcademyEmp } from "../employer/academyEmp/academyEmp.model";
-import { AgentEmp } from "../employer/agentEmp/agentEmp.model";
-import { AmateurClubEmp } from "../employer/amateurClubEmp/amateurClubEmp.model";
-import { CollegeOrUniversityEmp } from "../employer/collegeOrUniversityEmp/collegeOrUniversityEmp.model";
-import { ConsultingCompanyEmp } from "../employer/consultingCompanyEmp/consultingCompanyEmp.model";
-import { HighSchoolEmp } from "../employer/highSchoolEmp/highSchoolEmp.model";
-import { ProfessionalClubEmp } from "../employer/professionalClubEmp/professionalClubEmp.model";
+import { AmateurPlayerProfile } from "../candidate/amateurPlayerProfile/amateurPlayerProfile.model";
+import { ProfessionalPlayerProfile } from "../candidate/professionalPlayerProfile/professionalPlayerProfile.model";
+import { OnFieldStaffProfile } from "../candidate/onFieldStaffProfile/onFieldStaffProfile.model";
+import { OfficeStaffProfile } from "../candidate/officeStaffProfile/officeStaffProfile.model";
+import { HighSchoolPlayerProfile } from "../candidate/highSchoolPlayerProfile/highSchoolPlayerProfile.model";
+import { CollegeUniversityPlayerProfile } from "../candidate/collegeUniversityPlayerProfile/collegeUniversityPlayerProfile.model";
+import { AcademyEmployerProfile } from "../employer/academyEmployerProfile/academyEmployerProfile.model";
+import { AgentEmployerProfile } from "../employer/agentEmployerProfile/agentEmployerProfile.model";
+import { AmateurClubEmployerProfile } from "../employer/amateurClubEmployerProfile/amateurClubEmployerProfile.model";
+import { CollegeUniversityEmployerProfile } from "../employer/collegeUniversityEmployerProfile/collegeUniversityEmployerProfile.model";
+import { ConsultingCompanyEmployerProfile } from "../employer/consultingCompanyEmployerProfile/consultingCompanyEmployerProfile.model";
+import { HighSchoolEmployerProfile } from "../employer/highSchoolEmployerProfile/highSchoolEmployerProfile.model";
+import { ProfessionalClubEmployerProfile } from "../employer/professionalClubEmployerProfile/professionalClubEmployerProfile.model";
 import { CandidateEducationService } from "../candidateEducation/candidateEducation.service";
 import { CandidateExperienceService } from "../candidateExperience/candidateExperience.service";
 import { CandidateLicensesAndCertificationService } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.service";
@@ -265,48 +265,48 @@ const getUserDetails = async (userId: string) => {
     if (user.userType === "candidate") {
       switch (user.role) {
         case CandidateRole.AMATEUR_PLAYER:
-          profile = await AmateurPlayerCan.findById(user.profileId).lean();
+          profile = await AmateurPlayerProfile.findById(user.profileId).lean();
           break;
         case CandidateRole.PROFESSIONAL_PLAYER:
-          profile = await ProfessionalPlayerCan.findById(user.profileId).lean();
+          profile = await ProfessionalPlayerProfile.findById(user.profileId).lean();
           break;
         case CandidateRole.ON_FIELD_STAFF:
-          profile = await OnFieldStaffCan.findById(user.profileId).lean();
+          profile = await OnFieldStaffProfile.findById(user.profileId).lean();
           break;
         case CandidateRole.OFFICE_STAFF:
-          profile = await OfficeStaffCan.findById(user.profileId).lean();
+          profile = await OfficeStaffProfile.findById(user.profileId).lean();
           break;
         case CandidateRole.HIGH_SCHOOL:
-          profile = await HighSchoolCan.findById(user.profileId).lean();
+          profile = await HighSchoolPlayerProfile.findById(user.profileId).lean();
           break;
         case CandidateRole.COLLEGE_UNIVERSITY:
-          profile = await CollegeOrUniversity.findById(user.profileId).lean();
+          profile = await CollegeUniversityPlayerProfile.findById(user.profileId).lean();
           break;
       }
     } else if (user.userType === "employer") {
       switch (user.role) {
         case EmployerRole.ACADEMY:
-          profile = await AcademyEmp.findById(user.profileId).lean();
+          profile = await AcademyEmployerProfile.findById(user.profileId).lean();
           break;
         case EmployerRole.AGENT:
-          profile = await AgentEmp.findById(user.profileId).lean();
+          profile = await AgentEmployerProfile.findById(user.profileId).lean();
           break;
         case EmployerRole.AMATEUR_CLUB:
-          profile = await AmateurClubEmp.findById(user.profileId).lean();
+          profile = await AmateurClubEmployerProfile.findById(user.profileId).lean();
           break;
         case EmployerRole.COLLEGE_UNIVERSITY:
-          profile = await CollegeOrUniversityEmp.findById(
+          profile = await CollegeUniversityEmployerProfile.findById(
             user.profileId
           ).lean();
           break;
         case EmployerRole.CONSULTING_COMPANY:
-          profile = await ConsultingCompanyEmp.findById(user.profileId).lean();
+          profile = await ConsultingCompanyEmployerProfile.findById(user.profileId).lean();
           break;
         case EmployerRole.HIGH_SCHOOL:
-          profile = await HighSchoolEmp.findById(user.profileId).lean();
+          profile = await HighSchoolEmployerProfile.findById(user.profileId).lean();
           break;
         case EmployerRole.PROFESSIONAL_CLUB:
-          profile = await ProfessionalClubEmp.findById(user.profileId).lean();
+          profile = await ProfessionalClubEmployerProfile.findById(user.profileId).lean();
           break;
       }
     }

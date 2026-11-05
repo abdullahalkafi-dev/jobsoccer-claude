@@ -7,18 +7,18 @@ import { User } from "../user/user.model";
 import { CandidateRole, EmployerRole } from "../user/user.interface";
 
 // Import Employer Models
-import { AcademyEmp } from "../employer/academyEmp/academyEmp.model";
-import { AgentEmp } from "../employer/agentEmp/agentEmp.model";
-import { AmateurClubEmp } from "../employer/amateurClubEmp/amateurClubEmp.model";
-import { CollegeOrUniversityEmp } from "../employer/collegeOrUniversityEmp/collegeOrUniversityEmp.model";
-import { ConsultingCompanyEmp } from "../employer/consultingCompanyEmp/consultingCompanyEmp.model";
-import { HighSchoolEmp } from "../employer/highSchoolEmp/highSchoolEmp.model";
-import { ProfessionalClubEmp } from "../employer/professionalClubEmp/professionalClubEmp.model";
+import { AcademyEmployerProfile } from "../employer/academyEmployerProfile/academyEmployerProfile.model";
+import { AgentEmployerProfile } from "../employer/agentEmployerProfile/agentEmployerProfile.model";
+import { AmateurClubEmployerProfile } from "../employer/amateurClubEmployerProfile/amateurClubEmployerProfile.model";
+import { CollegeUniversityEmployerProfile } from "../employer/collegeUniversityEmployerProfile/collegeUniversityEmployerProfile.model";
+import { ConsultingCompanyEmployerProfile } from "../employer/consultingCompanyEmployerProfile/consultingCompanyEmployerProfile.model";
+import { HighSchoolEmployerProfile } from "../employer/highSchoolEmployerProfile/highSchoolEmployerProfile.model";
+import { ProfessionalClubEmployerProfile } from "../employer/professionalClubEmployerProfile/professionalClubEmployerProfile.model";
 
 // Import models for additional fields
 import { CandidateShortList } from "../candidateShortList/candidateShortList.model";
 import { Follow } from "../follow/follow.model";
-import { Job } from "../Job/job.model";
+import { Job } from "../job/job.model";
 import { getCandidateModel } from "../../shared/util/getCandidateModel";
 
 /**
@@ -27,19 +27,19 @@ import { getCandidateModel } from "../../shared/util/getCandidateModel";
 const getEmployerModel = (role: EmployerRole): any => {
   switch (role) {
     case EmployerRole.PROFESSIONAL_CLUB:
-      return ProfessionalClubEmp;
+      return ProfessionalClubEmployerProfile;
     case EmployerRole.ACADEMY:
-      return AcademyEmp;
+      return AcademyEmployerProfile;
     case EmployerRole.AMATEUR_CLUB:
-      return AmateurClubEmp;
+      return AmateurClubEmployerProfile;
     case EmployerRole.CONSULTING_COMPANY:
-      return ConsultingCompanyEmp;
+      return ConsultingCompanyEmployerProfile;
     case EmployerRole.HIGH_SCHOOL:
-      return HighSchoolEmp;
+      return HighSchoolEmployerProfile;
     case EmployerRole.COLLEGE_UNIVERSITY:
-      return CollegeOrUniversityEmp;
+      return CollegeUniversityEmployerProfile;
     case EmployerRole.AGENT:
-      return AgentEmp;
+      return AgentEmployerProfile;
     default:
       throw new AppError(StatusCodes.BAD_REQUEST, "Invalid employer role");
   }

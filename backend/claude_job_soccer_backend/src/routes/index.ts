@@ -3,7 +3,7 @@ import { UserRoutes } from "../modules/user/user.route";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { CandidateRoutes } from "../modules/candidate/candidate.route";
 import { EmployerRoutes } from "../modules/employer/employer.route";
-import { JobRoutes } from "../modules/Job/job.route";
+import { JobRoutes } from "../modules/job/job.route";
 import { SearchHistoryRoutes } from "../modules/searchHistory/searchHistory.route";
 import SavedJobRoutes from "../modules/savedJobs/savedJobs.route";
 import FollowRoutes from "../modules/follow/follow.route";

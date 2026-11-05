@@ -3,7 +3,7 @@ import { SavedJob } from "./savesJobs.model";
 import { TSavedJob } from "./savedJobs.interface";
 import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
-import { Job } from "../Job/job.model";
+import { Job } from "../job/job.model";
 
 /**
  * Add a job to saved jobs

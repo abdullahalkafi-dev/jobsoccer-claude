@@ -5,7 +5,7 @@ import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../user/user.model";
 import { EmployerRole } from "../user/user.interface";
-import { AgentEmp } from "../employer/agentEmp/agentEmp.model";
+import { AgentEmployerProfile } from "../employer/agentEmployerProfile/agentEmployerProfile.model";
 
 /**
  * Update agent's average rating and total ratings
@@ -34,7 +34,7 @@ const updateAgentRating = async (agentProfileId: string): Promise<void> => {
   const averageRating = stats.length > 0 ? Math.round(stats[0].averageRating * 100) / 100 : 0;
   const totalRatings = stats.length > 0 ? stats[0].totalRatings : 0;
 
-  await AgentEmp.findByIdAndUpdate(agentProfileId, {
+  await AgentEmployerProfile.findByIdAndUpdate(agentProfileId, {
     averageRating,
     totalRatings,
   });
@@ -249,7 +249,7 @@ const getAgentAverageRating = async (
   }
 
   // Get agent profile
-  const agentProfile = await AgentEmp.findById(agentUser.profileId).lean();
+  const agentProfile = await AgentEmployerProfile.findById(agentUser.profileId).lean();
   if (!agentProfile) {
     throw new AppError(StatusCodes.NOT_FOUND, "Agent profile not found");
   }

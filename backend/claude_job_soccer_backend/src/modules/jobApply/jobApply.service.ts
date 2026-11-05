@@ -4,7 +4,7 @@ import AppError from "../../errors/AppError";
 import { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { aiConfig } from "../../shared/ai/ai.config";
-import { Job } from "../Job/job.model";
+import { Job } from "../job/job.model";
 import { User } from "../user/user.model";
 import { CandidateEducationService } from "../candidateEducation/candidateEducation.service";
 import { CandidateLicensesAndCertificationService } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.service";
