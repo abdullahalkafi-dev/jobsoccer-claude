@@ -19,13 +19,12 @@ const createMessage = async (
   payload: ICreateMessagePayload
 ): Promise<IMessageDocument> => {
   const { chatId, senderId, receiverId } = payload;
- console.log(payload);
   // Verify chat exists
   const chat = await Chat.findById(chatId);
   if (!chat) {
     throw new AppError(StatusCodes.NOT_FOUND, "Chat not found");
   }
-console.log(chat);
+logger.debug(chat);
   // Verify users are part of the chat
   const isUserInChat = chat.users.some(
     (userId) =>

@@ -1,6 +1,7 @@
 // redisClient.ts
 import Redis from "ioredis";
 import config from "../../config";
+import { logger } from "../logger/logger";
 
 // Create the Redis client instance
 const createRedisClient = (): Redis => {
@@ -46,18 +47,18 @@ const setupEventHandlers = (client: Redis): void => {
   });
 
   client.on("connect", () => {
-    console.log("Redis client connected");
+    logger.info("Redis client connected");
     connectionStatus = true;
   });
 
   client.on("close", () => {
-    console.log("Redis client disconnected");
+    logger.info("Redis client disconnected");
     connectionStatus = false;
     connectingPromise = null; // ✅ reset lock on close
   });
 
   client.on("ready", () => {
-    console.log("Redis client ready");
+    logger.info("Redis client ready");
     connectionStatus = true;
   });
 };
@@ -78,7 +79,7 @@ const connect = async (): Promise<void> => {
     try {
       await redisClient.connect();
       connectionStatus = true;
-      console.log("Connected to Redis");
+      logger.info("Connected to Redis");
     } catch (error) {
       console.error("Failed to connect to Redis:", error);
       throw error;

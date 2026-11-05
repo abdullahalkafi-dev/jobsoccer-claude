@@ -1,6 +1,7 @@
 import { stripe } from "../../config/stripe.config";
 import { SubscriptionServices } from "./subscription.service";
 import { PaymentHistoryService } from "../paymentHistory/paymentHistory.service";
+import { logger } from "../../shared/logger/logger";
 
 export const stripeWebhook = async (req: any, res: any) => {
   const sig = req.headers["stripe-signature"];
@@ -16,13 +17,13 @@ export const stripeWebhook = async (req: any, res: any) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
   
-  console.log(`\n🔔 Webhook received: ${event.type}`);
-  console.log(`Event ID: ${event.id}`);
+  logger.debug(`\n🔔 Webhook received: ${event.type}`);
+  logger.debug(`Event ID: ${event.id}`);
   
   switch (event.type) {
     case "customer.subscription.created":
     case "customer.subscription.updated":
-      console.log(
+      logger.debug(
         `Processing ${event.type} event for subscription: ${event.data.object.id}`
       );
 
@@ -68,7 +69,7 @@ export const stripeWebhook = async (req: any, res: any) => {
       
       // For subscription.created, also create payment history if invoice is paid
       if (event.type === "customer.subscription.created" && invoiceForPayment) {
-        console.log(`\n💰 Creating payment history from subscription.created event`);
+        logger.debug(`\n💰 Creating payment history from subscription.created event`);
         try {
           if (invoiceForPayment.status === "paid" && invoiceForPayment.amount_paid > 0) {
             let paymentIntentId = invoiceForPayment.payment_intent;
@@ -98,14 +99,14 @@ export const stripeWebhook = async (req: any, res: any) => {
               ),
             };
             
-            console.log("Creating payment history from subscription webhook:", paymentData);
+            logger.debug("Creating payment history from subscription webhook:", paymentData);
             const paymentHistory = await PaymentHistoryService.createPaymentHistory(paymentData);
             
             if (paymentHistory) {
-              console.log(`✅ Payment history created from subscription webhook: ${paymentHistory._id}`);
+              logger.debug(`✅ Payment history created from subscription webhook: ${paymentHistory._id}`);
             }
           } else {
-            console.log(`⚠️ Invoice not paid yet or amount is 0, will wait for invoice.paid event`);
+            logger.debug(`⚠️ Invoice not paid yet or amount is 0, will wait for invoice.paid event`);
           }
         } catch (error) {
           console.error("❌ Failed to create payment history from subscription webhook:", error);
@@ -118,13 +119,13 @@ export const stripeWebhook = async (req: any, res: any) => {
       break;
 
     case "invoice.paid":
-      console.log(`\n💰 Processing invoice.paid event`);
+      logger.debug(`\n💰 Processing invoice.paid event`);
       try {
         const invoice: any = event.data.object;
-        console.log(`Invoice ID: ${invoice.id}`);
-        console.log(`Customer ID: ${invoice.customer}`);
-        console.log(`Subscription ID: ${invoice.subscription}`);
-        console.log(`Amount paid: ${invoice.amount_paid / 100} ${invoice.currency}`);
+        logger.debug(`Invoice ID: ${invoice.id}`);
+        logger.debug(`Customer ID: ${invoice.customer}`);
+        logger.debug(`Subscription ID: ${invoice.subscription}`);
+        logger.debug(`Amount paid: ${invoice.amount_paid / 100} ${invoice.currency}`);
 
         // Get payment intent details
         let paymentIntentId = invoice.payment_intent;
@@ -156,13 +157,13 @@ export const stripeWebhook = async (req: any, res: any) => {
           ),
         };
         
-        console.log("Creating payment history with data:", paymentData);
+        logger.debug("Creating payment history with data:", paymentData);
         const paymentHistory = await PaymentHistoryService.createPaymentHistory(paymentData);
         
         if (paymentHistory) {
-          console.log(`✅ Payment history created successfully: ${paymentHistory._id}`);
+          logger.debug(`✅ Payment history created successfully: ${paymentHistory._id}`);
         } else {
-          console.log(`⚠️ Payment history creation returned null`);
+          logger.debug(`⚠️ Payment history creation returned null`);
         }
       } catch (error) {
         console.error("❌ Failed to create payment history:", error);
@@ -170,10 +171,10 @@ export const stripeWebhook = async (req: any, res: any) => {
       break;
 
     case "invoice.payment_failed":
-      console.log(`Processing invoice.payment_failed event`);
+      logger.debug(`Processing invoice.payment_failed event`);
       try {
         const invoice: any = event.data.object;
-        console.log({
+        logger.debug({
           stripeCustomerId: invoice.customer,
           stripePaymentIntentId: invoice.payment_intent || invoice.id,
           stripeInvoiceId: invoice.id,
@@ -202,12 +203,12 @@ export const stripeWebhook = async (req: any, res: any) => {
       break;
 
     case "checkout.session.completed":
-      console.log(`\n✅ Processing checkout.session.completed event`);
+      logger.debug(`\n✅ Processing checkout.session.completed event`);
       try {
         const session: any = event.data.object;
-        console.log(`Session ID: ${session.id}`);
-        console.log(`Subscription ID: ${session.subscription}`);
-        console.log(`Metadata:`, session.metadata);
+        logger.debug(`Session ID: ${session.id}`);
+        logger.debug(`Subscription ID: ${session.subscription}`);
+        logger.debug(`Metadata:`, session.metadata);
 
         // If this is an upgrade, update the subscription metadata
         if (session.metadata?.isUpgrade === "true" && session.metadata?.oldSubscriptionId) {
@@ -223,19 +224,19 @@ export const stripeWebhook = async (req: any, res: any) => {
                   upgradedFrom: session.metadata.upgradedFrom || "",
                 },
               });
-              console.log(`✅ Updated subscription metadata for upgrade`);
-              console.log(`📅 Remaining days from previous subscription: ${session.metadata.remainingDays || 0}`);
+              logger.debug(`✅ Updated subscription metadata for upgrade`);
+              logger.debug(`📅 Remaining days from previous subscription: ${session.metadata.remainingDays || 0}`);
 
               // Cancel the old subscription immediately
               await stripe.subscriptions.cancel(session.metadata.oldSubscriptionId);
-              console.log(`✅ Canceled old subscription: ${session.metadata.oldSubscriptionId}`);
+              logger.debug(`✅ Canceled old subscription: ${session.metadata.oldSubscriptionId}`);
 
               // Update old subscription status in database
               await SubscriptionServices.updateSubscriptionStatus(
                 session.metadata.oldSubscriptionId,
                 "canceled"
               );
-              console.log(`✅ Updated old subscription status in database`);
+              logger.debug(`✅ Updated old subscription status in database`);
             }
           } catch (error) {
             console.error("❌ Failed to handle upgrade:", error);

@@ -27,7 +27,6 @@ const fileUploadHandler = (req: Request, res: Response, next: NextFunction) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       let uploadDir;
-      console.log(file.fieldname);
       switch (file.fieldname) {
         case "image":
         case "banner":
@@ -85,8 +84,6 @@ const fileUploadHandler = (req: Request, res: Response, next: NextFunction) => {
       ) {
         cb(null, true);
       } else {
-        console.log(file.fieldname);
-        console.log(file.mimetype);
         cb(
           new AppError(
             StatusCodes.BAD_REQUEST,

@@ -33,7 +33,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
   } else if (err?.name === "ValidationError") {
-    console.log(err);
+    logger.error(err);
     const simplifiedError = handleValidationError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;

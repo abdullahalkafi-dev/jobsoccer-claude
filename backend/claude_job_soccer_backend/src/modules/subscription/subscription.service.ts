@@ -5,6 +5,7 @@ import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { Subscription } from "./subscription.model";
 import { STRIPE_PRICES } from "./subscription.constant";
+import { logger } from "../../shared/logger/logger";
 // Define subscription hierarchy for upgrades
 const SUBSCRIPTION_HIERARCHY = {
   monthly: 1,
@@ -52,7 +53,7 @@ export const createCheckoutSession = async (
       const currentLevel = SUBSCRIPTION_HIERARCHY[currentInterval as keyof typeof SUBSCRIPTION_HIERARCHY];
       const newLevel = SUBSCRIPTION_HIERARCHY[newInterval as keyof typeof SUBSCRIPTION_HIERARCHY];
 
-      console.log(`
+      logger.debug(`
       🔍 Existing subscription found:
          Current: ${currentInterval} (Level: ${currentLevel})
          Requested: ${newInterval} (Level: ${newLevel})
@@ -84,8 +85,8 @@ export const createCheckoutSession = async (
         );
       }
 
-      console.log(`✅ Upgrade allowed: ${currentInterval} → ${newInterval}`);
-      console.log(`📅 Remaining days from current subscription: ${remainingDays}`);
+      logger.debug(`✅ Upgrade allowed: ${currentInterval} → ${newInterval}`);
+      logger.debug(`📅 Remaining days from current subscription: ${remainingDays}`);
     }
 
     // Build checkout session options
@@ -118,16 +119,16 @@ export const createCheckoutSession = async (
           upgradedFrom: existingSubscription.interval,
         },
       };
-      console.log(`🎁 Adding ${remainingDays} days trial period for upgrade`);
+      logger.debug(`🎁 Adding ${remainingDays} days trial period for upgrade`);
     }
 
     const session = await stripe.checkout.sessions.create(sessionOptions);
-    console.log(`
+    logger.debug(`
     ---------------------------------------  Passed checkout service [ Line 34 ] ---------------------------------------
     `);
     return session.url;
   } catch (error) {
-    console.log(error);
+    logger.debug(error);
     if (error instanceof AppError) {
       throw error;
     }
@@ -146,7 +147,7 @@ const upsertStripeSubscription = async (stripeSub: any, metadata?: any) => {
   });
 
   if (!subscription) {
-    console.log(
+    logger.debug(
       "---------------------------> Creating new subscription for user:",
       user._id,
       "<-------------------------"
@@ -166,11 +167,11 @@ const upsertStripeSubscription = async (stripeSub: any, metadata?: any) => {
     } else {
       interval = "monthly"; // fallback
     }
-    console.log(`
+    logger.debug(`
       ---------------------------------------  create subscription [ Line 75 ] ---------------------------------------
       `);
 
-    console.log({
+    logger.debug({
       user: user._id,
       stripeSubscriptionId: stripeSub.id,
       stripePriceId: stripeSub.items.data[0].price.id,
@@ -178,12 +179,12 @@ const upsertStripeSubscription = async (stripeSub: any, metadata?: any) => {
       intervalCount: stripeIntervalCount,
     });
 
-    console.log(` 
+    logger.debug(` 
         ------------------------  meta data ----------------------------------
         `);
-    console.log(metadata);
+    logger.debug(metadata);
 
-    console.log(`---------------------------------------------------`);
+    logger.debug(`---------------------------------------------------`);
     
     // Prepare subscription data with upgrade tracking
     const subscriptionData: any = {
@@ -211,7 +212,7 @@ const upsertStripeSubscription = async (stripeSub: any, metadata?: any) => {
     if (metadata?.isUpgrade === "true" && metadata?.oldSubscriptionId) {
       try {
         await stripe.subscriptions.cancel(metadata.oldSubscriptionId);
-        console.log(
+        logger.debug(
           "---------------------------> Canceled old subscription:",
           metadata.oldSubscriptionId,
           "<-------------------------"
@@ -262,7 +263,7 @@ const upsertStripeSubscription = async (stripeSub: any, metadata?: any) => {
     // For trialing subscriptions, the effective end date should consider trial + paid period
     // Stripe's current_period_end during trial IS the trial_end
     // After trial ends, Stripe will update current_period_end to include the paid period
-    console.log(
+    logger.debug(
       `📅 Trial period detected: ${new Date(trialStart * 1000).toISOString()} to ${new Date(trialEnd * 1000).toISOString()}`
     );
   }
@@ -358,9 +359,9 @@ const updateSubscriptionStatus = async (
     );
     
     if (subscription) {
-      console.log(`✅ Updated subscription ${stripeSubscriptionId} status to ${status}`);
+      logger.debug(`✅ Updated subscription ${stripeSubscriptionId} status to ${status}`);
     } else {
-      console.log(`⚠️ Subscription ${stripeSubscriptionId} not found in database`);
+      logger.debug(`⚠️ Subscription ${stripeSubscriptionId} not found in database`);
     }
     
     return subscription;

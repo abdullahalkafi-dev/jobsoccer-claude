@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
+import { logger } from "../logger/logger";
 
 const unlinkAsync = promisify(fs.unlink);
 
@@ -11,7 +12,7 @@ const unlinkFile = async (file: string): Promise<void> => {
     // Check if file exists before trying to delete
     if (fs.existsSync(filePath)) {
       await unlinkAsync(filePath);
-      console.log(`Successfully deleted file: ${filePath}`);
+      logger.debug(`Successfully deleted file: ${filePath}`);
     } else {
       console.warn(`File not found for deletion: ${filePath}`);
     }
@@ -27,7 +28,7 @@ const unlinkFileSync = (file: string): void => {
     const filePath = path.join('uploads', file);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
-      console.log(`Successfully deleted file: ${filePath}`);
+      logger.debug(`Successfully deleted file: ${filePath}`);
     } else {
       console.warn(`File not found for deletion: ${filePath}`);
     }

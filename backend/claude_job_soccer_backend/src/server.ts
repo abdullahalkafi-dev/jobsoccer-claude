@@ -44,7 +44,6 @@ async function main() {
 
     const port =
       typeof config.port === "number" ? config.port : Number(config.port);
-    console.log(port, "port");
     // await redisClient.connect();
 
     server.listen(port, "0.0.0.0", () => {
