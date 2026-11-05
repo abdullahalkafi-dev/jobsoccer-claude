@@ -2,6 +2,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -318,6 +319,7 @@ function EducationItem({
         {education.description && (
           <p className="mt-3 text-sm text-gray-700">{education.description}</p>
         )}
+        <DocumentProof type="education" record={education} readOnly={readOnly} />
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { QueryBuilder } from "../../shared/builder/QueryBuilder";
 import redisOperations from "../../shared/redis/redisClient";
 import { ProfileService } from "../profile/profile.service";
 import { qualityFor } from "../profileQuality/profileQuality.view";
+import { hideVerificationDetails } from "../credentialVerification/credentialVerification.fields";
 import { Subscription } from "../subscription/subscription.model";
 import { CandidateEducationService } from "../candidateEducation/candidateEducation.service";
 import { CandidateExperienceService } from "../candidateExperience/candidateExperience.service";
@@ -46,14 +47,15 @@ const getUserById = async (userId: string, viewerId?: string) => {
   // Only the owner sees the score breakdown, tips and consent record; everyone else gets stars and level.
   const { profileQuality, videoConsent, ...publicUser } = user;
   const isOwner = viewerId === String(user._id);
+  const viewer = { id: viewerId };
   return {
     ...publicUser,
     profileQuality: qualityFor(profileQuality as any, user._id, viewerId),
     ...(isOwner ? { videoConsent } : {}),
     profile,
-    educations,
-    experiences,
-    certifications,
+    educations: hideVerificationDetails(educations as object[], userId, viewer),
+    experiences: hideVerificationDetails(experiences as object[], userId, viewer),
+    certifications: hideVerificationDetails(certifications as object[], userId, viewer),
   };
 };
 const updateUser = async (id: string, updateData: any) => {

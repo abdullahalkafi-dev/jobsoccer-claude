@@ -2,6 +2,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -375,6 +376,7 @@ function CertificateItem({
             {certificate.description}
           </p>
         )}
+        <DocumentProof type="license" record={certificate} readOnly={readOnly} />
       </div>
     </div>
   );

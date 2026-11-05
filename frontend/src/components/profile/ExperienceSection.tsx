@@ -2,6 +2,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -319,6 +320,7 @@ function ExperienceItem({
         </div>
 
         <p className="mt-3 text-sm text-gray-700">{experience.description}</p>
+        <DocumentProof type="experience" record={experience} readOnly={readOnly} />
       </div>
     </div>
   );
