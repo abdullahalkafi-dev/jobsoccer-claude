@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signInSchema, type SignInFormData } from "@/shchemas/signinValidation";
+import { signInSchema, type SignInFormData } from "@/schemas/signinValidation";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { useLoginMutation } from "@/redux/features/auth/authApi";

@@ -30,14 +30,14 @@ function JobPageContent() {
     const jobCategory = searchParams.get("jobCategory");
     const country = searchParams.get("country");
     const dateFilter = searchParams.get("dateFilter");
-    const aiScoreLevel = searchParams.get("aiScoreLevel");
+    const premium = searchParams.get("premium");
     const experience = searchParams.get("experience");
 
     if (searchTerm) urlFilters.searchTerm = searchTerm;
     if (jobCategory) urlFilters.jobCategory = jobCategory;
     if (country) urlFilters.country = country;
     if (dateFilter) urlFilters.dateFilter = dateFilter;
-    if (aiScoreLevel) urlFilters.aiScoreLevel = aiScoreLevel;
+    if (premium) urlFilters.premium = premium;
     if (experience) urlFilters.experience = experience;
 
     setFilters(urlFilters);
@@ -45,7 +45,7 @@ function JobPageContent() {
 
   const handleFiltersChange = (newFilters: {
     dateFilter?: string;
-    aiScoreLevel?: string;
+    premium?: string;
     experience?: string;
   }) => {
     setFilters((prev) => ({
@@ -80,7 +80,7 @@ function JobPageContent() {
           onFiltersChange={handleFiltersChange}
           onReset={handleReset}
           dateFilter={filters.dateFilter}
-          aiScoreLevel={filters.aiScoreLevel}
+          premium={filters.premium}
           experience={filters.experience}
         />
       </div>

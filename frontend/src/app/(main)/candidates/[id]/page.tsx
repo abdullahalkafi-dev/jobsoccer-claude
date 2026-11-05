@@ -32,6 +32,7 @@ import { useGetCandidateByIdQuery } from "@/redux/features/candidate/candidateAp
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ResumeDownloadButton from "@/components/profile/ResumeDownloadButton";
+import { QualityStars } from "@/features/profileQuality/QualityStars";
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -486,25 +487,12 @@ export default function UserProfilePage() {
                 )}
 
 
-                {user?.aiProfileScore >= 0 && (
+                {user?.profileQuality && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Profile Quality Score
+                      Profile Quality
                     </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.aiProfileScore}/100
-                    </p>
-                  </div>
-                )}
-
-                {typeof user?.profile?.AiVideoVideoScore === "number" && (
-                  <div>
-                    <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Video AI Score
-                    </label>
-                    <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.AiVideoVideoScore}/100
-                    </p>
+                    <QualityStars quality={user.profileQuality} />
                   </div>
                 )}
 

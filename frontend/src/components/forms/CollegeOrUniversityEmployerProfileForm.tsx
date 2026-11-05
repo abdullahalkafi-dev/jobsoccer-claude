@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { collegeOrUniversityEmployerProfileSchema } from "@/shchemas/profileValidation";
+import { collegeOrUniversityEmployerProfileSchema } from "@/schemas/profileValidation";
 import { TCollegeOrUniversityEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 import { z } from "zod";

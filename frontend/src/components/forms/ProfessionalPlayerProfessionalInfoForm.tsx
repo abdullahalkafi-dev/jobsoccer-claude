@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { professionalPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
+import { professionalPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
 import {
   countryList,
   divisionLevelOptions,

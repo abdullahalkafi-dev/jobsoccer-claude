@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, SquareCheck } from "lucide-react";
+import { MapPin } from "lucide-react";
 import {
   useGetSingleJobQuery,
   useGetJobsWithFiltersQuery,
 } from "@/redux/features/job/jobApi";
+import { PremiumBadge } from "@/features/premiumJobs/PremiumBadge";
+import { PremiumNotice } from "@/features/premiumJobs/PremiumNotice";
 import { useApplyJobMutation } from "@/redux/features/jobApplication/jobApplicationApi";
 import {
   useSaveJobMutation,
@@ -45,6 +47,8 @@ const JobDetailsPage = ({ params }: PageProps) => {
   // Use local state if available, otherwise use API data
   const isApplied = localIsApplied ?? jobData?.isApplied ?? false;
   const isSaved = localIsSaved ?? jobData?.isSaved ?? false;
+  // Premium jobs: everyone sees them, only 5-star (90+) candidates can apply
+  const premiumBlocked = !!jobData?.isPremium && !!jobData.premiumAccess && !jobData.premiumAccess.canApply;
 
   const { data: relatedJobsResponse, isLoading: relatedJobsLoading } =
     useGetJobsWithFiltersQuery(
@@ -197,6 +201,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     <h1 className="text-2xl font-bold text-black mb-2">
                       {jobData.jobTitle}
                     </h1>
+                    {jobData.isPremium && <PremiumBadge className="mb-2" />}
                     <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
                       <span>
                         {jobData.creator.creatorId.firstName}{" "}
@@ -285,18 +290,6 @@ const JobDetailsPage = ({ params }: PageProps) => {
                               {jobData.jobCategory}
                             </div>
                           </div>
-
-                          <div>
-                            <div className="text-xs text-gray-500 mb-1">
-                              AI Score Required
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <SquareCheck className="w-4 h-4 text-green-500 " />
-                              <span className="text-sm font-medium text-black">
-                                {jobData.requiredAiScore}%
-                              </span>
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -359,9 +352,10 @@ const JobDetailsPage = ({ params }: PageProps) => {
                             ? "Unsave Job"
                             : "Save Job"}
                       </button>
+                      {jobData.isPremium && <PremiumNotice access={jobData.premiumAccess} />}
                       <button
                         onClick={handleApplyClick}
-                        disabled={isApplied || isApplying}
+                        disabled={isApplied || isApplying || premiumBlocked}
                         className={`flex-1 px-8 py-2 rounded-md transition-colors disabled:opacity-50 ${isApplied
                           ? "bg-green-500 text-white cursor-not-allowed"
                           : "bg-green-500 text-white hover:bg-green-600"
@@ -371,7 +365,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                           ? "Applying..."
                           : isApplied
                             ? "Applied"
-                            : "Apply Now"}
+                            : premiumBlocked ? "Premium only" : "Apply Now"}
                       </button>
                     </div>
                   </div>
@@ -429,17 +423,6 @@ const JobDetailsPage = ({ params }: PageProps) => {
                           </div>
                         </div>
 
-                        <div className="pt-2">
-                          <div className="text-xs text-gray-500 mb-1">
-                            AI Score Required
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <SquareCheck className="w-4 h-4 text-green-500 " />
-                            <span className="text-sm font-medium text-black">
-                              {jobData.requiredAiScore}%
-                            </span>
-                          </div>
-                        </div>
                       </div>
 
                       {/* Desktop Action Buttons */}
@@ -462,7 +445,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                         </button>
                         <button
                           onClick={handleApplyClick}
-                          disabled={isApplied || isApplying}
+                          disabled={isApplied || isApplying || premiumBlocked}
                           className={`w-full px-4 py-2 rounded-md transition-colors text-sm disabled:opacity-50 ${isApplied
                             ? "bg-green-500 text-white cursor-not-allowed"
                             : "bg-green-500 text-white hover:bg-green-600"
@@ -472,7 +455,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                             ? "Applying..."
                             : isApplied
                               ? "Applied"
-                              : "Apply Now"}
+                              : premiumBlocked ? "Premium only" : "Apply Now"}
                         </button>
                       </div>
                     </div>

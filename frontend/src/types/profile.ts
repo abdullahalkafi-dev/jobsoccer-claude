@@ -6,7 +6,6 @@ import {
   officeStaffProfessionalInfoSchema,
   personalInfoSchema,
   professionalPlayerProfessionalInfoSchema,
-  videoSchema,
   academyEmployerProfileSchema,
   agentEmployerProfileSchema,
   amateurClubEmployerProfileSchema,
@@ -14,12 +13,11 @@ import {
   consultingCompanyEmployerProfileSchema,
   highSchoolEmployerProfileSchema,
   professionalClubEmployerProfileSchema,
-} from "@/shchemas/profileValidation";
+} from "@/schemas/profileValidation";
 import z from "zod";
 
 export type TCandidateRole = CandidateRole;
 export type TPersonalInfo = z.infer<typeof personalInfoSchema>;
-export type TVideo = z.infer<typeof videoSchema>;
 export type TAmateurPlayerProfessionalInfo = z.infer<
   typeof amateurPlayerProfessionalInfoSchema
 >;
@@ -64,24 +62,6 @@ export type THighSchoolEmployerProfile = z.infer<
 export type TProfessionalClubEmployerProfile = z.infer<
   typeof professionalClubEmployerProfileSchema
 >;
-
-export interface IVideoFormProps {
-  position?: string;
-  onNext: (data: TVideo) => void;
-  onPrev: () => void;
-  initialData?: Partial<TVideo>;
-  steps?: Array<{
-    id: number;
-    label: string;
-    completed?: boolean;
-    active?: boolean;
-  }>;
-  isLoading?: boolean;
-}
-// Internal video map structure
-export interface IVideoMap {
-  [key: string]: File | null;
-}
 
 // Role enums
 export enum CandidateRole {

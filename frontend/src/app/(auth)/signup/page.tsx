@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signUpSchema, type SignUpFormData } from "@/shchemas/signupValidation";
+import { signUpSchema, type SignUpFormData } from "@/schemas/signupValidation";
 import { useRouter } from "next/navigation";
 import RoleSelect from "@/components/input/SelectRole";
 import { useSignupMutation } from "@/redux/features/auth/authApi";

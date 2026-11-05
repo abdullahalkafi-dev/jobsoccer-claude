@@ -11,6 +11,8 @@ import {
   LogOut,
   BadgeCheck,
   Brain,
+  Briefcase,
+  FileCheck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -42,6 +44,8 @@ const navLinks: NavLink[] = [
   { href: "/users", label: "Users", icon: Users },
   { href: "/payments", label: "Payments", icon: CreditCard },
   { href: "/verifications", label: "Verifications", icon: BadgeCheck },
+  { href: "/jobs", label: "Jobs", icon: Briefcase },
+  { href: "/documents", label: "Documents", icon: FileCheck },
   { href: "/ai-reviews", label: "AI Reviews", icon: Brain },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

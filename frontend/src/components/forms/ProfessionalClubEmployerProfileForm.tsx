@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { professionalClubEmployerProfileSchema } from "@/shchemas/profileValidation";
+import { professionalClubEmployerProfileSchema } from "@/schemas/profileValidation";
 import { TProfessionalClubEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 import { z } from "zod";

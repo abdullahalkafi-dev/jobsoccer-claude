@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { collegeOrUniversityPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
+import { collegeOrUniversityPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
 import { TCollegeOrUniversityPlayerProfessionalInfo } from "@/types/profile";
 import {
   countryList,

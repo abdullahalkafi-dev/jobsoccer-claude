@@ -18,7 +18,7 @@ import {
 import {
   createPasswordSchema,
   type CreatePasswordFormData,
-} from "@/shchemas/passwordValidation";
+} from "@/schemas/passwordValidation";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { Spinner } from "@/components/ui/spinner";

@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQuery,
-  tagTypes: ["user", "verification", "aiReview"],
+  tagTypes: ["user", "verification", "aiReview", "adminJob", "document"],
   endpoints: (builder) => ({
     //user registration API
     getUserRegister: builder.query({
@@ -226,6 +226,55 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["aiReview"],
     }),
+
+    ///----------------- Jobs: premium switch -----------------///
+    //every job with its employer (search, status and premium filters)
+    getAdminJobs: builder.query({
+      query: ({ page = 1, limit = 20, searchTerm, premium }: { page?: number; limit?: number; searchTerm?: string; premium?: "true" | "false" | "" } = {}) => {
+        const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+        if (searchTerm) params.append("searchTerm", searchTerm);
+        if (premium) params.append("premium", premium);
+        return { url: `/job/admin/list?${params.toString()}`, method: "GET" };
+      },
+      providesTags: ["adminJob"],
+    }),
+
+    //mark / unmark a job as a premium opportunity
+    setJobPremium: builder.mutation({
+      query: ({ id, isPremium }: { id: string; isPremium: boolean }) => ({
+        url: `/job/admin/${id}/premium`,
+        method: "PATCH",
+        body: { isPremium },
+      }),
+      invalidatesTags: ["adminJob"],
+    }),
+
+    ///----------------- Credential documents -----------------///
+    //documents candidates uploaded for experience / education / licences
+    getPendingDocuments: builder.query({
+      query: () => ({ url: "/credential-verification/pending", method: "GET" }),
+      providesTags: ["document"],
+    }),
+
+    //approve or reject one document
+    reviewDocument: builder.mutation({
+      query: ({ type, recordId, status, note }: { type: string; recordId: string; status: "approved" | "rejected"; note?: string }) => ({
+        url: `/credential-verification/${type}/${recordId}/review`,
+        method: "PATCH",
+        body: { status, ...(note ? { note } : {}) },
+      }),
+      invalidatesTags: ["document"],
+    }),
+
+    ///----------------- Videos -----------------///
+    //end the 3-month video lock early (wrong file, broken upload)
+    unlockCandidateVideos: builder.mutation({
+      query: ({ userId, kind }: { userId: string; kind?: "Interview" | "Methodology" }) => ({
+        url: `/videos/unlock/${userId}`,
+        method: "POST",
+        body: kind ? { kind } : {},
+      }),
+    }),
   }),
 });
 
@@ -243,4 +292,9 @@ export const {
   useGetCandidateAssessmentQuery,
   useAddAiCorrectionMutation,
   useRescoreCandidateMutation,
+  useGetAdminJobsQuery,
+  useSetJobPremiumMutation,
+  useGetPendingDocumentsQuery,
+  useReviewDocumentMutation,
+  useUnlockCandidateVideosMutation,
 } = baseApi;
