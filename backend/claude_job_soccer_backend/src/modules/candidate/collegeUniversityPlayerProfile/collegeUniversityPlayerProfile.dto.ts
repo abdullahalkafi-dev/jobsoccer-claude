@@ -1,0 +1,69 @@
+import { z } from "zod";
+
+const createCollegeUniversityPlayerProfileDto = z.object({
+    dateOfBirth: z
+        .string()
+        .refine(
+            (date) => {
+                const parsedDate = new Date(date);
+                return !isNaN(parsedDate.getTime()) && parsedDate < new Date();
+            },
+            {
+                message: "Date of birth must be a valid date in the past",
+            }
+        )
+        .transform((date) => new Date(date)),
+    placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
+    nationality: z.string().trim().min(1, "Nationality is required"),
+    phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+    gender: z.string().trim().min(1, "Gender is required"),
+    height: z.object({
+        size: z.number().positive("Height must be positive"),
+        unit: z.enum(["cm", "m", "in", "ft"]),
+    }),
+    currentClub: z.string().trim().min(1, "Current club is required"),
+    category: z.string().trim().min(1, "Category is required").optional(),
+    position: z.enum([
+        "GK",
+        "Central back",
+        "Left back",
+        "Right back",
+        "Defensive midfielder",
+        "Offensive midfielder",
+        "Right winger",
+        "Left winger",
+        "Forward",
+        "Striker",
+    ]),
+    agent: z.string().trim().min(1, "Agent is required").optional(),
+    socialMedia: z.string().trim().min(1, "Social media is required").optional(),
+    satOrAct: z.string().trim().min(1, "SAT or ACT is required").optional(),
+    availability: z.string().trim().max(200).optional(),
+    weight: z.object({
+        size: z.number().positive("Weight must be positive"),
+        unit: z.enum(["kg", "lb"]),
+    }),
+    collegeOrUniversity: z.string().trim().min(1, "College or university is required"),
+    foot: z.enum(["Right", "Left", "Both"]),
+    league: z.string().trim().min(1, "League is required"),
+    schoolName: z.string().trim().min(1, "School name is required"),
+    diploma: z.string().trim().min(1, "Diploma is required"),
+    gpa: z.string().trim().min(1, "GPA is required").optional(),
+    country: z.string().min(1, "Country is required"),
+});
+
+const updateCollegeUniversityPlayerProfileDto = createCollegeUniversityPlayerProfileDto.partial();
+
+export type TCreateCollegeUniversityPlayerProfileDto = z.infer<
+    typeof createCollegeUniversityPlayerProfileDto
+>;
+export type TUpdateCollegeUniversityPlayerProfileDto = z.infer<
+    typeof updateCollegeUniversityPlayerProfileDto
+>;
+
+export const CollegeUniversityPlayerProfileDto = {
+    createCollegeUniversityPlayerProfileDto,
+    updateCollegeUniversityPlayerProfileDto,
+};
+
+

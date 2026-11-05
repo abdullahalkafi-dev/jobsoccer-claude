@@ -2,33 +2,33 @@ import { ZodType } from "zod";
 import { Model } from "mongoose";
 import { CandidateRole, EmployerRole } from "../user/user.interface";
 
-import { AmateurPlayerCanDto } from "../candidate/amateurPlayerCan/amateurPlayerCan.dto";
-import { AmateurPlayerCan } from "../candidate/amateurPlayerCan/amateurPlayerCan.model";
-import { CollegeOrUniversityCanDto } from "../candidate/collegeOrUniversityCan/collegeOrUniversityCan.dto";
-import { CollegeOrUniversity } from "../candidate/collegeOrUniversityCan/collegeOrUniversityCan.model";
-import { HighSchoolCanDto } from "../candidate/highSchoolCan/highSchoolCan.dto";
-import { HighSchoolCan } from "../candidate/highSchoolCan/highSchoolCan.model";
-import { OfficeStaffCanDto } from "../candidate/officeStaffCan/officeStaffCan.dto";
-import { OfficeStaffCan } from "../candidate/officeStaffCan/officeStaffCan.model";
-import { OnFieldStaffCanDto } from "../candidate/onFieldStaffCan/onFieldStaffCan.dto";
-import { OnFieldStaffCan } from "../candidate/onFieldStaffCan/onFieldStaffCan.model";
-import { ProfessionalPlayerCanDto } from "../candidate/professionalPlayerCan/professionalPlayerCan.dto";
-import { ProfessionalPlayerCan } from "../candidate/professionalPlayerCan/professionalPlayerCan.model";
+import { AmateurPlayerProfileDto } from "../candidate/amateurPlayerProfile/amateurPlayerProfile.dto";
+import { AmateurPlayerProfile } from "../candidate/amateurPlayerProfile/amateurPlayerProfile.model";
+import { CollegeUniversityPlayerProfileDto } from "../candidate/collegeUniversityPlayerProfile/collegeUniversityPlayerProfile.dto";
+import { CollegeUniversityPlayerProfile } from "../candidate/collegeUniversityPlayerProfile/collegeUniversityPlayerProfile.model";
+import { HighSchoolPlayerProfileDto } from "../candidate/highSchoolPlayerProfile/highSchoolPlayerProfile.dto";
+import { HighSchoolPlayerProfile } from "../candidate/highSchoolPlayerProfile/highSchoolPlayerProfile.model";
+import { OfficeStaffProfileDto } from "../candidate/officeStaffProfile/officeStaffProfile.dto";
+import { OfficeStaffProfile } from "../candidate/officeStaffProfile/officeStaffProfile.model";
+import { OnFieldStaffProfileDto } from "../candidate/onFieldStaffProfile/onFieldStaffProfile.dto";
+import { OnFieldStaffProfile } from "../candidate/onFieldStaffProfile/onFieldStaffProfile.model";
+import { ProfessionalPlayerProfileDto } from "../candidate/professionalPlayerProfile/professionalPlayerProfile.dto";
+import { ProfessionalPlayerProfile } from "../candidate/professionalPlayerProfile/professionalPlayerProfile.model";
 
-import { AcademyEmpDto } from "../employer/academyEmp/academyEmp.dto";
-import { AcademyEmp } from "../employer/academyEmp/academyEmp.model";
-import { AgentEmpDto } from "../employer/agentEmp/agentEmp.dto";
-import { AgentEmp } from "../employer/agentEmp/agentEmp.model";
-import { AmateurClubEmpDto } from "../employer/amateurClubEmp/amateurClubEmp.dto";
-import { AmateurClubEmp } from "../employer/amateurClubEmp/amateurClubEmp.model";
-import { CollegeOrUniversityEmpDto } from "../employer/collegeOrUniversityEmp/collegeOrUniversityEmp.dto";
-import { CollegeOrUniversityEmp } from "../employer/collegeOrUniversityEmp/collegeOrUniversityEmp.model";
-import { ConsultingCompanyEmpDto } from "../employer/consultingCompanyEmp/consultingCompanyEmp.dto";
-import { ConsultingCompanyEmp } from "../employer/consultingCompanyEmp/consultingCompanyEmp.model";
-import { HighSchoolEmpDto } from "../employer/highSchoolEmp/highSchoolEmp.dto";
-import { HighSchoolEmp } from "../employer/highSchoolEmp/highSchoolEmp.model";
-import { ProfessionalClubEmpDto } from "../employer/professionalClubEmp/professionalClubEmp.dto";
-import { ProfessionalClubEmp } from "../employer/professionalClubEmp/professionalClubEmp.model";
+import { AcademyEmployerProfileDto } from "../employer/academyEmployerProfile/academyEmployerProfile.dto";
+import { AcademyEmployerProfile } from "../employer/academyEmployerProfile/academyEmployerProfile.model";
+import { AgentEmployerProfileDto } from "../employer/agentEmployerProfile/agentEmployerProfile.dto";
+import { AgentEmployerProfile } from "../employer/agentEmployerProfile/agentEmployerProfile.model";
+import { AmateurClubEmployerProfileDto } from "../employer/amateurClubEmployerProfile/amateurClubEmployerProfile.dto";
+import { AmateurClubEmployerProfile } from "../employer/amateurClubEmployerProfile/amateurClubEmployerProfile.model";
+import { CollegeUniversityEmployerProfileDto } from "../employer/collegeUniversityEmployerProfile/collegeUniversityEmployerProfile.dto";
+import { CollegeUniversityEmployerProfile } from "../employer/collegeUniversityEmployerProfile/collegeUniversityEmployerProfile.model";
+import { ConsultingCompanyEmployerProfileDto } from "../employer/consultingCompanyEmployerProfile/consultingCompanyEmployerProfile.dto";
+import { ConsultingCompanyEmployerProfile } from "../employer/consultingCompanyEmployerProfile/consultingCompanyEmployerProfile.model";
+import { HighSchoolEmployerProfileDto } from "../employer/highSchoolEmployerProfile/highSchoolEmployerProfile.dto";
+import { HighSchoolEmployerProfile } from "../employer/highSchoolEmployerProfile/highSchoolEmployerProfile.model";
+import { ProfessionalClubEmployerProfileDto } from "../employer/professionalClubEmployerProfile/professionalClubEmployerProfile.dto";
+import { ProfessionalClubEmployerProfile } from "../employer/professionalClubEmployerProfile/professionalClubEmployerProfile.model";
 
 /**
  * One entry per role: the Mongoose model and the validators for create/update.
@@ -43,72 +43,72 @@ export type TProfileEntry = {
 
 const CANDIDATE_PROFILES: Record<CandidateRole, TProfileEntry> = {
   [CandidateRole.AMATEUR_PLAYER]: {
-    model: AmateurPlayerCan,
-    createSchema: AmateurPlayerCanDto.createAmateurPlayerCanDto,
-    updateSchema: AmateurPlayerCanDto.updateAmateurPlayerCanDto,
+    model: AmateurPlayerProfile,
+    createSchema: AmateurPlayerProfileDto.createAmateurPlayerProfileDto,
+    updateSchema: AmateurPlayerProfileDto.updateAmateurPlayerProfileDto,
   },
   [CandidateRole.PROFESSIONAL_PLAYER]: {
-    model: ProfessionalPlayerCan,
-    createSchema: ProfessionalPlayerCanDto.createProfessionalPlayerCanDto,
-    updateSchema: ProfessionalPlayerCanDto.updateProfessionalPlayerCanDto,
+    model: ProfessionalPlayerProfile,
+    createSchema: ProfessionalPlayerProfileDto.createProfessionalPlayerProfileDto,
+    updateSchema: ProfessionalPlayerProfileDto.updateProfessionalPlayerProfileDto,
   },
   [CandidateRole.HIGH_SCHOOL]: {
-    model: HighSchoolCan,
-    createSchema: HighSchoolCanDto.createHighSchoolCanDto,
-    updateSchema: HighSchoolCanDto.updateHighSchoolCanDto,
+    model: HighSchoolPlayerProfile,
+    createSchema: HighSchoolPlayerProfileDto.createHighSchoolPlayerProfileDto,
+    updateSchema: HighSchoolPlayerProfileDto.updateHighSchoolPlayerProfileDto,
   },
   [CandidateRole.COLLEGE_UNIVERSITY]: {
-    model: CollegeOrUniversity,
-    createSchema: CollegeOrUniversityCanDto.createCollegeOrUniversityCanDto,
-    updateSchema: CollegeOrUniversityCanDto.updateCollegeOrUniversityCanDto,
+    model: CollegeUniversityPlayerProfile,
+    createSchema: CollegeUniversityPlayerProfileDto.createCollegeUniversityPlayerProfileDto,
+    updateSchema: CollegeUniversityPlayerProfileDto.updateCollegeUniversityPlayerProfileDto,
   },
   [CandidateRole.ON_FIELD_STAFF]: {
-    model: OnFieldStaffCan,
-    createSchema: OnFieldStaffCanDto.createOnFieldStaffCanDto,
-    updateSchema: OnFieldStaffCanDto.updateOnFieldStaffCanDto,
+    model: OnFieldStaffProfile,
+    createSchema: OnFieldStaffProfileDto.createOnFieldStaffProfileDto,
+    updateSchema: OnFieldStaffProfileDto.updateOnFieldStaffProfileDto,
   },
   [CandidateRole.OFFICE_STAFF]: {
-    model: OfficeStaffCan,
-    createSchema: OfficeStaffCanDto.createOfficeStaffCanDto,
-    updateSchema: OfficeStaffCanDto.updateOfficeStaffCanDto,
+    model: OfficeStaffProfile,
+    createSchema: OfficeStaffProfileDto.createOfficeStaffProfileDto,
+    updateSchema: OfficeStaffProfileDto.updateOfficeStaffProfileDto,
   },
 };
 
 const EMPLOYER_PROFILES: Record<EmployerRole, TProfileEntry> = {
   [EmployerRole.ACADEMY]: {
-    model: AcademyEmp,
-    createSchema: AcademyEmpDto.createAcademyEmpDto,
-    updateSchema: AcademyEmpDto.updateAcademyEmpDto,
+    model: AcademyEmployerProfile,
+    createSchema: AcademyEmployerProfileDto.createAcademyEmployerProfileDto,
+    updateSchema: AcademyEmployerProfileDto.updateAcademyEmployerProfileDto,
   },
   [EmployerRole.AGENT]: {
-    model: AgentEmp,
-    createSchema: AgentEmpDto.createAgentEmpDto,
-    updateSchema: AgentEmpDto.updateAgentEmpDto,
+    model: AgentEmployerProfile,
+    createSchema: AgentEmployerProfileDto.createAgentEmployerProfileDto,
+    updateSchema: AgentEmployerProfileDto.updateAgentEmployerProfileDto,
   },
   [EmployerRole.AMATEUR_CLUB]: {
-    model: AmateurClubEmp,
-    createSchema: AmateurClubEmpDto.createAmateurClubEmpDto,
-    updateSchema: AmateurClubEmpDto.updateAmateurClubEmpDto,
+    model: AmateurClubEmployerProfile,
+    createSchema: AmateurClubEmployerProfileDto.createAmateurClubEmployerProfileDto,
+    updateSchema: AmateurClubEmployerProfileDto.updateAmateurClubEmployerProfileDto,
   },
   [EmployerRole.COLLEGE_UNIVERSITY]: {
-    model: CollegeOrUniversityEmp,
-    createSchema: CollegeOrUniversityEmpDto.createCollegeOrUniversityEmpDto,
-    updateSchema: CollegeOrUniversityEmpDto.updateCollegeOrUniversityEmpDto,
+    model: CollegeUniversityEmployerProfile,
+    createSchema: CollegeUniversityEmployerProfileDto.createCollegeUniversityEmployerProfileDto,
+    updateSchema: CollegeUniversityEmployerProfileDto.updateCollegeUniversityEmployerProfileDto,
   },
   [EmployerRole.CONSULTING_COMPANY]: {
-    model: ConsultingCompanyEmp,
-    createSchema: ConsultingCompanyEmpDto.createConsultingCompanyEmpDto,
-    updateSchema: ConsultingCompanyEmpDto.updateConsultingCompanyEmpDto,
+    model: ConsultingCompanyEmployerProfile,
+    createSchema: ConsultingCompanyEmployerProfileDto.createConsultingCompanyEmployerProfileDto,
+    updateSchema: ConsultingCompanyEmployerProfileDto.updateConsultingCompanyEmployerProfileDto,
   },
   [EmployerRole.HIGH_SCHOOL]: {
-    model: HighSchoolEmp,
-    createSchema: HighSchoolEmpDto.createHighSchoolEmpDto,
-    updateSchema: HighSchoolEmpDto.updateHighSchoolEmpDto,
+    model: HighSchoolEmployerProfile,
+    createSchema: HighSchoolEmployerProfileDto.createHighSchoolEmployerProfileDto,
+    updateSchema: HighSchoolEmployerProfileDto.updateHighSchoolEmployerProfileDto,
   },
   [EmployerRole.PROFESSIONAL_CLUB]: {
-    model: ProfessionalClubEmp,
-    createSchema: ProfessionalClubEmpDto.createProfessionalClubEmpDto,
-    updateSchema: ProfessionalClubEmpDto.updateProfessionalClubEmpDto,
+    model: ProfessionalClubEmployerProfile,
+    createSchema: ProfessionalClubEmployerProfileDto.createProfessionalClubEmployerProfileDto,
+    updateSchema: ProfessionalClubEmployerProfileDto.updateProfessionalClubEmployerProfileDto,
   },
 };
 

@@ -36,17 +36,17 @@ const { EJSON } = mongoose.mongo.BSON;
 import config from "../config";
 import { assertSafeEnvironment } from "../shared/safety/envGuard";
 
-import { AmateurPlayerCan } from "../modules/candidate/amateurPlayerCan/amateurPlayerCan.model";
-import { CollegeOrUniversity } from "../modules/candidate/collegeOrUniversityCan/collegeOrUniversityCan.model";
-import { HighSchoolCan } from "../modules/candidate/highSchoolCan/highSchoolCan.model";
-import { OfficeStaffCan } from "../modules/candidate/officeStaffCan/officeStaffCan.model";
-import { OnFieldStaffCan } from "../modules/candidate/onFieldStaffCan/onFieldStaffCan.model";
-import { ProfessionalPlayerCan } from "../modules/candidate/professionalPlayerCan/professionalPlayerCan.model";
+import { AmateurPlayerProfile } from "../modules/candidate/amateurPlayerProfile/amateurPlayerProfile.model";
+import { CollegeUniversityPlayerProfile } from "../modules/candidate/collegeUniversityPlayerProfile/collegeUniversityPlayerProfile.model";
+import { HighSchoolPlayerProfile } from "../modules/candidate/highSchoolPlayerProfile/highSchoolPlayerProfile.model";
+import { OfficeStaffProfile } from "../modules/candidate/officeStaffProfile/officeStaffProfile.model";
+import { OnFieldStaffProfile } from "../modules/candidate/onFieldStaffProfile/onFieldStaffProfile.model";
+import { ProfessionalPlayerProfile } from "../modules/candidate/professionalPlayerProfile/professionalPlayerProfile.model";
 import { CandidateEducation } from "../modules/candidateEducation/candidateEducation.model";
 import { CandidateExperience } from "../modules/candidateExperience/candidateExperience.model";
 import { CandidateLicenseAndCertification } from "../modules/candidateLicensesAndCertification/candidateLicensesAndCertification.model";
 import { AiEvaluation } from "../modules/aiEvaluation/aiEvaluation.model";
-import { Job } from "../modules/Job/job.model";
+import { Job } from "../modules/job/job.model";
 import { JobApply } from "../modules/jobApply/jobApply.model";
 import { User } from "../modules/user/user.model";
 import { VIDEO_LIMITS, VideoKind } from "../modules/video/video.constant";
@@ -111,12 +111,12 @@ const toNewVideo = (video: any, kind: VideoKind, now: Date, locked: boolean) => 
 };
 
 const PROFILE_MODELS = [
-  { model: OnFieldStaffCan, staff: true },
-  { model: OfficeStaffCan, staff: true },
-  { model: ProfessionalPlayerCan, staff: false },
-  { model: AmateurPlayerCan, staff: false },
-  { model: HighSchoolCan, staff: false },
-  { model: CollegeOrUniversity, staff: false },
+  { model: OnFieldStaffProfile, staff: true },
+  { model: OfficeStaffProfile, staff: true },
+  { model: ProfessionalPlayerProfile, staff: false },
+  { model: AmateurPlayerProfile, staff: false },
+  { model: HighSchoolPlayerProfile, staff: false },
+  { model: CollegeUniversityPlayerProfile, staff: false },
 ];
 
 const planAll = async (): Promise<{ plans: Plan[]; dropped: { collection: string; profile: string; video: any }[] }> => {

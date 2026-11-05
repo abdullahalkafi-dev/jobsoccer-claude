@@ -10,7 +10,7 @@ import { getRubric } from "../../shared/ai/rubric/rubric.registry";
 import { CandidateEducation } from "../candidateEducation/candidateEducation.model";
 import { CandidateExperience } from "../candidateExperience/candidateExperience.model";
 import { CandidateLicenseAndCertification } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.model";
-import { Job } from "../Job/job.model";
+import { Job } from "../job/job.model";
 import { User } from "../user/user.model";
 import { JobApply } from "./jobApply.model";
 

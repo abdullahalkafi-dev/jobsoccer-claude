@@ -9,17 +9,17 @@ import {
 import { Types } from "mongoose";
 
 // Import Employer Models
-import { AcademyEmp } from "./academyEmp/academyEmp.model";
-import { AgentEmp } from "./agentEmp/agentEmp.model";
-import { AmateurClubEmp } from "./amateurClubEmp/amateurClubEmp.model";
-import { CollegeOrUniversityEmp } from "./collegeOrUniversityEmp/collegeOrUniversityEmp.model";
-import { ConsultingCompanyEmp } from "./consultingCompanyEmp/consultingCompanyEmp.model";
-import { HighSchoolEmp } from "./highSchoolEmp/highSchoolEmp.model";
-import { ProfessionalClubEmp } from "./professionalClubEmp/professionalClubEmp.model";
+import { AcademyEmployerProfile } from "./academyEmployerProfile/academyEmployerProfile.model";
+import { AgentEmployerProfile } from "./agentEmployerProfile/agentEmployerProfile.model";
+import { AmateurClubEmployerProfile } from "./amateurClubEmployerProfile/amateurClubEmployerProfile.model";
+import { CollegeUniversityEmployerProfile } from "./collegeUniversityEmployerProfile/collegeUniversityEmployerProfile.model";
+import { ConsultingCompanyEmployerProfile } from "./consultingCompanyEmployerProfile/consultingCompanyEmployerProfile.model";
+import { HighSchoolEmployerProfile } from "./highSchoolEmployerProfile/highSchoolEmployerProfile.model";
+import { ProfessionalClubEmployerProfile } from "./professionalClubEmployerProfile/professionalClubEmployerProfile.model";
 
 // Import models for filtering and counting
 import { Follow } from "../follow/follow.model";
-import { Job } from "../Job/job.model";
+import { Job } from "../job/job.model";
 
 /**
  * Get employer model based on role
@@ -27,19 +27,19 @@ import { Job } from "../Job/job.model";
 const getEmployerModel = (role: EmployerRole): any => {
   switch (role) {
     case EmployerRole.PROFESSIONAL_CLUB:
-      return ProfessionalClubEmp;
+      return ProfessionalClubEmployerProfile;
     case EmployerRole.ACADEMY:
-      return AcademyEmp;
+      return AcademyEmployerProfile;
     case EmployerRole.AMATEUR_CLUB:
-      return AmateurClubEmp;
+      return AmateurClubEmployerProfile;
     case EmployerRole.CONSULTING_COMPANY:
-      return ConsultingCompanyEmp;
+      return ConsultingCompanyEmployerProfile;
     case EmployerRole.HIGH_SCHOOL:
-      return HighSchoolEmp;
+      return HighSchoolEmployerProfile;
     case EmployerRole.COLLEGE_UNIVERSITY:
-      return CollegeOrUniversityEmp;
+      return CollegeUniversityEmployerProfile;
     case EmployerRole.AGENT:
-      return AgentEmp;
+      return AgentEmployerProfile;
     default:
       throw new AppError(StatusCodes.BAD_REQUEST, "Invalid employer role");
   }

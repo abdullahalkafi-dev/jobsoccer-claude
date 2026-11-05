@@ -1,10 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import { AmateurPlayerCan } from "../../modules/candidate/amateurPlayerCan/amateurPlayerCan.model";
-import { CollegeOrUniversity } from "../../modules/candidate/collegeOrUniversityCan/collegeOrUniversityCan.model";
-import { HighSchoolCan } from "../../modules/candidate/highSchoolCan/highSchoolCan.model";
-import { OfficeStaffCan } from "../../modules/candidate/officeStaffCan/officeStaffCan.model";
-import { OnFieldStaffCan } from "../../modules/candidate/onFieldStaffCan/onFieldStaffCan.model";
-import { ProfessionalPlayerCan } from "../../modules/candidate/professionalPlayerCan/professionalPlayerCan.model";
+import { AmateurPlayerProfile } from "../../modules/candidate/amateurPlayerProfile/amateurPlayerProfile.model";
+import { CollegeUniversityPlayerProfile } from "../../modules/candidate/collegeUniversityPlayerProfile/collegeUniversityPlayerProfile.model";
+import { HighSchoolPlayerProfile } from "../../modules/candidate/highSchoolPlayerProfile/highSchoolPlayerProfile.model";
+import { OfficeStaffProfile } from "../../modules/candidate/officeStaffProfile/officeStaffProfile.model";
+import { OnFieldStaffProfile } from "../../modules/candidate/onFieldStaffProfile/onFieldStaffProfile.model";
+import { ProfessionalPlayerProfile } from "../../modules/candidate/professionalPlayerProfile/professionalPlayerProfile.model";
 import { CandidateRole } from "../../modules/user/user.interface";
 import AppError from "../../errors/AppError";
 
@@ -14,21 +14,21 @@ import AppError from "../../errors/AppError";
 export const getCandidateModel = (role: any): any => {
   switch (role) {
     case CandidateRole.PROFESSIONAL_PLAYER:
-      return ProfessionalPlayerCan;
+      return ProfessionalPlayerProfile;
     case CandidateRole.AMATEUR_PLAYER:
-      return AmateurPlayerCan;
+      return AmateurPlayerProfile;
     case CandidateRole.HIGH_SCHOOL:
-      return HighSchoolCan;
+      return HighSchoolPlayerProfile;
     case "High School":
-      return HighSchoolCan;
+      return HighSchoolPlayerProfile;
     case CandidateRole.COLLEGE_UNIVERSITY:
-      return CollegeOrUniversity;
+      return CollegeUniversityPlayerProfile;
     case "College/University":
-      return CollegeOrUniversity;
+      return CollegeUniversityPlayerProfile;
     case CandidateRole.ON_FIELD_STAFF:
-      return OnFieldStaffCan;
+      return OnFieldStaffProfile;
     case CandidateRole.OFFICE_STAFF:
-      return OfficeStaffCan;
+      return OfficeStaffProfile;
     default:
       throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate role");
   }
