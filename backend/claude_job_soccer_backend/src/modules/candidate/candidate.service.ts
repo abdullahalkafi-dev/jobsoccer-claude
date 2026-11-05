@@ -18,8 +18,8 @@ import { AdminVerification } from "../adminVerification/adminVerification.model"
 import { CandidateResume } from "../candidateResume/candidateResume.model";
 
 /**
- * Search candidates by name, category, and country
- * Supports pagination, sorting, and filtering
+ * Search candidates by name, category, and country, best Profile Quality first
+ * Supports pagination and filtering
  * When authenticated, includes relationship fields:
  * 1. isShortlisted - Whether the candidate is shortlisted by the current user
  * 2. friendRequestStatus - Friend request status and type (sent/received) from user's perspective
@@ -62,8 +62,10 @@ const searchCandidates = async (
     ];
   }
 
-  // Get users matching the criteria
+  // Higher Profile Quality ranks higher (client decision). Featured candidates are a separate,
+  // pinned list. _id keeps the order stable between pages for equal scores.
   const users = await User.find(userQuery)
+    .sort({ "profileQuality.score": -1, _id: 1 })
     .skip((Number(page) - 1) * Number(limit))
     .limit(Number(limit))
     .lean();

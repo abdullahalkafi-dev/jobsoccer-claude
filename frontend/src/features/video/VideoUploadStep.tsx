@@ -19,6 +19,11 @@ const Body = () => {
 
   return (
     <div className="space-y-6">
+      {!status.isComplete && (
+        <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900">
+          Still needed: your {status.missing.join(" and ").toLowerCase()} video. Both required videos must be uploaded to complete your profile and apply for jobs.
+        </p>
+      )}
       <ConsentChecklist status={status} />
       {status.plan.slots.map((slot) => (
         <VideoSlotCard
