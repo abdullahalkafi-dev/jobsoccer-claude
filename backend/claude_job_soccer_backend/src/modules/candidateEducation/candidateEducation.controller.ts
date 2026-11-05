@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { hideVerificationDetails } from "../credentialVerification/credentialVerification.fields";
 import { StatusCodes } from "http-status-codes";
 import { CandidateEducationService } from "./candidateEducation.service";
 import catchAsync from "../../shared/util/catchAsync";
@@ -90,9 +91,8 @@ const getAllEducationsByUser = catchAsync(
   async (req: Request, res: Response) => {
     const { userId } = req.params as any;
 
-    const result = await CandidateEducationService.getAllEducationsByUser(
-      userId
-    );
+    const records = await CandidateEducationService.getAllEducationsByUser(userId);
+    const result = hideVerificationDetails(records as object[], userId, req.user);
 
     sendResponse(res, {
       statusCode: StatusCodes.OK,
