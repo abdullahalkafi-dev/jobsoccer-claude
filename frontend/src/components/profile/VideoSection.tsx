@@ -7,10 +7,12 @@ import { useCallback } from "react";
 interface Video {
   _id: string;
   url: string;
-  title: string;
-  duration: number;
+  title?: string;
+  durationSeconds: number;
   uploadedAt: string;
-  videoType?: string;
+  kind?: string;
+  /** Public path of the English captions (WebVTT). */
+  captionsUrl?: string;
 }
 
 interface VideoSectionProps {
@@ -57,7 +59,7 @@ export default function VideoSection({
               return (
                 <div key={video._id} className="relative group flex flex-col justify-between">
                   <CardTitle className="my-2">
-                    {video?.videoType ? video.videoType + " Video" : "Video"}
+                    {video?.kind ? video.kind + " Video" : "Video"}
                   </CardTitle>
                   <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
                     {/* Video Player */}
@@ -78,6 +80,9 @@ export default function VideoSection({
                       }}
                       aria-label={video.title || "Video"}
                     >
+                      {video.captionsUrl && (
+                        <track kind="subtitles" src={getVideoUrl({ ...video, url: video.captionsUrl })} srcLang="en" label="English" default />
+                      )}
                       Your browser does not support the video tag.
                     </video>
                   </div>

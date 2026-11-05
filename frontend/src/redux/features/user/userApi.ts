@@ -7,7 +7,7 @@ const userApi = baseApi.injectEndpoints({
     createUserProfile: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "/user/profile",
+          url: "/profile",
           method: "POST",
           body: userInfo,
         };
@@ -15,7 +15,7 @@ const userApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUser(data.data));
+          dispatch(setUser(data.data.user));
         } catch (err) {
           console.error("Get user info failed:", err);
         }
@@ -26,14 +26,14 @@ const userApi = baseApi.injectEndpoints({
     // UPDATE PROFILE IMAGE
     updateProfileImage: builder.mutation({
       query: (formData: FormData) => ({
-        url: "/user/profile",
+        url: "/profile",
         method: "PATCH",
         body: formData,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUser(data.data));
+          dispatch(setUser(data.data.user));
         } catch (err) {
           console.error("Update profile image failed:", err);
         }
@@ -44,14 +44,14 @@ const userApi = baseApi.injectEndpoints({
     // UPDATE BANNER IMAGE
     updateBannerImage: builder.mutation({
       query: (formData: FormData) => ({
-        url: "/user/profile",
+        url: "/profile",
         method: "PATCH",
         body: formData,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUser(data.data));
+          dispatch(setUser(data.data.user));
         } catch (err) {
           console.error("Update banner image failed:", err);
         }
@@ -62,14 +62,14 @@ const userApi = baseApi.injectEndpoints({
     // UPDATE PROFILE (with form-data)
     updateProfile: builder.mutation({
       query: (formData: FormData) => ({
-        url: "/user/profile",
+        url: "/profile",
         method: "PATCH",
         body: formData,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUser(data.data));
+          dispatch(setUser(data.data.user));
         } catch (err) {
           console.error("Update profile failed:", err);
         }

@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { highSchoolEmployerProfileSchema } from "@/shchemas/profileValidation";
+import { highSchoolEmployerProfileSchema } from "@/schemas/profileValidation";
 import { THighSchoolEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 import { z } from "zod";

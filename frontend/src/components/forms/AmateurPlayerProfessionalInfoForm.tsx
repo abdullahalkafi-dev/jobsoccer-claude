@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { amateurPlayerProfessionalInfoSchema } from "@/shchemas/profileValidation";
+import { amateurPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
 import type { TAmateurPlayerProfessionalInfo } from "@/types/profile";
 import {
   amaturePlayerNationalTeamCategoryOptions,

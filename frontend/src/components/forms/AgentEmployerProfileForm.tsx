@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { agentEmployerProfileSchema } from "@/shchemas/profileValidation";
+import { agentEmployerProfileSchema } from "@/schemas/profileValidation";
 import { TAgentEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 

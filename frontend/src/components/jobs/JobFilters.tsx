@@ -66,12 +66,12 @@ function FilterDropdown({
 interface JobFiltersProps {
   onFiltersChange?: (filters: {
     dateFilter?: string;
-    aiScoreLevel?: string;
+    premium?: string;
     experience?: string;
   }) => void;
   onReset?: () => void;
   dateFilter?: string;
-  aiScoreLevel?: string;
+  premium?: string;
   experience?: string;
 }
 
@@ -79,18 +79,18 @@ export function JobFilters({
   onFiltersChange,
   onReset,
   dateFilter: initialDateFilter,
-  aiScoreLevel: initialAiScore,
+  premium: initialPremium,
   experience: initialExperience,
 }: JobFiltersProps) {
   const [timeFilter, setTimeFilter] = useState(initialDateFilter || "");
-  const [aiScoreFilter, setAiScoreFilter] = useState(initialAiScore || "");
+  const [opportunityFilter, setOpportunityFilter] = useState(initialPremium || "");
   const [experienceFilter, setExperienceFilter] = useState(
     initialExperience || ""
   );
 
   const handleReset = () => {
     setTimeFilter("");
-    setAiScoreFilter("");
+    setOpportunityFilter("");
     setExperienceFilter("");
     onReset?.();
   };
@@ -99,16 +99,16 @@ export function JobFilters({
     setTimeFilter(value);
     onFiltersChange?.({
       dateFilter: value,
-      aiScoreLevel: aiScoreFilter,
+      premium: opportunityFilter,
       experience: experienceFilter,
     });
   };
 
-  const handleAiScoreChange = (value: string) => {
-    setAiScoreFilter(value);
+  const handleOpportunityChange = (value: string) => {
+    setOpportunityFilter(value);
     onFiltersChange?.({
       dateFilter: timeFilter,
-      aiScoreLevel: value,
+      premium: value,
       experience: experienceFilter,
     });
   };
@@ -117,7 +117,7 @@ export function JobFilters({
     setExperienceFilter(value);
     onFiltersChange?.({
       dateFilter: timeFilter,
-      aiScoreLevel: value,
+      premium: opportunityFilter,
       experience: value,
     });
   };
@@ -129,11 +129,9 @@ export function JobFilters({
     { label: "Last 6 Months", value: "Last 6 Months" },
   ];
 
-  const aiScoreOptions: FilterOption[] = [
-    { label: "Low (10% - 29%)", value: "Low" },
-    { label: "Medium (30% - 59%)", value: "Medium" },
-    { label: "Good (60% - 79%)", value: "Good" },
-    { label: "High (80% - 100%)", value: "High" },
+  const opportunityOptions: FilterOption[] = [
+    { label: "Premium opportunities", value: "true" },
+    { label: "Standard jobs", value: "false" },
   ];
 
   const experienceOptions: FilterOption[] = [
@@ -144,7 +142,7 @@ export function JobFilters({
     { label: "Senior", value: "Senior" },
   ];
 
-  const hasActiveFilters = timeFilter || aiScoreFilter || experienceFilter;
+  const hasActiveFilters = timeFilter || opportunityFilter || experienceFilter;
 
   return (
     <div className="container mx-auto px-4 md:px-0 py-8">
@@ -158,11 +156,11 @@ export function JobFilters({
         />
 
         <FilterDropdown
-          label="AI Score"
-          options={aiScoreOptions}
-          value={aiScoreFilter}
-          onValueChange={handleAiScoreChange}
-          isActive={!!aiScoreFilter}
+          label="Opportunity"
+          options={opportunityOptions}
+          value={opportunityFilter}
+          onValueChange={handleOpportunityChange}
+          isActive={!!opportunityFilter}
         />
 
         <FilterDropdown

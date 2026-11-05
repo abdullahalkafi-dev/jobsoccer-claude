@@ -18,16 +18,6 @@ export const createJobSchema = z
     ),
     requirements: z.string().min(20, "Requirements minimum 20 characters long"),
     responsibilities: z.string().min(20, "Responsibilities minimum 20 characters long"),
-    requiredAiScore: z
-      .string()
-      .min(1, "Required AI score is required")
-      .refine(
-        (val) => {
-          const num = parseInt(val);
-          return !isNaN(num) && num >= 0 && num <= 100;
-        },
-        { message: "AI score must be between 0 and 100" }
-      ),
     requiredSkills: z.string().min(20, "Required skills minimum 20 characters long"),
     additionalRequirements: z.string().optional(),
   })
@@ -62,7 +52,6 @@ export interface CreateJobPayload {
   experience: string;
   requirements: string;
   responsibilities: string;
-  requiredAiScore: number;
   requiredSkills: string;
   additionalRequirements?: string;
   status: "active" | "closed" | "draft" | "expired";

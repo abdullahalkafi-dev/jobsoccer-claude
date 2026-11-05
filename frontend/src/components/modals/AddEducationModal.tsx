@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import {
   educationFormSchema,
   EducationFormData,
-} from "@/shchemas/educationValidation";
+} from "@/schemas/educationValidation";
 
 interface AddEducationModalProps {
   isOpen: boolean;

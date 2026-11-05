@@ -33,6 +33,8 @@ export const baseApi = createApi({
     "Notification",
     "NotificationCount",
     "Agent",
+    "Video",
+    "ProfileQuality",
   ],
   endpoints: () => ({}),
 });

@@ -22,7 +22,7 @@ export function GuideQuestions({ position }: GuideQuestionsProps) {
         {`${guide.displayName} – Interview Questionnaire (${guide.questionCount} Questions)`}
       </h3>
       <p className="text-sm text-gray-600 mb-4">
-        Please record videos answering the following questions and upload it in the sections below:
+        In your video interview, answer these questions in the order shown. You may skip a question: it is shown as &quot;Not Answered&quot; and gets 0 points.
       </p>
       <div className="space-y-4">
         {guide.sections.map((section) => {

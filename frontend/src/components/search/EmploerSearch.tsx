@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { employerRoles } from "@/shchemas/signupValidation";
+import { employerRoles } from "@/schemas/signupValidation";
 
 export function EmployerSearch() {
   const [searchTerm, setSearchTerm] = useState("");

@@ -1,5 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
-import { CreateJobPayload } from "@/shchemas/jobValidation";
+import { CreateJobPayload } from "@/schemas/jobValidation";
 import { TJob } from "@/types/job";
 
 const jobApi = baseApi.injectEndpoints({

@@ -1,3 +1,4 @@
+import type { TPublicQuality } from "@/features/profileQuality/types";
 export interface Video {
   url: string;
   duration: number;
@@ -53,7 +54,9 @@ export interface ICandidate {
   profileImage: string | null;
   userType: string;
   profile: Profile;
-  aiProfileScore?: number | null;
+  /** Stars + level only; the number stays private to the candidate. */
+  profileQuality?: TPublicQuality | null;
+  interviewScore?: number | null;
   isShortlisted?: boolean;
   friendRequestStatus?: {
     status: "pending" | "accepted" | "rejected";

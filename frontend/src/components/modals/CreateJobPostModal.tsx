@@ -30,7 +30,7 @@ import {
   createJobSchema,
   CreateJobFormData,
   CreateJobPayload,
-} from "@/shchemas/jobValidation";
+} from "@/schemas/jobValidation";
 import { useCreateJobMutation } from "@/redux/features/job/jobApi";
 import { toast } from "sonner";
 import { countryList, playerPositionOptions } from "@/constants/selectOptions";
@@ -88,7 +88,6 @@ export default function CreateJobPostModal({
       responsibilities: "",
       requirements: "",
       requiredSkills: "",
-      requiredAiScore: "",
       additionalRequirements: "",
     },
   });
@@ -112,7 +111,6 @@ export default function CreateJobPostModal({
         experience: data.experience,
         requirements: data.requirements,
         responsibilities: data.responsibilities,
-        requiredAiScore: parseInt(data.requiredAiScore),
         requiredSkills: data.requiredSkills,
         additionalRequirements: data.additionalRequirements,
         status: "active",
@@ -426,30 +424,6 @@ export default function CreateJobPostModal({
                     />
                   </div>
                 </div>
-
-                {/* Required AI Score */}
-                <FormField
-                  control={form.control}
-                  name="requiredAiScore"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Required AI Score (0-100)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Ex: 70"
-                          {...field}
-                          className="mt-1"
-                          min="0"
-                          max="100"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
 
               {/* Right Column - Job Descriptions */}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Bookmark, Clock, MapPin } from "lucide-react";
+import { PremiumBadge } from "@/features/premiumJobs/PremiumBadge";
 import { TJob } from "@/types/job";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -210,6 +211,7 @@ export function JobCard({ job }: JobCardProps) {
               {jobData.company}
             </h3>
           </Link>
+          {job.isPremium && <PremiumBadge className="mt-1" />}
           <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
             <MapPin className="w-4 h-4" />
             <span>{jobData.location}</span>

@@ -27,7 +27,9 @@ import { ProfileSkeleton } from "@/components/skeleton";
 import ExperienceSection from "@/components/profile/ExperienceSection";
 import CertificateSection from "@/components/profile/CertificateSection";
 import EducationSection from "@/components/profile/EducationSection";
-import VideoSection from "@/components/profile/VideoSection";
+import { VideoManager } from "@/features/video/VideoUploadStep";
+import { ProfileQualityCard } from "@/features/profileQuality/ProfileQualityCard";
+import { useLiveCandidateEvents } from "@/features/video/useLiveCandidateEvents";
 import ProfileBanner from "@/components/profile/ProfileBanner";
 import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
@@ -35,6 +37,8 @@ import InterviewAssessmentCard from "@/components/ai/InterviewAssessmentCard";
 import { useGetMyAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
 
 export default function MyProfilePage() {
+  // Live updates: videos, assessment progress and the score refresh by themselves
+  useLiveCandidateEvents();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
 
@@ -582,31 +586,11 @@ export default function MyProfilePage() {
                 </p>
               </div>
             )}
-
-            {/* Office Staff specific fields */}
-            {currentUser?.aiProfileScore && (
-              <div>
-                <label className="text-sm text-gray-500 mb-1 block">
-                 Profile Quality Score
-                </label>
-                <p className="text-gray-900 font-medium">
-                  {currentUser.aiProfileScore}/100
-                </p>
-              </div>
-            )}
-            {/* Office Staff specific fields */}
-            {currentUser?.profile?.AiVideoVideoScore && (
-              <div>
-                <label className="text-sm text-gray-500 mb-1 block">
-                  Video AI Score
-                </label>
-                <p className="text-gray-900 font-medium">
-                  {currentUser.profile.AiVideoVideoScore}/100
-                </p>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* -------------------------Profile Quality (rules + AI, with improvement actions)----------------------- */}
+        <ProfileQualityCard />
 
         {/* -------------------------Interview Assessment----------------------- */}
         {isOnFieldStaff && (
@@ -624,10 +608,8 @@ export default function MyProfilePage() {
         <ExperienceSection userId={currentUser?._id || ""} />
         <CertificateSection userId={currentUser?._id || ""} />
         <EducationSection userId={currentUser?._id || ""} />
-        <VideoSection
-          videos={currentUser?.profile?.videos || []}
-          userId={currentUser?._id || ""}
-        />
+        <h2 className="text-xl font-semibold text-gray-900">My videos</h2>
+        <VideoManager />
       </div>
 
       {/* ------------------Modals --------------------*/}

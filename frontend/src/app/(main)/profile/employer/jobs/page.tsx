@@ -96,8 +96,8 @@ const JobsPage: React.FC = () => {
     setOpenDropdownId(openDropdownId === jobId ? null : jobId);
   };
 
-  // Get AI score color
-  const getAIScoreColor = (score: number) => {
+  // Colour of the job match percentage
+  const getMatchColor = (score: number) => {
     if (score >= 80) return "text-green-500";
     if (score >= 60) return "text-blue-500";
     if (score >= 40) return "text-yellow-500";
@@ -256,7 +256,7 @@ const JobsPage: React.FC = () => {
                 {/* Table Header */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 text-sm font-medium text-gray-700 border-b border-gray-200">
                   <div className="col-span-4">Name</div>
-                  <div className="col-span-2 text-center">AI scores</div>
+                  <div className="col-span-2 text-center" title="How well the candidate fits this job (a sorting help, not a hiring decision)">Job Match</div>
                   <div className="col-span-3 text-center">Resume</div>
                   <div className="col-span-3 text-center">Connect</div>
                 </div>
@@ -301,22 +301,22 @@ const JobsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* AI Score */}
+                        {/* Job Match */}
                         <div className="col-span-2 flex flex-col justify-center items-center gap-1">
-                          {applicant.aiMatchStatus === "queued" || applicant.aiMatchStatus === "processing" ? (
+                          {applicant.matchStatus === "queued" || applicant.matchStatus === "processing" ? (
                             <span className="text-xs text-gray-500">Matching…</span>
-                          ) : applicant.aiMatchStatus === "failed" || applicant.aiMatchPercentage === null ? (
+                          ) : applicant.matchStatus === "failed" || applicant.matchScore === null ? (
                             <span className="text-xs text-gray-400">Not available</span>
                           ) : (
                             <span
-                              className={`text-sm font-medium ${getAIScoreColor(
-                                applicant.aiMatchPercentage
+                              className={`text-sm font-medium ${getMatchColor(
+                                applicant.matchScore
                               )}`}
                             >
-                              {applicant.aiMatchPercentage}%
+                              {applicant.matchScore}%
                             </span>
                           )}
-                          {applicant.aiMatchReasons && (
+                          {applicant.matchReasons && (
                             <button
                               type="button"
                               onClick={() =>
@@ -359,14 +359,14 @@ const JobsPage: React.FC = () => {
                         </div>
 
                         {/* Match reasons (AI guidance, not a hiring decision) */}
-                        {expandedApplicantId === applicant._id && applicant.aiMatchReasons && (
+                        {expandedApplicantId === applicant._id && applicant.matchReasons && (
                           <div className="col-span-12 rounded-md bg-gray-50 p-4 text-sm text-gray-700 space-y-3">
-                            <p>{applicant.aiMatchReasons.summary}</p>
+                            <p>{applicant.matchReasons.summary}</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
                                 <p className="font-medium text-gray-900 mb-1">Meets</p>
                                 <ul className="list-disc list-inside space-y-1">
-                                  {applicant.aiMatchReasons.metRequirements.map((r) => (
+                                  {applicant.matchReasons.metRequirements.map((r) => (
                                     <li key={r}>{r}</li>
                                   ))}
                                 </ul>
@@ -374,16 +374,16 @@ const JobsPage: React.FC = () => {
                               <div>
                                 <p className="font-medium text-gray-900 mb-1">Missing or not shown</p>
                                 <ul className="list-disc list-inside space-y-1">
-                                  {applicant.aiMatchReasons.missingRequirements.map((r) => (
+                                  {applicant.matchReasons.missingRequirements.map((r) => (
                                     <li key={r}>{r}</li>
                                   ))}
                                 </ul>
                               </div>
                             </div>
                             <p className="text-xs text-gray-500">
-                              Confidence: {applicant.aiMatchReasons.confidence}. Based on the job post, profile
-                              {applicant.aiMatchReasons.usedResume ? ", resume" : ""}
-                              {applicant.aiMatchReasons.usedInterview ? " and interview assessment" : ""}. AI
+                              Confidence: {applicant.matchReasons.confidence}. Based on the job post, profile
+                              {applicant.matchReasons.usedResume ? ", resume" : ""}
+                              {applicant.matchReasons.usedInterview ? " and interview assessment" : ""}. AI
                               guidance only, not a hiring decision.
                             </p>
                           </div>

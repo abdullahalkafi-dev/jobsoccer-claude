@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fieldStaffProfessionalInfoSchema } from "@/shchemas/profileValidation";
+import { fieldStaffProfessionalInfoSchema } from "@/schemas/profileValidation";
 import { TFieldStaffProfessionalInfo } from "@/types/profile";
 import {
   countryList,

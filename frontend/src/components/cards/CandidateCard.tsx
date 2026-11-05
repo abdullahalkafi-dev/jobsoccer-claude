@@ -23,12 +23,12 @@ import { toast } from "sonner";
 import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
 import userPlaceholder from "@/assets/user-placeholder.png";
-import { getProfileQualityScore } from "@/utils/profileQualityScore";
+import { QualityStars } from "@/features/profileQuality/QualityStars";
 
 function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: number }) {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const qualityScore = getProfileQualityScore(candidate);
+  const quality = candidate.profileQuality ?? null;
 
   const dispatch = useAppDispatch();
   const shortlistedIds = useAppSelector(
@@ -222,7 +222,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 {candidate.profile?.placeOfBirth}
               </span>
             </div>
-            {(index == 2 || qualityScore !== null) && (
+            {(index == 2 || quality !== null) && (
               <div className="flex w-fit flex-col gap-2">
               {index == 2 && (
                 <div className="flex text-sm text-gray-600 gap-2">
@@ -233,23 +233,14 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                   <div><span>Foot:</span> Right</div>
                 </div>
               )}
-              {qualityScore !== null && (
+              {quality !== null && (
                 <div
                   className={`flex items-center gap-1.5 text-sm text-gray-600 ${
                     index == 2 ? "border-t border-gray-300 pt-2" : ""
                   }`}
                 >
-                  <Image
-                    src="/icons/ai-icon.svg"
-                    alt="Profile Quality Score"
-                    width={18}
-                    height={18}
-                    className="w-4.5 h-4.5 object-contain"
-                  />
-                  <span>
-                    <span className="text-sm text-gray-600">Profile Quality Score:</span>{" "}
-                    {qualityScore}/100
-                  </span>
+                  <span className="text-sm text-gray-600">Profile Quality:</span>
+                  <QualityStars quality={quality} />
                 </div>
               )}
               </div>

@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { candidateRoles } from "@/shchemas/signupValidation";
+import { candidateRoles } from "@/schemas/signupValidation";
 import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
 
 export function JobSearch() {

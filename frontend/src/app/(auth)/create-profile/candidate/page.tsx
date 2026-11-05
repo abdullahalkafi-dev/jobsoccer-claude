@@ -12,7 +12,6 @@ import {
   type TOfficeStaffProfessionalInfo,
   type TFieldStaffProfessionalInfo,
   CandidateRole,
-  TVideo,
 } from "@/types/profile";
 import { AmateurPlayerProfessionalInfoForm } from "@/components/forms/AmateurPlayerProfessionalInfoForm";
 import { ProfessionalPlayerProfessionalInfoForm } from "@/components/forms/ProfessionalPlayerProfessionalInfoForm";
@@ -22,21 +21,12 @@ import { FieldStaffProfessionalInfoForm } from "@/components/forms/FieldStaffPro
 import { OfficeStaffProfessionalInfoForm } from "@/components/forms/OfficeStaffProfessionalInfoForm";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
-import { FieldStaffPosition, VideoType } from "@/constants/video.constant";
 import { useCreateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoMdArrowBack } from "react-icons/io";
-import { HeadCoachVideoForm } from "@/components/forms/HeadCoachVideoForm";
-import { GKCoachVideoForm } from "@/components/forms/GKCoachVideoForm";
-import { SpecificCoachVideoForm } from "@/components/forms/SpecificCoachVideoForm";
-import { ScoutVideoForm } from "@/components/forms/ScoutVideoForm";
-import { TechnicalDirectorVideoForm } from "@/components/forms/TechnicalDirectorVideoForm";
-import { AcademyDirectorVideoForm } from "@/components/forms/AcademyDirectorVideoForm";
-import { DirectorOfCoachingVideoForm } from "@/components/forms/DirectorOfCoachingVideoForm";
-import { OfficeStaffVideoForm } from "@/components/forms/OfficeStaffVideoForm";
-import { PlayerVideoForm } from "@/components/forms/PlayerVideoForm";
 import { removeEmptyFields } from "@/lib/utils";
+import { VideoUploadStep } from "@/features/video/VideoUploadStep";
 
 type ProfessionalInfo =
   | TAmateurPlayerProfessionalInfo
@@ -49,33 +39,28 @@ type ProfessionalInfo =
 interface FormData {
   personalInfo?: TPersonalInfo;
   professionalInfo?: ProfessionalInfo;
-  videos?: TVideo;
 }
 
-interface VideoFormData {
-  videos?: File[];
-  videoTitles?: string[];
-  videoMeta?: Array<{
-    type: VideoType;
-    title?: string;
-    description?: string;
-  }>;
-}
+/** Multipart body for POST /profile: the details as JSON plus the profile photo. */
+const buildProfileForm = (data: FormData): globalThis.FormData => {
+  const combined = { ...(data.personalInfo ?? {}), ...(data.professionalInfo ?? {}) };
+  const imageFile = combined.image instanceof File ? combined.image : null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { image, ...withoutImage } = combined;
 
-const PLAYER_ROLES = [
-  CandidateRole.PROFESSIONAL_PLAYER,
-  CandidateRole.AMATEUR_PLAYER,
-  CandidateRole.HIGH_SCHOOL,
-  CandidateRole.COLLEGE_UNIVERSITY,
-] as const;
+  const form = new globalThis.FormData();
+  form.append("data", JSON.stringify(removeEmptyFields(withoutImage) ?? {}));
+  if (imageFile) form.append("image", imageFile);
+  return form;
+};
 
 export default function CandidateProfilePage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({});
-  const [fieldStaffPosition, setFieldStaffPosition] = useState<string>("");
-
   const user = useAppSelector((state) => state.auth.user);
-  const [createUserProfile, { isLoading }] = useCreateUserProfileMutation();
+  // A candidate who already saved the profile but left before uploading videos continues at the video step.
+  const [currentStep, setCurrentStep] = useState(user?.profileId ? 3 : 1);
+  const [formData, setFormData] = useState<FormData>({});
+
+  const [createUserProfile] = useCreateUserProfileMutation();
   const router = useRouter();
 
   const userRole = user?.role as CandidateRole;
@@ -117,87 +102,25 @@ export default function CandidateProfilePage() {
     setCurrentStep(2);
   };
 
-  const handleProfessionalInfoNext = (data: ProfessionalInfo) => {
+  /** Step 2 saves the profile (photo + details). Videos come next, one at a time. */
+  const handleProfessionalInfoNext = async (data: ProfessionalInfo) => {
     setFormData((prev) => ({ ...prev, professionalInfo: data }));
-    setFieldStaffPosition((data as TFieldStaffProfessionalInfo).position || "");
-    setCurrentStep(3);
+    try {
+      const response = await createUserProfile(buildProfileForm({ ...formData, professionalInfo: data }));
+      if ("error" in response) {
+        const message = (response.error as { data?: { message?: string } })?.data?.message;
+        toast.error(message ?? "Could not save your profile. Please check the details and try again.");
+        return;
+      }
+      setCurrentStep(3);
+    } catch (error) {
+      toast.error("An error occurred while saving your profile.");
+      console.error("Profile creation error:", error);
+    }
   };
 
   const handlePrevStep = () => {
     setCurrentStep((prev) => Math.max(1, prev - 1));
-  };
-
-  const prepareFormData = (videoData: VideoFormData) => {
-    const combinedData = {
-      ...(formData.personalInfo ?? {}),
-      ...(formData.professionalInfo ?? {}),
-    };
-
-    const imageFile =
-      combinedData.image instanceof File ? combinedData.image : null;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { image, ...dataWithoutImage } = combinedData;
-    const cleanedData = removeEmptyFields(dataWithoutImage) ?? {};
-
-    const formDataToSend = new FormData();
-    formDataToSend.append("data", JSON.stringify(cleanedData));
-
-    if (imageFile) {
-      formDataToSend.append("image", imageFile);
-    }
-
-    // Handle video titles for player roles
-    if (videoData.videoTitles && Array.isArray(videoData.videoTitles)) {
-      formDataToSend.append(
-        "videoTitles",
-        JSON.stringify(videoData.videoTitles),
-      );
-    } else if (videoData.videoMeta) {
-      // Handle video metadata for staff roles
-      const cleanedVideoMeta = videoData.videoMeta
-        .map((vm) => {
-          const metadata: Record<string, unknown> = { type: vm.type };
-          if (vm.title?.trim()) metadata.title = vm.title.trim();
-          if (vm.description?.trim())
-            metadata.description = vm.description.trim();
-          return metadata;
-        })
-        .filter((vm) => Object.keys(vm).length > 0);
-
-      if (cleanedVideoMeta.length > 0) {
-        formDataToSend.append("videoMeta", JSON.stringify(cleanedVideoMeta));
-      }
-    }
-
-    // Append video files
-    if (videoData.videos) {
-      videoData.videos.forEach((video) => {
-        formDataToSend.append("videos", video);
-      });
-    }
-
-    return formDataToSend;
-  };
-
-  const handleVideoNext = async (data: TVideo) => {
-    try {
-      const videoData = data as VideoFormData;
-      setFormData((prev) => ({ ...prev, videos: data }));
-
-      const formDataToSend = prepareFormData(videoData);
-      const { data: userProfile } = await createUserProfile(formDataToSend);
-
-      if (userProfile?.data.profileId) {
-        toast.success("Profile completed successfully!");
-        router.push("/");
-      } else {
-        toast.error("Failed to create profile. Please try again.");
-      }
-    } catch (error) {
-      toast.error("An error occurred while creating your profile.");
-      console.error("Profile creation error:", error);
-    }
   };
 
   const renderProfessionalForm = () => {
@@ -291,118 +214,6 @@ export default function CandidateProfilePage() {
     }
   };
 
-  const renderVideoForm = () => {
-    const baseVideoProps = {
-      onNext: handleVideoNext as (data: TVideo) => void,
-      onPrev: handlePrevStep,
-      initialData: formData.videos,
-      steps,
-      isLoading,
-    };
-
-    // Player roles
-    if (PLAYER_ROLES.includes(userRole as (typeof PLAYER_ROLES)[number])) {
-      return <PlayerVideoForm {...baseVideoProps} />;
-    }
-
-    // Office staff
-    if (userRole === CandidateRole.OFFICE_STAFF) {
-      return (
-        <OfficeStaffVideoForm
-          {...baseVideoProps}
-          position={(formData.professionalInfo as TOfficeStaffProfessionalInfo | undefined)?.position}
-        />
-      );
-    }
-
-    // On Field staff positions
-    switch (fieldStaffPosition) {
-      case FieldStaffPosition.HEAD_COACH:
-      case FieldStaffPosition.ASSISTANT_COACH:
-        return (
-          <HeadCoachVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as
-                | FieldStaffPosition.HEAD_COACH
-                | FieldStaffPosition.ASSISTANT_COACH
-            }
-          />
-        );
-
-      case FieldStaffPosition.GOALKEEPER_COACH:
-      case FieldStaffPosition.MENTAL_COACH:
-      case FieldStaffPosition.VIDEO_ANALYST:
-        return (
-          <GKCoachVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as
-                | FieldStaffPosition.GOALKEEPER_COACH
-                | FieldStaffPosition.MENTAL_COACH
-                | FieldStaffPosition.VIDEO_ANALYST
-            }
-          />
-        );
-
-      case FieldStaffPosition.ATTACKING_COACH:
-      case FieldStaffPosition.DEFENSIVE_COACH:
-      case FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH:
-        return (
-          <SpecificCoachVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as
-                | FieldStaffPosition.ATTACKING_COACH
-                | FieldStaffPosition.DEFENSIVE_COACH
-                | FieldStaffPosition.TECHNICAL_DEVELOPMENT_COACH
-            }
-          />
-        );
-
-      case FieldStaffPosition.SCOUT:
-        return (
-          <ScoutVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={fieldStaffPosition as FieldStaffPosition.SCOUT}
-          />
-        );
-
-      case FieldStaffPosition.TECHNICAL_DIRECTOR:
-        return (
-          <TechnicalDirectorVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as FieldStaffPosition.TECHNICAL_DIRECTOR
-            }
-          />
-        );
-
-      case FieldStaffPosition.ACADEMY_DIRECTOR:
-        return (
-          <AcademyDirectorVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as FieldStaffPosition.ACADEMY_DIRECTOR
-            }
-          />
-        );
-
-      case FieldStaffPosition.DIRECTOR_OF_COACHING:
-        return (
-          <DirectorOfCoachingVideoForm
-            {...baseVideoProps}
-            fieldStaffPosition={
-              fieldStaffPosition as FieldStaffPosition.DIRECTOR_OF_COACHING
-            }
-          />
-        );
-
-      default:
-        return null;
-    }
-  };
-
   return (
     <div>
       <Link
@@ -421,7 +232,15 @@ export default function CandidateProfilePage() {
         />
       )}
       {currentStep === 2 && renderProfessionalForm()}
-      {currentStep === 3 && renderVideoForm()}
+      {currentStep === 3 && (
+        <VideoUploadStep
+          steps={steps}
+          onFinish={() => {
+            toast.success("Profile completed successfully!");
+            router.push("/");
+          }}
+        />
+      )}
     </div>
   );
 }

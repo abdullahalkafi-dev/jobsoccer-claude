@@ -159,11 +159,6 @@ export const officeStaffProfessionalInfoSchema = z.object({
   currentClub: z.string().min(1, "Current employer is required"),
 });
 
-// // Video Schema
-export const videoSchema = z.object({
-  videos: z.array(z.instanceof(File)).min(1, "At least one video is required"),
-});
-
 // ---------------------End of Candidate Role Schemas---------------------
 
 //----------------------Employer Role Schemas---------------------

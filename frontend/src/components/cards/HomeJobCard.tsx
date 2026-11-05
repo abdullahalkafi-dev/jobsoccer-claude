@@ -2,6 +2,7 @@
 "use client";
 
 import { Bookmark, Clock, MapPin } from "lucide-react";
+import { PremiumBadge } from "@/features/premiumJobs/PremiumBadge";
 import { TJob } from "@/types/job";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -208,6 +209,7 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
                 {jobData.company}
               </h3>
             </Link>
+            {job.isPremium && <PremiumBadge className="mt-1" />}
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">{jobData.location}</span>

@@ -11,6 +11,7 @@ import {
   useGetAiReviewQueueQuery,
   useGetCandidateAssessmentQuery,
   useRescoreCandidateMutation,
+  useUnlockCandidateVideosMutation,
 } from "@/redux/api/baseApi";
 
 interface QueueItem {
@@ -47,6 +48,7 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
   const { data, isLoading } = useGetCandidateAssessmentQuery(userId);
   const [addCorrection, { isLoading: isSaving }] = useAddAiCorrectionMutation();
   const [rescore, { isLoading: isRescoring }] = useRescoreCandidateMutation();
+  const [unlockVideos, { isLoading: isUnlocking }] = useUnlockCandidateVideosMutation();
   const [edits, setEdits] = useState<Record<number, { score: string; reason: string }>>({});
   const [showTranscript, setShowTranscript] = useState(false);
 
@@ -85,6 +87,16 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
     }
   };
 
+  /** Ends the 3-month lock early so the candidate can upload again (wrong file, broken upload). */
+  const runUnlock = async () => {
+    try {
+      await unlockVideos({ userId }).unwrap();
+      toast.success("Videos unlocked. The candidate was notified.");
+    } catch (error) {
+      toast.error(errorMessage(error));
+    }
+  };
+
   const runRescore = async () => {
     try {
       await rescore(userId).unwrap();
@@ -104,11 +116,20 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
             {reviewed?.totals.band ? ` - ${reviewed.totals.band}` : " - no level (questions not answered)"}
             {" · "}model {doc.aiModel} · rubric {doc.rubricId}@{doc.rubricVersion} · cost ${doc.costUsd ?? 0}
           </p>
+          {doc.detectedLanguage && <p className="text-sm text-gray-600">Spoken language: {doc.detectedLanguage} (scored on the English translation)</p>}
+          {doc.setupCheck && (
+            <p className="text-sm text-gray-600">
+              Recording setup: {doc.setupCheck.flags?.length ? doc.setupCheck.flags.join("; ") : "no problems seen"} - {doc.setupCheck.summary}
+            </p>
+          )}
           {reviewed?.reviewReasons?.length > 0 && (
             <p className="text-sm text-amber-700">Review: {reviewed.reviewReasons.join("; ")}</p>
           )}
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={runUnlock} disabled={isUnlocking}>
+            Unlock videos
+          </Button>
           <Button variant="outline" onClick={runRescore} disabled={isRescoring}>
             Re-score
           </Button>

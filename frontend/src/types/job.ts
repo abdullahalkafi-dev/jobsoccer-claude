@@ -1,3 +1,5 @@
+import type { TPremiumAccess } from "@/features/premiumJobs/types";
+
 export interface TJob {
   _id: string;
   jobTitle: string;
@@ -9,7 +11,6 @@ export interface TJob {
   requirements: string;
   additionalRequirements?: string;
   requiredSkills: string;
-  requiredAiScore: number;
   experience: string;
   salary: {
     min: number;
@@ -38,6 +39,10 @@ export interface TJob {
   __v?: number;
   isApplied?: boolean;
   isSaved?: boolean;
+  /** Premium opportunity (marked by an admin). */
+  isPremium?: boolean;
+  /** Only for a signed-in candidate viewing a premium job. */
+  premiumAccess?: TPremiumAccess | null;
 }
 
 export interface TJobCountByRole {
@@ -66,7 +71,7 @@ export interface TAppliedJob {
   jobId: TJob;
   candidateId: string;
   appliedAt: string;
-  aiMatchPercentage: number;
+  matchScore: number;
   resumeUrl: string;
   isDeleted: boolean;
   createdAt: string;
@@ -80,10 +85,10 @@ export interface TJobApplication {
   applicantProfileImage: string | null;
   candidateId: string;
   candidateRole: string;
-  aiMatchPercentage: number | null;
+  matchScore: number | null;
   /** Background job match (v2): queued / processing / completed / failed */
-  aiMatchStatus?: "queued" | "processing" | "completed" | "failed" | null;
-  aiMatchReasons?: {
+  matchStatus?: "queued" | "processing" | "completed" | "failed" | null;
+  matchReasons?: {
     metRequirements: string[];
     missingRequirements: string[];
     summary: string;

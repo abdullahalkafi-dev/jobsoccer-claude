@@ -34,7 +34,7 @@ import { toast } from "sonner";
 import {
   experienceFormSchema,
   ExperienceFormData,
-} from "@/shchemas/experienceValidation";
+} from "@/schemas/experienceValidation";
 
 interface AddExperienceModalProps {
   isOpen: boolean;

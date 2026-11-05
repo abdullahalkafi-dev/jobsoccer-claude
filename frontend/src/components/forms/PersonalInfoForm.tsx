@@ -9,7 +9,7 @@ import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { ImageUpload } from "@/components/form/fields/ImageUpload";
 import { Input } from "@/components/ui/input";
-import { personalInfoSchema } from "@/shchemas/profileValidation";
+import { personalInfoSchema } from "@/schemas/profileValidation";
 import { TPersonalInfo } from "@/types/profile";
 
 interface IPersonalInfoFormProps {
