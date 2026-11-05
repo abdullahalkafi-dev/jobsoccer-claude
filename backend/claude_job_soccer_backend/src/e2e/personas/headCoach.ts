@@ -167,7 +167,7 @@ export const headCoachScenario: RoleScenario = {
   position: "Head Coach",
   rubricId: "on_field_staff.head_coach.amateur.v1",
   questionCount: 18,
-  videoTypes: ["Pre-recorded Interview", "Technical", "Tactical", "Game's Principals"],
+  videoKinds: ["Interview", "Methodology"],
   profileBase: {
     dateOfBirth: "1982-04-18",
     placeOfBirth: "Manchester",

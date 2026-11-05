@@ -5,7 +5,9 @@ import AppError from "../../errors/AppError";
 import { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import { SearchHistoryService, SearchEntityType } from "../searchHistory/searchHistory.service";
-import { AI_SCORE_RANGES, AiScoreLevel, getDateFilterRange, DateFilter } from "./job.constants";
+import { getDateFilterRange, DateFilter } from "./job.constants";
+import { User } from "../user/user.model";
+import { PREMIUM_MIN_SCORE } from "../profileQuality/profileQuality.interface";
 import { SavedJob } from "../savedJobs/savesJobs.model";
 import { JobApply } from "../jobApply/jobApply.model";
 import { CandidateRole } from "../user/user.interface";
@@ -15,7 +17,9 @@ import { CandidateRole } from "../user/user.interface";
  * Create a new job posting
  */
 const createJob = async (jobData: Partial<IJob>): Promise<IJob> => {
-  const job = await Job.create(jobData);
+  // The premium flag belongs to the admins; an employer cannot set it.
+  const { isPremium: _ignored, ...employerData } = jobData;
+  const job = await Job.create(employerData);
   return job.toObject();
 };
 
@@ -73,32 +77,9 @@ const getAllJobs = async (query: Record<string, any>, userId?: string) => {
     queryFilter["salary.max"] = { $lte: Number(query.maxSalary) };
   }
 
-  // AI Score range filters
-  // Priority: Use aiScoreLevel if provided, otherwise use custom min/max
-  if (query.aiScoreLevel) {
-    const level = query.aiScoreLevel as AiScoreLevel;
-    const range = AI_SCORE_RANGES[level];
-    if (range) {
-      queryFilter.requiredAiScore = { 
-        $gte: range.min,
-        $lte: range.max
-      };
-    }
-  } else {
-    // Use custom range if aiScoreLevel is not provided
-    if (query.minRequiredAiScore) {
-      queryFilter.requiredAiScore = { 
-        ...queryFilter.requiredAiScore, 
-        $gte: Number(query.minRequiredAiScore) 
-      };
-    }
-    if (query.maxRequiredAiScore) {
-      queryFilter.requiredAiScore = { 
-        ...queryFilter.requiredAiScore, 
-        $lte: Number(query.maxRequiredAiScore) 
-      };
-    }
-  }
+  // Premium jobs (marked by an admin): ?premium=true shows only premium, ?premium=false hides them
+  if (query.premium === "true") queryFilter.isPremium = true;
+  else if (query.premium === "false") queryFilter.isPremium = { $ne: true };
 
   // Pagination
   const page = Number(query.page) || 1;
@@ -185,9 +166,7 @@ const getActiveJobs = async (filters: {
   experience?: string;
   minSalary?: number;
   maxSalary?: number;
-  aiScoreLevel?: AiScoreLevel;
-  minRequiredAiScore?: number;
-  maxRequiredAiScore?: number;
+  premium?: boolean;
   dateFilter?: DateFilter;
   employerRole?: string;
   page?: number;
@@ -202,9 +181,7 @@ const getActiveJobs = async (filters: {
     experience,
     minSalary,
     maxSalary,
-    aiScoreLevel,
-    minRequiredAiScore,
-    maxRequiredAiScore,
+    premium,
     dateFilter,
     employerRole,
     page = 1,
@@ -238,25 +215,8 @@ const getActiveJobs = async (filters: {
     queryFilter["salary.max"] = { $lte: maxSalary };
   }
 
-  // AI Score range filtering
-  // Priority: Use aiScoreLevel if provided, otherwise use custom min/max
-  if (aiScoreLevel) {
-    const range = AI_SCORE_RANGES[aiScoreLevel];
-    if (range) {
-      queryFilter.requiredAiScore = { 
-        $gte: range.min,
-        $lte: range.max
-      };
-    }
-  } else {
-    // Use custom range if aiScoreLevel is not provided
-    if (minRequiredAiScore !== undefined) {
-      queryFilter["requiredAiScore"] = { ...queryFilter["requiredAiScore"], $gte: minRequiredAiScore };
-    }
-    if (maxRequiredAiScore !== undefined) {
-      queryFilter["requiredAiScore"] = { ...queryFilter["requiredAiScore"], $lte: maxRequiredAiScore };
-    }
-  }
+  if (premium === true) queryFilter.isPremium = true;
+  else if (premium === false) queryFilter.isPremium = { $ne: true };
 
   const skip = (page - 1) * limit;
 
@@ -319,14 +279,28 @@ const getJobById = async (id: string, userId?: string) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Job not found");
   }
 
-  // Add isApplied and isSaved fields
+  // Add isApplied and isSaved fields, and (premium jobs) whether this candidate may apply
   const jobWithStatus = {
     ...job,
     isApplied: appliedJobIds.length > 0,
     isSaved: savedJobIds.length > 0,
+    premiumAccess: job.isPremium ? await premiumAccessFor(userId) : null,
   };
 
   return jobWithStatus;
+};
+
+/**
+ * Premium jobs are visible to everyone, but only candidates with a Profile Quality
+ * Score of at least {@link PREMIUM_MIN_SCORE} may apply. Returns what the screen needs
+ * to explain it (null for visitors and employers, who do not apply).
+ */
+const premiumAccessFor = async (userId?: string) => {
+  if (!userId) return null;
+  const user = await User.findById(userId).select("userType profileQuality").lean();
+  if (!user || user.userType !== "candidate") return null;
+  const score = (user.profileQuality as { score?: number } | undefined)?.score ?? 0;
+  return { required: PREMIUM_MIN_SCORE, score, canApply: score >= PREMIUM_MIN_SCORE };
 };
 
 /**
@@ -433,8 +407,9 @@ const updateJob = async (
     );
   }
 
-  // Update job
-  Object.assign(job, updateData);
+  // Update job (the premium flag is never changed by an employer)
+  const { isPremium: _ignored, ...employerUpdate } = updateData;
+  Object.assign(job, employerUpdate);
   await job.save(); // This triggers pre-save middleware
 
   return job.toObject();
@@ -778,8 +753,42 @@ const getHomepageFeaturedJobs = async (userId?: string) => {
   return jobsWithStatus;
 };
 
-// Export all service functions
+const escapeRegExp = (text: string): string => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** Admin: every job with its employer, for the premium switch (search + status + premium filters). */
+const listForAdmin = async (query: { page?: string; limit?: string; searchTerm?: string; status?: string; premium?: string }) => {
+  const page = Math.max(1, Number(query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+  const filter: Record<string, any> = {};
+  if (query.status) filter.status = query.status;
+  if (query.premium === "true") filter.isPremium = true;
+  else if (query.premium === "false") filter.isPremium = { $ne: true };
+  if (query.searchTerm) filter.jobTitle = new RegExp(escapeRegExp(query.searchTerm), "i");
+
+  const [data, total] = await Promise.all([
+    Job.find(filter)
+      .select("jobTitle jobCategory position location country status isPremium applicationCount createdAt creator")
+      .populate("creator.creatorId", "firstName lastName email role")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean(),
+    Job.countDocuments(filter),
+  ]);
+  return { data, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
+
+/** Admin: mark or unmark a job as a premium opportunity. */
+const setPremium = async (jobId: string, isPremium: boolean) => {
+  if (!Types.ObjectId.isValid(jobId)) throw new AppError(StatusCodes.BAD_REQUEST, "Invalid job ID");
+  const job = await Job.findByIdAndUpdate(jobId, { $set: { isPremium } }, { new: true }).lean();
+  if (!job) throw new AppError(StatusCodes.NOT_FOUND, "Job not found");
+  return job;
+};
+
 export const JobService = {
+  listForAdmin,
+  setPremium,
   createJob,
   getAllJobs,
   getActiveJobs,

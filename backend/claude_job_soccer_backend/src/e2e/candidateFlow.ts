@@ -1,7 +1,9 @@
 import { Types } from "mongoose";
 import { AiEvaluation, AiTranscript } from "../modules/aiEvaluation/aiEvaluation.model";
 import { User } from "../modules/user/user.model";
-import { Check, E2E, call, check, emailFor, fakeVideo, sha256, sleep, tinyPng, transcriptKey } from "./support";
+import { transcriptCacheKey } from "../modules/aiEvaluation/transcriptCache";
+import { getProfileEntry } from "../modules/profile/profile.registry";
+import { Check, E2E, call, check, emailFor, sha256, sleep, testVideo, tinyPng } from "./support";
 import { Persona, RoleScenario, buildTranscript, wordCount } from "./personas/types";
 
 /** One fake candidate, start to end, through the real API. Only the speech-to-text result is pre-loaded. */
@@ -95,56 +97,78 @@ export const runCandidate = async (scenario: RoleScenario, persona: Persona): Pr
     if (!token) throw new Error(`Login failed: ${JSON.stringify(login.body)}`);
     run.token = token;
 
-    // 4. Create the profile with the four required videos. When the account already has a profile
-    //    (earlier run) the candidate uploads new videos instead, which starts a new assessment.
+    // 4. Profile first (photo + details), then consent, then ONE video per request (interview first).
+    //    Re-runs reuse the account: its videos are locked for 3 months, so the lock is lifted in the dev database.
     user = await User.findById(run.userId);
-    const isUpdate = !!user?.profileId;
+    const hasProfile = !!user?.profileId;
     const knownEvaluations = new Set(
       (await AiEvaluation.find({ candidateUserId: new Types.ObjectId(run.userId) }).select("_id").lean()).map((d) => d._id.toString())
     );
-    let profileDoneAt = Date.now();
-    {
-      const videoMeta: { type: string; title: string; description: string }[] = [];
+    if (!hasProfile) {
       const form = new FormData();
-      if (isUpdate) {
-        form.append("data", JSON.stringify({ position: scenario.position }));
-      } else {
-        form.append("data", JSON.stringify({ ...scenario.profileBase, ...persona.profileExtras }));
-        form.append("image", new Blob([new Uint8Array(tinyPng())], { type: "image/png" }), "photo.png");
-      }
-
-      const seeds: { sha: string; text: string }[] = [];
-      scenario.videoTypes.forEach((type, index) => {
-        const bytes = fakeVideo(`${email}|${type}`);
-        const text = index === 0 ? transcript : " ";
-        seeds.push({ sha: sha256(bytes), text });
-        form.append("videos", new Blob([new Uint8Array(bytes)], { type: "video/mp4" }), `e2e-${index + 1}.mp4`);
-        videoMeta.push({ type, title: `${type} (e2e)`, description: `E2E test video for ${persona.key}` });
-      });
-      form.append("videoMeta", JSON.stringify(videoMeta));
-
-      // The speech-to-text step is replaced by a pre-loaded transcript for each file's fingerprint.
-      const seedStart = Date.now();
-      for (const seed of seeds) {
-        await AiTranscript.updateOne(
-          { sha256: seed.sha, ...transcriptKey() },
-          { $set: { text: seed.text, durationSeconds: Math.round(wordCount(seed.text) / SPEAKING_WORDS_PER_SECOND) } },
-          { upsert: true }
-        );
-      }
-      step("seed-transcripts", Date.now() - seedStart, null, `${seeds.length} files (interview ${words} words)`);
-
-      const created = await call(isUpdate ? "PATCH" : "POST", "/user/profile", { token, form });
-      profileDoneAt = Date.now();
-      step(isUpdate ? "update-profile-videos" : "create-profile", created.ms, created.status, isUpdate ? "account existed: new videos uploaded" : "includes the AI profile score");
-      check(run.checks, "C4", isUpdate ? "New videos accepted (HTTP 200)" : "Profile created (HTTP 201)", created.status === (isUpdate ? 200 : 201), `HTTP ${created.status} ${created.ok ? "" : JSON.stringify(created.body).slice(0, 300)}`);
-      if (!created.ok) throw new Error(`Profile ${isUpdate ? "update" : "creation"} failed: ${JSON.stringify(created.body)}`);
+      form.append("data", JSON.stringify({ ...scenario.profileBase, ...persona.profileExtras }));
+      form.append("image", new Blob([new Uint8Array(tinyPng())], { type: "image/png" }), "photo.png");
+      const created = await call("POST", "/profile", { token, form });
+      step("create-profile", created.ms, created.status);
+      check(run.checks, "C4", "Profile created (HTTP 201)", created.status === 201, `HTTP ${created.status} ${created.ok ? "" : JSON.stringify(created.body).slice(0, 300)}`);
+      if (!created.ok) throw new Error(`Profile creation failed: ${JSON.stringify(created.body)}`);
+    } else {
+      const entry = getProfileEntry(user!.userType, user!.role)!;
+      await entry.model.updateOne({ _id: user!.profileId }, { $set: { "videos.$[].lockedUntil": null } });
+      check(run.checks, "C4", "Profile already exists (re-run)", true, "video locks lifted in the dev database");
     }
 
-    // 5. Profile score (written at creation)
-    user = await User.findById(run.userId);
-    run.profileScore = user?.aiProfileScore ?? null;
-    check(run.checks, "C5", "AI profile score is a real score (> 0)", (run.profileScore ?? 0) > 0, `aiProfileScore = ${run.profileScore}`);
+    const consent = await call("POST", "/videos/consent", { token, json: { ai: true, players: true } });
+    step("save-consent", consent.ms, consent.status);
+    check(run.checks, "C4b", "Consent saved", consent.ok, `HTTP ${consent.status}`);
+
+    let profileDoneAt = Date.now();
+    const uploadTimes: number[] = [];
+    for (const [index, kind] of scenario.videoKinds.entries()) {
+      const bytes = testVideo(`${email}|${kind}`);
+      const text = index === 0 ? transcript : " ";
+      // The speech-to-text step is replaced by a pre-loaded transcript for this file's fingerprint.
+      await AiTranscript.updateOne(
+        transcriptCacheKey(sha256(bytes)),
+        { $set: { text, detectedLanguage: "english", segments: [], durationSeconds: Math.round(wordCount(text) / SPEAKING_WORDS_PER_SECOND) } },
+        { upsert: true }
+      );
+      const form = new FormData();
+      form.append("kind", kind);
+      form.append("video", new Blob([new Uint8Array(bytes)], { type: "video/mp4" }), `e2e-${index + 1}.mp4`);
+      const uploaded = await call("POST", "/videos", { token, form });
+      uploadTimes.push(uploaded.ms);
+      step(`upload-${kind.toLowerCase()}`, uploaded.ms, uploaded.status, index === 0 ? `interview ${words} words` : undefined);
+      check(run.checks, `C4-${kind}`, `${kind} video accepted (HTTP 201)`, uploaded.status === 201, `HTTP ${uploaded.status} ${uploaded.ok ? "" : JSON.stringify(uploaded.body).slice(0, 300)}`);
+      if (!uploaded.ok) throw new Error(`${kind} upload failed: ${JSON.stringify(uploaded.body)}`);
+      profileDoneAt = Date.now();
+    }
+    check(run.checks, "C4c", "Each video request ends quickly (under 10 s: no AI work inside the request)", uploadTimes.every((ms) => ms < 10_000), uploadTimes.map((ms) => `${ms} ms`).join(", "));
+
+    // A second interview upload inside the 3-month lock must be refused
+    const againForm = new FormData();
+    againForm.append("kind", scenario.videoKinds[0]);
+    againForm.append("video", new Blob([new Uint8Array(testVideo(`${email}|again`))], { type: "video/mp4" }), "again.mp4");
+    const locked = await call("POST", "/videos", { token, form: againForm });
+    check(run.checks, "C4d", "A second interview upload is blocked by the 3-month lock (HTTP 423)", locked.status === 423, `HTTP ${locked.status}`);
+
+    // 5. Profile Quality Score (rules + AI judgement, calculated in the background after the uploads)
+    {
+      const waitQuality = Date.now();
+      let quality: any = null;
+      while (Date.now() - waitQuality < 60_000) {
+        quality = (await User.findById(run.userId).select("profileQuality").lean())?.profileQuality;
+        if (quality?.calculatedAt) break;
+        await sleep(1000);
+      }
+      run.profileScore = quality?.score ?? null;
+      step("wait-for-profile-quality", Date.now() - waitQuality, null, quality ? `score ${quality.score}, ${quality.stars} stars (${quality.level})` : "not calculated");
+      check(run.checks, "C5", "Profile Quality Score is calculated (0-100, four categories)", !!quality && quality.score >= 0 && quality.score <= 100 && quality.categories?.length === 4, `score = ${quality?.score}`);
+      const media = quality?.categories?.find((c: any) => c.key === "media")?.earned;
+      check(run.checks, "C5b", "Both videos are counted in the Media Portfolio", (media ?? 0) >= 25, `media = ${media}/35`);
+      const own = await call("GET", "/profile-quality/me", { token });
+      check(run.checks, "C5c", "Candidate can read their own score and breakdown", own.ok && own.body?.data?.quality?.score === quality?.score, `HTTP ${own.status}`);
+    }
 
     // 6. Wait for the background interview assessment, noting each state and when it was seen
     const waitStart = Date.now();
@@ -192,7 +216,7 @@ export const runCandidate = async (scenario: RoleScenario, persona: Persona): Pr
       `band = ${totals.band}, not answered = ${totals.notAnsweredCount}`
     );
     const refreshed = await User.findById(run.userId).lean();
-    check(run.checks, "C15", "Old 0-100 score on the card is in sync with the report", refreshed?.AiVideoVideoScore === report.legacyScore100, `card ${refreshed?.AiVideoVideoScore} vs report ${report.legacyScore100}`);
+    check(run.checks, "C15", "Interview score on the card is in sync with the report", refreshed?.interviewScore === report.legacyScore100, `card ${refreshed?.interviewScore} vs report ${report.legacyScore100}`);
     check(run.checks, "C16", "Cost and usage are recorded", typeof doc.costUsd === "number" && (doc.usage?.length ?? 0) > 0, `cost $${doc.costUsd}`);
 
     run.evaluation = {

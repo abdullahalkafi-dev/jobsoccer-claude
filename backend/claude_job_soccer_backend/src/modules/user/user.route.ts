@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import { UserController } from "./user.controller";
+import { UserType } from "./user.interface";
 import { UserValidation } from "./user.dto";
 import fileUploadHandler from "../../shared/middlewares/fileUploadHandler";
 import auth from "../../shared/middlewares/auth";
@@ -17,7 +18,7 @@ const router = express.Router();
  *   - role: string (filter by user role)
  * Response: Paginated array of user objects
  */
-router.get("/", UserController.getAllUsers);
+router.get("/", auth(UserType.ADMIN), UserController.getAllUsers);
 
 /**
  * GET /api/v1/user/me
@@ -37,84 +38,6 @@ router.get("/me", auth(), UserController.getMe);
 router.get("/:id",optionalAuth, UserController.getUserById);
 
 /**
- * POST /api/v1/user/profile
- * Create user profile with media files
- * Supports file uploads for profile images and videos
- * Auth: Required
- * Body: Multipart form data with user profile fields and media files
- * Response: Created user profile object
- */
-router.post(
-  "/profile",
-  auth(),
-  fileUploadHandler,
-  UserController.addUserProfile
-);
-
-/**
- * PATCH /api/v1/user/profile
- * Update user profile with media files
- * Supports file uploads for profile images and videos
- * Auth: Required
- * Body: Multipart form data with user profile fields and media files
- * Response: Updated user profile object
- */
-router.patch(
-  "/profile",
-  auth(),
-  fileUploadHandler,
-  UserController.updateUserProfile
-);
-
-/**
- * PATCH /api/v1/user/profile/video/:videoIndex
- * Update a specific video by its index
- * Auth: Required
- * Params:
- *   - videoIndex: number (required) - The index of the video to update (0-based)
- * Body: Multipart form data with video file and metadata
- *   For Players: { videoTitle: string }
- *   For Staff: { videoTitle: string, videoCategory: string, position: string }
- * Response: Updated profile with modified video
- */
-router.patch(
-  "/profile/video/:videoIndex",
-  auth(),
-  fileUploadHandler,
-  UserController.updateProfileVideo
-);
-
-/**
- * POST /api/v1/user/profile/video
- * Add a new video to user profile
- * Auth: Required
- * Body: Multipart form data with video file and metadata
- *   For Players: { videoTitle: string }
- *   For Staff: { videoTitle: string, videoCategory: string, position: string }
- * Response: Updated profile with new video added
- */
-router.post(
-  "/profile/video",
-  auth(),
-  fileUploadHandler,
-  UserController.addProfileVideo
-);
-
-/**
- * DELETE /api/v1/user/profile/video/:videoIndex
- * Delete a specific video by its index
- * Auth: Required
- * Params:
- *   - videoIndex: number (required) - The index of the video to delete (0-based)
- * Response: Updated profile with video removed
- */
-router.delete(
-  "/profile/video/:videoIndex",
-  auth(),
-  UserController.deleteProfileVideo
-);
-
-/**
  * PATCH /api/v1/user/:id
  * Update user information
  * Supports file uploads for profile images and videos
@@ -124,7 +47,8 @@ router.delete(
  * Response: Updated user object
  */
 router.patch(
-  "/:id", 
+  "/:id",
+  auth(),
   fileUploadHandler,
   validateRequest(UserValidation.updateUser),
   UserController.updateUser
@@ -141,6 +65,7 @@ router.patch(
  */
 router.patch(
   "/:id/status",
+  auth(UserType.ADMIN),
   validateRequest(UserValidation.updateUserActivationStatus),
   UserController.updateUserActivationStatus
 );
@@ -156,6 +81,7 @@ router.patch(
  */
 router.patch(
   "/:id/role",
+  auth(UserType.ADMIN),
   validateRequest(UserValidation.updateUserRole),
   UserController.updateUserRole
 );

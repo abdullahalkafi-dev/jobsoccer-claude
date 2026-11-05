@@ -418,7 +418,6 @@ const getEmployerById = async (id: string, userId?: string) => {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
-    aiProfileScore: user?.aiProfileScore ?? 0,
     profileImage: user.profileImage,
     userType: user.userType,
     isVerified: user.isVerified,

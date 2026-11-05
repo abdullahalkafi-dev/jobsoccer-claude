@@ -58,8 +58,8 @@ router.delete(
  * Query params:
  *   - page: number (default: 1)
  *   - limit: number (default: 10)
- *   - sortBy: "aiMatchPercentage" | "-aiMatchPercentage" | "appliedAt" | "-appliedAt"
- *             (default: -aiMatchPercentage - highest match first)
+ *   - sortBy: "matchScore" | "-matchScore" | "appliedAt" | "-appliedAt"
+ *             (default: -matchScore - highest match first)
  * 
  * Response format:
  * {
@@ -73,7 +73,7 @@ router.delete(
  *       "applicantProfileImage": "url",
  *       "candidateId": "candidate_id",
  *       "candidateRole": "Professional Player",
- *       "aiMatchPercentage": 85,
+ *       "matchScore": 85,
  *       "resumeUrl": "https://...",
  *       "appliedAt": "2025-11-07T10:30:00.000Z"
  *     }

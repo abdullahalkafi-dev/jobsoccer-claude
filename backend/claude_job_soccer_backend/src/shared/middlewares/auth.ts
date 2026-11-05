@@ -2,46 +2,30 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Secret } from "jsonwebtoken";
 import config from "../../config";
-
 import { jwtHelper } from "../util/jwtHelper";
 import AppError from "../../errors/AppError";
-import { logger } from "../logger/logger";
 
+/**
+ * Require a valid "Authorization: Bearer <token>" header and, when roles are
+ * given, one of those user types. The decoded token is put on req.user.
+ * Nothing from the request (token, body) is ever logged here.
+ */
 const auth =
   (...roles: string[]) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, _res: Response, next: NextFunction) => {
     try {
-      const tokenWithBearer = req.headers.authorization;
-
-      console.log(tokenWithBearer);
-      console.log(req.body);
-      if (!tokenWithBearer) {
+      const header = req.headers.authorization;
+      if (!header?.startsWith("Bearer ")) {
         throw new AppError(StatusCodes.UNAUTHORIZED, "You are not authorized");
       }
 
-      if (tokenWithBearer)
-        if (tokenWithBearer && tokenWithBearer.startsWith("Bearer")) {
-          const token = tokenWithBearer.split(" ")[1];
-          //verify token
-          const verifyUser = jwtHelper.verifyToken(
-            token,
-            config.jwt.jwt_secret as Secret
-          );
+      const verified = jwtHelper.verifyToken(header.split(" ")[1], config.jwt.jwt_secret as Secret);
+      req.user = verified as typeof req.user;
 
-          //set user to header
-          req.user = verifyUser as typeof req.user;
-          console.log(verifyUser.userType);
-          console.log(roles);
-          //guard user
-          if (roles.length && !roles.includes(verifyUser.userType)) {
-            throw new AppError(
-              StatusCodes.FORBIDDEN,
-              "You don't have permission to access this api"
-            );
-          }
-          console.log("passed");
-          next();
-        }
+      if (roles.length && !roles.includes(verified.userType)) {
+        throw new AppError(StatusCodes.FORBIDDEN, "You don't have permission to access this api");
+      }
+      next();
     } catch (error) {
       next(error);
     }

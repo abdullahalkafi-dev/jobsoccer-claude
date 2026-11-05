@@ -20,13 +20,18 @@ const aiEvaluationSchema = new Schema<TAiEvaluation>(
       {
         _id: false,
         url: { type: String, required: true },
-        videoType: { type: String },
+        kind: { type: String },
+        videoId: { type: String },
         sha256: { type: String },
         durationSeconds: { type: Number },
         transcriptChars: { type: Number },
       },
     ],
     transcript: { type: String },
+    /** Language the candidate spoke (detected automatically); the transcript is always English. */
+    detectedLanguage: { type: String },
+    /** Recording-setup check (frames + transcript). Only flags for an admin, never changes the score. */
+    setupCheck: { type: Schema.Types.Mixed },
     report: { type: Schema.Types.Mixed },
     rawModelOutput: { type: String },
     aiModel: { type: String },
@@ -64,7 +69,11 @@ const aiTranscriptSchema = new Schema<TAiTranscript>(
     sha256: { type: String, required: true },
     model: { type: String, required: true },
     language: { type: String, required: true },
+    /** English text (translated when the speech was in another language). */
     text: { type: String, required: true },
+    detectedLanguage: { type: String },
+    /** English caption cues, for the WebVTT subtitles. */
+    segments: { type: Schema.Types.Mixed, default: [] },
     durationSeconds: { type: Number },
   },
   { timestamps: true, versionKey: false }

@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import { profileChangedPlugin } from "../../shared/events/profileChangedPlugin";
+import { verificationFields } from "../credentialVerification/credentialVerification.fields";
 import { TCandidateLicenseAndCertification } from "./candidateLicensesAndCertification.interface";
 
 const candidateLicensesAndCertificationSchema = new Schema<TCandidateLicenseAndCertification>(
@@ -59,10 +61,16 @@ const candidateLicensesAndCertificationSchema = new Schema<TCandidateLicenseAndC
   { timestamps: true, versionKey: false }
 );
 
+// Supporting document + admin verification (feeds the Profile Quality "Verification" points)
+candidateLicensesAndCertificationSchema.add(verificationFields);
+
 // Index for efficiently finding user's license and certification records
 candidateLicensesAndCertificationSchema.index({ userId: 1, createdAt: -1 });
 // Index for finding licenses and certifications by profile
 candidateLicensesAndCertificationSchema.index({ profileId: 1, startYear: -1 });
+
+// Recalculate the Profile Quality Score when this changes
+candidateLicensesAndCertificationSchema.plugin(profileChangedPlugin, "license");
 
 export const CandidateLicenseAndCertification = model<TCandidateLicenseAndCertification>(
   "CandidateLicenseAndCertification",

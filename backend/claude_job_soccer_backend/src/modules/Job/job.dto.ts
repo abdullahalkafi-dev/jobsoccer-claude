@@ -44,11 +44,6 @@ const createJobDto = z.object({
     responsibilities: z
       .string()
       .min(10, "Responsibilities must be at least 10 characters"),
-    requiredAiScore: z
-      .number()
-      .min(0, "Required AI Score must be at least 0")
-      .max(100, "Required AI Score cannot exceed 100")
-      .optional(),                                                                                                                             
     requiredSkills: z
       .string()
       .min(5, "Required skills must be at least 5 characters"),
@@ -97,11 +92,6 @@ const updateJobDto = z.object({
     responsibilities: z.string().min(10).optional(),
     requiredSkills: z.string().min(5).optional(),
     additionalRequirements: z.string().optional(),
-    requiredAiScore: z
-      .number()
-      .min(0, "Required AI Score must be at least 0")
-      .max(100, "Required AI Score cannot exceed 100")
-      .optional(),
     country: z.string().optional(),
     status: z.enum(["active", "closed", "draft", "expired"]).optional(),
   }).strict(),
@@ -128,10 +118,8 @@ const getAllJobsDto = z.object({
     experience: z.enum(["Entry Level", "Intermediate", "Mid-Level", "Mid-Senior", "Senior"]).optional(),
     minSalary: z.string().optional(),
     maxSalary: z.string().optional(),
-    // AI Score filtering - can use either level (Low, Medium, Good, High) or custom range
-    aiScoreLevel: z.enum(["Low", "Medium", "Good", "High"]).optional(),
-    minRequiredAiScore: z.string().optional(),
-    maxRequiredAiScore: z.string().optional(),
+    // Premium opportunities (marked by an admin)
+    premium: z.enum(["true", "false"]).optional(),
     // Date filtering - filter by when job was created
     dateFilter: z.enum(["Last Week", "This Month", "Any Time"]).optional(),
     creatorRole: z.string().optional(),
@@ -143,8 +131,13 @@ const getAllJobsDto = z.object({
   }),
 });
 
+const setPremiumDto = z.object({
+  body: z.object({ isPremium: z.boolean() }).strict(),
+});
+
 export const JobValidation = {
   createJobDto,
   updateJobDto,
   getAllJobsDto,
+  setPremiumDto,
 };

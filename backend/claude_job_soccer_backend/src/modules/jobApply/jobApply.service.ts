@@ -3,240 +3,105 @@ import { TJobApply } from "./jobApply.interface";
 import AppError from "../../errors/AppError";
 import { Types } from "mongoose";
 import { StatusCodes } from "http-status-codes";
+import { aiConfig } from "../../shared/ai/ai.config";
 import { Job } from "../Job/job.model";
 import { User } from "../user/user.model";
-import { CandidateRole } from "../user/user.interface";
-import { calculateJobMatchScore } from "../../shared/openai/jobMatching.service";
-
-// Import Supplementary Data Models
-import { CandidateExperience } from "../candidateExperience/candidateExperience.model";
-import { CandidateEducation } from "../candidateEducation/candidateEducation.model";
-import { CandidateLicenseAndCertification } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.model";
 import { CandidateEducationService } from "../candidateEducation/candidateEducation.service";
 import { CandidateLicensesAndCertificationService } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.service";
 import { getCandidateModel } from "../../shared/util/getCandidateModel";
 import { FriendList } from "../friendlist/friendlist.model";
-import { UserType } from "../user/user.interface";
-import { isJobMatchV2Enabled, JobMatchService } from "./jobMatch.service";
+import { CandidateRole, UserType } from "../user/user.interface";
+import { CandidateExperience } from "../candidateExperience/candidateExperience.model";
+import { PREMIUM_MIN_SCORE } from "../profileQuality/profileQuality.interface";
+import { VideoService } from "../video/video.service";
+import { JobMatchService } from "./jobMatch.service";
 
 /**
- * Calculate total years of experience from experience records
+ * Who may apply to which job:
+ *  - normal jobs: every candidate with a complete profile;
+ *  - premium jobs (marked by an admin): only candidates whose Profile Quality
+ *    Score is at least {@link PREMIUM_MIN_SCORE}. Everyone can still SEE them.
+ * "Complete" means the required videos are uploaded (client: both videos are
+ * required to complete your profile and apply).
  */
-const calculateYearsOfExperience = (experiences: any[]): number => {
-  let totalMonths = 0;
-  const currentDate = new Date();
+const assertCanApply = async (candidate: any, job: any): Promise<void> => {
+  if (candidate.userType !== UserType.CANDIDATE) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Only candidates can apply to jobs");
+  }
+  if (!candidate.profileId) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Candidate profile not found. Please complete your profile before applying.");
+  }
 
-  experiences.forEach((exp) => {
-    const startDate = new Date(
-      exp.startYear,
-      getMonthNumber(exp.startMonth),
-      1
-    );
-    let endDate: Date;
-
-    if (exp.isCurrentlyWorking) {
-      endDate = currentDate;
-    } else if (exp.endYear && exp.endMonth) {
-      endDate = new Date(exp.endYear, getMonthNumber(exp.endMonth), 1);
-    } else {
-      return; // Skip if no end date and not currently working
+  if (job.isPremium) {
+    const score = candidate.profileQuality?.score ?? 0;
+    if (score < PREMIUM_MIN_SCORE) {
+      throw new AppError(
+        StatusCodes.FORBIDDEN,
+        `This is a premium opportunity. You need a Profile Quality Score of ${PREMIUM_MIN_SCORE} or more to apply (yours is ${score}).`
+      );
     }
+  }
 
-    const months =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      (endDate.getMonth() - startDate.getMonth());
-    totalMonths += months > 0 ? months : 0;
-  });
-
-  return Math.round((totalMonths / 12) * 10) / 10; // Round to 1 decimal place
+  const videos = await VideoService.getStatus(candidate._id.toString()).catch(() => null);
+  if (videos && !videos.isComplete) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      `Please upload your required ${videos.missing.join(" and ").toLowerCase()} video before applying.`
+    );
+  }
 };
 
 /**
- * Convert month name to month number (0-11)
+ * Apply to a job. The AI match against the job runs in the background, so the
+ * candidate gets the answer immediately.
  */
-const getMonthNumber = (monthName: string): number => {
-  const months: Record<string, number> = {
-    January: 0,
-    February: 1,
-    March: 2,
-    April: 3,
-    May: 4,
-    June: 5,
-    July: 6,
-    August: 7,
-    September: 8,
-    October: 9,
-    November: 10,
-    December: 11,
-  };
-  return months[monthName] || 0;
-};
+const applyToJob = async (candidateId: string, jobId: string, resumeUrl?: string): Promise<TJobApply> => {
+  if (!Types.ObjectId.isValid(candidateId)) throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate ID");
+  if (!Types.ObjectId.isValid(jobId)) throw new AppError(StatusCodes.BAD_REQUEST, "Invalid job ID");
 
-/**
- * Apply to a job
- */
-const applyToJob = async (
-  candidateId: string,
-  jobId: string,
-  resumeUrl?: string
-): Promise<TJobApply> => {
-  // Validate IDs
-  if (!Types.ObjectId.isValid(candidateId)) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate ID");
-  }
-  if (!Types.ObjectId.isValid(jobId)) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Invalid job ID");
-  }
-
-  // Check if job exists and is active
   const job = await Job.findById(jobId).lean();
-  if (!job) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Job not found");
-  }
+  if (!job) throw new AppError(StatusCodes.NOT_FOUND, "Job not found");
   if (job.status !== "active") {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      "This job is no longer accepting applications"
-    );
+    throw new AppError(StatusCodes.BAD_REQUEST, "This job is no longer accepting applications");
   }
 
-  // Check if candidate has already applied (including soft-deleted applications)
-  const existingApplication = await JobApply.findOne({
-    jobId,
-    candidateId,
-  });
-
-  // If there's an active application, throw error
+  // Includes soft-deleted (withdrawn) applications, which are reactivated below.
+  const existingApplication = await JobApply.findOne({ jobId, candidateId });
   if (existingApplication && !existingApplication.isDeleted) {
-    throw new AppError(
-      StatusCodes.CONFLICT,
-      "You have already applied to this job"
-    );
+    throw new AppError(StatusCodes.CONFLICT, "You have already applied to this job");
   }
 
-  // Get candidate details
   const candidate = await User.findById(candidateId).lean();
-  if (!candidate) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Candidate not found");
-  }
+  if (!candidate) throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  await assertCanApply(candidate, job);
 
-  if (candidate.userType !== "candidate") {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      "Only candidates can apply to jobs"
-    );
-  }
-
-  // Get candidate's complete profile
-  const candidateModel = getCandidateModel(candidate.role as CandidateRole);
-  const candidateProfile = await candidateModel
-    .findById(candidate.profileId)
-    .lean();
-
-  if (!candidateProfile) {
-    throw new AppError(
-      StatusCodes.NOT_FOUND,
-      "Candidate profile not found. Please complete your profile before applying."
-    );
-  }
-
-  // Build enriched candidate data for AI matching
-  const enrichedCandidateData: Record<string, any> = {
-    ...candidateProfile,
-    role: candidate.role,
-  };
-
-  // Determine if this is a player role
-  const playerRoles = [
-    CandidateRole.PROFESSIONAL_PLAYER,
-    CandidateRole.AMATEUR_PLAYER,
-    CandidateRole.HIGH_SCHOOL,
-    CandidateRole.COLLEGE_UNIVERSITY,
-  ];
-  const isPlayerRole = playerRoles.includes(candidate.role as CandidateRole);
-
-  // For non-player roles (office staff and on-field staff), fetch supplementary data
-  if (!isPlayerRole) {
-    const [experiences, educations, certifications] = await Promise.all([
-      CandidateExperience.find({ userId: candidateId }).lean(),
-      CandidateEducation.find({ userId: candidateId }).lean(),
-      CandidateLicenseAndCertification.find({ userId: candidateId }).lean(),
-    ]);
-
-    // Add experience data if available
-    if (experiences && experiences.length > 0) {
-      enrichedCandidateData.experiences = experiences;
-      // Calculate total years of experience
-      const totalYears = calculateYearsOfExperience(experiences);
-      enrichedCandidateData.totalYearsOfExperience = totalYears;
-    }
-
-    // Add education data if available
-    if (educations && educations.length > 0) {
-      enrichedCandidateData.educations = educations;
-    }
-
-    // Add certifications data if available
-    if (certifications && certifications.length > 0) {
-      enrichedCandidateData.certifications = certifications;
-    }
-  }
-  // For player roles, only use profile data (no experience, education, certifications)
-
-  // Job match v2 runs in the background (resume + interview assessment);
-  // otherwise the original synchronous match is used.
-  const matchInBackground = isJobMatchV2Enabled();
-  const aiMatchPercentage = matchInBackground
-    ? undefined
-    : await calculateJobMatchScore(job, enrichedCandidateData, candidate.role as string);
-
-  // Check if job has a required AI score threshold
-  //TODO: Temporarily disable AI score threshold check
-  // if (job.requiredAiScore && aiMatchPercentage < job.requiredAiScore) {
-  //   throw new AppError(
-  //     StatusCodes.FORBIDDEN,
-  //     `Your profile match score (${aiMatchPercentage}%) is below the required threshold (${job.requiredAiScore}%) for this job. Please improve your profile or apply to jobs that better match your qualifications.`
-  //   );
-  // }
-
+  const matchInBackground = aiConfig.evalEnabled;
   let application;
-
-  // If there's a previously withdrawn application, reactivate it
-  if (existingApplication && existingApplication.isDeleted) {
+  if (existingApplication) {
     application = await JobApply.findByIdAndUpdate(
       existingApplication._id,
       {
-        $set: { appliedAt: new Date(), resumeUrl, isDeleted: false, ...(aiMatchPercentage !== undefined && { aiMatchPercentage }) },
-        ...(matchInBackground && { $unset: { aiMatchPercentage: 1, aiMatchDetails: 1, aiMatchStatus: 1 } }),
+        $set: { appliedAt: new Date(), resumeUrl, isDeleted: false },
+        $unset: { matchScore: 1, matchDetails: 1, matchStatus: 1, matchError: 1 },
       },
       { new: true }
     );
   } else {
-    // Create new application
-    application = await JobApply.create({
-      jobId,
-      candidateId,
-      appliedAt: new Date(),
-      aiMatchPercentage,
-      resumeUrl,
-      isDeleted: false,
-    });
+    application = await JobApply.create({ jobId, candidateId, appliedAt: new Date(), resumeUrl, isDeleted: false });
   }
 
-  // Increment job application count
   await Job.updateOne({ _id: jobId }, { $inc: { applicationCount: 1 } });
 
   if (matchInBackground) {
     await JobMatchService.queueMatch(application!._id.toString()).catch(() => undefined);
     application = await JobApply.findById(application!._id);
   }
-
   return application!.toObject();
 };
 
 /**
  * Get all applications for a specific job
- * OPTIMIZED: Uses compound index { jobId: 1, isDeleted: 1, aiMatchPercentage: -1 }
+ * OPTIMIZED: Uses compound index { jobId: 1, isDeleted: 1, matchScore: -1 }
  * Returns applicant name, AI score, and resume download link
  */
 const getApplicationsByJob = async (
@@ -265,7 +130,7 @@ const getApplicationsByJob = async (
   const skip = (page - 1) * limit;
 
   // Sorting (default: highest AI match first)
-  let sortBy: any = { aiMatchPercentage: -1 };
+  let sortBy: any = { matchScore: -1 };
   if (query.sortBy) {
     if (query.sortBy.startsWith("-")) {
       sortBy = { [query.sortBy.substring(1)]: -1 };
@@ -299,16 +164,16 @@ const getApplicationsByJob = async (
     applicantProfileImage: app.candidateId.profileImage,
     candidateId: app.candidateId._id,
     candidateRole: app.candidateId.role,
-    aiMatchPercentage: app.aiMatchPercentage ?? null,
-    aiMatchStatus: app.aiMatchStatus ?? (app.aiMatchPercentage !== undefined ? "completed" : null),
-    aiMatchReasons: app.aiMatchDetails
+    matchScore: app.matchScore ?? null,
+    matchStatus: app.matchStatus ?? (app.matchScore !== undefined ? "completed" : null),
+    matchReasons: app.matchDetails
       ? {
-          metRequirements: app.aiMatchDetails.metRequirements,
-          missingRequirements: app.aiMatchDetails.missingRequirements,
-          summary: app.aiMatchDetails.summary,
-          confidence: app.aiMatchDetails.confidence,
-          usedResume: app.aiMatchDetails.usedResume,
-          usedInterview: app.aiMatchDetails.usedInterview,
+          metRequirements: app.matchDetails.metRequirements,
+          missingRequirements: app.matchDetails.missingRequirements,
+          summary: app.matchDetails.summary,
+          confidence: app.matchDetails.confidence,
+          usedResume: app.matchDetails.usedResume,
+          usedInterview: app.matchDetails.usedInterview,
         }
       : null,
     resumeUrl: app.resumeUrl || null,

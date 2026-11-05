@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import { TProfileVideo } from "../../video/video.constant";
+import { profileVideoSchema } from "../../video/video.schema";
 import { countryList } from "../../../shared/constant/country.constant";
 
 enum TNationalTeamCategory {
@@ -11,7 +13,7 @@ enum TNationalTeamCategory {
   U20 = "U20",
   U21 = "U21",
 }
-enum TPosition {
+enum PlayerPosition {
   GK = "GK",
   CENTRAL_BACK = "Central back",
   LEFT_BACK = "Left back",
@@ -40,7 +42,7 @@ export type TProfessionalPlayerCan = {
   nationalTeamCategory?: TNationalTeamCategory;
   currentClub: string;
   division: string;
-  position: TPosition;
+  position: PlayerPosition;
   agent?: string;
   country: (typeof countryList)[number];
   availability: string;
@@ -50,12 +52,7 @@ export type TProfessionalPlayerCan = {
   foot: TFoot;
   teamsJoined: string;
   contractExpires: string;
-  videos: {
-    url: string;
-    duration: number; // in seconds
-    title: string;
-    uploadedAt?: Date;
-  }[];
+  videos: TProfileVideo[];
 };
 
 const professionalPlayerCanSchema = new Schema<TProfessionalPlayerCan>(
@@ -78,7 +75,7 @@ const professionalPlayerCanSchema = new Schema<TProfessionalPlayerCan>(
         division: { type: String, required: true, trim: true },
         position: {
             type: String,
-            enum: Object.values(TPosition),
+            enum: Object.values(PlayerPosition),
             required: true,
         },
         agent: { type: String, required: false, trim: true },
@@ -104,14 +101,7 @@ const professionalPlayerCanSchema = new Schema<TProfessionalPlayerCan>(
         },
         teamsJoined: { type: String, required: true, trim: true },
         contractExpires: { type: String, required: true, trim: true },
-        videos: [
-            {
-                url: { type: String, required: true, trim: true },
-                duration: { type: Number, required: true }, // in seconds
-                title: { type: String, required: true, trim: true },
-                uploadedAt: { type: Date, default: Date.now },
-            },
-        ],
+        videos: { type: [profileVideoSchema], default: [] },
     },
     {
         timestamps: true,

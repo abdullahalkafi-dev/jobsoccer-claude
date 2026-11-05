@@ -1,58 +1,60 @@
 import crypto from "crypto";
-import fs from "fs";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
 import AppError from "../../errors/AppError";
 import { aiConfig } from "../../shared/ai/ai.config";
 import { UsageRecord } from "../../shared/ai/client/openaiClient";
+import { saveCaptions } from "../../shared/ai/captions/captions";
 import { EvaluationError, evaluateTranscript } from "../../shared/ai/evaluation/evaluator";
 import { EvaluationReport } from "../../shared/ai/evaluation/evaluation.types";
 import { buildReport, computeTotals } from "../../shared/ai/evaluation/guardrails";
-import { enqueueAiJob } from "../../shared/ai/queue/aiQueue";
+import { checkRecordingSetup, TSetupCheck } from "../../shared/ai/frameCheck/frameCheck";
+import { enqueueJob } from "../../shared/ai/queue/aiQueue";
 import { getRubric, listRubrics, resolveRubric } from "../../shared/ai/rubric/rubric.registry";
 import { Rubric } from "../../shared/ai/rubric/rubric.schema";
-import { transcribeVideoFile } from "../../shared/ai/transcription/transcriber";
-import { VideoType } from "../../shared/constant/video.constant";
 import { logger } from "../../shared/logger/logger";
 import redisOperations from "../../shared/redis/redisClient";
 import { getLocalCopy } from "../../shared/storage";
-import { getCandidateModel } from "../../shared/util/getCandidateModel";
+import { emitToUser } from "../../socket/emitToUser";
 import { FriendList } from "../friendlist/friendlist.model";
 import { NotificationService } from "../notification/notification.service";
+import { getProfileEntry } from "../profile/profile.registry";
 import { CandidateRole, UserType } from "../user/user.interface";
 import { User } from "../user/user.model";
+import { VideoKind } from "../video/video.constant";
+import { VideoService } from "../video/video.service";
 import { TAiEvaluation } from "./aiEvaluation.interface";
-import { AiEvaluation, AiTranscript } from "./aiEvaluation.model";
+import { AiEvaluation } from "./aiEvaluation.model";
+import { transcribeCached } from "./transcriptCache";
 
 type Viewer = { id: string; userType: string };
 
-/** True when this candidate is scored with a client scoring guide (new pipeline). */
-export const usesRubricScoring = (role: string, position?: string | null): boolean =>
-  aiConfig.evalEnabled &&
-  (role === CandidateRole.ON_FIELD_STAFF || role === CandidateRole.OFFICE_STAFF) &&
-  !!position &&
-  !!resolveRubric({ role, position });
+const isStaffRole = (role: string): boolean => role === CandidateRole.ON_FIELD_STAFF || role === CandidateRole.OFFICE_STAFF;
 
-// The interview video holds the answers; other videos may add to them.
-const videoOrder = (type?: string) => (type === VideoType.PRE_RECORDED_INTERVIEW ? 0 : 1);
+/** Tell the candidate's open tabs how far the assessment is (queued, transcribing, scoring, done). */
+const announce = (userId: string, evaluationId: string, status: string): void =>
+  emitToUser(userId, "assessment:status", { evaluationId, status });
 
 /**
- * Create a queued evaluation for the candidate's current videos and hand it to
- * the background worker. Returns null when the position has no scoring guide.
+ * Create a queued evaluation for the candidate's INTERVIEW video and hand it to
+ * the background worker. Only the interview is scored (client decision); the
+ * methodology video is for employers to watch. Returns null when the candidate
+ * has no interview video or no scoring guide.
  */
 const requestEvaluation = async (userId: string, trigger: string): Promise<TAiEvaluation | null> => {
   const user = await User.findById(userId).lean();
-  if (!user || user.userType !== UserType.CANDIDATE || !user.profileId) return null;
-  const profile = await getCandidateModel(user.role).findById(user.profileId).lean();
+  if (!user || user.userType !== UserType.CANDIDATE || !user.profileId || !isStaffRole(user.role as string)) return null;
+  const entry = getProfileEntry(user.userType, user.role);
+  const profile: any = entry ? await entry.model.findById(user.profileId).lean() : null;
   if (!profile) return null;
 
   const rubric = resolveRubric({ role: user.role as string, position: profile.position });
   if (!aiConfig.evalEnabled || !rubric) return null;
 
-  const videos = [...(profile.videos ?? [])]
-    .filter((v: any) => v?.url)
-    .sort((a: any, b: any) => videoOrder(a.videoType) - videoOrder(b.videoType))
-    .map((v: any) => ({ url: v.url, videoType: v.videoType }));
+  const videos = (profile.videos ?? [])
+    .filter((v: any) => v?.url && v.kind === VideoKind.INTERVIEW)
+    .map((v: any) => ({ url: v.url, kind: v.kind, videoId: String(v._id) }));
+  if (videos.length === 0) return null;
 
   const evaluation = await AiEvaluation.create({
     candidateUserId: user._id,
@@ -68,12 +70,13 @@ const requestEvaluation = async (userId: string, trigger: string): Promise<TAiEv
     videos,
     queuedAt: new Date(),
   });
-  await enqueueAiJob("evaluate-interview", { id: evaluation._id.toString() });
+  await enqueueJob("interview", { id: evaluation._id.toString() }, { jobId: `evaluate-${evaluation._id}` });
+  announce(userId, evaluation._id.toString(), "queued");
   logger.info(`AI evaluation ${evaluation._id} queued for user ${userId} (${rubric.rubricId}, ${trigger})`);
   return evaluation.toObject();
 };
 
-/** Same as requestEvaluation but never throws: profile changes must not fail because of AI. */
+/** Same as requestEvaluation but never throws: uploads must not fail because of AI. */
 const requestEvaluationSafely = async (userId: string, trigger: string): Promise<void> => {
   try {
     await requestEvaluation(userId, trigger);
@@ -82,37 +85,10 @@ const requestEvaluationSafely = async (userId: string, trigger: string): Promise
   }
 };
 
-const sha256File = (filePath: string): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const hash = crypto.createHash("sha256");
-    fs.createReadStream(filePath)
-      .on("data", (chunk) => hash.update(chunk))
-      .on("end", () => resolve(hash.digest("hex")))
-      .on("error", reject);
-  });
-
-/** Transcript for one stored video, from the cache when the same file was seen before. */
-const transcribeStoredVideo = async (url: string, usage: UsageRecord[]) => {
-  const copy = await getLocalCopy(url);
-  try {
-    const sha256 = await sha256File(copy.path);
-    const cacheKey = { sha256, model: aiConfig.models.transcribe, language: aiConfig.transcriptionLanguage };
-    const cached = await AiTranscript.findOne(cacheKey).lean();
-    if (cached) return { sha256, text: cached.text, durationSeconds: cached.durationSeconds ?? null };
-
-    const result = await transcribeVideoFile(copy.path);
-    usage.push(result.usage);
-    await AiTranscript.updateOne(cacheKey, { $set: { text: result.text || " ", durationSeconds: result.durationSeconds } }, { upsert: true });
-    return { sha256, text: result.text, durationSeconds: result.durationSeconds };
-  } finally {
-    copy.release();
-  }
-};
-
 const totalCost = (usage: UsageRecord[]) =>
   Math.round(usage.reduce((n, u) => n + (u.estimatedCostUsd ?? 0), 0) * 1_000_000) / 1_000_000;
 
-/** Store the finished report and keep the old 0-100 score in sync for cards and filters. */
+/** Store the finished report and keep the 0-100 interview score on the user for cards and search. */
 const completeEvaluation = async (evaluation: any, report: EvaluationReport) => {
   evaluation.status = "completed";
   evaluation.report = report;
@@ -125,49 +101,78 @@ const completeEvaluation = async (evaluation: any, report: EvaluationReport) => 
     { $set: { isLatest: false } }
   );
 
-  await getCandidateModel(evaluation.role).updateOne({ _id: evaluation.profileId }, { AiVideoVideoScore: report.legacyScore100 });
-  await User.updateOne({ _id: evaluation.candidateUserId }, { AiVideoVideoScore: report.legacyScore100 });
+  await User.updateOne({ _id: evaluation.candidateUserId }, { interviewScore: report.legacyScore100 });
   await redisOperations.del(`user:${evaluation.candidateUserId}:me`).catch(() => undefined);
 
+  const userId = evaluation.candidateUserId.toString();
+  announce(userId, evaluation._id.toString(), "completed");
   await NotificationService.sendNotificationToUser(
-    evaluation.candidateUserId.toString(),
+    userId,
     "Interview assessment ready",
     `Your ${report.displayName} interview assessment is ready on your profile.`
   ).catch((error: any) => logger.warn("Could not send AI notification", { error: error.message }));
 };
 
-/** Worker step: transcribe, evaluate, check, store. Throws so the queue can retry. */
+/**
+ * Worker step: transcribe the interview (any language -> English), write the
+ * English captions, then score it with the client's guide while the recording
+ * setup is checked in parallel. Throws so the queue can retry.
+ */
 const processEvaluation = async (evaluationId: string, isFinalAttempt = true): Promise<void> => {
   const evaluation = await AiEvaluation.findById(evaluationId);
   if (!evaluation || evaluation.status === "completed") return;
   const rubric = getRubric(evaluation.rubricId);
   if (!rubric) throw new Error(`Unknown rubric ${evaluation.rubricId}`);
+  const userId = evaluation.candidateUserId.toString();
 
   const usage: UsageRecord[] = [];
+  const copies: { release: () => void }[] = [];
   try {
     evaluation.status = "transcribing";
     evaluation.attempts += 1;
     evaluation.startedAt = new Date();
     evaluation.error = undefined;
     await evaluation.save();
+    announce(userId, evaluationId, "transcribing");
 
     const parts: string[] = [];
+    const setupTasks: Promise<{ check: TSetupCheck; usage: UsageRecord } | null>[] = [];
     for (const video of evaluation.videos) {
-      const t = await transcribeStoredVideo(video.url, usage);
-      video.sha256 = t.sha256;
-      video.durationSeconds = t.durationSeconds;
-      video.transcriptChars = t.text.trim().length;
-      if (t.text.trim()) parts.push(`[Video: ${video.videoType ?? "video"}]\n${t.text.trim()}`);
+      const copy = await getLocalCopy(video.url);
+      copies.push(copy);
+      const transcript = await transcribeCached(copy.path);
+      usage.push(...transcript.usage);
+      video.sha256 = transcript.sha256;
+      video.durationSeconds = transcript.durationSeconds;
+      video.transcriptChars = transcript.text.trim().length;
+      evaluation.detectedLanguage = transcript.detectedLanguage;
+      if (transcript.text.trim()) parts.push(transcript.text.trim());
+
+      // English captions for the video player (best effort: never blocks the score).
+      if (video.videoId) {
+        saveCaptions(transcript.sha256, transcript.segments)
+          .then((url) => (url ? VideoService.setCaptions(userId, video.videoId!, url) : undefined))
+          .catch((error: any) => logger.warn("Could not write captions", { error: error.message }));
+      }
+      // Recording-setup check starts now and runs while the answers are scored.
+      if (transcript.text.trim() && (transcript.durationSeconds ?? 0) > 0) {
+        setupTasks.push(
+          checkRecordingSetup(copy.path, transcript.durationSeconds!, transcript.text).catch((error: any) => {
+            logger.warn("Recording setup check failed (non-blocking)", { error: error.message });
+            return null;
+          })
+        );
+      }
     }
-    const transcript = parts.join("\n\n");
-    evaluation.transcript = transcript;
+    const transcriptText = parts.join("\n\n");
+    evaluation.transcript = transcriptText;
     evaluation.idempotencyKey = crypto
       .createHash("sha256")
       .update([...evaluation.videos.map((v) => v.sha256), rubric.rubricId, rubric.version, aiConfig.promptVersion, aiConfig.models.eval].join("|"))
       .digest("hex");
     evaluation.markModified("videos");
 
-    // Same videos, guide, prompt and model already evaluated: reuse instead of paying again.
+    // Same video, guide, prompt and model already evaluated: reuse instead of paying again.
     const previous = await AiEvaluation.findOne({
       idempotencyKey: evaluation.idempotencyKey,
       status: "completed",
@@ -178,6 +183,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       evaluation.aiModel = previous.aiModel;
       evaluation.promptVersion = previous.promptVersion;
       evaluation.rawModelOutput = previous.rawModelOutput;
+      evaluation.setupCheck = previous.setupCheck;
       evaluation.usage = usage;
       evaluation.costUsd = totalCost(usage);
       await completeEvaluation(evaluation, previous.report);
@@ -185,32 +191,57 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     }
 
     let report: EvaluationReport;
-    if (!transcript.trim()) {
-      // No speech at all: report "not answered" with low confidence instead of a low score.
+    if (!transcriptText.trim()) {
+      // No speech at all: report "not answered" with low confidence instead of a low score,
+      // and free the candidate to upload again at once (client decision).
       report = buildReport(
         rubric,
         {
           questions: [],
           strongestAreas: [],
           mainWeaknesses: [],
-          summary: "No speech could be found in the interview videos, so the answers could not be assessed.",
+          summary: "No speech could be found in the interview video, so the answers could not be assessed.",
           overallConfidence: "low",
           audioOrTranscriptProblem: true,
           instructionAttempt: false,
         },
-        transcript
+        transcriptText
       );
       evaluation.aiModel = "none";
+      await VideoService.releaseLock(userId, VideoKind.INTERVIEW).catch((error: any) =>
+        logger.warn("Could not release the video lock", { error: error.message })
+      );
+      await NotificationService.sendNotificationToUser(
+        userId,
+        "We could not hear your interview",
+        "No speech was found in your interview video. Please upload it again with your microphone close to you."
+      ).catch(() => undefined);
     } else {
       evaluation.status = "evaluating";
       await evaluation.save();
-      const result = await evaluateTranscript(rubric, transcript);
+      announce(userId, evaluationId, "evaluating");
+      const result = await evaluateTranscript(rubric, transcriptText);
       usage.push(...result.usage);
-      report = buildReport(rubric, result.output, transcript);
+      report = buildReport(rubric, result.output, transcriptText);
       evaluation.aiModel = result.model;
       evaluation.promptVersion = result.promptVersion;
       evaluation.rawModelOutput = result.rawOutput;
     }
+
+    // Setup problems only flag the video for an admin; the score is never changed by them.
+    const setup = (await Promise.all(setupTasks)).find((result) => result !== null) ?? null;
+    if (setup) {
+      usage.push(setup.usage);
+      evaluation.setupCheck = setup.check;
+      if (setup.check.flags.length) {
+        report = {
+          ...report,
+          needsHumanReview: true,
+          reviewReasons: [...report.reviewReasons, ...setup.check.flags.map((flag) => `recording setup: ${flag}`)],
+        };
+      }
+    }
+
     evaluation.usage = usage;
     evaluation.costUsd = totalCost(usage);
     await completeEvaluation(evaluation, report);
@@ -223,7 +254,31 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     evaluation.status = isFinalAttempt ? "failed" : "queued";
     evaluation.finishedAt = isFinalAttempt ? new Date() : undefined;
     await evaluation.save();
+    announce(userId, evaluationId, isFinalAttempt ? "failed" : "queued");
     throw error;
+  } finally {
+    copies.forEach((copy) => copy.release());
+  }
+};
+
+/**
+ * Worker step for videos that are not scored (methodology): transcribe and
+ * write the English captions, so every video can be watched with subtitles.
+ */
+const processCaptions = async (videoId: string, userId: string): Promise<void> => {
+  const user = await User.findById(userId).lean();
+  const entry = user ? getProfileEntry(user.userType, user.role) : null;
+  const profile: any = entry && user?.profileId ? await entry.model.findById(user.profileId).lean() : null;
+  const video = profile?.videos?.find((v: any) => String(v._id) === videoId);
+  if (!video) return;
+
+  const copy = await getLocalCopy(video.url);
+  try {
+    const transcript = await transcribeCached(copy.path);
+    const captionsUrl = await saveCaptions(transcript.sha256, transcript.segments);
+    if (captionsUrl) await VideoService.setCaptions(userId, videoId, captionsUrl);
+  } finally {
+    copy.release();
   }
 };
 
@@ -232,7 +287,7 @@ const requeuePending = async (): Promise<number> => {
   const pending = await AiEvaluation.find({ status: { $in: ["queued", "transcribing", "evaluating"] } })
     .select("_id")
     .lean();
-  for (const p of pending) await enqueueAiJob("evaluate-interview", { id: p._id.toString() });
+  for (const p of pending) await enqueueJob("interview", { id: p._id.toString() }, { jobId: `evaluate-${p._id}` });
   return pending.length;
 };
 
@@ -352,8 +407,7 @@ const addCorrection = async (
 
   const reviewed = applyCorrections(getRubric(doc.rubricId), doc);
   if (reviewed && doc.isLatest) {
-    await getCandidateModel(doc.role).updateOne({ _id: doc.profileId }, { AiVideoVideoScore: reviewed.legacyScore100 });
-    await User.updateOne({ _id: doc.candidateUserId }, { AiVideoVideoScore: reviewed.legacyScore100 });
+    await User.updateOne({ _id: doc.candidateUserId }, { interviewScore: reviewed.legacyScore100 });
   }
   return toAdminView(doc.toObject());
 };
@@ -418,6 +472,7 @@ export const AiEvaluationService = {
   requestEvaluation,
   requestEvaluationSafely,
   processEvaluation,
+  processCaptions,
   requeuePending,
   canViewCandidate,
   getLatestForCandidate,

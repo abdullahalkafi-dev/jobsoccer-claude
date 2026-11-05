@@ -31,7 +31,7 @@ const arg = (name: string): string | undefined => {
 };
 const has = (name: string) => process.argv.includes(name);
 
-const VIDEO_LIMIT_SECONDS = 360; // client-side cap of the Head Coach forms
+const VIDEO_LIMIT_SECONDS = 6 * 60 + 30; // client: interview video up to 6:30
 
 const main = async () => {
   const roleKey = arg("--role") ?? "head_coach";
@@ -42,7 +42,7 @@ const main = async () => {
   const dbName = await connectDevDatabase();
   console.log(`API:       ${E2E.apiBase}`);
   console.log(`Database:  ${dbName}`);
-  console.log(`Models:    transcribe=${aiConfig.models.transcribe} (cache key), language=${aiConfig.transcriptionLanguage}`);
+  console.log(`Models:    transcribe=${aiConfig.models.transcribe} (cache key; the language is auto-detected)`);
   console.log(`Role:      ${scenario.position} (${scenario.rubricId})\n`);
 
   const only = arg("--only")?.split(",").map((s) => s.trim());
@@ -75,10 +75,16 @@ const main = async () => {
     const increasing = values.every((v, i) => i === 0 || v > values[i - 1]);
     check(cross, "X1", "Better candidates score higher (bad < weak < good < best)", increasing, order.map((k, i) => `${k} ${values[i]}`).join(" < "));
   }
-  const bad = runs.find((r) => r.persona === "bad")?.profileScore;
-  const best = runs.find((r) => r.persona === "best")?.profileScore;
-  if (bad != null && best != null) {
-    check(cross, "X2", "AI profile score separates a thin profile from a full one (gap >= 10 points)", best - bad >= 10, `bad ${bad}, best ${best} (all: ${runs.map((r) => `${r.persona} ${r.profileScore}`).join(", ")})`);
+  // Profile Quality is about the profile, not the interview: identical profile data must give (almost) the same score
+  const quality = runs.map((r) => r.profileScore).filter((v): v is number => v != null);
+  if (quality.length >= 2) {
+    check(
+      cross,
+      "X2",
+      "Profile Quality does not depend on the interview score (same profile = same score, spread <= 5)",
+      Math.max(...quality) - Math.min(...quality) <= 5,
+      runs.map((r) => `${r.persona} ${r.profileScore}`).join(", ")
+    );
   }
   for (const r of runs) {
     check(cross, `T-${r.persona}`, `Interview answers fit the ${VIDEO_LIMIT_SECONDS}s video limit (estimated speaking time)`, r.estimatedSpokenSeconds <= VIDEO_LIMIT_SECONDS, `${r.transcriptWords} words = about ${r.estimatedSpokenSeconds}s`);

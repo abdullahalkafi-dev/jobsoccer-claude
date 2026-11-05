@@ -1,7 +1,9 @@
 import { model, Schema } from "mongoose";
+import { TProfileVideo } from "../../video/video.constant";
+import { profileVideoSchema } from "../../video/video.schema";
 import { countryList } from "../../../shared/constant/country.constant";
 
-enum TPosition {
+enum PlayerPosition {
   GK = "GK",
   CENTRAL_BACK = "Central back",
   LEFT_BACK = "Left back",
@@ -29,7 +31,7 @@ export type THighSchoolCan = {
   height: { size: number; unit: string };
   currentClub: string;
   category?: string;
-  position: TPosition; 
+  position: PlayerPosition; 
   agent?: string;
   satOrAct?: string;
   availability: string;
@@ -40,12 +42,7 @@ export type THighSchoolCan = {
   schoolName: string;
   gpa: string;
   country: (typeof countryList)[number];
-  videos: {
-    url: string;
-    duration: number; // in seconds
-    title: string;
-    uploadedAt?: Date;
-  }[];
+  videos: TProfileVideo[];
 };
 
 const highSchoolCanSchema = new Schema<THighSchoolCan>(
@@ -63,7 +60,7 @@ const highSchoolCanSchema = new Schema<THighSchoolCan>(
     category: { type: String, required: false, trim: true },
     position: {
       type: String,
-      enum: Object.values(TPosition),
+      enum: Object.values(PlayerPosition),
       required: true,
     },
     agent: { type: String, required: false, trim: true },
@@ -90,14 +87,7 @@ const highSchoolCanSchema = new Schema<THighSchoolCan>(
       enum: countryList,
       required: true,
     },
-    videos: [
-      {
-        url: { type: String, required: true, trim: true },
-        duration: { type: Number, required: true }, // in seconds
-        title: { type: String, required: true, trim: true },
-        uploadedAt: { type: Date, default: Date.now },
-      },
-    ],
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,

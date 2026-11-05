@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CandidateRole } from "../../../modules/user/user.interface";
-import { TPosition } from "../../constant/video.constant";
+import { OnFieldStaffPosition } from "../../constant/position.constant";
 import { bandFor, getRubric, listRubrics, loadRubrics, resolveRubric } from "./rubric.registry";
 
 // Sample totals stated in each client document (section 5).
@@ -77,7 +77,7 @@ describe("rubric registry", () => {
   });
 
   it("every on-field position resolves to a rubric", () => {
-    for (const position of Object.values(TPosition)) {
+    for (const position of Object.values(OnFieldStaffPosition)) {
       expect(resolveRubric({ role: CandidateRole.ON_FIELD_STAFF, position })).not.toBeNull();
     }
   });

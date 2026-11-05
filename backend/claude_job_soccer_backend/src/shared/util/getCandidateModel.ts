@@ -12,7 +12,6 @@ import AppError from "../../errors/AppError";
  * Get candidate model based on role
  */
 export const getCandidateModel = (role: any): any => {
-  console.log("candidate role --------------->", role);
   switch (role) {
     case CandidateRole.PROFESSIONAL_PLAYER:
       return ProfessionalPlayerCan;

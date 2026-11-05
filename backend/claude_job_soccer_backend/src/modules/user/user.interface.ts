@@ -1,4 +1,5 @@
 import { Model, Types } from "mongoose";
+import { TProfileQuality } from "../profileQuality/profileQuality.interface";
 
 export enum UserType {
   CANDIDATE = "candidate",
@@ -22,6 +23,14 @@ export enum EmployerRole {
   COLLEGE_UNIVERSITY = "College/University",
   AGENT = "Agent",
 }
+
+/** Consent given before uploading videos (stored with the date and the text version). */
+export type TVideoConsent = {
+  aiAt?: Date;
+  playersAt?: Date;
+  version?: string;
+};
+
 export type TBaseUser = {
   firstName: string;
   lastName: string;
@@ -29,8 +38,11 @@ export type TBaseUser = {
   role: CandidateRole | EmployerRole;
   profileImage?: string;
   bannerImage?: string;
-  aiProfileScore?: number;
-  AiVideoVideoScore?: number;
+  /** Candidates only: Profile Quality Score with its breakdown. */
+  profileQuality?: TProfileQuality;
+  /** Candidates only: latest interview assessment, 0-100 (copy of the AiEvaluation result for cards and search). */
+  interviewScore?: number | null;
+  videoConsent?: TVideoConsent;
   profileId: string;
   userType: UserType;
   isVerified: boolean;

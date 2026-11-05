@@ -1,6 +1,8 @@
 import { model, Schema } from "mongoose";
+import { TProfileVideo } from "../../video/video.constant";
+import { profileVideoSchema } from "../../video/video.schema";
 import { countryList } from "../../../shared/constant/country.constant";
-import { TPosition } from "../../../shared/constant/video.constant";
+import { OnFieldStaffPosition } from "../../../shared/constant/position.constant";
 
 
 
@@ -17,16 +19,8 @@ export type TOnFieldStaffCan = {
   country: (typeof countryList)[number];
   socialMedia: string;
   agent?: string;
-  position: TPosition;
-  videos: {
-    videoType: string; // From VideoType enum
-    url: string;
-    duration: number; // in seconds
-    title?: string;
-    description?: string;
-    uploadedAt?: Date;
-  }[];
-  AiVideoVideoScore?: number;
+  position: OnFieldStaffPosition;
+  videos: TProfileVideo[];
 };
 const onFieldStaffCanSchema = new Schema<TOnFieldStaffCan>(
   {
@@ -48,20 +42,10 @@ const onFieldStaffCanSchema = new Schema<TOnFieldStaffCan>(
      category: { type: String, required: false, trim: true },
     position: {
       type: String,
-      enum: Object.values(TPosition),
+      enum: Object.values(OnFieldStaffPosition),
       required: true,
     },
-    videos: [
-      {
-        videoType: { type: String, required: true, trim: true },
-        url: { type: String, required: true, trim: true },
-        duration: { type: Number, required: true }, // in seconds
-        title: { type: String, trim: true },
-        description: { type: String, trim: true },
-        uploadedAt: { type: Date, default: Date.now },
-      },
-    ],
-    AiVideoVideoScore: { type: Number, default: null },
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,

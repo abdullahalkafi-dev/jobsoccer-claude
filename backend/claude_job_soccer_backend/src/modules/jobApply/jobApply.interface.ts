@@ -5,10 +5,10 @@ export type TJobApply = {
   jobId: Types.ObjectId;
   candidateId: Types.ObjectId;
   appliedAt: Date;
-  aiMatchPercentage?: number;
+  matchScore?: number;
   /** Job match v2 (background). Absent for applications scored the old way. */
-  aiMatchStatus?: "queued" | "processing" | "completed" | "failed";
-  aiMatchDetails?: {
+  matchStatus?: "queued" | "processing" | "completed" | "failed";
+  matchDetails?: {
     score: number;
     metRequirements: string[];
     missingRequirements: string[];
@@ -20,7 +20,7 @@ export type TJobApply = {
     costUsd: number;
     matchedAt: Date;
   };
-  aiMatchError?: string;
+  matchError?: string;
   resumeUrl?: string;
   isDeleted: boolean;
   createdAt?: Date;

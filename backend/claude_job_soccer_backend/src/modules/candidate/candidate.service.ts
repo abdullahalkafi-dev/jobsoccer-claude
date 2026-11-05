@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { qualityFor, toPublicQuality } from "../profileQuality/profileQuality.view";
 import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
 import { CandidateRole } from "../user/user.interface";
@@ -134,7 +135,8 @@ const searchCandidates = async (
         profileImage: user.profileImage,
         userType: user.userType,
         profile,
-        aiProfileScore: user.aiProfileScore ?? null,
+        profileQuality: toPublicQuality(user.profileQuality),
+        interviewScore: user.interviewScore ?? null,
         // Relationship fields (only present when user is authenticated)
         ...(userId && {
           isShortlisted: shortlistMap.get(userId_str) || false,
@@ -291,7 +293,8 @@ const getFeaturedCandidates = async (userId?: string) => {
             profileImage: user.profileImage,
             userType: user.userType,
             profile,
-            aiProfileScore: user.aiProfileScore ?? null,
+            profileQuality: toPublicQuality(user.profileQuality),
+        interviewScore: user.interviewScore ?? null,
             // Relationship fields (only present when user is authenticated)
             ...(userId && {
               isShortlisted: shortlistMap.get(userId_str) || false,
@@ -390,13 +393,6 @@ const getCandidateById = async (id: string, userId?: string) => {
       };
     }
   }
-    if (
-      user.role === CandidateRole.ON_FIELD_STAFF ||
-      user.role === CandidateRole.OFFICE_STAFF
-    ) {
-      // AiVideoVideoScore is now computed by AI during video upload
-      profile.AiVideoVideoScore = profile.AiVideoVideoScore ?? null;
-    }
 
   return {
     _id: user._id,
@@ -404,7 +400,8 @@ const getCandidateById = async (id: string, userId?: string) => {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
-    aiProfileScore: user?.aiProfileScore ?? 0,
+    profileQuality: qualityFor(user.profileQuality, user._id, userId),
+    interviewScore: user.interviewScore ?? null,
     profileImage: user.profileImage,
     userType: user.userType,
     isVerified: user.isVerified,

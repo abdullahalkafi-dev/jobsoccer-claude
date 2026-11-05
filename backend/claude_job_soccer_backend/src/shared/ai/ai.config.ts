@@ -7,14 +7,15 @@
  * Tiers:
  * - eval: important work (rubric scoring, summaries, review flags)  -> gpt-6.1-sol
  * - fast: cheap helper work (clean-up, pre-checks)                 -> gpt-6-luna
- * - transcribe: speech to text                                     -> whisper-1
+ * - transcribe: speech to text (language auto-detected, English output) -> whisper-1
+ * - vision: recording-setup check on interview frames          -> same as eval by default
  */
 
 import "../../config"; // loads .env before process.env is read
 
 export type ReasoningEffort = "low" | "medium" | "high";
 
-export type AiTask = "eval" | "fast";
+export type AiTask = "eval" | "fast" | "vision";
 
 export interface ModelCapabilities {
   /** Reasoning models reject `temperature`; only send it when supported. */
@@ -45,11 +46,11 @@ export const aiConfig = {
     eval: process.env.OPENAI_EVAL_MODEL || "gpt-6.1-sol",
     fast: process.env.OPENAI_FAST_MODEL || "gpt-6-luna",
     transcribe: process.env.OPENAI_TRANSCRIBE_MODEL || "whisper-1",
+    vision: process.env.OPENAI_VISION_MODEL || process.env.OPENAI_EVAL_MODEL || "gpt-6.1-sol",
   },
 
   reasoningEffort: toEffort(process.env.OPENAI_EVAL_REASONING_EFFORT),
   promptVersion: process.env.AI_PROMPT_VERSION || "v1",
-  transcriptionLanguage: process.env.AI_TRANSCRIBE_LANGUAGE || "en",
 
   client: {
     timeoutMs: toInt(process.env.OPENAI_TIMEOUT_MS, 120_000),
@@ -62,8 +63,15 @@ export const aiConfig = {
     maxTranscribeBytes: 25 * 1024 * 1024,
   },
 
-  worker: {
-    concurrency: toInt(process.env.AI_WORKER_CONCURRENCY, 1),
+  /**
+   * Jobs run at the same time per queue. Interview scoring is the heaviest
+   * (Whisper + the eval model), so it has its own, lower limit.
+   */
+  concurrency: {
+    interview: toInt(process.env.AI_CONCURRENCY_INTERVIEW, 2),
+    captions: toInt(process.env.AI_CONCURRENCY_CAPTIONS, 3),
+    jobMatch: toInt(process.env.AI_CONCURRENCY_JOB_MATCH, 3),
+    profileQuality: toInt(process.env.AI_CONCURRENCY_PROFILE_QUALITY, 4),
   },
 
   /** USD per 1M tokens, used only for cost logging. */

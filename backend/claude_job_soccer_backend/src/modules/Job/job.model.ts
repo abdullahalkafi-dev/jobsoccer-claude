@@ -109,11 +109,11 @@ const jobSchema = new Schema<IJob>(
         lowercase: true, // Normalized for searching
       },
     ],
-    requiredAiScore: {
-      type: Number,
-      min: 0,
-      max: 100,
-      index: true, // For filtering by AI score
+    // Premium opportunity: marked by an admin; only candidates with a Profile Quality Score of 90+ may apply.
+    isPremium: {
+      type: Boolean,
+      default: false,
+      index: true,
     },
     applicationCount: {
       type: Number,

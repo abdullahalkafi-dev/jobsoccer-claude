@@ -351,7 +351,30 @@ const getHomepageJobs = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const listJobsForAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await JobService.listForAdmin(req.query as Record<string, string>);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Jobs retrieved successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const setJobPremium = catchAsync(async (req: Request, res: Response) => {
+  const job = await JobService.setPremium(req.params.id as string, req.body.isPremium);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: req.body.isPremium ? "Job marked as premium" : "Job is no longer premium",
+    data: job,
+  });
+});
+
 export const JobController = {
+  listJobsForAdmin,
+  setJobPremium,
   createJob,
   getAllJobs,
   getActiveJobs,

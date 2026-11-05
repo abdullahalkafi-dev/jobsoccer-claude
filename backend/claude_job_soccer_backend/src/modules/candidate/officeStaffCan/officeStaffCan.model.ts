@@ -1,16 +1,9 @@
 import { model, Schema } from "mongoose";
+import { TProfileVideo } from "../../video/video.constant";
+import { profileVideoSchema } from "../../video/video.schema";
+import { OfficeStaffPosition } from "../../../shared/constant/position.constant";
 import { countryList } from "../../../shared/constant/country.constant";
 
-enum TPosition {
-  ADMINISTRATIVE_DIRECTOR = "Administrative Director",
-  COMMUNITY_MANAGER = "Community Manager",
-  DATA_ANALYST = "Data Analyst",
-  DIGITAL_MARKETING = "Digital Marketing",
-  EVENT_MANAGER = "Event Manager",
-  NUTRITIONIST = "Nutritionist",
-  PR_COMMUNICATIONS_MANAGER = "PR & Communications Manager",
-  TEAM_MANAGER = "Team Manager",
-}
 
 
 export type TOfficeStaffCan = {
@@ -19,21 +12,13 @@ export type TOfficeStaffCan = {
   country: (typeof countryList)[number];
   nationality: string;
   phoneNumber?: string;
-  position: TPosition;
+  position: OfficeStaffPosition;
   availability: string;
   agent?: string;
   socialMedia: string;
   currentClub: string;
   gender: "Male" | "Female" | "Other";
-  videos: {
-    videoType: string; // From VideoType enum
-    url: string;
-    duration: number; // in seconds
-    title?: string;
-    description?: string;
-    uploadedAt?: Date;
-  }[];
-  AiVideoVideoScore?: number;
+  videos: TProfileVideo[];
 };
 const officeStaffSchema = new Schema<TOfficeStaffCan>(
   {
@@ -48,7 +33,7 @@ const officeStaffSchema = new Schema<TOfficeStaffCan>(
     phoneNumber: { type: String, required: false, trim: true },
     position: {
       type: String,
-      enum: Object.values(TPosition),
+      enum: Object.values(OfficeStaffPosition),
       required: true,
     },
     availability: { type: String, required: false, trim: true },
@@ -60,17 +45,7 @@ const officeStaffSchema = new Schema<TOfficeStaffCan>(
       enum: ["Male", "Female", "Other"],
       required: true,
     },
-    videos: [
-      {
-        videoType: { type: String, required: true, trim: true },
-        url: { type: String, required: true, trim: true },
-        duration: { type: Number, required: true }, // in seconds
-        title: { type: String, trim: true },
-        description: { type: String, trim: true },
-        uploadedAt: { type: Date, default: Date.now },
-      },
-    ],
-    AiVideoVideoScore: { type: Number, default: null },
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,

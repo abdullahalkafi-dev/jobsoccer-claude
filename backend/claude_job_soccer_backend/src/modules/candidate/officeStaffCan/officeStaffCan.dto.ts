@@ -36,17 +36,7 @@ const createOfficeStaffCanDto = z.object({
   agent: z.string().trim().min(1, "Agent is required").optional(),
   socialMedia: z.string().trim().min(1, "Social media is required").optional(),
   currentClub: z.string().trim().min(1, "Current club is required"),
-  gender: z.enum(["Male", "Female","Other"]),
-  videos: z.array(
-    z.object({
-      videoType: z.string().min(1, "Video type is required"),
-      url: z.string().min(1, "Video URL is required"),
-      duration: z.number().min(0, "Duration must be non-negative"),
-      title: z.string().optional(),
-      description: z.string().optional(),
-      uploadedAt: z.date().optional(),
-    })
-  ).optional(),
+  gender: z.enum(["Male", "Female","Other"]),
 });
 
 const updateOfficeStaffCanDto = createOfficeStaffCanDto.partial();

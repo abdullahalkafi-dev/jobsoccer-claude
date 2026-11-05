@@ -1,7 +1,10 @@
 import crypto from "crypto";
+import { execFileSync } from "child_process";
+import fs from "fs";
+import os from "os";
+import path from "path";
 import mongoose from "mongoose";
 import config from "../config";
-import { aiConfig } from "../shared/ai/ai.config";
 import { assertSafeEnvironment } from "../shared/safety/envGuard";
 
 /**
@@ -80,17 +83,50 @@ export const call = async (
 
 export const sha256 = (bytes: Buffer): string => crypto.createHash("sha256").update(bytes).digest("hex");
 
-/** A small file that passes the upload filter as an .mp4; unique bytes per call so every file has its own hash. */
-export const fakeVideo = (label: string): Buffer =>
-  Buffer.concat([Buffer.from(`E2E-FAKE-VIDEO|${label}|`), crypto.randomBytes(1024)]);
+/** ffmpeg: the one bundled as a dev dependency when present, otherwise the one on PATH. */
+const ffmpegBinary = (): string => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require("@ffmpeg-installer/ffmpeg").path as string;
+  } catch {
+    return "ffmpeg";
+  }
+};
+
+let baseVideo: Buffer | null = null;
+
+/** One real, valid 720p MP4 (3 s, with a silent audio track), made once with ffmpeg. */
+const buildBaseVideo = (): Buffer => {
+  const out = path.join(os.tmpdir(), `e2e_base_${process.pid}.mp4`);
+  execFileSync(
+    ffmpegBinary(),
+    ["-y", "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=10", "-f", "lavfi", "-i", "anullsrc=r=16000:cl=mono", "-t", "3", "-c:v", "libx264", "-preset", "ultrafast", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", out],
+    { stdio: "ignore" }
+  );
+  const bytes = fs.readFileSync(out);
+  fs.unlinkSync(out);
+  return bytes;
+};
+
+/**
+ * A valid MP4 that passes the real upload checks (format, length, 720p, sound).
+ * A trailing "free" box (ignored by every player) makes the bytes - and so the
+ * SHA-256 used as the transcript cache key - unique per call.
+ */
+export const testVideo = (label: string): Buffer => {
+  baseVideo ??= buildBaseVideo();
+  const payload = Buffer.concat([Buffer.from(`E2E|${label}|`), crypto.randomBytes(256)]);
+  const header = Buffer.alloc(8);
+  header.writeUInt32BE(payload.length + 8, 0);
+  header.write("free", 4, "ascii");
+  return Buffer.concat([baseVideo, header, payload]);
+};
 
 /** Smallest valid PNG (1x1), accepted by the image converter. */
 export const tinyPng = (): Buffer =>
   Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
 
 export const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-export const transcriptKey = () => ({ model: aiConfig.models.transcribe, language: aiConfig.transcriptionLanguage });
 
 export interface Check {
   id: string;

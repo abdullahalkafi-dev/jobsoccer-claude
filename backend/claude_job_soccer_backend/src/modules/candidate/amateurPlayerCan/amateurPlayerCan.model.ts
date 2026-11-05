@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import { TProfileVideo } from "../../video/video.constant";
+import { profileVideoSchema } from "../../video/video.schema";
 import { countryList } from "../../../shared/constant/country.constant";
 
 enum TNationalTeamCategory {
@@ -11,7 +13,7 @@ enum TNationalTeamCategory {
   U20 = "U20",
   U21 = "U21",
 }
-enum TPosition {
+enum PlayerPosition {
   GK = "GK",
   CENTRAL_BACK = "Central back",
   LEFT_BACK = "Left back",
@@ -39,7 +41,7 @@ export type TAmateurPlayerCan = {
   height: { size: number; unit: string };
   currentClub: string;
   nationalTeamCategory?: TNationalTeamCategory;
-  position: TPosition;
+  position: PlayerPosition;
   agent?: string;
   socialMedia: string;
   country: (typeof countryList)[number];
@@ -47,12 +49,7 @@ export type TAmateurPlayerCan = {
   weight: { size: number; unit: string };
   foot: TFoot;
   league: string;
-  videos: {
-    url: string;
-    duration: number; // in seconds
-    title: string;
-    uploadedAt?: Date;
-  }[];
+  videos: TProfileVideo[];
 };
 
 const amateurPlayerCanSchema = new Schema<TAmateurPlayerCan>(
@@ -74,7 +71,7 @@ const amateurPlayerCanSchema = new Schema<TAmateurPlayerCan>(
     currentClub: { type: String, required: true, trim: true },
     position: {
       type: String,
-      enum: Object.values(TPosition),
+      enum: Object.values(PlayerPosition),
       required: true,
     },
     agent: { type: String, required: false, trim: true },
@@ -98,14 +95,7 @@ const amateurPlayerCanSchema = new Schema<TAmateurPlayerCan>(
       required: true,
     },
     league: { type: String, required: true, trim: true },
-    videos: [
-      {
-        url: { type: String, required: true, trim: true },
-        duration: { type: Number, required: true }, // in seconds
-        title: { type: String, required: true, trim: true },
-        uploadedAt: { type: Date, default: Date.now },
-      },
-    ],
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,
