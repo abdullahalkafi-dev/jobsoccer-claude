@@ -33,7 +33,12 @@ import {
 } from "@/schemas/jobValidation";
 import { useCreateJobMutation } from "@/redux/features/job/jobApi";
 import { toast } from "sonner";
-import { countryList, playerPositionOptions } from "@/constants/selectOptions";
+import {
+  countryList,
+  fieldStaffPositionOptions,
+  officeStaffPositionOptions,
+  playerPositionOptions,
+} from "@/constants/selectOptions";
 
 interface CreateJobPostModalProps {
   isOpen: boolean;
@@ -49,6 +54,13 @@ const jobCategories = [
   { value: "On field staff", label: "On-Field Staff" },
   { value: "Office Staff", label: "Office Staff" },
 ];
+
+/** Positions an employer can pick for a job, by the category of candidate it is for. */
+const positionOptionsFor = (category?: string): readonly string[] => {
+  if (category === "On field staff") return fieldStaffPositionOptions;
+  if (category === "Office Staff") return officeStaffPositionOptions;
+  return playerPositionOptions;
+};
 
 const contractTypes = [
   { value: "FullTime", label: "Full Time" },
@@ -265,7 +277,11 @@ export default function CreateJobPostModal({
                         Job Category
                       </FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          // the position list depends on the category
+                          form.setValue("position", "", { shouldValidate: false });
+                        }}
                         value={field.value}
                       >
                         <FormControl className="w-full">
@@ -308,7 +324,7 @@ export default function CreateJobPostModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {playerPositionOptions.map((position) => (
+                          {positionOptionsFor(form.watch("jobCategory")).map((position) => (
                             <SelectItem key={position} value={position}>
                               {position}
                             </SelectItem>

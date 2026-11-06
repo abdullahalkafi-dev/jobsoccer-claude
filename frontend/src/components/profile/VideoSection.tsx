@@ -64,7 +64,7 @@ export default function VideoSection({
                   <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
                     {/* Video Player */}
                     <video
-                      src={videoUrl}
+                      src={`${videoUrl}#t=0.1`}
                       controls
                       controlsList="nodownload"
                       className="w-full h-full object-contain"

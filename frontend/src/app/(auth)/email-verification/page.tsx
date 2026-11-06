@@ -153,7 +153,7 @@ function EmailVerificationPageContent() {
       {/* Right Panel */}
       <div className="flex-1 bg-gray-50 flex items-center justify-center p-2 md:px-5 lg:px-8">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-2xl p-5 sm:p-8 shadow-sm border border-gray-100">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                 Verify Your Email
@@ -161,7 +161,7 @@ function EmailVerificationPageContent() {
             </div>
 
             {/* OTP Input */}
-            <div className="flex gap-3 justify-center mb-6">
+            <div className="flex gap-2 sm:gap-3 justify-center mb-6">
               {otp.map((digit, index) => (
                 <Input
                   key={index}
@@ -174,7 +174,7 @@ function EmailVerificationPageContent() {
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-12 h-12 text-center text-lg font-medium border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                  className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-medium border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500"
                 />
               ))}
             </div>

@@ -108,8 +108,9 @@ export default function CandidateProfilePage() {
     try {
       const response = await createUserProfile(buildProfileForm({ ...formData, professionalInfo: data }));
       if ("error" in response) {
-        const message = (response.error as { data?: { message?: string } })?.data?.message;
-        toast.error(message ?? "Could not save your profile. Please check the details and try again.");
+        const data = (response.error as { data?: { message?: string; errorSources?: { message?: string }[] } })?.data;
+        const detail = data?.errorSources?.[0]?.message ?? data?.message;
+        toast.error(detail ?? "Could not save your profile. Please check the details and try again.");
         return;
       }
       setCurrentStep(3);

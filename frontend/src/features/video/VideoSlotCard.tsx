@@ -113,7 +113,7 @@ export function VideoSlotCard({
               {video ? (
                 <>
                   <video
-                    src={mediaUrl(video.url)}
+                    src={`${mediaUrl(video.url)}#t=0.1`}
                     controls
                     controlsList="nodownload"
                     preload="metadata"
