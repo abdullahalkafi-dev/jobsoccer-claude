@@ -43,7 +43,7 @@ export type TAmateurPlayerProfile = {
   nationalTeamCategory?: TNationalTeamCategory;
   position: PlayerPosition;
   agent?: string;
-  socialMedia: string;
+  socialMedia?: string;
   country: (typeof countryList)[number];
   availability: string;
   weight: { size: number; unit: string };
@@ -88,7 +88,7 @@ const amateurPlayerProfileSchema = new Schema<TAmateurPlayerProfile>(
       size: { type: Number, required: true },
       unit: { type: String, required: true, enum: ["kg", "lb"] },
     },
-    socialMedia: { type: String, required: true, trim: true },
+    socialMedia: { type: String, required: false, trim: true },
     foot: {
       type: String,
       enum: Object.values(TFoot),

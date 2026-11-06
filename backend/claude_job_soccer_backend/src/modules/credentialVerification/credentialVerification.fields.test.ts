@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hideVerificationDetails } from "./credentialVerification.fields";
+import { editUpdate, hideVerificationDetails, needsVerificationReset, withoutServerOwnedFields } from "./credentialVerification.fields";
 
 const record = {
   _id: "r1",
@@ -28,5 +28,37 @@ describe("hideVerificationDetails", () => {
       expect(visible).not.toHaveProperty("verificationNote");
       expect(visible).not.toHaveProperty("verifiedBy");
     }
+  });
+});
+
+describe("withoutServerOwnedFields", () => {
+  it("drops verification and ownership fields a candidate tries to send", () => {
+    const sent = { title: "Head Coach", verificationStatus: "approved", verifiedBy: "me", documentUrl: "x.pdf", userId: "someone-else", profileId: "p", _id: "i" };
+    expect(withoutServerOwnedFields(sent)).toEqual({ title: "Head Coach" });
+  });
+});
+
+describe("verification after an edit", () => {
+  const approved = { club: "FC Test", title: "Coach", verificationStatus: "approved" };
+
+  it("resets an approved record when its content changes", () => {
+    expect(needsVerificationReset(approved, { club: "Other FC" })).toBe(true);
+    const update = editUpdate(approved, { club: "Other FC" });
+    expect(update.$set).toMatchObject({ club: "Other FC", verificationStatus: "none" });
+    expect(update).toHaveProperty("$unset.documentUrl");
+  });
+
+  it("also resets a record that is waiting for review", () => {
+    expect(needsVerificationReset({ ...approved, verificationStatus: "pending" }, { title: "Other" })).toBe(true);
+  });
+
+  it("keeps the approval when the edit changes nothing", () => {
+    expect(needsVerificationReset(approved, { club: "FC Test", title: "Coach" })).toBe(false);
+    expect(editUpdate(approved, { club: "FC Test" })).toEqual({ $set: { club: "FC Test" } });
+  });
+
+  it("does not touch records that were never verified", () => {
+    expect(needsVerificationReset({ ...approved, verificationStatus: "none" }, { club: "Other FC" })).toBe(false);
+    expect(needsVerificationReset({ club: "x" }, { club: "y" })).toBe(false);
   });
 });

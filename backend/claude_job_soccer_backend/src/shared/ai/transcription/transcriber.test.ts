@@ -4,7 +4,17 @@ import path from "path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // vi.mock is hoisted above everything else, so the mocks it uses must be created with vi.hoisted
-const { transcriptionsCreate, translationsCreate } = vi.hoisted(() => ({ transcriptionsCreate: vi.fn(), translationsCreate: vi.fn() }));
+const { transcriptionsCreate, translationsCreate, translateLines } = vi.hoisted(() => ({
+  transcriptionsCreate: vi.fn(),
+  translationsCreate: vi.fn(),
+  translateLines: vi.fn(),
+}));
+
+// the real English check stays; only the chat-model translation is replaced
+vi.mock("./englishTranslation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./englishTranslation")>()),
+  translateLinesToEnglish: translateLines,
+}));
 
 vi.mock("../client/openaiClient", () => ({
   aiClient: { audio: { transcriptions: { create: transcriptionsCreate }, translations: { create: translationsCreate } } },
@@ -51,6 +61,20 @@ describe("transcribeVideoFile", () => {
     expect(result.language).toBe("spanish");
     expect(result.segments[0].text).toBe("I would start with a warm-up.");
     expect(result.usage).toHaveLength(2);
+  });
+
+  it("translates the original lines itself when Whisper hands back the original language", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: "Empezaría con un calentamiento.", segments: [{ start: 0, end: 2, text: "Empezaría con un calentamiento." }] });
+    translationsCreate.mockResolvedValue({ text: "Empezaría con un calentamiento para todo el equipo.", segments: [{ start: 0, end: 2, text: "Empezaría con un calentamiento para todo el equipo." }] });
+    translateLines.mockResolvedValue([{ start: 0, end: 2, text: "I would start with a warm-up." }]);
+
+    const result = await transcribeVideoFile(tempFile);
+
+    expect(translateLines).toHaveBeenCalledTimes(1);
+    expect(translateLines.mock.calls[0][0][0].text).toBe("Empezaría con un calentamiento.");
+    expect(result.text).toBe("I would start with a warm-up.");
+    expect(result.segments).toEqual([{ start: 0, end: 2, text: "I would start with a warm-up." }]);
+    expect(result.language).toBe("spanish");
   });
 
   it("never turns an error into an empty transcript", async () => {

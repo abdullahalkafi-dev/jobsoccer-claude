@@ -17,7 +17,7 @@ export type TOnFieldStaffProfile = {
   league: string;
   category?: string;
   country: (typeof countryList)[number];
-  socialMedia: string;
+  socialMedia?: string;
   agent?: string;
   position: OnFieldStaffPosition;
   videos: TProfileVideo[];
@@ -36,7 +36,7 @@ const onFieldStaffProfileSchema = new Schema<TOnFieldStaffProfile>(
       required: true,
     },
     gender: { type: String, enum: ["Male", "Female","Other"], required: true },
-    socialMedia: { type: String, required: true, trim: true },
+    socialMedia: { type: String, required: false, trim: true },
     agent: { type: String, required: false, trim: true },
     league: { type: String, required: true, trim: true },
      category: { type: String, required: false, trim: true },

@@ -36,7 +36,7 @@ export type THighSchoolPlayerProfile = {
   satOrAct?: string;
   availability: string;
   weight: { size: number; unit: string };
-  socialMedia: string;
+  socialMedia?: string;
   foot: TFoot;
   league: string;
   schoolName: string;
@@ -73,7 +73,7 @@ const highSchoolPlayerProfileSchema = new Schema<THighSchoolPlayerProfile>(
       size: { type: Number, required: true },
       unit: { type: String, required: true, enum: ["kg", "lb"] },
     },
-    socialMedia: { type: String, required: true, trim: true },
+    socialMedia: { type: String, required: false, trim: true },
     foot: {
       type: String,
       enum: Object.values(TFoot),

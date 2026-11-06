@@ -15,7 +15,7 @@ export type TOfficeStaffProfile = {
   position: OfficeStaffPosition;
   availability: string;
   agent?: string;
-  socialMedia: string;
+  socialMedia?: string;
   currentClub: string;
   gender: "Male" | "Female" | "Other";
   videos: TProfileVideo[];
@@ -38,7 +38,7 @@ const officeStaffSchema = new Schema<TOfficeStaffProfile>(
     },
     availability: { type: String, required: false, trim: true },
     agent: { type: String, required: false, trim: true },
-    socialMedia: { type: String, required: true, trim: true },
+    socialMedia: { type: String, required: false, trim: true },
     currentClub: { type: String, required: true, trim: true },
     gender: {
       type: String,

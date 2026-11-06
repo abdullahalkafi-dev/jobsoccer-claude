@@ -5,6 +5,7 @@ import { TCandidateLicenseAndCertification } from "./candidateLicensesAndCertifi
 import { User } from "../user/user.model";
 import { UserType } from "../user/user.interface";
 import { candidateLicensesAndCertificationCache } from "./candidateLicensesAndCertification.cache";
+import { editUpdate, withoutServerOwnedFields } from "../credentialVerification/credentialVerification.fields";
 
 /**
  * Add a new license and certification record for a candidate
@@ -36,7 +37,7 @@ const addLicenseAndCertification = async (
 
   // Create new license and certification entry
   const newLicense = await CandidateLicenseAndCertification.create({
-    ...licenseData,
+    ...withoutServerOwnedFields(licenseData),
     userId,
     profileId: user.profileId,
     candidateRole: user.role,
@@ -68,11 +69,13 @@ const updateLicenseAndCertification = async (
     );
   }
 
+  updateData = withoutServerOwnedFields(updateData);
+
   // Update the license and certification record
   const updatedLicense =
     await CandidateLicenseAndCertification.findByIdAndUpdate(
       licenseId,
-      { $set: updateData },
+      editUpdate(license, updateData),
       { new: true, runValidators: true }
     );
 

@@ -5,6 +5,7 @@ import { TCandidateExperience } from "./candidateExperience.interface";
 import { User } from "../user/user.model";
 import { UserType } from "../user/user.interface";
 import { candidateExperienceCache } from "./candidateExpreience.cache";
+import { editUpdate, withoutServerOwnedFields } from "../credentialVerification/credentialVerification.fields";
 
 /**
  * Add a new experience record for a candidate
@@ -46,7 +47,7 @@ const addExperience = async (
 
   // Create new experience entry
   const newExperience = await CandidateExperience.create({
-    ...experienceData,
+    ...withoutServerOwnedFields(experienceData),
     userId,
     profileId: user.profileId,
     candidateRole: user.role,
@@ -75,6 +76,8 @@ const updateExperience = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Experience record not found");
   }
 
+  updateData = withoutServerOwnedFields(updateData);
+
   // Validate that if isCurrentlyWorking is true, endMonth and endYear should not be provided
   if (updateData.isCurrentlyWorking) {
     if (updateData.endMonth || updateData.endYear) {
@@ -91,7 +94,7 @@ const updateExperience = async (
   // Update the experience record
   const updatedExperience = await CandidateExperience.findByIdAndUpdate(
     experienceId,
-    { $set: updateData },
+    editUpdate(experience, updateData),
     { new: true, runValidators: true }
   );
 

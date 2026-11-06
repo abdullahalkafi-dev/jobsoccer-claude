@@ -6,7 +6,7 @@ export type TAgentEmployerProfile = {
   phoneNumber: string;
   country: (typeof countryList)[number];
   nationality: string;
-  socialMedia: string;
+  socialMedia?: string;
   website: string;
   fifaLicenseNumber: string;
   averageRating: number;
@@ -32,7 +32,7 @@ const agentEmployerProfileSchema = new Schema<TAgentEmployerProfile>({
   },
   socialMedia: {
     type: String,
-    required: true,
+    required: false,
   },
   website: {
     type: String,
