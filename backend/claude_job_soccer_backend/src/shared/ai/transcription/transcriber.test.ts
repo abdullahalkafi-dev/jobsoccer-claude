@@ -31,49 +31,54 @@ import { transcribeVideoFile } from "./transcriber";
 
 const tempFile = path.join(os.tmpdir(), `transcriber-test-${process.pid}.mp3`);
 
+// a realistic answer: long enough to count as speech (15 words or more)
+const WARM_UP = "I would start with a short warm-up using the ball, then move into a small sided game so the players can practise the pressing triggers we talked about.";
+const WARM_UP_ES = "Empezaría con un calentamiento corto con el balón, y luego pasaría a un juego reducido para que los jugadores practiquen las señales de presión que hablamos.";
+
 describe("transcribeVideoFile", () => {
   beforeEach(() => {
     transcriptionsCreate.mockReset();
     translationsCreate.mockReset();
+    translateLines.mockReset();
     fs.writeFileSync(tempFile, "audio");
   });
 
   it("detects the language itself (no language is forced) and keeps English speech as it is", async () => {
-    transcriptionsCreate.mockResolvedValue({ language: "english", text: "I would start with a warm-up.", segments: [{ start: 0, end: 2, text: " I would start with a warm-up." }] });
+    transcriptionsCreate.mockResolvedValue({ language: "english", text: WARM_UP, segments: [{ start: 0, end: 2, text: ` ${WARM_UP}` }] });
 
     const result = await transcribeVideoFile(tempFile);
 
     expect(transcriptionsCreate.mock.calls[0][0]).not.toHaveProperty("language");
     expect(transcriptionsCreate.mock.calls[0][0].response_format).toBe("verbose_json");
     expect(translationsCreate).not.toHaveBeenCalled();
-    expect(result).toMatchObject({ text: "I would start with a warm-up.", language: "english", durationSeconds: 12 });
-    expect(result.segments).toEqual([{ start: 0, end: 2, text: "I would start with a warm-up." }]);
+    expect(result).toMatchObject({ text: WARM_UP, language: "english", durationSeconds: 12 });
+    expect(result.segments).toEqual([{ start: 0, end: 2, text: WARM_UP }]);
   });
 
   it("translates other languages to English, so scoring and captions are English", async () => {
-    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: "Empezaría con un calentamiento.", segments: [{ start: 0, end: 2, text: "Empezaría con un calentamiento." }] });
-    translationsCreate.mockResolvedValue({ text: "I would start with a warm-up.", segments: [{ start: 0, end: 2, text: " I would start with a warm-up." }] });
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP, segments: [{ start: 0, end: 2, text: ` ${WARM_UP}` }] });
 
     const result = await transcribeVideoFile(tempFile);
 
     expect(translationsCreate).toHaveBeenCalledTimes(1);
-    expect(result.text).toBe("I would start with a warm-up.");
+    expect(result.text).toBe(WARM_UP);
     expect(result.language).toBe("spanish");
-    expect(result.segments[0].text).toBe("I would start with a warm-up.");
+    expect(result.segments[0].text).toBe(WARM_UP);
     expect(result.usage).toHaveLength(2);
   });
 
   it("translates the original lines itself when Whisper hands back the original language", async () => {
-    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: "Empezaría con un calentamiento.", segments: [{ start: 0, end: 2, text: "Empezaría con un calentamiento." }] });
-    translationsCreate.mockResolvedValue({ text: "Empezaría con un calentamiento para todo el equipo.", segments: [{ start: 0, end: 2, text: "Empezaría con un calentamiento para todo el equipo." }] });
-    translateLines.mockResolvedValue([{ start: 0, end: 2, text: "I would start with a warm-up." }]);
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+    translateLines.mockResolvedValue([{ start: 0, end: 2, text: WARM_UP }]);
 
     const result = await transcribeVideoFile(tempFile);
 
     expect(translateLines).toHaveBeenCalledTimes(1);
-    expect(translateLines.mock.calls[0][0][0].text).toBe("Empezaría con un calentamiento.");
-    expect(result.text).toBe("I would start with a warm-up.");
-    expect(result.segments).toEqual([{ start: 0, end: 2, text: "I would start with a warm-up." }]);
+    expect(translateLines.mock.calls[0][0][0].text).toBe(WARM_UP_ES);
+    expect(result.text).toBe(WARM_UP);
+    expect(result.segments).toEqual([{ start: 0, end: 2, text: WARM_UP }]);
     expect(result.language).toBe("spanish");
   });
 
@@ -83,8 +88,17 @@ describe("transcribeVideoFile", () => {
   });
 
   it("drops empty caption segments", async () => {
-    transcriptionsCreate.mockResolvedValue({ language: "en", text: "Hello", segments: [{ start: 0, end: 1, text: "  " }, { start: 1, end: 2, text: "Hello" }] });
+    transcriptionsCreate.mockResolvedValue({ language: "en", text: WARM_UP, segments: [{ start: 0, end: 1, text: "  " }, { start: 1, end: 2, text: WARM_UP }] });
     const result = await transcribeVideoFile(tempFile);
     expect(result.segments).toHaveLength(1);
+  });
+
+  it.each(["You", "Thank you.", "Thanks for watching!", ""])('treats the made-up text "%s" (music, noise or silence) as no speech', async (invented) => {
+    transcriptionsCreate.mockResolvedValue({ language: "english", text: invented, segments: invented ? [{ start: 0, end: 2, text: invented }] : [] });
+
+    const result = await transcribeVideoFile(tempFile);
+
+    expect(result.text).toBe("");
+    expect(result.segments).toEqual([]);
   });
 });

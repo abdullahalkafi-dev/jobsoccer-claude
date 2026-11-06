@@ -12,6 +12,7 @@ import { checkRecordingSetup, TSetupCheck } from "../../shared/ai/frameCheck/fra
 import { enqueueJob } from "../../shared/ai/queue/aiQueue";
 import { getRubric, listRubrics, resolveRubric } from "../../shared/ai/rubric/rubric.registry";
 import { Rubric } from "../../shared/ai/rubric/rubric.schema";
+import { hasUsableSpeech } from "../../shared/ai/transcription/transcriber";
 import { logger } from "../../shared/logger/logger";
 import redisOperations from "../../shared/redis/redisClient";
 import { getLocalCopy } from "../../shared/storage";
@@ -191,7 +192,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     }
 
     let report: EvaluationReport;
-    if (!transcriptText.trim()) {
+    if (!hasUsableSpeech(transcriptText)) {
       // No speech at all: report "not answered" with low confidence instead of a low score,
       // and free the candidate to upload again at once (client decision).
       report = buildReport(
