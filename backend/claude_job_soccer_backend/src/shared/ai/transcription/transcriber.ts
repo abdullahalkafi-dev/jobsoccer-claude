@@ -3,6 +3,7 @@ import path from "path";
 import { aiConfig } from "../ai.config";
 import { aiClient, recordUsage, UsageRecord } from "../client/openaiClient";
 import { extractAudio, getMediaDurationSeconds, removeTempFile } from "../media/audioExtractor";
+import { looksEnglish, translateLinesToEnglish } from "./englishTranslation";
 
 /** One caption cue: start/end in seconds, English text. */
 export type TCaptionSegment = { start: number; end: number; text: string };
@@ -80,10 +81,18 @@ export const transcribeVideoFile = async (videoPath: string): Promise<Transcript
       response_format: "verbose_json",
     });
     usage.push(recordUsage("translation", model, noTokens, Date.now() - started));
+
+    const translatedText: string = translation.text ?? "";
+    if (looksEnglish(translatedText)) {
+      return { text: translatedText, language, segments: toSegments(translation), durationSeconds, model, usage };
+    }
+
+    // Whisper sometimes returns the original language unchanged: translate the original lines instead.
+    const english = await translateLinesToEnglish(toSegments(transcription), usage);
     return {
-      text: translation.text ?? "",
+      text: english.map((line) => line.text).join(" "),
       language,
-      segments: toSegments(translation),
+      segments: english,
       durationSeconds,
       model,
       usage,

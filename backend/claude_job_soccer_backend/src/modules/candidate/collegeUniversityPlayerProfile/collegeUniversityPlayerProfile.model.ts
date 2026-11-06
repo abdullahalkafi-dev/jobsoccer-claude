@@ -33,7 +33,7 @@ export type TCollegeUniversityPlayerProfile = {
   category?: string;
   position: PlayerPosition; // need update
   agent?: string;
-  socialMedia: string;
+  socialMedia?: string;
   satOrAct?: string;
   availability: string;
   weight: { size: number; unit: string };
@@ -66,7 +66,7 @@ const collegeOrUniversitySchema = new Schema<TCollegeUniversityPlayerProfile>(
       required: true,
     },
     agent: { type: String, required: false, trim: true },
-    socialMedia: { type: String, required: true, trim: true },
+    socialMedia: { type: String, required: false, trim: true },
     satOrAct: { type: String, required:false, trim: true },
     availability: {
       type: String,

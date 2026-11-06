@@ -48,7 +48,7 @@ export type TProfessionalPlayerProfile = {
   availability: string;
   weight: { size: number; unit: string };
   nationalTeamGames: string;
-  socialMedia: string;
+  socialMedia?: string;
   foot: TFoot;
   teamsJoined: string;
   contractExpires: string;
@@ -93,7 +93,7 @@ const professionalPlayerProfileSchema = new Schema<TProfessionalPlayerProfile>(
             unit: { type: String, required: true, enum: ["kg", "lb"] },
         },
         nationalTeamGames: { type: String, required: true, trim: true },
-        socialMedia: { type: String, required: true, trim: true },
+        socialMedia: { type: String, required: false, trim: true },
         foot: {
             type: String,
             enum: Object.values(TFoot),

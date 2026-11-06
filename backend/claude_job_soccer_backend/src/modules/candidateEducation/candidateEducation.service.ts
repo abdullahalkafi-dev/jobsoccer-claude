@@ -5,6 +5,7 @@ import { TCandidateEducation } from "./candidateEducation.interface";
 import { User } from "../user/user.model";
 import { UserType } from "../user/user.interface";
 import { candidateEducationCache } from "./candidateEducation.cache";
+import { editUpdate, withoutServerOwnedFields } from "../credentialVerification/credentialVerification.fields";
 
 /**
  * Add a new education record for a candidate
@@ -36,7 +37,7 @@ const addEducation = async (
 
   // Create new education entry
   const newEducation = await CandidateEducation.create({
-    ...educationData,
+    ...withoutServerOwnedFields(educationData),
     userId,
     profileId: user.profileId,
     candidateRole: user.role,
@@ -65,10 +66,12 @@ const updateEducation = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Education record not found");
   }
 
+  updateData = withoutServerOwnedFields(updateData);
+
   // Update the education record
   const updatedEducation = await CandidateEducation.findByIdAndUpdate(
     educationId,
-    { $set: updateData },
+    editUpdate(education, updateData),
     { new: true, runValidators: true }
   );
 
