@@ -8,6 +8,8 @@ import { useGetVideoStatusQuery } from "./videoApi";
 
 type TStep = { id: number; label: string; completed?: boolean; active?: boolean };
 
+const INTERVIEW_SUBTITLE ="Employers watch these to get to know you. Your interview is scored by AI in the background, so you can keep using the website while it is checked.";
+
 const Body = () => {
   const { data: status, isLoading, isError } = useGetVideoStatusQuery();
 
@@ -42,12 +44,16 @@ const Body = () => {
 /** Registration step: the candidate uploads the required videos one by one, then finishes. */
 export function VideoUploadStep({ steps, onFinish, onBack }: { steps?: TStep[]; onFinish: () => void; onBack?: () => void }) {
   const { data: status } = useGetVideoStatusQuery();
+  const hasInterview = status?.plan.slots.some((slot) => slot.kind === "Interview");
+  const subtitle = hasInterview
+    ? INTERVIEW_SUBTITLE
+    : "Employers watch these to get to know you.";
 
   return (
     <FormLayout
       steps={steps}
       title="Upload your videos"
-      subtitle="Employers watch these to get to know you. Your interview is scored by AI in the background, so you can keep using the website while it is checked."
+      subtitle={subtitle}
       onNext={onFinish}
       onPrev={onBack}
       showPrev={!!onBack}

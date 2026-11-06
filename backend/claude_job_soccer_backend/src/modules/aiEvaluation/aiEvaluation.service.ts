@@ -416,15 +416,22 @@ const addCorrection = async (
 const listForReview = async (query: { page?: string; limit?: string }) => {
   const page = Math.max(1, Number(query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
-  const filter = {
+  const needsReview = {
     status: "completed",
     isLatest: true,
     "report.needsHumanReview": true,
     "corrections.reviewStatus": { $ne: "reviewed" },
   };
+  // A failed assessment is never "latest"; it stays in the queue until a newer assessment replaces it.
+  const latestPerCandidate = await AiEvaluation.aggregate([
+    { $sort: { createdAt: -1 } },
+    { $group: { _id: "$candidateUserId", evaluationId: { $first: "$_id" }, status: { $first: "$status" } } },
+    { $match: { status: "failed" } },
+  ]);
+  const filter = { $or: [needsReview, { _id: { $in: latestPerCandidate.map((row) => row.evaluationId) } }] };
   const [data, total] = await Promise.all([
     AiEvaluation.find(filter)
-      .select("candidateUserId position rubricId report.totals report.reviewReasons report.displayName finishedAt")
+      .select("candidateUserId position rubricId status error report.totals report.reviewReasons report.displayName finishedAt")
       .populate("candidateUserId", "firstName lastName email")
       .sort({ finishedAt: -1 })
       .skip((page - 1) * limit)
