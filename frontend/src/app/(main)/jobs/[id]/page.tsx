@@ -427,6 +427,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
                       {/* Desktop Action Buttons */}
                       <div className="mt-6 flex flex-col gap-3">
+                        {jobData.isPremium && <PremiumNotice access={jobData.premiumAccess} />}
                         <button
                           onClick={handleSaveJob}
                           disabled={isSaving || isUnsaving}

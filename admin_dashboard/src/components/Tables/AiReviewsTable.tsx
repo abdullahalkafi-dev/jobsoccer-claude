@@ -116,7 +116,7 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
             {reviewed?.totals.band ? ` - ${reviewed.totals.band}` : " - no level (questions not answered)"}
             {" · "}model {doc.aiModel} · rubric {doc.rubricId}@{doc.rubricVersion} · cost ${doc.costUsd ?? 0}
           </p>
-          {doc.detectedLanguage && <p className="text-sm text-gray-600">Spoken language: {doc.detectedLanguage} (scored on the English translation)</p>}
+          {doc.detectedLanguage && <p className="text-sm text-gray-600">Spoken language: {doc.detectedLanguage}{/^(en|english)$/i.test(doc.detectedLanguage) ? "" : " (scored on the English translation)"}</p>}
           {doc.setupCheck && (
             <p className="text-sm text-gray-600">
               Recording setup: {doc.setupCheck.flags?.length ? doc.setupCheck.flags.join("; ") : "no problems seen"} - {doc.setupCheck.summary}
