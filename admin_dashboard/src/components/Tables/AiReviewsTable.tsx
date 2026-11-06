@@ -18,6 +18,9 @@ interface QueueItem {
   _id: string;
   candidateUserId: { _id: string; firstName: string; lastName: string; email: string } | null;
   position: string;
+  status?: "completed" | "failed";
+  /** Why the AI could not finish (only for failed assessments). */
+  error?: string;
   report?: {
     displayName: string;
     totals: { earned: number; max: number; percentage: number; notAnsweredCount: number };
@@ -54,7 +57,31 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
 
   if (isLoading) return <Skeleton className="h-64 w-full" />;
   const doc = data?.data?.report;
-  if (!doc) return <p className="text-sm text-gray-600">No completed assessment for this candidate.</p>;
+  if (!doc) {
+    return (
+      <div className="space-y-3">
+        <p className="text-sm text-gray-600">No completed assessment for this candidate. If the AI could not finish, run it again.</p>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={isRescoring}
+            onClick={() =>
+              rescore(userId)
+                .unwrap()
+                .then(() => toast.success("New assessment queued"))
+                .catch((error) => toast.error(errorMessage(error)))
+            }
+          >
+            Re-score
+          </Button>
+          <Button size="sm" variant="ghost" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      </div>
+    );
+  }
   const reviewed = doc.reviewedReport ?? doc.report;
   const questions: QuestionResult[] = reviewed?.questions ?? [];
 
@@ -270,7 +297,9 @@ export function AiReviewsTable() {
                   <td className="p-3">
                     {item.report ? `${item.report.totals.earned}/${item.report.totals.max} (${item.report.totals.percentage}%)` : "-"}
                   </td>
-                  <td className="p-3 text-gray-600">{item.report?.reviewReasons.join("; ")}</td>
+                  <td className="p-3 text-gray-600">
+                    {item.status === "failed" ? `The AI could not finish this assessment. ${item.error ?? ""}`.slice(0, 160) : item.report?.reviewReasons.join("; ")}
+                  </td>
                   <td className="p-3">{item.finishedAt ? new Date(item.finishedAt).toLocaleDateString() : "-"}</td>
                   <td className="p-3">
                     {item.candidateUserId && (
