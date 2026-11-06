@@ -35,7 +35,7 @@ const toSegments = (raw: any): TCaptionSegment[] =>
  *     captions are always English.
  * Errors are thrown, never turned into an empty transcript.
  */
-export const transcribeVideoFile = async (videoPath: string): Promise<TranscriptionResult> => {
+const transcribe = async (videoPath: string): Promise<TranscriptionResult> => {
   const model = aiConfig.models.transcribe;
   const durationSeconds = await getMediaDurationSeconds(videoPath);
   const audioPath = await extractAudio(videoPath);
@@ -100,4 +100,22 @@ export const transcribeVideoFile = async (videoPath: string): Promise<Transcript
   } finally {
     if (audioPath) removeTempFile(audioPath);
   }
+};
+
+/** An interview answer is never shorter than this; fewer words means the audio had no real speech. */
+export const MIN_SPOKEN_WORDS = 15;
+
+const countWords = (text: string): number => (text.match(/[\p{L}\p{N}']+/gu) ?? []).length;
+
+/** True when the transcript holds real speech (also used on transcripts saved before this rule existed). */
+export const hasUsableSpeech = (text: string): boolean => countWords(text) >= MIN_SPOKEN_WORDS;
+
+/**
+ * Whisper often invents a word or two ("You", "Thank you.") for music, noise or silence.
+ * Treat that as no speech at all, so the no-speech handling applies: no captions, no scoring,
+ * and the candidate can upload again at once.
+ */
+export const transcribeVideoFile = async (videoPath: string): Promise<TranscriptionResult> => {
+  const result = await transcribe(videoPath);
+  return hasUsableSpeech(result.text) ? result : { ...result, text: "", segments: [] };
 };
