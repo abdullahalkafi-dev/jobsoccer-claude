@@ -9,6 +9,8 @@
 import mongoose from "mongoose";
 import config from "../config";
 import { CandidateResume } from "../modules/candidateResume/candidateResume.model";
+import { User } from "../modules/user/user.model";
+import { ProfileQualityService } from "../modules/profileQuality/profileQuality.service";
 
 (async () => {
   const apply = process.argv.includes("--apply");
@@ -28,6 +30,16 @@ import { CandidateResume } from "../modules/candidateResume/candidateResume.mode
     changed++;
   }
   console.log(changed, "resume(s)", apply ? "activated" : "would be activated");
+
+  // Recount the score of everyone whose active CV is not counted yet (stored CV points = 0).
+  const active: string[] = await CandidateResume.distinct("userId", { isActive: true });
+  for (const userId of active) {
+    const user: any = await User.findById(userId).select("profileQuality").lean();
+    const cv = user?.profileQuality?.categories?.flatMap((c: any) => c.items).find((i: any) => i.key === "cv");
+    if (!cv || cv.earned > 0) continue;
+    console.log(" recount score for user", String(userId));
+    if (apply) await ProfileQualityService.recalculate(String(userId));
+  }
   await mongoose.disconnect();
   process.exit(0);
 })().catch((e) => { console.error(e.message); process.exit(1); });
