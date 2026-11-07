@@ -5,6 +5,8 @@ import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../user/user.model";
 import { CandidateRole, EmployerRole, UserType } from "../user/user.interface";
+import { getCandidateModel } from "../../shared/util/getCandidateModel";
+import { toPublicQuality } from "../profileQuality/profileQuality.view";
 
 /**
  * Shortlist a candidate
@@ -126,17 +128,38 @@ const getShortlistedCandidates = async (
     .populate({
       path: "candidateId",
       select:
-        "firstName lastName email role userType createdAt profileImage profileId",
+        "firstName lastName email role userType createdAt profileImage profileId profileQuality",
     })
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)
     .lean();
 
+  // The candidate card needs the profile (position, videos, ...) and the public quality level.
+  const withProfile = await Promise.all(
+    data.map(async (entry: any) => {
+      const user = entry.candidateId;
+      if (!user) return entry;
+      const profile = user.profileId
+        ? await getCandidateModel(user.role).findById(user.profileId).lean()
+        : null;
+      const { profileQuality, ...publicUser } = user;
+      return {
+        ...entry,
+        candidateId: {
+          ...publicUser,
+          profile: profile || {},
+          profileQuality: toPublicQuality(profileQuality),
+          isShortlisted: true,
+        },
+      };
+    })
+  );
+
   const totalPages = Math.ceil(total / limit);
 
   return {
-    data: data as TCandidateShortList[],
+    data: withProfile as unknown as TCandidateShortList[],
     meta: {
       page,
       limit,

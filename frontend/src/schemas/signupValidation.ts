@@ -29,7 +29,7 @@ export const signUpSchema = z.object({
     ),
   password: z.string().min(4, "Password must be at least 4 characters long"),
   role: z
-    .enum(allRoles as [string, ...string[]])
+    .enum(allRoles as [string, ...string[]], { error: "Please select a role" })
     .describe("Please select a valid role"),
 });
 

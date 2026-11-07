@@ -127,7 +127,15 @@ function EmailVerificationPageContent() {
         }
       }
     } catch (error) {
-      toast.error("Failed to verify email. Please try again.");
+      const serverMessage = (error as { data?: { message?: string } })?.data?.message;
+      const text = (serverMessage || "").toLowerCase();
+      toast.error(
+        text.includes("expired")
+          ? "This code has expired. Please request a new code."
+          : text.includes("invalid")
+            ? "That code is not correct. Please check it and try again."
+            : serverMessage || "Failed to verify email. Please try again."
+      );
       // Clear OTP fields on error
       setOtp(["", "", "", "", "", ""]);
       // Focus first input

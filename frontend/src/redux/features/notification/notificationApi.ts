@@ -32,6 +32,14 @@ export const notificationApi = baseApi.injectEndpoints({
     // Get unread notification count
     getUnreadCount: builder.query<IUnreadCountResponse, void>({
       query: () => "/notifications/unread-count",
+      // The server sends { unreadCount }; the UI works with a plain number.
+      transformResponse: (r: { success: boolean; message: string; data: unknown }) => ({
+        ...r,
+        data:
+          typeof r.data === "number"
+            ? r.data
+            : Number((r.data as { unreadCount?: number } | null)?.unreadCount ?? 0),
+      }),
       providesTags: ["NotificationCount"],
     }),
 

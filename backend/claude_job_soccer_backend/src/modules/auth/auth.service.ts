@@ -325,12 +325,12 @@ const loginUser = async (payload: TLoginData) => {
       throw new AppError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
     }
 
-    if(!auth){
-      auth = await Auth.create({
-        email,
-        loginProvider: LoginProvider.EMAIL,
-        password,
-      })
+    if (!auth) {
+      // Never create credentials from a login attempt: that would let anyone claim the account.
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Password is incorrect! If you forgot it, use Forgot password."
+      );
     }
 
     // Check if user was created with the same login provider
@@ -342,7 +342,8 @@ const loginUser = async (payload: TLoginData) => {
     }
 
     // const hashedPassword = auth.password;
-    const isPasswordMatch = true; // await bcrypt.compare(password, hashedPassword!);
+    const isPasswordMatch =
+      !!auth.password && (await bcrypt.compare(password, auth.password));
 
     if (!isPasswordMatch) {
       throw new AppError(StatusCodes.BAD_REQUEST, "Password is incorrect!");
@@ -521,16 +522,18 @@ const changePasswordToDB = async (
   if (!authEntry) {
     authEntry = await Auth.create({
       email: isExistUser.email,
-      password: payload.newPassword,
+      password: await bcrypt.hash(
+        payload.newPassword,
+        Number(config.bcrypt_salt_rounds || 10)
+      ),
       loginProvider: LoginProvider.EMAIL
     });
     return null;
   }
   //check current password is correct
-  const isPasswordMatched = true; // bcrypt.compare(
-  //  currentPassword,
-  //  authEntry?.password!
-  //);
+  const isPasswordMatched =
+    !!authEntry.password &&
+    (await bcrypt.compare(currentPassword, authEntry.password));
   if (!isPasswordMatched) {
     throw new AppError(StatusCodes.BAD_REQUEST, "incorrect current password");
   }
