@@ -24,6 +24,30 @@ services:
       retries: 5
       start_period: 5s
 
+  # S3-compatible file storage (SeaweedFS). Keys come from S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
+  # in the backend .env (run compose with --env-file backend/claude_job_soccer_backend/.env).
+  # The S3 port is bound to 127.0.0.1; Nginx exposes it only under api-dev.jobsoccer.com/jobsoccer/.
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    container_name: jobsoccer_seaweedfs_staging
+    restart: unless-stopped
+    command: server -dir=/data -s3 -s3.port=8333 -master.volumeSizeLimitMB=1024
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+    ports:
+      - "127.0.0.1:8433:8333"
+    volumes:
+      - seaweedfs_staging_data:/data
+    mem_limit: 768m
+    networks:
+      - jobsoccer_staging_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   backend:
     build:
       context: ./backend/claude_job_soccer_backend
@@ -38,6 +62,8 @@ services:
       - PORT=8000
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - S3_ENDPOINT=http://seaweedfs:8333
+      - S3_FORCE_PATH_STYLE=true
     ports:
       - "127.0.0.1:8100:8000"
     volumes:
@@ -46,6 +72,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      seaweedfs:
+        condition: service_started
     mem_limit: 1g
     networks:
       - jobsoccer_staging_network
@@ -103,6 +131,7 @@ services:
         max-file: "3"
 
 volumes:
+  seaweedfs_staging_data:
   redis_staging_data:
 
 networks:
