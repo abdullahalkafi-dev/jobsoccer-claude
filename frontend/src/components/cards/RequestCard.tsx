@@ -43,14 +43,14 @@ const RequestCard: React.FC<RequestCardProps> = ({
           disabled={isLoading}
           className="px-2 sm:px-4 py-1 sm:py-2 text-xs md:text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Cancel Request
+          Decline
         </button>
         <button
           onClick={() => onAccept(request._id)}
           disabled={isLoading}
           className="px-2 sm:px-4 py-1 sm:py-2 text-xs md:text-sm text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Accept Request
+          Accept
         </button>
       </div>
     </div>

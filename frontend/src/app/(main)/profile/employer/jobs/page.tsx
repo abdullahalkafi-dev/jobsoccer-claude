@@ -12,6 +12,7 @@ import {
 import { useGetJobApplicationsQuery } from "@/redux/features/jobApplication/jobApplicationApi";
 import { TJob } from "@/types/job";
 import Image from "next/image";
+import Link from "next/link";
 
 const JobsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
@@ -292,9 +293,12 @@ const JobsPage: React.FC = () => {
                             </div>
                           )}
                           <div className="flex flex-col">
-                            <span className="text-sm text-gray-900">
+                            <Link
+                              href={`/candidates/${applicant.candidateId}`}
+                              className="text-sm text-gray-900 hover:underline hover:text-blue-600"
+                            >
                               {applicant.applicantName}
-                            </span>
+                            </Link>
                             <span className="text-xs text-gray-500">
                               {applicant.candidateRole}
                             </span>

@@ -35,7 +35,9 @@ export default function ShortlistPage() {
     useGetShortlistedCandidatesQuery(null);
 
   const typedData = shortlistData as ShortlistResponse | undefined;
-  const shortlistedCandidates = typedData?.data || [];
+  const shortlistedCandidates = (typedData?.data || []).filter(
+    (s) => s.candidateId && s.candidateId.profile
+  );
   const totalShortlisted = typedData?.meta?.total || 0;
 
   // Loading state

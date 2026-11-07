@@ -13,7 +13,11 @@ function CandidateSearchPageContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
-  const { data: candidatesData, isLoading } = useGetCandidatesQuery(filters);
+  const [page, setPage] = useState(1);
+  const { data: candidatesData, isLoading } = useGetCandidatesQuery({
+    ...filters,
+    page: String(page),
+  });
 
   // Initialize filters from URL params
   useEffect(() => {
@@ -28,10 +32,12 @@ function CandidateSearchPageContent() {
     if (country) urlFilters.country = country;
 
     setFilters(urlFilters);
+    setPage(1);
   }, [searchParams]);
 
   const candidates = candidatesData?.data || [];
-  const totalCandidates = candidates.length;
+  const totalCandidates = candidatesData?.meta?.total ?? candidates.length;
+  const totalPages = candidatesData?.meta?.totalPage ?? 1;
 
   return (
     <div>
@@ -113,13 +119,32 @@ function CandidateSearchPageContent() {
           )}
         </div>
 
-        {/* Load More / Pagination (Optional - can be added later) */}
+        {/* Pagination */}
         {candidates.length > 0 && (
-          <div className="text-center py-8">
-            <p className="text-sm text-gray-500">
-              Showing all {totalCandidates}{" "}
-              {totalCandidates === 1 ? "result" : "results"}
-            </p>
+          <div className="flex items-center justify-center gap-4 py-8">
+            <button
+              disabled={page <= 1}
+              onClick={() => {
+                setPage(page - 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-gray-600">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => {
+                setPage(page + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
