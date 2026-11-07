@@ -342,7 +342,12 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
   const tips = categories
     .flatMap((category) => category.items)
     .filter((item) => !item.done && item.tip)
-    .sort((a, b) => b.max - b.earned - (a.max - a.earned))
+    // Things the candidate can act on come first; "waiting for review" notes go last.
+    .sort((a, b) => {
+      const waiting = (i: { tip?: string }) => (i.tip ?? "").includes("waiting for review");
+      if (waiting(a) !== waiting(b)) return waiting(a) ? 1 : -1;
+      return b.max - b.earned - (a.max - a.earned);
+    })
     .map((item) => item.tip as string)
     .slice(0, 5);
 

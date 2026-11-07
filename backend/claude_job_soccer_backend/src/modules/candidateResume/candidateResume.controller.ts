@@ -37,7 +37,8 @@ const addResume = catchAsync(async (req: Request, res: Response) => {
     const result = await CandidateResumeService.addResume(
       userId,
       resumeFile,
-      setAsActive === true || setAsActive === "true"
+      // The upload form sends only the user id: a new resume is the active one unless told otherwise.
+      !(setAsActive === false || setAsActive === "false")
     );
 
     sendResponse(res, {

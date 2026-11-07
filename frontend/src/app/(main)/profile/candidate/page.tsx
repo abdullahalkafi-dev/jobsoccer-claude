@@ -590,7 +590,9 @@ export default function MyProfilePage() {
         </div>
 
         {/* -------------------------Profile Quality (rules + AI, with improvement actions)----------------------- */}
-        <ProfileQualityCard />
+        <div className="mt-6">
+          <ProfileQualityCard />
+        </div>
 
         {/* -------------------------Interview Assessment----------------------- */}
         {isOnFieldStaff && (
