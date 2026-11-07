@@ -596,11 +596,13 @@ export default function MyProfilePage() {
 
         {/* -------------------------Interview Assessment----------------------- */}
         {isOnFieldStaff && (
-          <InterviewAssessmentCard
-            data={assessment}
-            isLoading={isLoadingAssessment}
-            emptyText="Your interview assessment will appear here after you upload your interview video."
-          />
+          <div className="mt-6">
+            <InterviewAssessmentCard
+              data={assessment}
+              isLoading={isLoadingAssessment}
+              emptyText="Your interview assessment will appear here after you upload your interview video."
+            />
+          </div>
         )}
 
         {/* -------------------------Analytics----------------------- */}
