@@ -43,7 +43,8 @@ const RUBRIC_FILES: unknown[] = [
   // 2026-10-23: 18-question versions of the two 15-question guides (v1 stays for old evaluations)
   assistantCoachAmateurV2,
   mentalCoachV2,
-  // 2026-10-23: office staff guides. Not used for scoring yet (no questionnaire for office staff in the app).
+  // 2026-10-23: office staff guides (8 positions, 18 questions each). Used for scoring: the AI assessment accepts office staff
+  // and the office video plan has a required interview slot (client rules, 2026-11-05).
   administrativeDirector,
   communityManager,
   dataAnalyst,
