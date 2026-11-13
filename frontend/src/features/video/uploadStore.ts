@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import type { TVideoKind } from "./types";
-import { uploadVideo } from "./uploadVideo";
+import { uploadVideoResumable } from "./uploadVideo";
 
 /**
  * Video uploads that keep running while the candidate moves around the website.
@@ -22,6 +22,10 @@ export type TUploadState = {
   bytesPerSecond: number;
   /** Estimated seconds left for the file to arrive (null until measured). */
   secondsLeft: number | null;
+  /** The connection dropped: the next try happens at this time (ms), null while all is well. */
+  retryAt: number | null;
+  /** An earlier unfinished upload of the same file was continued from this many bytes. */
+  resumedFromBytes: number | null;
 };
 
 type TEntry = { state: TUploadState | null; error: string | null };
@@ -42,7 +46,7 @@ const isAnyUploading = () => [...entries.values()].some((entry) => entry.state !
 const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
   event.preventDefault();
   // Older browsers need a value; the text itself is not shown by modern browsers
-  event.returnValue = "Your video is still uploading. If you leave now, the upload stops.";
+  event.returnValue = "Your video is still uploading. If you leave now, the upload pauses until you choose the same file again.";
 };
 let warningOn = false;
 const syncLeaveWarning = () => {
@@ -64,34 +68,54 @@ export const startVideoUpload = async (input: {
   if (entries.get(kind)?.state) return false; // one upload per slot at a time
 
   // Speed over a sliding window of recent samples, so the estimate follows the real connection
-  const samples: { at: number; loaded: number }[] = [];
+  let samples: { at: number; loaded: number }[] = [];
+  const update = (patch: Partial<TUploadState>) => {
+    const current = entries.get(kind)?.state;
+    if (!current) return;
+    set(kind, { error: null, state: { ...current, ...patch } });
+  };
   set(kind, {
     error: null,
-    state: { stage: "uploading", percent: 0, loadedBytes: 0, totalBytes: file.size, bytesPerSecond: 0, secondsLeft: null },
+    state: {
+      stage: "uploading",
+      percent: 0,
+      loadedBytes: 0,
+      totalBytes: file.size,
+      bytesPerSecond: 0,
+      secondsLeft: null,
+      retryAt: null,
+      resumedFromBytes: null,
+    },
   });
 
   try {
-    await uploadVideo({
+    await uploadVideoResumable({
       ...input,
       onProgress: (loaded, total) => {
         const now = Date.now();
+        // After a retry or a resume the position can jump: start measuring the speed again
+        if (samples.length && loaded < samples[samples.length - 1].loaded) samples = [];
         samples.push({ at: now, loaded });
         while (samples.length > 2 && now - samples[0].at > 8000) samples.shift();
         const first = samples[0];
         const seconds = (now - first.at) / 1000;
         const bytesPerSecond = seconds >= 1 ? (loaded - first.loaded) / seconds : 0;
-        set(kind, {
-          error: null,
-          state: {
-            stage: loaded >= total ? "checking" : "uploading",
-            percent: Math.min(100, Math.round((loaded / total) * 100)),
-            loadedBytes: loaded,
-            totalBytes: total,
-            bytesPerSecond,
-            secondsLeft: bytesPerSecond > 0 ? Math.max(0, Math.round((total - loaded) / bytesPerSecond)) : null,
-          },
+        update({
+          stage: "uploading",
+          percent: Math.min(100, Math.floor((loaded / total) * 100)),
+          loadedBytes: loaded,
+          totalBytes: total,
+          bytesPerSecond,
+          secondsLeft: bytesPerSecond > 0 ? Math.max(0, Math.round((total - loaded) / bytesPerSecond)) : null,
+          retryAt: null,
         });
       },
+      onRetry: (seconds) => {
+        samples = [];
+        update({ retryAt: Date.now() + seconds * 1000, bytesPerSecond: 0, secondsLeft: null });
+      },
+      onResume: (bytes) => update({ resumedFromBytes: bytes }),
+      onUploaded: () => update({ stage: "checking", percent: 100, secondsLeft: 0, retryAt: null }),
     });
     set(kind, EMPTY);
     return true;
