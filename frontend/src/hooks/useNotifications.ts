@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { baseApi } from "@/redux/api/baseApi";
+import { useAppDispatch } from "@/redux/hooks";
 import {
   INotification,
   INewNotificationPayload,
@@ -25,6 +27,7 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const socketRef = useRef<Socket | null>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!token) {
@@ -49,9 +52,12 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
         token: token,
       },
       transports: ["websocket", "polling"],
+      // Never give up: after a server restart (deploy) the tab reconnects by itself.
+      // The wait grows from 1 s to at most 10 s between attempts.
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 10000,
       timeout: 10000,
       forceNew: false,
       autoConnect: true,
@@ -75,8 +81,12 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
       setConnected(false);
     });
 
-    newSocket.on("reconnect", () => {
+    // Back after a drop: events sent while we were away were lost, so reload the live data once
+    newSocket.io.on("reconnect", () => {
       setConnected(true);
+      dispatch(
+        baseApi.util.invalidateTags(["User", "Video", "ProfileQuality", "Assessment", "Notification", "NotificationCount"])
+      );
     });
 
     // Listen for new notifications
@@ -128,13 +138,13 @@ export function useNotifications(token: string | null): UseNotificationsReturn {
         socketRef.current.off("connected");
         socketRef.current.off("connect_error");
         socketRef.current.off("disconnect");
-        socketRef.current.off("reconnect");
         socketRef.current.off("new_notification");
         socketRef.current.off("notification_count_update");
         socketRef.current.disconnect();
         socketRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // Request browser notification permission

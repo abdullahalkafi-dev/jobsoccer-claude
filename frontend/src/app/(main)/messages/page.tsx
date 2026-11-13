@@ -99,7 +99,7 @@ export default function MessagesPage() {
   const receiverId = selectedChat?.user.id || "";
 
   // Initialize socket and chat hooks
-  const { socket, connected, onlineUsers } = useSocket(token);
+  const { socket, connected, onlineUsers } = useSocket();
 
   const {
     messages: chatMessages,
@@ -113,7 +113,6 @@ export default function MessagesPage() {
 
   // Convert chat messages to UI format
   const messages: Message[] = chatMessages.map((msg) => {
-    console.log("messages--->", msg);
     return {
       id: msg._id,
       senderId:
@@ -142,8 +141,6 @@ export default function MessagesPage() {
                 chat.users.find((u) => u._id !== currentUserId) ||
                 chat.users[0];
               const latestMsg = chat.latestMessage;
-
-              console.log("chat--->", chat);
 
               return {
                 id: chat._id,
@@ -201,7 +198,18 @@ export default function MessagesPage() {
     );
   }, [onlineUsers]);
 
-  // Listen for new_message and chat_updated events to refresh chat list
+  // Keep the latest online list for the handlers below without re-subscribing on every change
+  const onlineUsersRef = useRef<string[]>(onlineUsers);
+  useEffect(() => {
+    onlineUsersRef.current = onlineUsers;
+  }, [onlineUsers]);
+  const conversationsRef = useRef<Conversation[]>(conversations);
+  useEffect(() => {
+    conversationsRef.current = conversations;
+  }, [conversations]);
+
+  // Live chat list: a new message moves its conversation to the top in place; the list is
+  // only fetched again when a conversation we do not have yet appears.
   useEffect(() => {
     if (!socket) return;
 
@@ -225,7 +233,7 @@ export default function MessagesPage() {
                   avatar: otherUser.profileImage
                     ? `${process.env.NEXT_PUBLIC_BASE_URL}${otherUser.profileImage}`
                     : "/placeholder.svg?height=40&width=40",
-                  online: onlineUsers.includes(otherUser._id),
+                  online: onlineUsersRef.current.includes(otherUser._id),
                   userType: otherUser.userType,
                   role: otherUser.role,
                 },
@@ -250,43 +258,60 @@ export default function MessagesPage() {
     };
 
     const handleNewMessage = (data: { message: ChatMessage }) => {
+      const message = data.message;
       const currentSelectedConversation = selectedConversationRef.current;
 
-      // Update conversation list to show new message in sidebar
-      refreshConversationList();
+      // A brand-new conversation: load the list once so it appears
+      if (!conversationsRef.current.some((conv) => conv.id === message.chatId)) {
+        refreshConversationList();
+      } else {
+        // Move the conversation to the top with its new last message (no request needed)
+        setConversations((prev) => {
+          const index = prev.findIndex((conv) => conv.id === message.chatId);
+          if (index < 0) return prev;
+          const updated = {
+            ...prev[index],
+            lastMessage: message.content || message.messageType || prev[index].lastMessage,
+            lastTimestamp: new Date(message.createdAt),
+          };
+          return [updated, ...prev.slice(0, index), ...prev.slice(index + 1)];
+        });
+      }
 
       // If message is for currently selected chat, also add it directly to ensure it shows
       if (
         currentSelectedConversation &&
-        data.message.chatId === currentSelectedConversation
+        message.chatId === currentSelectedConversation
       ) {
         setChatMessages((prev) => {
-          // Check if message already exists
-          if (prev.find((m) => m._id === data.message._id)) {
+          if (prev.find((m) => m._id === message._id)) {
             return prev;
           }
-          const newList = [...prev, data.message].sort(
+          return [...prev, message].sort(
             (a, b) =>
               new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
-          return newList;
         });
       }
     };
 
-    const handleChatUpdated = () => {
-      refreshConversationList();
-    };
+    // Sent with every message; new_message above already updated the list
+    const handleChatUpdated = () => {};
+
+    // After a reconnect we may have missed messages: load the list once
+    const handleReconnect = () => refreshConversationList();
 
     socket.on("new_message", handleNewMessage);
     socket.on("chat_updated", handleChatUpdated);
+    socket.io.on("reconnect", handleReconnect);
 
     return () => {
       socket.off("new_message", handleNewMessage);
       socket.off("chat_updated", handleChatUpdated);
+      socket.io.off("reconnect", handleReconnect);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, currentUserId, onlineUsers]);
+  }, [socket, currentUserId]);
 
   // Fetch messages for selected conversation
   useEffect(() => {

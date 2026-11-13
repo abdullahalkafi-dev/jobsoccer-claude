@@ -45,7 +45,7 @@ export function useChat(
     markAsRead: socketMarkAsRead,
     startTyping,
     stopTyping,
-  } = useSocket(token);
+  } = useSocket();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);

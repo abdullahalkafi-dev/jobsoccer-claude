@@ -19,8 +19,14 @@ interface IAuthenticatedSocket extends Socket {
   };
 }
 
-// Store online users with their socket IDs
+// Store online users with their socket IDs (one entry per connection)
 export const onlineUsers = new Map<string, ISocketUser>();
+
+/** True while the user still has at least one open connection. */
+export const hasConnection = (userId: string): boolean => {
+  for (const entry of onlineUsers.values()) if (entry.userId === userId) return true;
+  return false;
+};
 
 const socketInit = (io: Server) => {
   // Middleware for authentication
@@ -80,7 +86,8 @@ const socketInit = (io: Server) => {
     // One room per user: services push live events (video / assessment / score updates) with emitToUser().
     socket.join(userRoom(userId));
 
-    // Add user to online users
+    // A user can have several connections (tabs, devices). They come online with the first one.
+    const wasOnline = hasConnection(userId);
     onlineUsers.set(socket.id, {
       userId,
       socketId: socket.id,
@@ -95,12 +102,14 @@ const socketInit = (io: Server) => {
     });
 
     // Broadcast to other users that this user is now online
-    socket.broadcast.emit("user_online", {
-      userId,
-    });
+    if (!wasOnline) {
+      socket.broadcast.emit("user_online", {
+        userId,
+      });
+    }
 
     // Register message socket handlers
-    messageSocketHandlers(socket, io, onlineUsers);
+    messageSocketHandlers(socket, io);
 
     // Handle errors
     socket.on("error", (error: Error) => {
@@ -114,13 +123,13 @@ const socketInit = (io: Server) => {
     socket.on("disconnect", (reason: string) => {
       logger.debug(`❌ User disconnected: ${userId} (Reason: ${reason})`);
 
-      // Remove user from online users
+      // Remove this connection; the user is offline only when their last one has closed
       onlineUsers.delete(socket.id);
-
-      // Broadcast to other users that this user is now offline
-      socket.broadcast.emit("user_offline", {
-        userId,
-      });
+      if (!hasConnection(userId)) {
+        socket.broadcast.emit("user_offline", {
+          userId,
+        });
+      }
     });
 
     // Handle manual disconnect request
@@ -140,9 +149,7 @@ const socketInit = (io: Server) => {
 
     // Get online users
     socket.on("get_online_users", (callback?: Function) => {
-      const onlineUserIds = Array.from(onlineUsers.values()).map(
-        (user) => user.userId
-      );
+      const onlineUserIds = [...new Set(Array.from(onlineUsers.values()).map((user) => user.userId))];
 
       const response = {
         success: true,

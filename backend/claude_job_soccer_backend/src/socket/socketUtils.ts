@@ -1,4 +1,5 @@
 import { onlineUsers } from "./socketInit";
+import { userRoom } from "./emitToUser";
 
 /**
  * Get socket ID by user ID
@@ -49,7 +50,8 @@ export const removeOnlineUser = (socketId: string): boolean => {
 };
 
 /**
- * Emit to specific user if online
+ * Emit to a user if online: to their room, so every open tab/device receives it
+ * (a user often has more than one connection).
  */
 export const emitToUser = (
   io: any,
@@ -57,12 +59,9 @@ export const emitToUser = (
   event: string,
   data: any
 ): boolean => {
-  const socketId = getSocketIdByUserId(userId);
-  if (socketId) {
-    io.to(socketId).emit(event, data);
-    return true;
-  }
-  return false;
+  if (!isUserOnline(userId)) return false;
+  io.to(userRoom(userId)).emit(event, data);
+  return true;
 };
 
 /**

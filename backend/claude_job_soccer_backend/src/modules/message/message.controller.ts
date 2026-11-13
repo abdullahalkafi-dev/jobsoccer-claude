@@ -6,7 +6,7 @@ import { MessageService } from "./message.service";
 import { MessageType } from "./message.interface";
 import AppError from "../../errors/AppError";
 import { io } from "../../socket/socketServer";
-import { onlineUsers } from "../../socket/socketInit";
+import { userRoom } from "../../socket/emitToUser";
 
 const createMessage = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user.id;
@@ -41,21 +41,12 @@ const createMessage = catchAsync(async (req: Request, res: Response) => {
     messageType,
   });
 
-  // Emit Socket.IO events for real-time delivery
-  // Find receiver's socket and send message
-  const receiverSocketId = Array.from(onlineUsers.values()).find(
-    (user) => user.userId === receiverId
-  )?.socketId;
-
-  if (receiverSocketId) {
-    io.to(receiverSocketId).emit("new_message", {
-      message,
-    });
-    
-    // Notify receiver to update chat list
-    io.to(receiverSocketId).emit("chat_updated", {
-      chatId,
-    });
+  // Real-time delivery to every open tab/device of both users (screens drop duplicates by message id)
+  if (io) {
+    for (const id of [receiverId, userId]) {
+      io.to(userRoom(String(id))).emit("new_message", { message });
+      io.to(userRoom(String(id))).emit("chat_updated", { chatId });
+    }
   }
 
   sendResponse(res, {
