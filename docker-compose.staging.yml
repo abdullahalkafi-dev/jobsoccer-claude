@@ -24,6 +24,27 @@ services:
       retries: 5
       start_period: 5s
 
+  # MongoDB next to the backend (single-node replica set: the app uses transactions).
+  # Why: the Atlas clusters are ~270 ms away from this server (Kansas), so every query cost 0.27 s.
+  # Data = a copy of the dev database (jobsoccer_dev); the Atlas dev copy is kept untouched as a backup.
+  # Roll back: remove the DATABASE_URL line from the backend service (it then uses the Atlas URL from .env again).
+  mongo:
+    image: mongo:7
+    container_name: jobsoccer_mongo_staging
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all", "--wiredTigerCacheSizeGB", "0.5"]
+    volumes:
+      - mongo_staging_data:/data/db
+    mem_limit: 1g
+    networks:
+      - jobsoccer_staging_network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+
   # S3-compatible file storage (SeaweedFS). Keys come from S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
   # in the backend .env (run compose with --env-file backend/claude_job_soccer_backend/.env).
   # The S3 port is bound to 127.0.0.1; Nginx exposes it only under api-dev.jobsoccer.com/jobsoccer/.
@@ -60,6 +81,7 @@ services:
       - NODE_ENV=production
       - APP_ENV=staging
       - PORT=8000
+      - DATABASE_URL=mongodb://mongo:27017/jobsoccer_dev?replicaSet=rs0
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - S3_ENDPOINT=http://seaweedfs:8333
@@ -71,6 +93,8 @@ services:
       - ./logs:/app/logs
     depends_on:
       redis:
+        condition: service_healthy
+      mongo:
         condition: service_healthy
       seaweedfs:
         condition: service_started
@@ -133,6 +157,7 @@ services:
 volumes:
   seaweedfs_staging_data:
   redis_staging_data:
+  mongo_staging_data:
 
 networks:
   jobsoccer_staging_network:
