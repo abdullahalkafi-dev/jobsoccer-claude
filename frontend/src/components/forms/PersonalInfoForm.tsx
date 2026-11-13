@@ -31,7 +31,7 @@ export function PersonalInfoForm({
   const {
     register,
     handleSubmit,
-    setValue,
+    setValue: rawSetValue,
     watch,
     formState: { errors, isValid },
   } = useForm<TPersonalInfo>({
@@ -41,6 +41,10 @@ export function PersonalInfoForm({
   });
 
   const imageValue = watch("image");
+
+  // Re-check the form after a dropdown/photo changes, so "Next" enables as soon as everything is filled.
+  const setValue: typeof rawSetValue = (name, value, options) =>
+    rawSetValue(name, value, { shouldValidate: true, shouldDirty: true, ...options });
 
   const onSubmit = (data: TPersonalInfo) => {
     onNext(data);
