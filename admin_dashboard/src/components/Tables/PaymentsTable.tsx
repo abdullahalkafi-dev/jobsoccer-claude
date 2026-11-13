@@ -14,79 +14,8 @@ interface Payment {
   paymentStatus: "Paid" | "Unpaid";
 }
 
-// Sample data - replace with actual API data
-const payments: Payment[] = [
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Paid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Unpaid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Paid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Unpaid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Paid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Unpaid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Paid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Unpaid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Paid",
-  },
-  {
-    transactionId: "#561002",
-    bookingId: "#CN 565",
-    providerName: "Rahim Khan",
-    amount: 562,
-    paymentStatus: "Unpaid",
-  },
-];
+// No payment records are connected to this page yet (the old demo rows were removed).
+const payments: Payment[] = [];
 
 const getStatusStyle = (status: string) => {
   switch (status) {
@@ -155,22 +84,22 @@ export function PaymentsTable() {
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Transaction ID
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Booking ID
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Provider Name
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Amount
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Payment Status
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Action
               </th>
             </tr>
@@ -178,19 +107,19 @@ export function PaymentsTable() {
           <tbody className="divide-y divide-gray-100">
             {currentPayments.map((payment, index) => (
               <tr key={index} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                   {payment.transactionId}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
                   {payment.bookingId}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-900">
                   {payment.providerName}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                   ${payment.amount}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 py-3 whitespace-nowrap">
                   <span
                     className={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(
                       payment.paymentStatus,
@@ -199,7 +128,7 @@ export function PaymentsTable() {
                     {payment.paymentStatus}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                <td className="px-3 py-3 whitespace-nowrap text-sm">
                   <button
                     onClick={() => handleViewDetails(payment.transactionId)}
                     className="text-gray-400 hover:text-gray-600 transition-colors p-1.5 hover:bg-gray-100 rounded-md"
@@ -213,6 +142,12 @@ export function PaymentsTable() {
           </tbody>
         </table>
       </div>
+
+      {filteredPayments.length === 0 && (
+        <div className="p-10 text-center text-sm text-gray-500">
+          No payments recorded yet. Subscription payments will appear here once payments are connected.
+        </div>
+      )}
 
       {/* Cards - Mobile */}
       <div className="md:hidden divide-y divide-gray-100">

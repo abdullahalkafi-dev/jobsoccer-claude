@@ -259,22 +259,22 @@ export function VerificationsTable() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="hidden xl:table-cell px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     User Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Requested At
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -285,14 +285,23 @@ export function VerificationsTable() {
                     key={request._id}
                     className="hover:bg-gray-50 transition-colors"
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-linear-to-br border flex items-center justify-center text-white font-semibold text-sm shrink-0">
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${request.userId?.profileImage}`}
-                            alt={`${request.userId?.firstName}'s profile`}
-                            className="w-full h-full object-cover rounded-full"
-                          />
+                        <div className="relative w-10 h-10 rounded-full bg-gray-100 border flex items-center justify-center text-gray-600 font-semibold text-sm shrink-0 overflow-hidden">
+                          {/* Initials show behind the photo, so a missing file never leaves a broken image */}
+                          <span className="absolute inset-0 flex items-center justify-center">
+                            {getInitials(request.userId?.firstName, request.userId?.lastName)}
+                          </span>
+                          {request.userId?.profileImage && (
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${request.userId.profileImage}`}
+                              alt={`${request.userId?.firstName}'s profile`}
+                              className="relative z-10 w-full h-full object-cover rounded-full bg-white"
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
+                            />
+                          )}
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">
@@ -305,17 +314,17 @@ export function VerificationsTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <span className="text-sm text-gray-900">
                         {request.userId?.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="hidden xl:table-cell px-3 py-3">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200 capitalize">
                         {request.userType}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusStyle(request.status)} capitalize`}
                       >
@@ -323,12 +332,12 @@ export function VerificationsTable() {
                         {request.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <span className="text-sm text-gray-600">
                         {formatDate(request.createdAt)}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3 whitespace-nowrap">
                       {request.status === "pending" ? (
                         <div className="flex items-center gap-2">
                           <Button
