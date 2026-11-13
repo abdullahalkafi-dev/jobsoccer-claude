@@ -10,9 +10,35 @@ import { useGetMyProfileQualityQuery } from "./qualityApi";
  * category (the client's table) and concrete actions to improve.
  * It measures how complete and verified the profile is, not ability.
  */
+/** Same layout and height as the real card (score, table of 4 rows, premium line, tips), so nothing jumps. */
+function ProfileQualitySkeleton() {
+  return (
+    <Card>
+      <CardContent className="space-y-5 p-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-3 w-28" />
+            <Skeleton className="h-6 w-40" />
+          </div>
+          <Skeleton className="h-9 w-24" />
+        </div>
+        <Skeleton className="h-[11.5rem] w-full rounded-lg" />
+        <Skeleton className="h-5 w-72" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-4/6" />
+        </div>
+        <Skeleton className="h-8 w-full" />
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ProfileQualityCard() {
   const { data, isLoading } = useGetMyProfileQualityQuery();
-  if (isLoading) return <Skeleton className="h-48 w-full" />;
+  if (isLoading) return <ProfileQualitySkeleton />;
 
   const quality = data?.quality;
   if (!quality) return null;

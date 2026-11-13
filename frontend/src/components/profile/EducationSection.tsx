@@ -102,7 +102,8 @@ export default function EducationSection({
         </CardHeader>
         <CardContent className="px-0">
           {isLoadingEducations ? (
-            <div className="flex items-center justify-center py-12">
+            // Same height as a filled section, so the page does not jump when the list arrives
+            <div className="flex items-center justify-center h-72">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
           ) : educationsError ? (
