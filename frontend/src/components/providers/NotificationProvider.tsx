@@ -39,6 +39,15 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   );
 }
 
+/**
+ * The live connection when this page has one, otherwise "not connected" (for example the sign-up
+ * steps, which sit outside the provider). Use this in components that work in both places.
+ */
+export function useOptionalLiveConnection(): { socket: Socket | null; connected: boolean } {
+  const context = useContext(NotificationContext);
+  return { socket: context?.socket ?? null, connected: context?.connected ?? false };
+}
+
 // Custom hook to use notification context
 export function useNotificationContext() {
   const context = useContext(NotificationContext);

@@ -115,7 +115,10 @@ const uploadVideo = async (input: {
   replaceVideoId?: string;
 }) => {
   const { userId, kind, file, title, replaceVideoId } = input;
+  // The file has fully arrived; tell the candidate's screen what happens next (a large file takes a while).
+  const stage = (name: "checking" | "saving") => emitToUser(userId, "video:stage", { kind, stage: name });
   try {
+    stage("checking");
     const ctx = await loadContext(userId);
     const slot = findSlot(ctx.plan, kind);
     if (!slot) {
@@ -157,6 +160,7 @@ const uploadVideo = async (input: {
       captionsUrl: undefined,
     };
 
+    stage("saving");
     if (target) target.set(video);
     else ctx.profile.videos.push(video);
     await ctx.profile.save();
