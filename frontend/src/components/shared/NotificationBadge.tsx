@@ -20,11 +20,11 @@ export default function NotificationBadge({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Use global notification context
-  const { unreadCount: realtimeUnreadCount } = useNotificationContext();
+  const { unreadCount: realtimeUnreadCount, connected } = useNotificationContext();
 
-  // Fetch unread count from API
+  // Fetch unread count from API; poll only while the live connection is down (it pushes changes otherwise)
   const { data: unreadCountData, refetch } = useGetUnreadCountQuery(undefined, {
-    pollingInterval: 60000, // Poll every 60 seconds as fallback
+    pollingInterval: connected ? 0 : 60000,
   });
 
   const unreadCount = unreadCountData?.data || realtimeUnreadCount || 0;

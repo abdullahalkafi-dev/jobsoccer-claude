@@ -56,7 +56,7 @@ function AnalyticsSection() {
                     Access Request
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Discover who&apos;s viewed your profile
+                    See which employers asked to view your profile
                   </p>
                 </div>
               </div>

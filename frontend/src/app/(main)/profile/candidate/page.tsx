@@ -30,6 +30,7 @@ import EducationSection from "@/components/profile/EducationSection";
 import { VideoManager } from "@/features/video/VideoUploadStep";
 import { ProfileQualityCard } from "@/features/profileQuality/ProfileQualityCard";
 import { useLiveCandidateEvents } from "@/features/video/useLiveCandidateEvents";
+import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import ProfileBanner from "@/components/profile/ProfileBanner";
 import ProfileAvatar from "@/components/profile/ProfileAvatar";
 import AnalyticsSection from "@/components/profile/AnalyticsSection";
@@ -39,6 +40,7 @@ import { useGetMyAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluat
 export default function MyProfilePage() {
   // Live updates: videos, assessment progress and the score refresh by themselves
   useLiveCandidateEvents();
+  const { connected: liveConnected } = useNotificationContext();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
 
@@ -51,16 +53,15 @@ export default function MyProfilePage() {
     pollingInterval: assessmentPolling,
   });
   useEffect(() => {
+    // The live connection pushes every assessment step; check every 15 s only while it is down
     const inProgress = assessment?.pending && assessment.pending.status !== "failed";
-    setAssessmentPolling(inProgress ? 15000 : 0);
-  }, [assessment?.pending]);
+    setAssessmentPolling(inProgress && !liveConnected ? 15000 : 0);
+  }, [assessment?.pending, liveConnected]);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [isEditPlayerDetailsModalOpen, setIsPlayerDetailsModalOpen] =
     useState(false);
-
-  const [isLoading, setIsLoading] = useState(true);
 
   // API mutations
   const [updateProfileImage, { isLoading: isUpdatingProfile }] =
@@ -187,24 +188,15 @@ export default function MyProfilePage() {
 
   const displayRole = roleLabel(currentUser?.role);
 
-  // Handle loading state
-  useEffect(() => {
-    if (currentUser) {
-      // Simulate minimal loading time for smooth transition
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [currentUser]);
-
-  // Show loading skeleton while data is loading
-  if (isLoading || !currentUser) {
-    return <ProfileSkeleton />;
+  // Show the skeleton only until the signed-in user is known (no artificial wait)
+  if (!currentUser) {
+    return <ProfileSkeleton embedded />;
   }
 
   return (
-    <div className="px-4">
+    // flex-1 + min-w-0: take all the space next to the sidebar from the first frame, so the page
+    // does not start narrow and stretch as each section loads
+    <div className="px-4 flex-1 min-w-0 w-full">
       {/* Banner and Profile Picture Section */}
       <div className="relative mb-8">
         <ProfileBanner

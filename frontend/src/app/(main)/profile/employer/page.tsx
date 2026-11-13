@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Award,
   Edit,
@@ -29,7 +29,6 @@ export default function EmployerProfilePage() {
   const currentUser = useAppSelector((state) => state.auth.user);
 
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   // API mutations
   const [updateProfileImage, { isLoading: isUpdatingProfile }] =
@@ -161,19 +160,9 @@ export default function EmployerProfilePage() {
 
   const displayRole = currentUser?.role;
 
-  // Handle loading state
-  useEffect(() => {
-    if (currentUser) {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [currentUser]);
-
-  // Show loading skeleton while data is loading
-  if (isLoading || !currentUser) {
-    return <ProfileSkeleton />;
+  // Show the skeleton only until the signed-in user is known (no artificial wait)
+  if (!currentUser) {
+    return <ProfileSkeleton embedded />;
   }
 
   // Format founded date
@@ -187,7 +176,7 @@ export default function EmployerProfilePage() {
   };
 
   return (
-    <div className="px-4 w-full">
+    <div className="px-4 flex-1 min-w-0 w-full">
       {/* Banner and Profile Picture Section */}
       <div className="relative mb-8">
         <ProfileBanner
