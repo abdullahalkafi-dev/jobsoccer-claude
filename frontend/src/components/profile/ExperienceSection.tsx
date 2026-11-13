@@ -185,7 +185,7 @@ function EmptyExperienceState({
   readOnly = false,
 }: EmptyExperienceStateProps) {
   return (
-    <div className="text-center py-12 px-4">
+    <div className="text-center py-5 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <Award className="h-8 w-8 text-gray-400" />
       </div>
