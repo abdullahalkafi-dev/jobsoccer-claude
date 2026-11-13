@@ -55,6 +55,7 @@ services:
         NEXT_PUBLIC_HOSTNAME: api.jobsoccer.com
         NEXT_PUBLIC_PORT: "8000"
         NEXT_PUBLIC_SOCKET_URL: https://api.jobsoccer.com
+        NEXT_PUBLIC_ADMIN_URL: https://admin.jobsoccer.com
     container_name: jobsoccer_frontend_prod
     restart: always
     env_file:

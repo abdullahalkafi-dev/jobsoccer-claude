@@ -110,7 +110,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
         {userType === "admin" ? (
           <DropdownMenuItem asChild className="cursor-pointer">
             <a
-              href="http://74.208.193.37:4000/login"
+              href={ADMIN_LOGIN_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 w-full"
@@ -215,6 +215,9 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
 };
 
 // ==================== Helpers ====================
+
+/** Admin dashboard of this environment (staging: admin-dev, live: admin), set at build time. */
+const ADMIN_LOGIN_URL = `${process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.jobsoccer.com"}/login`;
 
 /**
  * Pages behind sign-in are not prefetched: a prefetch made before login is answered with
