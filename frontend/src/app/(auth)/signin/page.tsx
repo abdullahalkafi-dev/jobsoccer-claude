@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,12 @@ import { Spinner } from "@/components/ui/spinner";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { LinkedInButton } from "@/components/auth/LinkedInButton";
 import { getLinkedInAuthUrl } from "@/lib/linkedinAuth";
+import { useAppSelector } from "@/redux/hooks";
+import { safeNextPath, writeTokenCookie } from "@/lib/authCookie";
+
+/** The page the route guard sent the user away from (?next=/messages), if any. */
+const readNextPath = (): string | null =>
+  typeof window === "undefined" ? null : safeNextPath(new URLSearchParams(window.location.search).get("next"));
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +36,21 @@ export default function SignInPage() {
 
   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
   const router = useRouter();
+
+  // Already signed in in this browser (the guard only lacked its cookie, e.g. after 30 days away):
+  // restore the cookie and continue to where the user was going, instead of asking again.
+  const savedToken = useAppSelector((state) => state.auth.token);
+  const loginRestored = useAppSelector((state) => !!state.auth._persist?.rehydrated);
+  const checkedSavedLogin = useRef(false);
+  useEffect(() => {
+    // Decide once, for the login that existed when the page opened (a fresh login below sends
+    // the user on by itself, e.g. to create-profile)
+    if (!loginRestored || checkedSavedLogin.current) return;
+    checkedSavedLogin.current = true;
+    if (!savedToken) return;
+    writeTokenCookie(savedToken);
+    router.replace(readNextPath() ?? "/");
+  }, [loginRestored, savedToken, router]);
 
   const form = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -61,7 +82,7 @@ export default function SignInPage() {
 
         form.reset();
         if (res.data.user?.profileId) {
-          router.push("/");
+          router.push(readNextPath() ?? "/");
         } else if (res.data.user?.userType === "employer") {
           router.push("/create-profile/employer");
         } else {

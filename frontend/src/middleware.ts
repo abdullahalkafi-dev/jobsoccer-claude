@@ -1,34 +1,37 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// This function can be marked `async` if using `await` inside
+/**
+ * Route guard. It can only see cookies, so it reads the "token" cookie, which the app keeps
+ * in step with the saved login (see lib/authCookie.ts and AuthSync in lib/Provider.tsx).
+ */
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!request.cookies.get("token")?.value;
+  const { pathname, search } = request.nextUrl;
 
-  const { pathname } = request.nextUrl;
-
-  // Define protected routes (require authentication)
+  // Pages that need a signed-in user
   const isProtectedRoute =
     pathname.startsWith("/messages") ||
     pathname.startsWith("/notification") ||
     pathname.startsWith("/my-network") ||
     pathname.startsWith("/profile");
 
-  // Define auth routes (should not be accessible when authenticated)
+  // Pages for signed-out visitors only. (/create-profile is NOT here: a new user is signed in
+  // right after the email code and must still reach it.)
   const isAuthRoute =
     pathname.startsWith("/signin") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/forgot-password") ||
-    pathname.startsWith("/create-new-password") ||
-    pathname.startsWith("/create-profile");
+    pathname.startsWith("/create-new-password");
 
-  // Redirect unauthenticated users away from protected routes
   if (!isAuthenticated && isProtectedRoute) {
-    return NextResponse.redirect(new URL("/signin", request.url));
+    // Remember where the user wanted to go; Sign in sends them there afterwards. If the browser
+    // still has a saved login (only the cookie had expired), Sign in restores it and continues.
+    const url = new URL("/signin", request.url);
+    url.searchParams.set("next", pathname + search);
+    return NextResponse.redirect(url);
   }
 
-  // Redirect authenticated users away from auth routes
   if (isAuthenticated && isAuthRoute) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -36,13 +39,13 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
     "/messages/:path*",
     "/notification/:path*",
     "/my-network/:path*",
     "/profile/:path*",
+    "/signin/:path*",
     "/signup/:path*",
     "/forgot-password",
     "/create-new-password/:path*",
