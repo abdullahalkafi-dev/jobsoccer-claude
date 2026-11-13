@@ -101,6 +101,38 @@ const saveConsent = async (userId: string, input: { ai?: boolean; players?: bool
 };
 
 /**
+ * May this candidate store a video of this kind now? (slot exists, consent given, not locked,
+ * room for another). Used before an upload starts and again when the file has arrived.
+ */
+const checkUploadAllowed = async (userId: string, kind: VideoKind, replaceVideoId?: string) => {
+  const ctx = await loadContext(userId);
+  const slot = findSlot(ctx.plan, kind);
+  if (!slot) {
+    throw new AppError(StatusCodes.BAD_REQUEST, `${ctx.profile.position ?? ctx.user.role} does not use ${kind} videos.`);
+  }
+  assertConsent(ctx, slot);
+
+  const sameKind = (ctx.profile.videos as any[]).filter((v) => v.kind === kind);
+  let target: any;
+  if (slot.count === 1) {
+    target = sameKind[0];
+  } else if (replaceVideoId) {
+    target = sameKind.find((v) => String(v._id) === replaceVideoId);
+    if (!target) throw new AppError(StatusCodes.NOT_FOUND, "The video to replace was not found.");
+  } else if (sameKind.length >= slot.count) {
+    throw new AppError(StatusCodes.BAD_REQUEST, `You already have ${slot.count} ${kind.toLowerCase()} videos. Replace one of them.`);
+  }
+
+  if (target && isLockActive(target)) {
+    throw new AppError(
+      StatusCodes.LOCKED,
+      `Your ${kind.toLowerCase()} video is locked until ${formatDate(target.lockedUntil)}. Contact support if you need to change it earlier.`
+    );
+  }
+  return { ctx, slot, target };
+};
+
+/**
  * Store ONE video on the profile.
  * Checks: consent, the 3-month lock, and the real file (length, 720p, sound).
  * Anything slow (transcription, captions, the AI interview) happens afterwards
@@ -109,7 +141,7 @@ const saveConsent = async (userId: string, input: { ai?: boolean; players?: bool
 const uploadVideo = async (input: {
   userId: string;
   kind: VideoKind;
-  file: Express.Multer.File;
+  file: Pick<Express.Multer.File, "path" | "size">;
   title?: string;
   /** Highlights only: which of the two videos to replace. */
   replaceVideoId?: string;
@@ -119,30 +151,7 @@ const uploadVideo = async (input: {
   const stage = (name: "checking" | "saving") => emitToUser(userId, "video:stage", { kind, stage: name });
   try {
     stage("checking");
-    const ctx = await loadContext(userId);
-    const slot = findSlot(ctx.plan, kind);
-    if (!slot) {
-      throw new AppError(StatusCodes.BAD_REQUEST, `${ctx.profile.position ?? ctx.user.role} does not use ${kind} videos.`);
-    }
-    assertConsent(ctx, slot);
-
-    const sameKind = (ctx.profile.videos as any[]).filter((v) => v.kind === kind);
-    let target: any;
-    if (slot.count === 1) {
-      target = sameKind[0];
-    } else if (replaceVideoId) {
-      target = sameKind.find((v) => String(v._id) === replaceVideoId);
-      if (!target) throw new AppError(StatusCodes.NOT_FOUND, "The video to replace was not found.");
-    } else if (sameKind.length >= slot.count) {
-      throw new AppError(StatusCodes.BAD_REQUEST, `You already have ${slot.count} ${kind.toLowerCase()} videos. Replace one of them.`);
-    }
-
-    if (target && isLockActive(target)) {
-      throw new AppError(
-        StatusCodes.LOCKED,
-        `Your ${kind.toLowerCase()} video is locked until ${formatDate(target.lockedUntil)}. Contact support if you need to change it earlier.`
-      );
-    }
+    const { ctx, slot, target } = await checkUploadAllowed(userId, kind, replaceVideoId);
 
     const probe = await probeVideo(file.path);
     assertVideoMeetsRules(probe, kind, slot.maxSeconds);
@@ -248,6 +257,7 @@ const setCaptions = async (userId: string, videoId: string, captionsUrl: string)
 export const VideoService = {
   getStatus,
   saveConsent,
+  checkUploadAllowed,
   uploadVideo,
   deleteVideo,
   releaseLock,

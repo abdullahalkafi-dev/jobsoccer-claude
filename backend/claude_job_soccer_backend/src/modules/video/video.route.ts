@@ -5,6 +5,7 @@ import { videoUpload } from "../../shared/middlewares/videoUpload";
 import { UserType } from "../user/user.interface";
 import { VideoController } from "./video.controller";
 import { VideoDto } from "./video.dto";
+import { ResumableVideoUpload } from "./video.resumable";
 
 const router = express.Router();
 
@@ -16,6 +17,21 @@ router.post("/consent", auth(UserType.CANDIDATE), validateRequest(VideoDto.conse
 
 /** POST /api/v1/videos - upload ONE video (multipart: video, kind, title?, replaceVideoId?). */
 router.post("/", auth(UserType.CANDIDATE), videoUpload, validateRequest(VideoDto.uploadDto), VideoController.upload);
+
+/**
+ * Resumable upload (the website uses this): the file travels in pieces and continues after a
+ * dropped connection. POST /uploads starts (or continues the same file), PUT /uploads/:id?offset=
+ * sends one raw piece, GET /uploads/:id says how much arrived, POST /uploads/:id/complete saves it.
+ */
+router.post("/uploads", auth(UserType.CANDIDATE), validateRequest(VideoDto.startUploadDto), VideoController.startUpload);
+router.get("/uploads/:uploadId", auth(UserType.CANDIDATE), VideoController.uploadStatus);
+router.put(
+  "/uploads/:uploadId",
+  auth(UserType.CANDIDATE),
+  express.raw({ type: "application/octet-stream", limit: ResumableVideoUpload.CHUNK_BYTES + 1024 }),
+  VideoController.uploadChunk
+);
+router.post("/uploads/:uploadId/complete", auth(UserType.CANDIDATE), VideoController.completeUpload);
 
 /** DELETE /api/v1/videos/:videoId - remove an optional video. */
 router.delete("/:videoId", auth(UserType.CANDIDATE), VideoController.remove);

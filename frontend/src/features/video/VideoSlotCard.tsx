@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Lock, RefreshCw, Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,22 @@ import {
   type TUploadStage,
 } from "./uploadStore";
 import type { TStoredVideo, TVideoPlan, TVideoSlot } from "./types";
+
+/** "Connection lost. Trying again in 8 s…" with a live countdown. */
+function RetryNotice({ retryAt, done }: { retryAt: number; done: string }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const seconds = Math.max(0, Math.ceil((retryAt - now) / 1000));
+  return (
+    <p className="text-xs text-amber-700">
+      Connection lost after {done}. {seconds > 0 ? `Trying again in ${seconds} s…` : "Trying again…"} Nothing is lost: the upload
+      continues from where it stopped.
+    </p>
+  );
+}
 
 const mediaUrl = (path: string): string => (path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BASE_URL}/${path}`);
 
@@ -186,7 +202,9 @@ export function VideoSlotCard({
                 style={{ width: `${upload.percent}%` }}
               />
             </div>
-            {upload.stage === "uploading" ? (
+            {upload.stage === "uploading" && upload.retryAt ? (
+              <RetryNotice retryAt={upload.retryAt} done={formatProgressBytes(upload.loadedBytes, upload.totalBytes)} />
+            ) : upload.stage === "uploading" ? (
               <p className="text-xs text-gray-600">
                 Uploading… {upload.percent}% · {formatProgressBytes(upload.loadedBytes, upload.totalBytes)}
                 {upload.bytesPerSecond > 0 && <> · {formatSpeed(upload.bytesPerSecond)}</>} · {formatTimeLeft(upload.secondsLeft)}
@@ -196,8 +214,14 @@ export function VideoSlotCard({
                 {upload.stage === "checking" ? "Upload complete. Checking your video (length, quality, sound)…" : "Saving your video…"}
               </p>
             )}
+            {upload.resumedFromBytes !== null && upload.stage === "uploading" && (
+              <p className="text-xs text-green-700">
+                Continuing your earlier upload of this file from {formatProgressBytes(upload.resumedFromBytes, upload.totalBytes).split(" of ")[0]} MB.
+              </p>
+            )}
             <p className="text-xs text-gray-500">
-              You can keep using the website while it uploads. Please do not close or reload this tab until it is finished.
+              You can keep using the website while it uploads. If the connection drops, the upload continues by itself. If you
+              close this tab, choose the same file again to continue where it stopped.
             </p>
           </div>
         )}
