@@ -13,7 +13,8 @@ const INTERVIEW_SUBTITLE ="Employers watch these to get to know you. Your interv
 const Body = () => {
   const { data: status, isLoading, isError } = useGetVideoStatusQuery();
 
-  if (isLoading) return <Skeleton className="h-64 w-full" />;
+  // Roughly the height of the video cards, so the page below does not jump when they arrive
+  if (isLoading) return <Skeleton className="h-[36rem] w-full" />;
   if (isError || !status) return <p className="text-sm text-red-600">We could not load your video requirements. Please refresh the page.</p>;
 
   const consentOk =
