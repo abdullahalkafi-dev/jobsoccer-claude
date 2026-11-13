@@ -40,7 +40,11 @@ export const store = configureStore({
     }).concat(baseApi.middleware),
 });
 
-export const persistor = persistStore(store);
+// The saved login is restored only after React has taken over the server-rendered page
+// (persistor.persist() in lib/Provider.tsx). Restoring it earlier would make the browser's first
+// render (signed in) differ from the server's HTML (signed out): a hydration error.
+// (redux-persist 6 supports manualPersist at runtime, see lib/persistStore.js; its types omit it.)
+export const persistor = persistStore(store, { manualPersist: true } as unknown as Parameters<typeof persistStore>[1]);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type AppStore = typeof store;
