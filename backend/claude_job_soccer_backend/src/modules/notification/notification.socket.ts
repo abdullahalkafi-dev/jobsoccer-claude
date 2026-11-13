@@ -1,5 +1,6 @@
 import { io } from "../../socket/socketServer";
-import { isUserOnline, getSocketIdByUserId, emitToUser } from "../../socket/socketUtils";
+import { isUserOnline, emitToUser } from "../../socket/socketUtils";
+import { userRoom } from "../../socket/emitToUser";
 import { NotificationService } from "./notification.service";
 import { TNotification } from "./notification.interface";
 
@@ -79,13 +80,8 @@ export const emitToMultipleUsersIfOnline = (
 export const sendUnreadCountUpdate = async (userId: string): Promise<void> => {
   const unreadCount = await NotificationService.getUnreadCount(userId);
 
-  if (io && isUserOnline(userId)) {
-    const socketId = getSocketIdByUserId(userId);
-    if (socketId) {
-      io.to(socketId).emit("notification_count_update", {
-        success: true,
-        unreadCount,
-      });
-    }
-  }
+  io?.to(userRoom(userId)).emit("notification_count_update", {
+    success: true,
+    unreadCount,
+  });
 };

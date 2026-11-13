@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { ChatMessage, Chat } from "@/types/chat";
-
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+import { useNotificationContext } from "@/components/providers/NotificationProvider";
 
 interface SocketResponse {
   success?: boolean;
@@ -42,73 +40,50 @@ interface UseSocketReturn {
   getOnlineUsers: () => Promise<OnlineUsersResponse>;
 }
 
-export function useSocket(token: string | null): UseSocketReturn {
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [connected, setConnected] = useState(false);
+/**
+ * Chat actions on the tab's ONE live connection (opened by NotificationProvider).
+ * It never opens a connection of its own: one connection per tab keeps the server
+ * light and makes every event reach the screen that listens for it.
+ */
+export function useSocket(): UseSocketReturn {
+  const { socket, connected } = useNotificationContext();
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const socketRef = useRef<Socket | null>(null);
+  socketRef.current = socket;
 
   useEffect(() => {
-    if (!token) return;
+    if (!socket) return;
 
-    // Create socket connection
-    const newSocket = io(SOCKET_URL, {
-      auth: {
-        token: token,
-      },
-      transports: ["websocket"], // Use websocket only for faster connection
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      timeout: 10000,
-      forceNew: false,
-      autoConnect: true,
-    });
-
-    // Connection events
-    newSocket.on("connect", () => {
-      setConnected(true);
-    });
-
-    newSocket.on("connected", () => {
-      setConnected(true);
-    });
-
-    newSocket.on("connect_error", () => {
-      setConnected(false);
-    });
-
-    newSocket.on("disconnect", () => {
-      setConnected(false);
-    });
-
-    // Online status events
-    newSocket.on("user_online", (data: { userId: string }) => {
+    const handleOnline = (data: { userId: string }) => {
       setOnlineUsers((prev) => [...new Set([...prev, data.userId])]);
-    });
-
-    newSocket.on("user_offline", (data: { userId: string }) => {
+    };
+    const handleOffline = (data: { userId: string }) => {
       setOnlineUsers((prev) => prev.filter((id) => id !== data.userId));
-    });
+    };
+    const handleList = (data: { onlineUsers: string[]; count: number }) => {
+      setOnlineUsers(data.onlineUsers);
+    };
+    // Start from the server's list, and again after every reconnect (we may have missed changes)
+    const loadList = () => {
+      socket.emit("get_online_users", (response: OnlineUsersResponse) => {
+        if (response?.success) setOnlineUsers(response.onlineUsers);
+      });
+    };
 
-    newSocket.on(
-      "online_users",
-      (data: { onlineUsers: string[]; count: number }) => {
-        setOnlineUsers(data.onlineUsers);
-      }
-    );
-
-    newSocket.on("error", () => {
-      // Handle socket error silently
-    });
-
-    socketRef.current = newSocket;
-    setSocket(newSocket);
+    socket.on("user_online", handleOnline);
+    socket.on("user_offline", handleOffline);
+    socket.on("online_users", handleList);
+    socket.on("connect", loadList);
+    if (socket.connected) loadList();
 
     return () => {
-      newSocket.close();
+      // Only remove our own listeners: the connection is shared with the rest of the page
+      socket.off("user_online", handleOnline);
+      socket.off("user_offline", handleOffline);
+      socket.off("online_users", handleList);
+      socket.off("connect", loadList);
     };
-  }, [token]);
+  }, [socket]);
 
   // Send message function
   const sendMessage = useCallback(

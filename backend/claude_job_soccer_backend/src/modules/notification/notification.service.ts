@@ -4,7 +4,7 @@ import { TNotification } from "./notification.interface";
 import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
 import { io } from "../../socket/socketServer";
-import { isUserOnline, getSocketIdByUserId } from "../../socket/socketUtils";
+import { userRoom } from "../../socket/emitToUser";
 
 /**
  * Create a new notification and send via socket if user is online
@@ -20,16 +20,11 @@ const createNotification = async (
     userId: new Types.ObjectId(userId),
     isRead: false,
   });
-  // Send real-time notification if user is online
-  if (isUserOnline(userId)) {
-    const socketId = getSocketIdByUserId(userId);
-    if (socketId && io) {
-      io.to(socketId).emit("new_notification", {
-        success: true,
-        notification: notification.toObject(),
-      });
-    }
-  }
+  // Real-time copy to every open tab/device of the user (nothing happens when they are offline)
+  io?.to(userRoom(userId)).emit("new_notification", {
+    success: true,
+    notification: notification.toObject(),
+  });
 
   return notification.toObject();
 };

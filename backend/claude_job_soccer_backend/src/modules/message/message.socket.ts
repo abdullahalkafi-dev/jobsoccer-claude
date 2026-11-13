@@ -2,11 +2,7 @@ import { Socket } from "socket.io";
 import { MessageService } from "./message.service";
 import { MessageType } from "./message.interface";
 import { ChatService } from "../chat/chat.service";
-
-interface ISocketUser {
-  userId: string;
-  socketId: string;
-}
+import { userRoom } from "../../socket/emitToUser";
 
 interface ISendMessagePayload {
   chatId: string;
@@ -29,11 +25,11 @@ interface IBlockUserPayload {
   chatId: string;
 }
 
-export const messageSocketHandlers = (
-  socket: Socket,
-  io: any,
-  onlineUsers: Map<string, ISocketUser>
-) => {
+/**
+ * Chat events. Every delivery goes to the user's room (all their tabs and devices),
+ * never to one socket id: a user can have several connections open at once.
+ */
+export const messageSocketHandlers = (socket: Socket, io: any) => {
   // Send message via socket
   socket.on(
     "send_message",
@@ -87,25 +83,14 @@ export const messageSocketHandlers = (
           callback({ success: true, message });
         }
 
-        // Find receiver's socket and send message
-        const receiverSocketId = Array.from(onlineUsers.values()).find(
-          (user) => user.userId === payload.receiverId
-        )?.socketId;
+        // Deliver to every open tab/device of the receiver (their room), and to the
+        // sender's other tabs, so the conversation is the same everywhere.
+        io.to(userRoom(payload.receiverId)).emit("new_message", { message });
+        socket.to(userRoom(userId)).emit("new_message", { message });
 
-        if (receiverSocketId) {
-
-          io.to(receiverSocketId).emit("new_message", {
-            message,
-          });
-        }
-
-        // Emit to both users to update chat list
-        socket.emit("chat_updated", { chatId: payload.chatId });
-        if (receiverSocketId) {
-          io.to(receiverSocketId).emit("chat_updated", {
-            chatId: payload.chatId,
-          });
-        }
+        // Both users' chat lists move this conversation to the top
+        io.to(userRoom(userId)).emit("chat_updated", { chatId: payload.chatId });
+        io.to(userRoom(payload.receiverId)).emit("chat_updated", { chatId: payload.chatId });
       } catch (error: any) {
         console.error("Error sending message:", error);
         const errorResponse = {
@@ -162,16 +147,10 @@ export const messageSocketHandlers = (
 
         // Notify the other user that messages were read
         if (otherUserId) {
-          const otherUserSocketId = Array.from(onlineUsers.values()).find(
-            (user) => user.userId === otherUserId
-          )?.socketId;
-
-          if (otherUserSocketId) {
-            io.to(otherUserSocketId).emit("messages_read_by_other", {
-              chatId: payload.chatId,
-              readByUserId: userId,
-            });
-          }
+          io.to(userRoom(otherUserId)).emit("messages_read_by_other", {
+            chatId: payload.chatId,
+            readByUserId: userId,
+          });
         }
       } catch (error: any) {
         console.error("Error marking messages as read:", error);
@@ -197,17 +176,10 @@ export const messageSocketHandlers = (
         return;
       }
 
-      // Find receiver's socket
-      const receiverSocketId = Array.from(onlineUsers.values()).find(
-        (user) => user.userId === payload.receiverId
-      )?.socketId;
-
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("user_typing", {
-          chatId: payload.chatId,
-          userId,
-        });
-      }
+      io.to(userRoom(payload.receiverId)).emit("user_typing", {
+        chatId: payload.chatId,
+        userId,
+      });
     } catch (error: any) {
       console.error("Error handling typing start:", error);
     }
@@ -221,17 +193,10 @@ export const messageSocketHandlers = (
         return;
       }
 
-      // Find receiver's socket
-      const receiverSocketId = Array.from(onlineUsers.values()).find(
-        (user) => user.userId === payload.receiverId
-      )?.socketId;
-
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("user_stopped_typing", {
-          chatId: payload.chatId,
-          userId,
-        });
-      }
+      io.to(userRoom(payload.receiverId)).emit("user_stopped_typing", {
+        chatId: payload.chatId,
+        userId,
+      });
     } catch (error: any) {
       console.error("Error handling typing stop:", error);
     }
@@ -276,16 +241,10 @@ export const messageSocketHandlers = (
           ?.toString();
 
         if (blockedUserId) {
-          const blockedUserSocketId = Array.from(onlineUsers.values()).find(
-            (user) => user.userId === blockedUserId
-          )?.socketId;
-
-          if (blockedUserSocketId) {
-            io.to(blockedUserSocketId).emit("you_were_blocked", {
-              chatId: payload.chatId,
-              blockedByUserId: userId,
-            });
-          }
+          io.to(userRoom(blockedUserId)).emit("you_were_blocked", {
+            chatId: payload.chatId,
+            blockedByUserId: userId,
+          });
         }
       } catch (error: any) {
         console.error("Error blocking user:", error);
@@ -341,16 +300,10 @@ export const messageSocketHandlers = (
           ?.toString();
 
         if (unblockedUserId) {
-          const unblockedUserSocketId = Array.from(onlineUsers.values()).find(
-            (user) => user.userId === unblockedUserId
-          )?.socketId;
-
-          if (unblockedUserSocketId) {
-            io.to(unblockedUserSocketId).emit("you_were_unblocked", {
-              chatId: payload.chatId,
-              unblockedByUserId: userId,
-            });
-          }
+          io.to(userRoom(unblockedUserId)).emit("you_were_unblocked", {
+            chatId: payload.chatId,
+            unblockedByUserId: userId,
+          });
         }
       } catch (error: any) {
         console.error("Error unblocking user:", error);
