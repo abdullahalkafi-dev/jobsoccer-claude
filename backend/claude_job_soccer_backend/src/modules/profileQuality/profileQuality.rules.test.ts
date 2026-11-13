@@ -80,7 +80,19 @@ describe("calculateProfileQuality (staff)", () => {
     const result = calculateProfileQuality(fullStaff({ videos: [] }));
     expect(result.score).toBe(75);
     expect(result.tips[0]).toBe("Record your video interview.");
-    expect(result.tips).toContain("Upload your methodology video.");
+    expect(result.tips).toContain("Optional: add a methodology video to stand out to employers.");
+  });
+
+  it("caps staff at 95 without the optional methodology video (worth 5 points)", () => {
+    for (const role of [CandidateRole.ON_FIELD_STAFF, CandidateRole.OFFICE_STAFF]) {
+      const result = calculateProfileQuality(fullStaff({ role, videos: [{ kind: VideoKind.INTERVIEW }] }));
+      expect(result.score).toBe(95);
+      expect(result.level).toBe("premium");
+      const media = result.categories.find((c) => c.key === "media")!;
+      expect(media.max).toBe(35);
+      expect(media.items.find((i) => i.key === "methodology")!.max).toBe(5);
+      expect(media.items.find((i) => i.key === "interview")!.max).toBe(20);
+    }
   });
 
   it("does not demand licences from office staff and does not penalise missing messages", () => {

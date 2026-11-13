@@ -175,6 +175,14 @@ const interviewSlot = (introLastLine: string): TVideoSlot => ({
         "Answer in your own words. Reading directly from a script is not allowed.",
       ],
     },
+    {
+      heading: "Recording instructions",
+      items: [
+        "You may pause and record your answers separately, then combine all answers into one video before uploading.",
+        "The questions must be clearly displayed in the video, in the order they appear.",
+        "Your final video must be up to 6:30 minutes in total.",
+      ],
+    },
     RECORDING_POSITION,
   ],
 });
@@ -217,7 +225,6 @@ const staffMethodologySlot = (guide: TMethodologyGuide, required: boolean, offic
         ? [
             "Explain your working methodology: how you organize your work, make decisions, and measure results in your role.",
             "Speak clearly so employers can follow your process and logic.",
-            "The video must be one continuous clip.",
             "Profiles that include this video stand out to employers.",
           ]
         : ["The footage must be clear enough to evaluate your methodology."],
@@ -306,7 +313,7 @@ export const getVideoPlan = (role: CandidateRole, position?: string | null): TVi
       ...base,
       slots: [
         interviewSlot("Current club or coaching role (if applicable)"),
-        staffMethodologySlot(guide, true, false),
+        staffMethodologySlot(guide, false, false),
       ],
       consent: {
         ai: { required: true, text: AI_CONSENT_TEXT },
