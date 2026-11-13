@@ -140,6 +140,9 @@ export const formatTimeLeft = (seconds: number | null): string => {
   return minutes >= 60 ? `about ${Math.floor(minutes / 60)} h ${minutes % 60} min left` : `about ${minutes} min left`;
 };
 
-/** "123 of 480 MB" */
-export const formatProgressBytes = (loaded: number, total: number): string =>
-  `${Math.round(loaded / (1024 * 1024))} of ${Math.round(total / (1024 * 1024))} MB`;
+/** "123 of 480 MB"; small files keep one decimal ("0.4 of 1.5 MB") */
+export const formatProgressBytes = (loaded: number, total: number): string => {
+  const mb = (bytes: number) => bytes / (1024 * 1024);
+  const digits = mb(total) < 10 ? 1 : 0;
+  return `${mb(loaded).toFixed(digits)} of ${mb(total).toFixed(digits)} MB`;
+};
