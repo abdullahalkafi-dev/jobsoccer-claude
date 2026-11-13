@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/hooks";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,27 +23,41 @@ export default function AgentHiringPage() {
     "requests"
   );
 
+  // Only agents use this page; other employers are sent back to their profile (no failing requests).
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+  const isAgent = user?.role === "Agent";
+  useEffect(() => {
+    if (user && !isAgent) router.replace("/profile/employer");
+  }, [user, isAgent, router]);
+
   // Fetch hiring requests (pending)
   const {
     data: requestsData,
     isLoading: requestsLoading,
     refetch: refetchRequests,
-  } = useGetAgentRequestsQuery({
-    status: "pending",
-    page: 1,
-    limit: 50,
-  });
+  } = useGetAgentRequestsQuery(
+    {
+      status: "pending",
+      page: 1,
+      limit: 50,
+    },
+    { skip: !isAgent }
+  );
 
   // Fetch approved hirings
   const {
     data: approvedData,
     isLoading: approvedLoading,
     refetch: refetchApproved,
-  } = useGetAgentRequestsQuery({
-    status: "accepted",
-    page: 1,
-    limit: 50,
-  });
+  } = useGetAgentRequestsQuery(
+    {
+      status: "accepted",
+      page: 1,
+      limit: 50,
+    },
+    { skip: !isAgent }
+  );
 
   const [updateHiringStatus] = useUpdateHiringStatusMutation();
 

@@ -39,7 +39,7 @@ export function Footer() {
 
               <li>
                 <Link
-                  href=""
+                  href="/about"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
                   About Us
@@ -47,7 +47,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href=""
+                  href="/faq"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
                   FAQ
@@ -55,7 +55,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href=""
+                  href="/contact"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
                   Contact
@@ -69,7 +69,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href=""
+                  href="/terms"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
                   Terms of Use
@@ -77,7 +77,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href=""
+                  href="/privacy"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
                   Privacy policy

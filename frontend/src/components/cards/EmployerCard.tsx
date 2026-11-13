@@ -41,6 +41,8 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
   const isFollowing = localIsFollowing ?? employer.isFollowing ?? false;
   const followerCount = localFollowerCount ?? employer?.followerCount ?? 0;
   const isLoading = isFollowLoading || isUnfollowLoading;
+  // A logo file that is missing on the server falls back to the initials avatar
+  const [logoFailed, setLogoFailed] = React.useState(false);
 
   const handleFollow = async () => {
     if (
@@ -108,7 +110,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       <div className="border-b border-gray-200 pb-4">
         <div className="flex items-center gap-3 mb-4 ">
           <Link href={`/employers/${employer._id}`}>
-            {logoUrl ? (
+            {logoUrl && !logoFailed ? (
               <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-200 bg-white cursor-pointer hover:opacity-80 transition-opacity">
                 <Image
                   src={logoUrl}
@@ -116,6 +118,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
                   width={48}
                   height={48}
                   className="w-full h-full object-cover"
+                  onError={() => setLogoFailed(true)}
                 />
               </div>
             ) : (
