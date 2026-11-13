@@ -28,7 +28,7 @@ const upload = multer({
 }).single("video");
 
 /**
- * Receive exactly one video (form field "video", up to 500 MB) and put it on
+ * Receive exactly one video (form field "video", up to 600 MB) and put it on
  * req.file. One video per request keeps each upload small enough to finish
  * reliably and lets the browser show real progress per video.
  */
@@ -36,7 +36,7 @@ export const videoUpload = (req: Request, res: Response, next: NextFunction): vo
   upload(req, res, (error: any) => {
     if (!error) return next();
     if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
-      return next(new AppError(StatusCodes.REQUEST_TOO_LONG, "This video is larger than 500 MB."));
+      return next(new AppError(StatusCodes.REQUEST_TOO_LONG, "This video is larger than 600 MB."));
     }
     next(error);
   });
