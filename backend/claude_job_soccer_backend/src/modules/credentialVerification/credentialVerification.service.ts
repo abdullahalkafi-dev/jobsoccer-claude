@@ -7,6 +7,9 @@ import { CandidateEducation } from "../candidateEducation/candidateEducation.mod
 import { CandidateExperience } from "../candidateExperience/candidateExperience.model";
 import { CandidateLicenseAndCertification } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.model";
 import { NotificationService } from "../notification/notification.service";
+import { candidateEducationCache } from "../candidateEducation/candidateEducation.cache";
+import { candidateExperienceCache } from "../candidateExperience/candidateExpreience.cache";
+import { candidateLicensesAndCertificationCache } from "../candidateLicensesAndCertification/candidateLicensesAndCertification.cache";
 
 /** The three kinds of record a candidate can back up with a document. */
 export const RECORD_TYPES = ["experience", "education", "license"] as const;
@@ -22,6 +25,16 @@ const LABELS: Record<TRecordType, string> = {
   experience: "work history",
   education: "education",
   license: "licence or certification",
+};
+
+/**
+ * The candidate's lists of experience / education / licences are cached for an hour. A document
+ * status change (sent, verified, not approved) must show at once, so clear that list's cache.
+ */
+const clearListCache = async (type: TRecordType, userId: string, profileId?: string): Promise<void> => {
+  if (type === "experience") await candidateExperienceCache.invalidateUserCache(userId, profileId);
+  else if (type === "education") await candidateEducationCache.invalidateUserCache(userId);
+  else await candidateLicensesAndCertificationCache.invalidateUserCache(userId);
 };
 
 const loadRecord = async (type: TRecordType, recordId: string) => {
@@ -48,6 +61,7 @@ const submitDocument = async (input: { userId: string; type: TRecordType; record
   record.verifiedBy = undefined;
   await record.save();
   await persistUploadedFiles([input.file.path]);
+  await clearListCache(input.type, input.userId, record.profileId ? String(record.profileId) : undefined);
 
   return record.toObject();
 };
@@ -75,6 +89,7 @@ const review = async (input: { adminId: string; type: TRecordType; recordId: str
   await record.save();
 
   const userId = String(record.userId);
+  await clearListCache(input.type, userId, record.profileId ? String(record.profileId) : undefined);
   await NotificationService.sendNotificationToUser(
     userId,
     input.status === "approved" ? "Document approved" : "Document not approved",
