@@ -18,9 +18,22 @@ const SENSITIVE_FIELDS = [
   "apiSecret",
 ];
 
+/**
+ * What a request body may look like in a log line. Raw bodies (Buffers: video upload pieces,
+ * the Stripe webhook) are never copied: express-winston builds this for EVERY request, even ones
+ * it does not log, and spreading an 8 MB Buffer into an object with 8 million keys ran the
+ * backend out of memory and crashed it.
+ */
+const bodyForLog = (body: unknown): unknown => {
+  if (!body || typeof body !== "object") return undefined;
+  if (Buffer.isBuffer(body) || ArrayBuffer.isView(body)) return `[binary ${(body as Buffer).length} bytes]`;
+  return Object.keys(body).length > 0 ? redactSensitiveData(body) : undefined;
+};
+
 // Dynamically redact sensitive data from request body and headers
 const redactSensitiveData = (obj: any): any => {
   if (!obj || typeof obj !== "object") return obj;
+  if (Buffer.isBuffer(obj) || ArrayBuffer.isView(obj)) return `[binary ${(obj as Buffer).length} bytes]`;
 
   const redacted = Array.isArray(obj) ? [...obj] : { ...obj };
 
@@ -60,6 +73,7 @@ const expressWinstonLogger = (level: string) => {
 
     // Dynamic metadata with sensitive data redaction
     dynamicMeta: (req: Request, res: Response) => {
+      const body = bodyForLog(req.body);
       return {
         requestId: req.id || req.headers["x-request-id"] || "unknown",
         method: req.method,
@@ -68,9 +82,7 @@ const expressWinstonLogger = (level: string) => {
         ip: req.ip,
         userAgent: req.get("user-agent"),
         userId: (req as any).user?.id,
-        ...(Object.keys(req.body || {}).length > 0 && {
-          body: redactSensitiveData(req.body),
-        }),
+        ...(body !== undefined && { body }),
         ...(Object.keys(req.query || {}).length > 0 && {
           query: redactSensitiveData(req.query),
         }),
