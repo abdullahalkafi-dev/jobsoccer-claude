@@ -263,25 +263,25 @@ export function UsersTable() {
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Role
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Type
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Subscription
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Joined
               </th>
-              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              <th className="px-3 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -290,7 +290,7 @@ export function UsersTable() {
             {isFetching ? (
               Array.from({ length: 5 }).map((_, index) => (
                 <tr key={`skeleton-${index}`}>
-                  <td className="px-6 py-4" colSpan={7}>
+                  <td className="px-3 py-3" colSpan={7}>
                     <Skeleton className="h-12 w-full" />
                   </td>
                 </tr>
@@ -301,7 +301,7 @@ export function UsersTable() {
                   key={user._id}
                   className="hover:bg-gray-50 transition-colors duration-150"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm">
                         {getInitials(user.firstName, user.lastName)}
@@ -316,13 +316,13 @@ export function UsersTable() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.email}</div>
+                  <td className="px-3 py-3 max-w-[15rem]">
+                    <div className="text-sm text-gray-900 truncate" title={user.email}>{user.email}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <div className="text-sm text-gray-700">{user.role}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md border ${getUserTypeStyle(
                         user.userType
@@ -331,7 +331,7 @@ export function UsersTable() {
                       {user.userType}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md border ${getStatusStyle(
                         user.subscriptionStatus
@@ -340,12 +340,12 @@ export function UsersTable() {
                       {user.subscriptionStatus}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <div className="text-sm text-gray-700">
                       {formatDate(user.createdAt)}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                  <td className="px-3 py-3 whitespace-nowrap text-center">
                     <button
                       onClick={() => handleViewDetails(user._id)}
                       className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-150"
