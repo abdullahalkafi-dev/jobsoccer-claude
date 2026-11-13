@@ -43,12 +43,12 @@ const aiEvaluationApi = baseApi.injectEndpoints({
     getMyAssessment: builder.query<TAssessmentResponse, void>({
       query: () => "/ai-evaluation/me",
       transformResponse: (response: { data: TAssessmentResponse }) => response.data,
-      providesTags: ["User"],
+      providesTags: ["Assessment"],
     }),
     getCandidateAssessment: builder.query<TAssessmentResponse, string>({
       query: (userId) => `/ai-evaluation/candidate/${userId}`,
       transformResponse: (response: { data: TAssessmentResponse }) => response.data,
-      providesTags: ["FriendList"],
+      providesTags: ["Assessment"],
     }),
   }),
 });

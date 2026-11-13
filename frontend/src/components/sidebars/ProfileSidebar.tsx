@@ -91,7 +91,7 @@ export default function ProfileSidebar() {
       )}
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:block w-60 lg:shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
+      <div className="hidden md:block w-60 shrink-0 bg-white border rounded-2xl border-gray-200 h-full">
         <SidebarContent
           activeSection={activeSection}
           onLogout={handleLogoutClick}

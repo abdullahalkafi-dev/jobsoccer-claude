@@ -3,9 +3,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export function ProfileSkeleton() {
+/**
+ * @param embedded true inside the profile layout (next to the sidebar): take the same width as the
+ *   real page, so swapping skeleton for content does not make the page jump.
+ */
+export function ProfileSkeleton({ embedded = false }: { embedded?: boolean } = {}) {
   return (
-    <div className="px-4 md:px-6 lg:px-8 container mx-auto">
+    <div className={embedded ? "px-4 flex-1 min-w-0 w-full" : "px-4 md:px-6 lg:px-8 container mx-auto"}>
       {/* Banner and Profile Picture Skeleton */}
       <div className="relative mb-8 w-full">
         <Skeleton className="h-48 lg:h-64 w-full rounded-lg" />

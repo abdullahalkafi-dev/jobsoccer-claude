@@ -35,6 +35,7 @@ export const baseApi = createApi({
     "Agent",
     "Video",
     "ProfileQuality",
+    "Assessment",
   ],
   endpoints: () => ({}),
 });
