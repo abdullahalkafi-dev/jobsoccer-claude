@@ -198,13 +198,14 @@ const staffMedia = (s: TQualitySnapshot): TItemSpec[] => {
   return [
     { key: "photo", label: "Profile photo", max: 5, fraction: s.profileImage ? 1 : 0, tip: "Add a clear profile photo." },
     { key: "cv", label: "CV", max: 5, fraction: cvFraction, tip: s.resume ? "Update your CV so it matches your role." : "Upload your CV." },
-    { key: "interview", label: "Video interview", max: 15, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tip: "Record your video interview." },
+    // The methodology video is optional (5 points); the interview carries the rest, so media always adds up to 35.
+    { key: "interview", label: "Video interview", max: 20, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tip: "Record your video interview." },
     {
       key: "methodology",
       label: "Methodology video",
-      max: 10,
+      max: 5,
       fraction: has(VideoKind.METHODOLOGY) ? 1 : 0,
-      tip: s.role === CandidateRole.OFFICE_STAFF ? "Optional: add a methodology video to stand out to employers." : "Upload your methodology video.",
+      tip: "Optional: add a methodology video to stand out to employers.",
     },
   ];
 };
