@@ -47,7 +47,7 @@ export function AmateurPlayerProfessionalInfoForm({
   const {
     register,
     handleSubmit,
-    setValue,
+    setValue: rawSetValue,
     formState: { errors, isValid },
   } = useForm<TAmateurPlayerProfessionalInfo>({
     resolver: zodResolver(amateurPlayerProfessionalInfoSchema),
@@ -64,6 +64,10 @@ export function AmateurPlayerProfessionalInfoForm({
     },
     mode: "onChange",
   });
+
+  // Re-check the form after a dropdown/photo changes, so "Next" enables as soon as everything is filled.
+  const setValue: typeof rawSetValue = (name, value, options) =>
+    rawSetValue(name, value, { shouldValidate: true, shouldDirty: true, ...options });
 
   const onSubmit = (data: TAmateurPlayerProfessionalInfo) => {
     console.log("Amateur Player Professional Info:", data);

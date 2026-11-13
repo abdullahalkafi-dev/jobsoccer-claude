@@ -46,7 +46,7 @@ export function CollegeOrUniversityPlayerProfessionalInfoForm({
   const {
     register,
     handleSubmit,
-    setValue,
+    setValue: rawSetValue,
     formState: { errors, isValid },
   } = useForm<TCollegeOrUniversityPlayerProfessionalInfo>({
     resolver: zodResolver(collegeOrUniversityPlayerProfessionalInfoSchema),
@@ -63,6 +63,10 @@ export function CollegeOrUniversityPlayerProfessionalInfoForm({
     },
     mode: "onChange",
   });
+
+  // Re-check the form after a dropdown/photo changes, so "Next" enables as soon as everything is filled.
+  const setValue: typeof rawSetValue = (name, value, options) =>
+    rawSetValue(name, value, { shouldValidate: true, shouldDirty: true, ...options });
 
   const onSubmit = (data: TCollegeOrUniversityPlayerProfessionalInfo) => {
     onNext(data);
