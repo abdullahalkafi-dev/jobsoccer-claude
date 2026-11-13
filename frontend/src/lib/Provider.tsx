@@ -23,6 +23,11 @@ const AuthSync = () => {
   const router = useRouter();
 
   useEffect(() => {
+    // The page is hydrated now: restore the saved login from localStorage
+    persistor.persist();
+  }, []);
+
+  useEffect(() => {
     let previous: string | null | undefined; // undefined = the saved login is not restored yet
     let fromOtherTab = false;
     const channel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(AUTH_CHANNEL) : null;
