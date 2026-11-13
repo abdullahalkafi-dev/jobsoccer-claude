@@ -1,13 +1,22 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { getLinkedInProfile, verifyOAuthState } from "@/lib/linkedinAuth";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 
+/** Reads ?code from the URL, so it renders in the browser only (Suspense keeps the build static). */
 export default function LinkedInCallbackPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <LinkedInCallback />
+    </Suspense>
+  );
+}
+
+function LinkedInCallback() {
   const [error, setError] = useState<string>("");
 
   const [login] = useLoginMutation();

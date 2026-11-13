@@ -1,5 +1,6 @@
 import { TUser } from "@/types/auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clearTokenCookie, writeTokenCookie } from "@/lib/authCookie";
 
 type TAuthState = {
   user: TUser | null;
@@ -17,12 +18,8 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
-      // Store token in cookie for middleware access
-      if (typeof document !== "undefined") {
-        document.cookie = `token=${action.payload}; path=/; max-age=${
-          60 * 60 * 24 * 7
-        }`; // 7 days
-      }
+      // The route guard (middleware) reads the cookie; keep it in step with the store
+      writeTokenCookie(action.payload);
     },
     setUser: (state, action: PayloadAction<TUser | null>) => {
       state.user = action.payload;
@@ -30,11 +27,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      // Remove token cookie
-      if (typeof document !== "undefined") {
-        document.cookie =
-          "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-      }
+      clearTokenCookie();
     },
   },
 });

@@ -177,6 +177,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
     return (
       <Link
         href={link.href}
+        prefetch={prefetchFor(link.href)}
         onClick={handleClick}
         className={`flex items-center gap-3 py-2 ${baseClasses} ${activeClasses}`}
       >
@@ -196,6 +197,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
   return (
     <Link
       href={link.href}
+      prefetch={prefetchFor(link.href)}
       onClick={link.onClick}
       className={`flex flex-col items-center gap-1 relative ${baseClasses} ${activeClasses}`}
     >
@@ -213,6 +215,14 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
 };
 
 // ==================== Helpers ====================
+
+/**
+ * Pages behind sign-in are not prefetched: a prefetch made before login is answered with
+ * "go to Sign in", and Next.js would replay that cached answer on the first click after login.
+ */
+const PROTECTED_PREFIXES = ["/messages", "/notification", "/my-network", "/profile"];
+const prefetchFor = (href: string): false | undefined =>
+  PROTECTED_PREFIXES.some((prefix) => href.startsWith(prefix)) ? false : undefined;
 const getNavLinks = (
   isLoggedIn: boolean,
   onNotificationClick: () => void,
@@ -239,11 +249,8 @@ const getNavLinks = (
     ];
   }
 
-  return [
-    ...commonLinks,
-    { name: "Upgrade", href: "/upgrade", icon: Crown },
-    { name: "Messages", href: "/messages", icon: MessageCircle },
-  ];
+  // Signed-out visitors only see pages they can open (no Messages link that leads to Sign in)
+  return [...commonLinks, { name: "Upgrade", href: "/upgrade", icon: Crown }];
 };
 
 const getProfileImageUrl = (profileImage?: string): string | undefined => {
@@ -266,6 +273,9 @@ export function Navbar() {
   const token = useAppSelector((state) => state.auth.token);
   const reduxUser = useAppSelector((state) => state.auth.user);
   const hasToken = !!token;
+  // False until the saved login has been read from this browser: until then we do not know
+  // whether to show "Sign In" or the account menu, so neither is shown (no flash of the wrong one)
+  const loginRestored = useAppSelector((state) => !!state.auth._persist?.rehydrated);
 
   // Mount logic to avoid Next.js hydration mismatch
   useEffect(() => {
@@ -288,12 +298,12 @@ export function Navbar() {
   }, [userError, dispatch]);
 
   // Get real-time unread notification count from context
-  const { unreadCount: realtimeUnreadCount } = useNotificationContext();
+  const { unreadCount: realtimeUnreadCount, connected: liveConnected } = useNotificationContext();
 
   // Get unread notification count from API as backup
   const { data: unreadCountData } = useGetUnreadCountQuery(undefined, {
     skip: !hasToken,
-    pollingInterval: 60000, // Poll every 60 seconds
+    pollingInterval: liveConnected ? 0 : 60000, // the live connection pushes changes; poll only while it is down
   });
 
   // Use real-time count if available, otherwise fall back to API count
@@ -389,13 +399,9 @@ export function Navbar() {
           {/* Desktop User Menu */}
           <div className="hidden lg:flex gap-5 justify-end">
             <GoogleTranslate />
-            {!mounted ? (
-              // Neutral loading placeholder before hydration matching server render
-              <Link href="/signin">
-                <Button className="bg-black hover:bg-gray-800 text-white font-semibold cursor-pointer">
-                  Sign In
-                </Button>
-              </Link>
+            {!mounted || !loginRestored ? (
+              // Same size as the button, so nothing moves when the real control appears
+              <div className="h-9 w-[84px]" aria-hidden="true" />
             ) : hasToken && isLoadingUser && !currentUser ? (
               // Pulse loader when loading state is active and we don't have redux cached data
               <div className="w-11 h-11 rounded-full bg-gray-200 animate-pulse" />
@@ -423,7 +429,7 @@ export function Navbar() {
         <SheetContent side="left" className="w-[300px] sm:w-[400px]">
           <SheetHeader className="border-b">
             <SheetTitle className="text-left">
-              {!mounted ? (
+              {!mounted || !loginRestored ? (
                 <span className="text-xl font-bold text-gray-900">Menu</span>
               ) : hasToken && isLoadingUser && !currentUser ? (
                 <div className="w-13 h-13 rounded-full bg-gray-200 animate-pulse" />
@@ -456,7 +462,7 @@ export function Navbar() {
               />
             ))}
 
-            {(!mounted || !isLoggedIn) && (
+            {mounted && loginRestored && !isLoggedIn && (
               <Link
                 href="/signin"
                 onClick={closeMobileMenu}
