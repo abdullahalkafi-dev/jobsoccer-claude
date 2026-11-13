@@ -19,8 +19,9 @@ export function useLiveCandidateEvents(): void {
 
   useEffect(() => {
     if (!socket) return;
+    // Each event reloads only what it changed
     const refreshVideos = () => dispatch(baseApi.util.invalidateTags(["Video", "User"]));
-    const refreshAssessment = () => dispatch(baseApi.util.invalidateTags(["User"]));
+    const refreshAssessment = () => dispatch(baseApi.util.invalidateTags(["Assessment"]));
     const refreshQuality = () => dispatch(baseApi.util.invalidateTags(["ProfileQuality", "User"]));
 
     socket.on("video:updated", refreshVideos);

@@ -28,6 +28,12 @@ export const VIDEO_LIMITS = {
   playerHighlightCount: 2,
 } as const;
 
+/**
+ * How long one upload request may take (whole body + checks). 45 minutes lets a 600 MB
+ * video through at about 1.8 Mbit/s. Nginx's timeouts for /api/v1/videos must be at least this.
+ */
+export const UPLOAD_REQUEST_TIMEOUT_MS = 45 * 60 * 1000;
+
 /** Version of the consent texts shown before upload; stored with the consent. */
 export const VIDEO_CONSENT_VERSION = "2026-11";
 

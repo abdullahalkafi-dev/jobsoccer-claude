@@ -8,6 +8,7 @@ import { startAiBackgroundWork } from "./shared/ai/aiWorker";
 import { registerAiEvaluationListeners } from "./modules/aiEvaluation/aiEvaluation.listeners";
 import { ProfileQualityService } from "./modules/profileQuality/profileQuality.service";
 import { assertSafeEnvironment } from "./shared/safety/envGuard";
+import { UPLOAD_REQUEST_TIMEOUT_MS } from "./modules/video/video.constant";
 
 // Refuse to start a dev/staging process against the client's production database
 try {
@@ -24,6 +25,10 @@ process.on("uncaughtException", (error) => {
 });
 
 const server = socketServer();
+// Node closes any request that takes longer than 5 minutes by default (408). A 600 MB interview video
+// on a normal home or phone connection needs much longer, so allow up to 45 minutes per request.
+server.requestTimeout = UPLOAD_REQUEST_TIMEOUT_MS;
+
 async function main() {
   try {
     mongoose.connect(config.database_url as string);

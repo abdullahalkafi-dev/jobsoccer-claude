@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Lock, RefreshCw, Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,17 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { GuideQuestions } from "@/components/questions/GuideQuestions";
 import { SetupPhotos } from "./SetupPhotos";
 import { checkVideoFile, formatClock } from "./checkVideoFile";
-import { uploadVideo } from "./uploadVideo";
+import { useOptionalLiveConnection } from "@/components/providers/NotificationProvider";
+import {
+  formatProgressBytes,
+  formatSpeed,
+  formatTimeLeft,
+  setUploadError,
+  setUploadStage,
+  startVideoUpload,
+  useVideoUpload,
+  type TUploadStage,
+} from "./uploadStore";
 import type { TStoredVideo, TVideoPlan, TVideoSlot } from "./types";
 
 const mediaUrl = (path: string): string => (path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BASE_URL}/${path}`);
@@ -31,11 +41,25 @@ export function VideoSlotCard({
   const token = useAppSelector((state) => state.auth.token);
   const inputRef = useRef<HTMLInputElement>(null);
   const targetRef = useRef<{ replaceVideoId?: string }>({});
-  const [progress, setProgress] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { socket, connected } = useOptionalLiveConnection();
+  // The upload lives outside this card, so it keeps going (and is shown again) if the candidate leaves the page
+  const { state: upload, error } = useVideoUpload(slot.kind);
 
   const rows = Array.from({ length: slot.count }, (_, index) => videos[index] ?? null);
-  const uploading = progress !== null;
+  const hasVideo = rows.some(Boolean);
+  const uploading = upload !== null;
+
+  // Once the whole file has arrived, the server reports what it is doing with it
+  useEffect(() => {
+    if (!socket) return;
+    const onStage = (data: { kind: string; stage: TUploadStage }) => {
+      if (data.kind === slot.kind) setUploadStage(slot.kind, data.stage);
+    };
+    socket.on("video:stage", onStage);
+    return () => {
+      socket.off("video:stage", onStage);
+    };
+  }, [socket, slot.kind]);
 
   const pick = (replaceVideoId?: string) => {
     targetRef.current = { replaceVideoId };
@@ -43,24 +67,21 @@ export function VideoSlotCard({
   };
 
   const handleFile = async (file: File | undefined) => {
+    if (inputRef.current) inputRef.current.value = "";
     if (!file || !token) return;
-    setError(null);
+    setUploadError(slot.kind, null);
     const check = await checkVideoFile(file, {
       maxSeconds: slot.maxSeconds,
       maxMegabytes: plan.limits.maxMegabytes,
       minShortSide: plan.limits.minShortSide,
     });
-    if (!check.ok) return setError(check.message);
+    if (!check.ok) return setUploadError(slot.kind, check.message);
 
-    setProgress(0);
-    try {
-      await uploadVideo({ token, kind: slot.kind, file, replaceVideoId: targetRef.current.replaceVideoId, onProgress: setProgress });
-      dispatch(baseApi.util.invalidateTags(["Video", "User", "ProfileQuality"]));
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "The upload failed.");
-    } finally {
-      setProgress(null);
-      if (inputRef.current) inputRef.current.value = "";
+    const saved = await startVideoUpload({ token, kind: slot.kind, file, replaceVideoId: targetRef.current.replaceVideoId });
+    if (saved) {
+      // Show the new video at once. With a live connection the server also pushes the score and profile
+      // updates; without one, reload those here too.
+      dispatch(baseApi.util.invalidateTags(connected ? ["Video"] : ["Video", "User", "ProfileQuality"]));
     }
   };
 
@@ -77,9 +98,10 @@ export function VideoSlotCard({
 
         <p className="text-sm text-gray-700">{slot.headline}</p>
 
-        {slot.kind === "Interview" && plan.position && <GuideQuestions position={plan.position} />}
+        {/* Open while the interview still has to be recorded; folded away once it is uploaded */}
+        {slot.kind === "Interview" && plan.position && <GuideQuestions position={plan.position} collapsible defaultOpen={!hasVideo} />}
 
-        <details className="rounded-lg bg-gray-50 p-3 text-sm" open={!rows.some(Boolean)}>
+        <details className="rounded-lg bg-gray-50 p-3 text-sm" open={!hasVideo}>
           <summary className="cursor-pointer font-medium text-gray-900">Recording guide</summary>
           <div className="mt-3 space-y-4">
             {slot.sections.map((section) => (
@@ -156,12 +178,27 @@ export function VideoSlotCard({
 
         {!consentOk && <p className="text-sm text-amber-700">Please tick the confirmations above before uploading.</p>}
 
-        {uploading && (
-          <div role="progressbar" aria-valuenow={progress ?? 0} aria-valuemin={0} aria-valuemax={100} className="space-y-1">
+        {upload && (
+          <div role="progressbar" aria-valuenow={upload.percent} aria-valuemin={0} aria-valuemax={100} className="space-y-1">
             <div className="h-2 w-full overflow-hidden rounded bg-gray-200">
-              <div className="h-full bg-yellow-400 transition-all" style={{ width: `${progress}%` }} />
+              <div
+                className={`h-full bg-yellow-400 transition-all ${upload.stage === "uploading" ? "" : "animate-pulse"}`}
+                style={{ width: `${upload.percent}%` }}
+              />
             </div>
-            <p className="text-xs text-gray-600">{progress === 100 ? "Checking your video…" : `Uploading… ${progress}%`}</p>
+            {upload.stage === "uploading" ? (
+              <p className="text-xs text-gray-600">
+                Uploading… {upload.percent}% · {formatProgressBytes(upload.loadedBytes, upload.totalBytes)}
+                {upload.bytesPerSecond > 0 && <> · {formatSpeed(upload.bytesPerSecond)}</>} · {formatTimeLeft(upload.secondsLeft)}
+              </p>
+            ) : (
+              <p className="text-xs text-gray-600">
+                {upload.stage === "checking" ? "Upload complete. Checking your video (length, quality, sound)…" : "Saving your video…"}
+              </p>
+            )}
+            <p className="text-xs text-gray-500">
+              You can keep using the website while it uploads. Please do not close or reload this tab until it is finished.
+            </p>
           </div>
         )}
         {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
