@@ -40,10 +40,13 @@ services:
       - jobsoccer_staging_network
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval \"try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }\" | grep -q 1"]
-      interval: 10s
+      # mongosh is a Node program: each check costs ~1 s of a full CPU. Check every 5 s while
+      # starting (so the backend can start quickly), then once a minute.
+      interval: 60s
       timeout: 10s
-      retries: 10
-      start_period: 10s
+      retries: 3
+      start_period: 60s
+      start_interval: 5s
 
   # S3-compatible file storage (SeaweedFS). Keys come from S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
   # in the backend .env (run compose with --env-file backend/claude_job_soccer_backend/.env).
