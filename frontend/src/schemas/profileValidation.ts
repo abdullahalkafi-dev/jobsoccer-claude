@@ -1,6 +1,19 @@
 import { z } from "zod";
 import { countryList } from "@/constants/selectOptions";
 
+// Friendly format checks shared by the employer forms.
+const phoneRule = z
+  .string()
+  .trim()
+  .min(1, "Phone number is required")
+  .regex(/^\+?[\d\s().-]{6,20}$/, "Enter a valid phone number (digits only, for example +44 7700 900123)");
+const websiteRule = z
+  .string()
+  .trim()
+  .min(1, "Website is required")
+  .refine((v) => /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(v), "Enter a valid website (for example https://www.myclub.com)");
+
+
 // ---------------------Candidate Role Schemas---------------------
 
 // Personal Information Schema
@@ -53,7 +66,7 @@ export const amateurPlayerProfessionalInfoSchema = z.object({
   league: z.string().min(1, "League is required"),
   agent: z.string().optional(),
   socialMedia: z.string().optional(),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
 });
 
 // College or University player Professional Information Schema
@@ -80,7 +93,7 @@ export const collegeOrUniversityPlayerProfessionalInfoSchema = z.object({
   diploma: z.string().min(1, "Diploma is required"),
   satOrAct: z.string().optional(),
   gpa: z.string().optional(),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
 });
 
 // High School player Professional Information Schema
@@ -106,7 +119,7 @@ export const highSchoolPlayerProfessionalInfoSchema = z.object({
   diploma: z.string().min(1, "Diploma is required"),
   satOrAct: z.string().optional(),
   gpa: z.string().optional(),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
 });
 
 // Professional player Professional Information Schema
@@ -125,7 +138,7 @@ export const professionalPlayerProfessionalInfoSchema = z.object({
   division: z.string().trim().min(1, "Division is required"),
   position: z.string().min(1, "Position is required"),
   agent: z.string().optional(),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   availability: z.string().optional(),
   socialMedia: z.string().optional(),
   foot: z.string().min(1, "Foot is required"),
@@ -138,7 +151,7 @@ export const professionalPlayerProfessionalInfoSchema = z.object({
 export const fieldStaffProfessionalInfoSchema = z.object({
   currentClub: z.string().min(1, "Current employer is required"),
   availability: z.string().optional(),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   gender: z.string().min(1, "Gender is required"),
   socialMedia: z.string().optional(),
   position: z.string().min(1, "Position is required"),
@@ -169,7 +182,7 @@ export const academyEmployerProfileSchema = z.object({
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   founded: z
     .string()
@@ -186,9 +199,9 @@ export const academyEmployerProfileSchema = z.object({
   nationality: z.string().trim().min(1, "Nationality is required"),
   position: z.string().trim().min(1, "Position is required"),
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
-  website: z.string().trim().min(1, "Website is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
+  website: websiteRule,
+  phoneNumber: phoneRule,
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
@@ -199,11 +212,11 @@ export const agentEmployerProfileSchema = z.object({
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
   companyName: z.string().trim().min(1, "Company name is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
-  country: z.string().min(1, "Country is required"),
+  phoneNumber: phoneRule,
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   nationality: z.string().trim().min(1, "Nationality is required"),
   socialMedia: z.string().optional(),
-  website: z.string().trim().min(1, "Website is required"),
+  website: websiteRule,
   fifaLicenseNumber: z
     .string()
     .trim()
@@ -216,7 +229,7 @@ export const amateurClubEmployerProfileSchema = z.object({
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   founded: z
     .string()
@@ -232,9 +245,9 @@ export const amateurClubEmployerProfileSchema = z.object({
     .transform((date) => new Date(date)),
   nationality: z.string().trim().min(1, "Nationality is required"),
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
-  website: z.string().trim().min(1, "Website is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
+  website: websiteRule,
+  phoneNumber: phoneRule,
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
@@ -248,7 +261,7 @@ export const collegeOrUniversityEmployerProfileSchema = z.object({
     .string()
     .trim()
     .min(1, "College or university name is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   founded: z
     .string()
@@ -262,10 +275,10 @@ export const collegeOrUniversityEmployerProfileSchema = z.object({
       },
     )
     .transform((date) => new Date(date)),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  phoneNumber: phoneRule,
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
-  website: z.string().trim().min(1, "Website is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
+  website: websiteRule,
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
@@ -276,7 +289,7 @@ export const consultingCompanyEmployerProfileSchema = z.object({
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   founded: z
     .string()
@@ -293,9 +306,9 @@ export const consultingCompanyEmployerProfileSchema = z.object({
   nationality: z.string().trim().min(1, "Nationality is required"),
   position: z.string().trim().min(1, "Position is required"),
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
-  website: z.string().trim().min(1, "Website is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
+  website: websiteRule,
+  phoneNumber: phoneRule,
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
@@ -306,7 +319,7 @@ export const highSchoolEmployerProfileSchema = z.object({
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
   highSchoolName: z.string().trim().min(1, "High school name is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   founded: z
     .string()
@@ -321,10 +334,10 @@ export const highSchoolEmployerProfileSchema = z.object({
     )
     .transform((date) => new Date(date)),
   clubName: z.string().trim().min(1, "Club name is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  phoneNumber: phoneRule,
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
-  website: z.string().trim().min(1, "Website is required"),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
+  website: websiteRule,
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
 });
@@ -334,10 +347,10 @@ export const professionalClubEmployerProfileSchema = z.object({
   logo: z
     .instanceof(File, { message: "Please upload a logo" })
     .refine((file) => file.size > 0, "Logo is required"),
-  country: z.string().min(1, "Country is required"),
+  country: z.string({ message: "Please select a country" }).min(1, "Please select a country"),
   address: z.string().trim().min(1, "Address is required"),
   location: z.string().trim().min(1, "Location is required"),
-  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"]),
+  level: z.enum(["Division 1", "Division 2", "Division 3", "Division 4"], { message: "Please select a level" }),
   founded: z
     .string()
     .refine(
@@ -350,9 +363,9 @@ export const professionalClubEmployerProfileSchema = z.object({
       },
     )
     .transform((date) => new Date(date)),
-  website: z.string().trim().min(1, "Website is required"),
+  website: websiteRule,
   nationality: z.string().trim().min(1, "Nationality is required"),
-  phoneNumber: z.string().trim().min(1, "Phone number is required"),
+  phoneNumber: phoneRule,
   clubName: z.string().trim().min(1, "Club name is required"),
   clubContact: z.string().trim().min(1, "Club contact is required"),
   clubDescription: z.string().trim().min(1, "Club description is required"),
