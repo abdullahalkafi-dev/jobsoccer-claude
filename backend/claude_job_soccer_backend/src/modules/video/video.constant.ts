@@ -17,7 +17,7 @@ export const VIDEO_LIMITS = {
   /** Player highlight videos: up to 3:00 each. */
   playerMaxSeconds: 3 * 60,
   /** Accepted by the upload middleware and re-checked from the real file. */
-  maxBytes: 500 * 1024 * 1024,
+  maxBytes: 600 * 1024 * 1024,
   /** "Minimum quality 720p": checked on the short side so portrait phones pass. */
   minShortSide: 720,
   allowedMimeTypes: ["video/mp4", "video/quicktime"],

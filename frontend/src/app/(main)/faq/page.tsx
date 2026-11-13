@@ -17,7 +17,7 @@ const QUESTIONS: { q: string; a: string }[] = [
   },
   {
     q: "What are the video requirements?",
-    a: "MP4 or MOV, at least 720p, up to 500 MB, recorded with a fixed camera in a quiet place. You may record your answers separately and combine them into one video before uploading.",
+    a: "MP4 or MOV, at least 720p, up to 600 MB, recorded with a fixed camera in a quiet place. You may record your answers separately and combine them into one video before uploading.",
   },
   {
     q: "Can I replace my videos?",

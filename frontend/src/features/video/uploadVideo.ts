@@ -35,7 +35,7 @@ export const uploadVideo = (input: {
       } catch {
         // keep the generic message
       }
-      reject(new Error(xhr.status === 413 ? "This video is larger than 500 MB." : message));
+      reject(new Error(xhr.status === 413 ? "This video is larger than 600 MB." : message));
     };
     xhr.onerror = () => reject(new Error("Network problem. Check your connection and try again."));
     xhr.onabort = () => reject(new Error("Upload cancelled."));
