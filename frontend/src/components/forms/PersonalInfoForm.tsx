@@ -11,6 +11,7 @@ import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { ImageUpload } from "@/components/form/fields/ImageUpload";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { getPersonalInfoSchema } from "@/schemas/profileValidation";
 import { TPersonalInfo } from "@/types/profile";
 
@@ -79,10 +80,13 @@ export function PersonalInfoForm({
               label={t("label.dateOfBirth")}
               error={errors.dateOfBirth?.message}
             >
-              <Input
-                {...register("dateOfBirth")}
-                type="date"
-                className="bg-gray-50 border-0 flex-col"
+              <DatePicker
+                value={watch("dateOfBirth")}
+                // the schema turns this string into a Date on submit
+                onChange={(v) => setValue("dateOfBirth", v as unknown as Date, { shouldValidate: true })}
+                aria-invalid={!!errors.dateOfBirth}
+                toDate={new Date()}
+                className="bg-gray-50 border-0 hover:bg-gray-50"
               />
             </FormField>
 

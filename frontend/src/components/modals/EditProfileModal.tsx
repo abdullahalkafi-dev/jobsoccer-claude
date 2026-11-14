@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -98,6 +99,7 @@ export default function EditProfileModal({
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     formState: { errors },
   } = useForm<PersonalInformationFormData>({
@@ -261,10 +263,12 @@ export default function EditProfileModal({
                   label={t("profile.dateOfBirth")}
                   error={errors.dateOfBirth?.message}
                 >
-                  <Input
-                    type="date"
-                    {...register("dateOfBirth")}
-                    className="bg-gray-50 border-0"
+                  <DatePicker
+                    value={watch("dateOfBirth")}
+                    onChange={(v) => setValue("dateOfBirth", v, { shouldValidate: true })}
+                    aria-invalid={!!errors.dateOfBirth}
+                    toDate={new Date()}
+                    className="bg-gray-50 border-0 hover:bg-gray-50"
                   />
                 </FormField>
 

@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -218,10 +219,11 @@ export default function EditEmployerPersonalInformationModal({
 
                 {/* Founded */}
                 <FormField label={t("employer.founded")} error={errors.founded?.message}>
-                  <Input
-                    type="date"
-                    {...register("founded")}
-                    className="bg-gray-50 border-0"
+                  <DatePicker
+                    value={watch("founded")}
+                    onChange={(v) => setValue("founded", v, { shouldValidate: true })}
+                    aria-invalid={!!errors.founded}
+                    className="bg-gray-50 border-0 hover:bg-gray-50"
                   />
                 </FormField>
 
