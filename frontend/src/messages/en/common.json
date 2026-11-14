@@ -52,5 +52,14 @@
     "rateStars": "Rate {count, plural, one {# star} other {# stars}}",
     "youRated": "You rated this agent",
     "success": "Rating submitted successfully!"
+  },
+  "datePicker": {
+    "placeholder": "Select a date",
+    "today": "Today",
+    "clear": "Clear",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "selectMonth": "Select month",
+    "selectYear": "Select year"
   }
 }

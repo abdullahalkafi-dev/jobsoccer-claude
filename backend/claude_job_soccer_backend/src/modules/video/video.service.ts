@@ -6,6 +6,7 @@ import AppError from "../../errors/AppError";
 import { logger } from "../../shared/logger/logger";
 import { appEvents } from "../../shared/events/appEvents";
 import { emitToUser } from "../../socket/emitToUser";
+import { buildCaptionTracks, TCaptionPaths } from "../../shared/ai/captions/captionTracks";
 import { persistUploadedFiles } from "../../shared/storage";
 import redisOperations from "../../shared/redis/redisClient";
 import { NotificationService } from "../notification/notification.service";
@@ -83,7 +84,7 @@ const getStatus = async (userId: string, lang: Lang = "en") => {
     .map((slot) => slot.kind);
   return {
     plan,
-    videos: videos.map((v) => ({ ...v, isLocked: isLockActive(v) })),
+    videos: videos.map((v) => ({ ...v, isLocked: isLockActive(v), captionTracks: buildCaptionTracks(v) })),
     missing,
     isComplete: missing.length === 0,
     consent: { ...(user.videoConsent ?? {}), currentVersion: VIDEO_CONSENT_VERSION },
@@ -176,6 +177,7 @@ const uploadVideo = async (input: {
       uploadedAt: new Date(),
       lockedUntil: lockedUntilFor(slot),
       captionsUrl: undefined,
+      captions: undefined,
     };
 
     stage("saving");
@@ -264,6 +266,19 @@ const setCaptions = async (userId: string, videoId: string, captionsUrl: string)
   emitToUser(userId, "video:updated", { videoId, status: "captions-ready" });
 };
 
+/** Save the Spanish / French caption paths of a video (English stays in captionsUrl). Only the given languages change. */
+const setTranslatedCaptions = async (userId: string, videoId: string, captions: TCaptionPaths): Promise<void> => {
+  const set: Record<string, string> = {};
+  for (const lang of ["es", "fr"] as const) if (captions[lang]) set[`videos.$.captions.${lang}`] = captions[lang]!;
+  if (!Object.keys(set).length) return;
+  const user = await User.findById(userId).lean();
+  const entry = user ? getProfileEntry(user.userType, user.role) : null;
+  if (!user?.profileId || !entry) return;
+  await entry.model.updateOne({ _id: user.profileId, "videos._id": videoId }, { $set: set });
+  await invalidateMeCache(userId);
+  emitToUser(userId, "video:updated", { videoId, status: "captions-ready" });
+};
+
 export const VideoService = {
   getStatus,
   saveConsent,
@@ -273,4 +288,5 @@ export const VideoService = {
   releaseLock,
   unlockVideosByAdmin,
   setCaptions,
+  setTranslatedCaptions,
 };

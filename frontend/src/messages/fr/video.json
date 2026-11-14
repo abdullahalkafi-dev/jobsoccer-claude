@@ -21,7 +21,7 @@
     "upToEach": "jusqu'à {max} chacune",
     "recordingGuide": "Guide d'enregistrement",
     "fileName": "Nom de fichier recommandé : {name}",
-    "captionsReady": "{length} · sous-titres anglais prêts",
+    "captionsReady": "{length} · sous-titres prêts ({languages})",
     "captionsCreating": "{length} · les sous-titres sont en cours de création",
     "lockedUntil": "Verrouillée jusqu'au {date}",
     "replace": "Remplacer",
