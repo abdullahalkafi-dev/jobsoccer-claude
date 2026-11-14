@@ -18,8 +18,8 @@ export const VIDEO_LIMITS = {
   playerMaxSeconds: 3 * 60,
   /** Accepted by the upload middleware and re-checked from the real file. */
   maxBytes: 600 * 1024 * 1024,
-  /** "Minimum quality 720p": checked on the short side so portrait phones pass. */
-  minShortSide: 720,
+  /** Minimum quality, checked on the short side so portrait phones pass. 0 = any quality is accepted (720 was the old rule). */
+  minShortSide: 0,
   allowedMimeTypes: ["video/mp4", "video/quicktime"],
   allowedExtensions: [".mp4", ".mov"],
   /** Interview and methodology videos are locked after submission. */

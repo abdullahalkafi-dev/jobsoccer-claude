@@ -104,8 +104,8 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     "Quiet location: avoid wind, noise, and music.": "Lugar tranquilo: evita el viento, el ruido y la música.",
     "Speak in one language only, matching the role or market. English subtitles are created automatically.":
       "Habla en un solo idioma, acorde con el puesto o el mercado. Los subtítulos en inglés se crean automáticamente.",
-    "Accepted formats: MP4 or MOV. Minimum quality: 720p. Maximum file size: 600 MB per video.":
-      "Formatos aceptados: MP4 o MOV. Calidad mínima: 720p. Tamaño máximo: 600 MB por vídeo.",
+    "Accepted formats: MP4 or MOV. Any quality is accepted (720p or higher is recommended). Maximum file size: 600 MB per video.":
+      "Formatos aceptados: MP4 o MOV. Se acepta cualquier calidad (se recomienda 720p o superior). Tamaño máximo: 600 MB por vídeo.",
     // ---- consent / lock
     "Your video answers are transcribed, summarized, and scored by AI to help employers review them. Scores support, never replace, the employer's judgment. I give my consent.":
       "Las respuestas de tu vídeo se transcriben, se resumen y se puntúan con IA para ayudar a los empleadores a revisarlas. Las puntuaciones apoyan, pero nunca sustituyen, el criterio del empleador. Doy mi consentimiento.",
@@ -237,8 +237,8 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     "Quiet location: avoid wind, noise, and music.": "Lieu calme : évitez le vent, le bruit et la musique.",
     "Speak in one language only, matching the role or market. English subtitles are created automatically.":
       "Parlez dans une seule langue, adaptée au poste ou au marché. Les sous-titres en anglais sont créés automatiquement.",
-    "Accepted formats: MP4 or MOV. Minimum quality: 720p. Maximum file size: 600 MB per video.":
-      "Formats acceptés : MP4 ou MOV. Qualité minimale : 720p. Taille maximale : 600 Mo par vidéo.",
+    "Accepted formats: MP4 or MOV. Any quality is accepted (720p or higher is recommended). Maximum file size: 600 MB per video.":
+      "Formats acceptés : MP4 ou MOV. Toute qualité est acceptée (720p ou plus est recommandé). Taille maximale : 600 Mo par vidéo.",
     "Your video answers are transcribed, summarized, and scored by AI to help employers review them. Scores support, never replace, the employer's judgment. I give my consent.":
       "Les réponses de votre vidéo sont transcrites, résumées et notées par une IA afin d'aider les employeurs à les examiner. Les notes appuient, sans jamais remplacer, le jugement de l'employeur. Je donne mon consentement.",
     "You must have permission from your club and from the players shown in your video to share the footage. For players under 18, permission must come from their parents or legal guardians. I confirm I have this permission.":

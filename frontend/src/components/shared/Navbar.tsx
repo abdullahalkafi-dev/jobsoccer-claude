@@ -212,7 +212,7 @@ const NavLinkItem: React.FC<NavLinkItemProps> = ({
           </span>
         )}
       </div>
-      <span className="text-sm font-medium">{link.name}</span>
+      <span className="text-xs xl:text-sm font-medium whitespace-nowrap">{link.name}</span>
     </Link>
   );
 };
@@ -392,7 +392,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden lg:flex items-center justify-center gap-4 lg:gap-8 w-full"
+            className="hidden lg:flex items-center justify-center gap-3 xl:gap-8 w-full"
             aria-label={t("mainNav")}
           >
             {navLinks.map((link) => (
@@ -406,8 +406,8 @@ export function Navbar() {
           </nav>
 
           {/* Desktop User Menu */}
-          <div className="hidden lg:flex gap-5 justify-end">
-            <LanguageSwitcher />
+          <div className="hidden lg:flex gap-3 xl:gap-5 justify-end shrink-0">
+            <LanguageSwitcher compactBelowXl />
             {!mounted || !loginRestored ? (
               // Same size as the button, so nothing moves when the real control appears
               <div className="h-9 min-w-[84px]" aria-hidden="true" />
