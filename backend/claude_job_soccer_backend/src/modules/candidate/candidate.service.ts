@@ -1,3 +1,5 @@
+import { accentInsensitiveRegex, escapedRegex } from "../../shared/util/searchRegex";
+import type { Lang } from "../../shared/i18n";
 import { StatusCodes } from "http-status-codes";
 import { qualityFor, toPublicQuality } from "../profileQuality/profileQuality.view";
 import AppError from "../../errors/AppError";
@@ -29,7 +31,8 @@ import { CandidateResume } from "../candidateResume/candidateResume.model";
  */
 const searchCandidates = async (
   query: Record<string, unknown>,
-  userId?: string
+  userId?: string,
+  lang: Lang = "en"
 ) => {
   const { searchTerm, role, country, page = 1, limit = 10 } = query;
 
@@ -57,8 +60,8 @@ const searchCandidates = async (
   // Search by name (firstName or lastName)
   if (searchTerm) {
     userQuery.$or = [
-      { firstName: { $regex: searchTerm, $options: "i" } },
-      { lastName: { $regex: searchTerm, $options: "i" } },
+      { firstName: accentInsensitiveRegex(String(searchTerm)) },
+      { lastName: accentInsensitiveRegex(String(searchTerm)) },
     ];
   }
 
@@ -137,7 +140,7 @@ const searchCandidates = async (
         profileImage: user.profileImage,
         userType: user.userType,
         profile,
-        profileQuality: toPublicQuality(user.profileQuality),
+        profileQuality: toPublicQuality(user.profileQuality, lang),
         interviewScore: user.interviewScore ?? null,
         // Relationship fields (only present when user is authenticated)
         ...(userId && {
@@ -185,7 +188,7 @@ const FEATURED_PER_CATEGORY = 4;
  * Returns max 4 candidates per category, pinned candidates first, then oldest first
  * When authenticated, includes relationship fields for each candidate
  */
-const getFeaturedCandidates = async (userId?: string) => {
+const getFeaturedCandidates = async (userId?: string, lang: Lang = "en") => {
   const categories = [
     CandidateRole.PROFESSIONAL_PLAYER,
     CandidateRole.AMATEUR_PLAYER,
@@ -295,7 +298,7 @@ const getFeaturedCandidates = async (userId?: string) => {
             profileImage: user.profileImage,
             userType: user.userType,
             profile,
-            profileQuality: toPublicQuality(user.profileQuality),
+            profileQuality: toPublicQuality(user.profileQuality, lang),
         interviewScore: user.interviewScore ?? null,
             // Relationship fields (only present when user is authenticated)
             ...(userId && {
@@ -319,7 +322,7 @@ const getFeaturedCandidates = async (userId?: string) => {
  * Get candidate by ID with full profile details
  * When authenticated, includes relationship fields
  */
-const getCandidateById = async (id: string, userId?: string) => {
+const getCandidateById = async (id: string, userId?: string, lang: Lang = "en") => {
   const user = await User.findById(id).lean();
 
   if (!user) {
@@ -402,7 +405,7 @@ const getCandidateById = async (id: string, userId?: string) => {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
-    profileQuality: qualityFor(user.profileQuality, user._id, userId),
+    profileQuality: qualityFor(user.profileQuality, user._id, userId, lang),
     interviewScore: user.interviewScore ?? null,
     profileImage: user.profileImage,
     userType: user.userType,

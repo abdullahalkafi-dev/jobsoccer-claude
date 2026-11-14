@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const sendEmail = async (values: ISendEmail) => {
   try {
     const info = await transporter.sendMail({
-      from: `"job_soccer" ${config.email.from}`,
+      from: `"Jobsoccer" ${config.email.from}`,
       to: values.to,
       subject: values.subject,
       html: values.html,

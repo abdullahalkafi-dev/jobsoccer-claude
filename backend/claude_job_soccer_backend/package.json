@@ -9,6 +9,7 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
+    "i18n:check": "vitest run src/shared/i18n",
     "storage:migrate": "tsc && node dist/scripts/migrateUploadsToStorage.js",
     "ai:eval": "tsc && node dist/scripts/aiEval.js",
     "e2e:flow": "tsc && node dist/e2e/run.js",

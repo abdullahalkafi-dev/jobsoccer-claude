@@ -27,8 +27,8 @@ const createProfile = async (payload: { userId: string; data: Record<string, any
 
   const entry = getProfileEntry(user.userType, user.role);
   if (!entry) {
-    const reason = user.userType === "admin" ? "Admin users cannot have profiles" : `Invalid ${user.userType} role: ${user.role}`;
-    throw new AppError(StatusCodes.BAD_REQUEST, reason);
+    if (user.userType === "admin") throw new AppError(StatusCodes.BAD_REQUEST, "Admin users cannot have profiles");
+    throw new AppError(StatusCodes.BAD_REQUEST, `Invalid ${user.userType} role: ${user.role}`);
   }
 
   const validated = entry.createSchema.parse(data);

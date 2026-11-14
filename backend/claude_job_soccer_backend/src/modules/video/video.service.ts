@@ -1,3 +1,4 @@
+import type { Lang } from "../../shared/i18n";
 import fs from "fs";
 import path from "path";
 import { StatusCodes } from "http-status-codes";
@@ -22,7 +23,7 @@ type TVideoContext = {
   plan: TVideoPlan;
 };
 
-const loadContext = async (userId: string): Promise<TVideoContext> => {
+const loadContext = async (userId: string, lang: Lang = "en"): Promise<TVideoContext> => {
   const user = await User.findById(userId);
   if (!user) throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   if (user.userType !== UserType.CANDIDATE) {
@@ -35,7 +36,7 @@ const loadContext = async (userId: string): Promise<TVideoContext> => {
   const profile = entry ? await entry.model.findById(user.profileId) : null;
   if (!profile) throw new AppError(StatusCodes.NOT_FOUND, "Profile not found");
 
-  const plan = getVideoPlan(user.role as CandidateRole, profile.position);
+  const plan = getVideoPlan(user.role as CandidateRole, profile.position, lang);
   if (!plan) {
     throw new AppError(StatusCodes.BAD_REQUEST, `Videos are not configured for ${profile.position ?? user.role}.`);
   }
@@ -73,8 +74,8 @@ const removeRejectedFile = async (filePath?: string): Promise<void> => {
 };
 
 /** What the screens need: the plan, current videos with their lock state, and what is still missing. */
-const getStatus = async (userId: string) => {
-  const { user, profile, plan } = await loadContext(userId);
+const getStatus = async (userId: string, lang: Lang = "en") => {
+  const { user, profile, plan } = await loadContext(userId, lang);
   const videos: TProfileVideo[] = (profile.videos ?? []).map((v: any) => (v.toObject ? v.toObject() : v));
   const missing = plan.slots
     .filter((slot) => slot.required)
@@ -90,10 +91,17 @@ const getStatus = async (userId: string) => {
 };
 
 /** Record the candidate's consent (the checkboxes shown before upload). */
-const saveConsent = async (userId: string, input: { ai?: boolean; players?: boolean }) => {
+const saveConsent = async (userId: string, input: { ai?: boolean; players?: boolean }, lang: Lang = "en") => {
   const update: Record<string, unknown> = { "videoConsent.version": VIDEO_CONSENT_VERSION };
-  if (input.ai) update["videoConsent.aiAt"] = new Date();
-  if (input.players) update["videoConsent.playersAt"] = new Date();
+  // The language the consent text was shown in is kept with the consent record (the version string stays the same)
+  if (input.ai) {
+    update["videoConsent.aiAt"] = new Date();
+    update["videoConsent.aiLang"] = lang;
+  }
+  if (input.players) {
+    update["videoConsent.playersAt"] = new Date();
+    update["videoConsent.playersLang"] = lang;
+  }
   const user = await User.findByIdAndUpdate(userId, { $set: update }, { new: true });
   if (!user) throw new AppError(StatusCodes.NOT_FOUND, "User not found");
   await invalidateMeCache(userId);
@@ -126,7 +134,8 @@ const checkUploadAllowed = async (userId: string, kind: VideoKind, replaceVideoI
   if (target && isLockActive(target)) {
     throw new AppError(
       StatusCodes.LOCKED,
-      `Your ${kind.toLowerCase()} video is locked until ${formatDate(target.lockedUntil)}. Contact support if you need to change it earlier.`
+      `Your ${kind.toLowerCase()} video is locked until ${formatDate(target.lockedUntil)}. Contact support if you need to change it earlier.`,
+      { code: "VIDEO_LOCKED" }
     );
   }
   return { ctx, slot, target };
@@ -200,7 +209,7 @@ const deleteVideo = async (userId: string, videoId: string) => {
     throw new AppError(StatusCodes.BAD_REQUEST, "This video is required. You can replace it, but not delete it.");
   }
   if (isLockActive(video)) {
-    throw new AppError(StatusCodes.LOCKED, `This video is locked until ${formatDate(video.lockedUntil)}.`);
+    throw new AppError(StatusCodes.LOCKED, `This video is locked until ${formatDate(video.lockedUntil)}.`, { code: "VIDEO_LOCKED" });
   }
 
   ctx.profile.videos.pull({ _id: videoId });
@@ -238,7 +247,8 @@ const unlockVideosByAdmin = async (candidateUserId: string, kind?: VideoKind) =>
     await NotificationService.sendNotificationToUser(
       candidateUserId,
       "Video unlocked",
-      "Your video has been unlocked by JOBSOCCER support. You can upload a new version now."
+      "Your video has been unlocked by JOBSOCCER support. You can upload a new version now.",
+      "video_unlocked"
     ).catch((error: any) => logger.warn("Could not send unlock notification", { error: error.message }));
   }
   return { released };

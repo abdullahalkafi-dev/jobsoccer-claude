@@ -2,7 +2,7 @@ import { aiConfig, capabilitiesFor } from "../ai.config";
 import { aiClient, readChatUsage, recordUsage, UsageRecord } from "../client/openaiClient";
 import { Rubric } from "../rubric/rubric.schema";
 import { ModelOutput, modelOutputJsonSchema, modelOutputSchema } from "./evaluation.types";
-import { buildEvaluationPrompt } from "./promptBuilder";
+import { buildEvaluationPrompt, TTranscriptContext } from "./promptBuilder";
 
 export interface EvaluatorResult {
   output: ModelOutput;
@@ -22,10 +22,10 @@ export class EvaluationError extends Error {
  * One structured-output call per candidate on the eval model (Sol).
  * If the reply does not match the schema, the model is asked once to repair it.
  */
-export const evaluateTranscript = async (rubric: Rubric, transcript: string): Promise<EvaluatorResult> => {
+export const evaluateTranscript = async (rubric: Rubric, transcript: string, context: TTranscriptContext = {}): Promise<EvaluatorResult> => {
   const model = aiConfig.models.eval;
   const caps = capabilitiesFor(model);
-  const prompt = buildEvaluationPrompt(rubric, transcript);
+  const prompt = buildEvaluationPrompt(rubric, transcript, context);
   const usage: UsageRecord[] = [];
 
   const messages: { role: "system" | "user" | "assistant"; content: string }[] = [

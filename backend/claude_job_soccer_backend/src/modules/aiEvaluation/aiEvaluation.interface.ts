@@ -28,6 +28,16 @@ export type TAiEvaluationCorrection = {
   createdAt: Date;
 };
 
+/** Viewer-language copy of the texts the AI wrote for an evaluation. */
+export type TStoredTranslation = {
+  /** Fingerprint of the English texts that were translated; a different hash means the cache is stale. */
+  hash: string;
+  summary: string;
+  strongestAreas: string[];
+  mainWeaknesses: string[];
+  createdAt: Date;
+};
+
 export type TAiEvaluation = {
   _id?: Types.ObjectId;
   candidateUserId: Types.ObjectId;
@@ -47,6 +57,12 @@ export type TAiEvaluation = {
   videos: TAiEvaluationVideo[];
   transcript?: string;
   detectedLanguage?: string;
+  /** The transcript is an English translation of the spoken language. */
+  isTranslated?: boolean;
+  /** Transcript in the spoken language (only when translated). */
+  originalTranscript?: string;
+  /** Cached es/fr versions of the AI texts, see aiTranslations. */
+  translations?: Partial<Record<"es" | "fr", TStoredTranslation>>;
   setupCheck?: TSetupCheck;
   report?: EvaluationReport;
   rawModelOutput?: string;
@@ -70,6 +86,9 @@ export type TAiTranscript = {
   language: string;
   text: string;
   detectedLanguage?: string;
+  isTranslated?: boolean;
+  originalText?: string | null;
+  originalSegments?: TCaptionSegment[];
   segments?: TCaptionSegment[];
   durationSeconds?: number | null;
   createdAt?: Date;

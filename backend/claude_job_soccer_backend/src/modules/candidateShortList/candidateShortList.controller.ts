@@ -59,7 +59,8 @@ const getShortlistedCandidates = catchAsync(
 
     const result = await CandidateShortListService.getShortlistedCandidates(
       shortlistedById!,
-      req.query
+      req.query,
+      req.lang
     );
 
     sendResponse(res, {

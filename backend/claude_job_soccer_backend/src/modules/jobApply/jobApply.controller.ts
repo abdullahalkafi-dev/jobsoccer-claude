@@ -32,7 +32,7 @@ const getApplicationsByJob = catchAsync(async (req: Request, res: Response) => {
   const result = await JobApplyService.getApplicationsByJob(jobId, req.query, {
     id: req.user.id,
     userType: req.user.userType,
-  });
+  }, req.lang);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -7,4 +7,6 @@ export type TGenericErrorResponse = {
   statusCode: number;
   message: string;
   errorSources: TErrorSources;
+  /** Optional stable machine code. */
+  code?: string;
 };

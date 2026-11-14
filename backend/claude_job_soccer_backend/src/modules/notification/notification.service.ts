@@ -5,6 +5,25 @@ import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
 import { io } from "../../socket/socketServer";
 import { userRoom } from "../../socket/emitToUser";
+import { User } from "../user/user.model";
+import { DEFAULT_LANG, isLang, Lang } from "../../shared/i18n";
+import { renderNotification } from "../../shared/i18n/notifications";
+
+export { renderNotification };
+
+/** A notification as the reader sees it: typed ones are rendered in their language, old ones keep the stored text. */
+const localize = <T extends { type?: string; params?: Record<string, unknown>; title: string; description: string }>(
+  notification: T,
+  lang: Lang
+): T => {
+  const text = renderNotification(notification.type, notification.params, lang);
+  return text ? { ...notification, title: text.title, description: text.description } : notification;
+};
+
+const languageOf = async (userId: string): Promise<Lang> => {
+  const user = await User.findById(userId).select("language").lean().catch(() => null);
+  return isLang(user?.language) ? user.language : DEFAULT_LANG;
+};
 
 /**
  * Create a new notification and send via socket if user is online
@@ -12,21 +31,27 @@ import { userRoom } from "../../socket/emitToUser";
 const createNotification = async (
   title: string,
   description: string,
-  userId: string
+  userId: string,
+  type?: string,
+  params?: Record<string, unknown>
 ): Promise<TNotification> => {
+  // With a type, the stored title/description are the English rendering (the fallback for old readers)
+  const english = renderNotification(type, params, "en");
   const notification = await Notification.create({
-    title,
-    description,
+    title: english?.title ?? title,
+    description: english?.description ?? description,
     userId: new Types.ObjectId(userId),
     isRead: false,
+    ...(type ? { type, params: params ?? {} } : {}),
   });
+  const readerLang = type ? await languageOf(userId) : DEFAULT_LANG;
   // Real-time copy to every open tab/device of the user (nothing happens when they are offline)
   io?.to(userRoom(userId)).emit("new_notification", {
     success: true,
-    notification: notification.toObject(),
+    notification: localize(notification.toObject() as TNotification, readerLang),
   });
 
-  return notification.toObject();
+  return localize(notification.toObject() as TNotification, readerLang);
 };
 
 /**
@@ -34,7 +59,8 @@ const createNotification = async (
  */
 const getNotifications = async (
   userId: string,
-  query: Record<string, any>
+  query: Record<string, any>,
+  lang: Lang = DEFAULT_LANG
 ): Promise<{
   data: TNotification[];
   meta: {
@@ -78,7 +104,7 @@ const getNotifications = async (
   const totalPages = Math.ceil(total / limit);
 
   return {
-    data: data as TNotification[],
+    data: (data as TNotification[]).map((n) => localize(n, lang)),
     meta: {
       page,
       limit,
@@ -94,7 +120,8 @@ const getNotifications = async (
  */
 const getNotificationById = async (
   notificationId: string,
-  userId: string
+  userId: string,
+  lang: Lang = DEFAULT_LANG
 ): Promise<TNotification> => {
   const notification = await Notification.findOne({
     _id: new Types.ObjectId(notificationId),
@@ -105,7 +132,7 @@ const getNotificationById = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Notification not found");
   }
 
-  return notification as TNotification;
+  return localize(notification as TNotification, lang);
 };
 
 /**
@@ -113,7 +140,8 @@ const getNotificationById = async (
  */
 const markAsRead = async (
   notificationId: string,
-  userId: string
+  userId: string,
+  lang: Lang = DEFAULT_LANG
 ): Promise<TNotification> => {
   const notification = await Notification.findOneAndUpdate(
     {
@@ -128,7 +156,7 @@ const markAsRead = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Notification not found");
   }
 
-  return notification as TNotification;
+  return localize(notification as TNotification, lang);
 };
 
 /**
@@ -193,9 +221,11 @@ const getUnreadCount = async (userId: string): Promise<number> => {
 const sendNotificationToUser = async (
   userId: string,
   title: string,
-  description: string
+  description: string,
+  type?: string,
+  params?: Record<string, unknown>
 ): Promise<TNotification> => {
-  return createNotification(title, description, userId);
+  return createNotification(title, description, userId, type, params);
 };
 
 export const NotificationService = {

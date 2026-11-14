@@ -20,7 +20,7 @@ const checkout = catchAsync(async (req: Request, res: Response) => {
  logger.debug(`
   passed controller [ line 12 ]
   `);
-  const url = await createCheckoutSession(req.user.id, priceId);
+  const url = await createCheckoutSession(req.user.id, priceId, req.lang);
   res.status(200).json({ url });
 });
 

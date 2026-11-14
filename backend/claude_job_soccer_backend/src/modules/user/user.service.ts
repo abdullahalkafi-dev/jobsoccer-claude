@@ -1,4 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import type { Lang } from "../../shared/i18n";
+import { rememberUserLang } from "../../shared/i18n/languageMiddleware";
 import AppError from "../../errors/AppError";
 import { User } from "./user.model";
 import { unlinkFileSync } from "../../shared/util/unlinkFile";
@@ -26,7 +28,7 @@ const getAllUsers = async (query: Record<string, unknown>) => {
 
   return { result, meta };
 };
-const getUserById = async (userId: string, viewerId?: string) => {
+const getUserById = async (userId: string, viewerId?: string, lang: Lang = "en") => {
   const user = await User.findById(userId).lean();
   if (!user) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -50,7 +52,7 @@ const getUserById = async (userId: string, viewerId?: string) => {
   const viewer = { id: viewerId };
   return {
     ...publicUser,
-    profileQuality: qualityFor(profileQuality as any, user._id, viewerId),
+    profileQuality: qualityFor(profileQuality as any, user._id, viewerId, lang),
     ...(isOwner ? { videoConsent } : {}),
     profile,
     educations: hideVerificationDetails(educations as object[], userId, viewer),
@@ -112,6 +114,17 @@ const updateUserRole = async (id: string, role: "USER" | "ADMIN") => {
   await redisOperations.del(`user:${id}:me`); // Invalidate cache for this user
   
   return user;
+};
+
+/** Save the user's language. Everything sent to them later (messages, emails, notifications) uses it. */
+const updateLanguage = async (userId: string, language: Lang) => {
+  const user = await User.findByIdAndUpdate(userId, { $set: { language } }, { new: true }).select("language").lean();
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+  rememberUserLang(userId, language);
+  await redisOperations.del(`user:${userId}:me`); // the cached /me includes the language
+  return { language: user.language };
 };
 
 const getMe = async (userId: string): Promise<any> => {
@@ -176,6 +189,8 @@ const getMe = async (userId: string): Promise<any> => {
 
   const result = {
     ...user,
+    // Older accounts have no saved language yet
+    language: user.language ?? "en",
     profile,
     educations,
     experiences,
@@ -196,5 +211,6 @@ export const UserServices = {
   updateUser,
   updateUserActivationStatus,
   updateUserRole,
+  updateLanguage,
   getMe,
 };

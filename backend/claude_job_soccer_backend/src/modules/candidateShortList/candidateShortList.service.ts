@@ -1,3 +1,4 @@
+import type { Lang } from "../../shared/i18n";
 import { Types } from "mongoose";
 import { CandidateShortList } from "./candidateShortList.model";
 import { TCandidateShortList } from "./candidateShortList.interface";
@@ -100,7 +101,8 @@ const removeShortlistedCandidate = async (
  */
 const getShortlistedCandidates = async (
   shortlistedById: string,
-  query: Record<string, any>
+  query: Record<string, any>,
+  lang: Lang = "en"
 ): Promise<{
   data: TCandidateShortList[];
   meta: {
@@ -149,7 +151,7 @@ const getShortlistedCandidates = async (
         candidateId: {
           ...publicUser,
           profile: profile || {},
-          profileQuality: toPublicQuality(profileQuality),
+          profileQuality: toPublicQuality(profileQuality, lang),
           isShortlisted: true,
         },
       };

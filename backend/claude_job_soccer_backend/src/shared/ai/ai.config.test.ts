@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { capabilitiesFor, modelFor } from "./ai.config";
+import { aiConfig, capabilitiesFor, modelFor } from "./ai.config";
 import { estimateCostUsd, readChatUsage } from "./client/openaiClient";
 
 describe("ai.config", () => {
   it("routes tasks to the configured models", () => {
     expect(modelFor("eval")).toBe(process.env.OPENAI_EVAL_MODEL || "gpt-6.1-sol");
     expect(modelFor("fast")).toBe(process.env.OPENAI_FAST_MODEL || "gpt-6-luna");
+  });
+
+  it("has a separate translation model that defaults to whisper-1", () => {
+    expect(aiConfig.models.translate).toBe(process.env.OPENAI_TRANSLATE_MODEL || "whisper-1");
   });
 
   it("does not send temperature to reasoning models", () => {

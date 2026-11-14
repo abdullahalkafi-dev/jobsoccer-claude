@@ -12,13 +12,15 @@ export type TOfficeStaffProfile = {
   country: (typeof countryList)[number];
   nationality: string;
   phoneNumber?: string;
+  /** Spoken languages, free text ("English, Spanish"). */
+  languages?: string;
   position: OfficeStaffPosition;
   availability: string;
   agent?: string;
   socialMedia?: string;
   currentClub: string;
   gender: "Male" | "Female" | "Other";
-  videos: TProfileVideo[];
+  videos: TProfileVideo[];
 };
 const officeStaffSchema = new Schema<TOfficeStaffProfile>(
   {
@@ -31,6 +33,7 @@ const officeStaffSchema = new Schema<TOfficeStaffProfile>(
     },
     nationality: { type: String, required: true, trim: true },
     phoneNumber: { type: String, required: false, trim: true },
+    languages: { type: String, required: false, trim: true },
     position: {
       type: String,
       enum: Object.values(OfficeStaffPosition),
@@ -45,7 +48,7 @@ const officeStaffSchema = new Schema<TOfficeStaffProfile>(
       enum: ["Male", "Female", "Other"],
       required: true,
     },
-    videos: { type: [profileVideoSchema], default: [] },
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,

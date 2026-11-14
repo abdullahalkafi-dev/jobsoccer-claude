@@ -1,5 +1,6 @@
 import { aiConfig } from "../../shared/ai/ai.config";
-import { evaluateJobMatch } from "../../shared/ai/jobMatch/jobMatchEvaluator";
+import { evaluateJobMatch, localizeJobMatchOutput } from "../../shared/ai/jobMatch/jobMatchEvaluator";
+import type { Lang } from "../../shared/i18n";
 import { enqueueJob } from "../../shared/ai/queue/aiQueue";
 import { getResumeText } from "../candidateResume/resumeText.service";
 import { logger } from "../../shared/logger/logger";
@@ -110,7 +111,38 @@ const requeuePending = async (): Promise<number> => {
   return pending.length;
 };
 
+/**
+ * The match texts (summary, met / missing requirements) in the viewer's language. The stored result
+ * stays English; the translation is cached next to it (matchDetails.i18n[lang]) so it is paid once.
+ */
+const reasonsFor = async (applicationId: unknown, details: any, lang: Lang) => {
+  const base = {
+    metRequirements: details.metRequirements,
+    missingRequirements: details.missingRequirements,
+    summary: details.summary,
+    confidence: details.confidence,
+    usedResume: details.usedResume,
+    usedInterview: details.usedInterview,
+  };
+  if (lang === "en") return base;
+  const cached = details.i18n?.[lang];
+  if (cached) return { ...base, summary: cached.summary, metRequirements: cached.metRequirements, missingRequirements: cached.missingRequirements };
+  try {
+    const out = await localizeJobMatchOutput(details, lang);
+    // Only keep it when something was really translated (English comes back unchanged on failure)
+    if (out.summary !== details.summary) {
+      const i18n = { summary: out.summary, metRequirements: out.metRequirements, missingRequirements: out.missingRequirements };
+      await JobApply.updateOne({ _id: applicationId as any }, { $set: { [`matchDetails.i18n.${lang}`]: i18n } });
+      return { ...base, ...i18n };
+    }
+  } catch (error) {
+    logger.warn("Job match translation failed", { error: (error as Error).message });
+  }
+  return base;
+};
+
 export const JobMatchService = {
+  reasonsFor,
   queueMatch,
   processMatch,
   requeuePending,

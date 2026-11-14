@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import { Types } from "mongoose";
 import { aiConfig } from "../../shared/ai/ai.config";
+import { AiLang } from "../../shared/ai/i18n/lang";
+import { translateAiText } from "../../shared/ai/translate/translateAiText";
 import { enqueueJob } from "../../shared/ai/queue/aiQueue";
 import { appEvents } from "../../shared/events/appEvents";
 import { logger } from "../../shared/logger/logger";
@@ -19,6 +21,7 @@ import { User } from "../user/user.model";
 import { judgeProfileText } from "./profileQuality.ai";
 import { TAiJudgement, TProfileQuality } from "./profileQuality.interface";
 import { calculateProfileQuality, TQualitySnapshot } from "./profileQuality.rules";
+import { localizeQuality } from "./profileQuality.view";
 
 const RESPONSE_WINDOW_DAYS = 90;
 /** Fewer received conversations than this and responsiveness is not rated (new users are not penalised). */
@@ -136,6 +139,22 @@ const recalculate = async (userId: string): Promise<TProfileQuality | null> => {
 };
 
 /**
+ * The candidate's own quality result in their language. The personal AI tips are written in English;
+ * they are translated once per language (one cheap call) and cached on the stored judgement
+ * (it is replaced together with the tips when the judged text changes). Any failure shows English.
+ */
+const localizedFor = async (userId: string, quality: TProfileQuality, lang: AiLang) => {
+  if (lang !== "en" && quality.ai?.tips?.length && !quality.ai.translations?.[lang as "es" | "fr"]) {
+    const translated = await translateAiText(quality.ai.tips, lang);
+    if (translated.some((tip, index) => tip !== quality.ai!.tips[index])) {
+      quality = { ...quality, ai: { ...quality.ai, translations: { ...quality.ai.translations, [lang]: translated } } };
+      await User.updateOne({ _id: userId, "profileQuality.ai.hash": quality.ai!.hash }, { $set: { [`profileQuality.ai.translations.${lang}`]: translated } }).catch(() => undefined);
+    }
+  }
+  return localizeQuality(quality, lang);
+};
+
+/**
  * Ask for a recalculation in the background. Many quick edits become one job
  * (same id within a few seconds), and the request that caused the change never waits.
  */
@@ -182,6 +201,7 @@ const startStaleRecalculationSchedule = (): void => {
 
 export const ProfileQualityService = {
   recalculate,
+  localizedFor,
   requestRecalculation,
   registerListeners,
   queueStaleRecalculations,

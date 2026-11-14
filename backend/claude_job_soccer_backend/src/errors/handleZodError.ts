@@ -1,144 +1,100 @@
-import { ZodError, ZodIssue } from "zod";
+import { ZodError } from "zod";
 import { TErrorSources, TGenericErrorResponse } from "../shared/types/error";
+import { DEFAULT_LANG, Lang, translateMessage } from "../shared/i18n";
+import { fieldLabel, zodTexts } from "../shared/i18n/zodMessages";
 
-// Helper function to generate user-friendly error messages
-const generateUserFriendlyMessage = (issue: ZodIssue): string => {
-  const fieldName = issue?.path[issue.path.length - 1] || "Field";
-  
-  // Format field name: convert camelCase to Title Case with spaces
-  const formattedFieldName = String(fieldName)
-    .replace(/([A-Z])/g, ' $1')
-    .trim()
-    .toLowerCase()
-    .replace(/^./, str => str.toUpperCase());
+/**
+ * Zod 4 issue shapes used here:
+ *  invalid_type  { expected }                 message "Invalid input: expected string, received undefined"
+ *  too_small     { origin, minimum }          message "Too small: expected string to have >=1 characters"
+ *  too_big       { origin, maximum }
+ *  invalid_format{ format }                   message "Invalid email address" / "Invalid string: must match pattern ..."
+ *  invalid_value { values }                   message "Invalid option: expected one of ..."
+ *  unrecognized_keys { keys }
+ *  custom        { params }
+ * A message written by hand in the schema is passed through as written; Zod's own default
+ * English texts are replaced by our translated sentences.
+ */
+type TIssue = {
+  code: string;
+  path: PropertyKey[];
+  message: string;
+  expected?: string;
+  origin?: string;
+  minimum?: number | bigint;
+  maximum?: number | bigint;
+  format?: string;
+  values?: unknown[];
+  keys?: string[];
+};
+
+const DEFAULT_MESSAGE =
+  /^(Invalid input|Too small:|Too big:|Invalid string:|Invalid option:|Unrecognized keys?:|Invalid (email address|URL|UUID|GUID|ISO|IP|CIDR|JSON|number|date|value|key)|Input not instance|Number must be|String must contain|Required$)/i;
+
+const isDefaultMessage = (message: unknown): boolean => typeof message !== "string" || !message || DEFAULT_MESSAGE.test(message);
+
+/** Name of the field the issue is about: last text segment of the path ("body", "data" wrappers are skipped when alone). */
+const fieldNameOf = (path: PropertyKey[]): string => {
+  const texts = path.filter((p): p is string => typeof p === "string");
+  return texts[texts.length - 1] ?? "field";
+};
+
+const pathValueOf = (path: PropertyKey[]): string | number => {
+  const last = path[path.length - 1];
+  if (last === undefined) return "";
+  return typeof last === "symbol" ? String(last) : last;
+};
+
+export const issueMessage = (issue: TIssue, lang: Lang): string => {
+  if (!isDefaultMessage(issue.message)) return translateMessage(issue.message, lang);
+
+  const t = zodTexts[lang];
+  const field = fieldLabel(fieldNameOf(issue.path), lang);
 
   switch (issue.code) {
     case "invalid_type": {
-      // In Zod 4, access received and expected through 'input' and 'expected' properties
-      const received = (issue as any).input;
-      const expected = (issue as any).expected;
-      
-      if (received === undefined || received === null) {
-        return `${formattedFieldName} is required`;
-      }
-      
-      // Map technical types to user-friendly terms
-      const typeMap: Record<string, string> = {
-        string: "text",
-        number: "number",
-        boolean: "true/false value",
-        array: "list",
-        object: "valid data",
-        date: "date",
-      };
-      
-      const expectedType = typeMap[expected] || expected;
-      const receivedType = typeof received === "object" ? "object" : typeof received;
-      const friendlyReceivedType = typeMap[receivedType] || receivedType;
-      
-      return `${formattedFieldName} must be a ${expectedType}, but received ${friendlyReceivedType}`;
+      if (/received (undefined|null)$/.test(issue.message ?? "")) return t.required(field);
+      const expected = issue.expected ?? "";
+      return t.types[expected] ? t.invalidType(field, t.types[expected]) : t.invalid(field);
     }
-    
-    case "invalid_format": {
-      // In Zod 4, 'invalid_string' was replaced with 'invalid_format'
-      const format = (issue as any).format;
-      
-      if (format === "email") {
-        return `${formattedFieldName} must be a valid email address`;
-      }
-      if (format === "url") {
-        return `${formattedFieldName} must be a valid URL`;
-      }
-      if (format === "uuid") {
-        return `${formattedFieldName} must be a valid UUID`;
-      }
-      return `${formattedFieldName} format is invalid`;
-    }
-    
     case "too_small": {
-      const minimum = (issue as any).minimum;
-      const kind = (issue as any).kind;
-      
-      if (kind === "string") {
-        return `${formattedFieldName} must be at least ${minimum} characters long`;
-      }
-      if (kind === "number") {
-        return `${formattedFieldName} must be at least ${minimum}`;
-      }
-      if (kind === "array") {
-        return `${formattedFieldName} must contain at least ${minimum} item(s)`;
-      }
-      return `${formattedFieldName} is too small`;
+      const n = issue.minimum !== undefined ? String(issue.minimum) : "";
+      if (issue.origin === "string") return Number(n) === 1 ? t.required(field) : t.tooSmallText(field, n);
+      if (issue.origin === "array" || issue.origin === "set") return t.tooSmallList(field, n);
+      return t.tooSmallNumber(field, n);
     }
-    
     case "too_big": {
-      const maximum = (issue as any).maximum;
-      const kind = (issue as any).kind;
-      
-      if (kind === "string") {
-        return `${formattedFieldName} must be at most ${maximum} characters long`;
-      }
-      if (kind === "number") {
-        return `${formattedFieldName} must be at most ${maximum}`;
-      }
-      if (kind === "array") {
-        return `${formattedFieldName} must contain at most ${maximum} item(s)`;
-      }
-      return `${formattedFieldName} is too large`;
+      const n = issue.maximum !== undefined ? String(issue.maximum) : "";
+      if (issue.origin === "string") return t.tooBigText(field, n);
+      if (issue.origin === "array" || issue.origin === "set") return t.tooBigList(field, n);
+      return t.tooBigNumber(field, n);
     }
-    
+    case "invalid_format":
+      if (issue.format === "email") return t.email(field);
+      if (issue.format === "url") return t.url(field);
+      if (issue.format === "uuid" || issue.format === "guid") return t.uuid(field);
+      return t.format(field);
     case "invalid_value": {
-      // In Zod 4, 'invalid_enum_value' was replaced with 'invalid_value'
-      const options = (issue as any).options;
-      if (options) {
-        return `${formattedFieldName} must be one of: ${options.join(", ")}`;
-      }
-      return `${formattedFieldName} has an invalid value`;
+      const values = (issue.values ?? []).map(String);
+      return values.length > 0 && values.length <= 12 ? t.oneOf(field, values.join(", ")) : t.invalidValue(field);
     }
-    
-    case "unrecognized_keys": {
-      const keys = (issue as any).keys;
-      return `Unrecognized field(s): ${keys?.join(", ")}`;
-    }
-    
-    case "custom":
-      return issue.message || `${formattedFieldName} is invalid`;
-    
+    case "unrecognized_keys":
+      return t.unrecognized((issue.keys ?? []).join(", "));
     default:
-      // Fallback to the original message if we don't have a specific handler
-      return issue.message;
+      return t.invalid(field);
   }
 };
 
-const handleZodError = (err: ZodError): TGenericErrorResponse => {
-  const errorSources: TErrorSources = err.issues.map((issue: ZodIssue) => {
-    const pathValue = issue?.path[issue.path.length - 1];
-    return {
-      path: typeof pathValue === 'symbol' ? String(pathValue) : (pathValue as string | number),
-      message: generateUserFriendlyMessage(issue),
-    };
-  });
+const handleZodError = (err: ZodError, lang: Lang = DEFAULT_LANG): TGenericErrorResponse => {
+  const errorSources: TErrorSources = (err.issues as unknown as TIssue[]).map((issue) => ({
+    path: pathValueOf(issue.path),
+    message: issueMessage(issue, lang),
+  }));
 
-  const statusCode = 400;
+  // The top-level message is the first field message (people read this one in the toast).
+  const message = errorSources[0]?.message ?? translateMessage("Invalid input", lang);
 
-  // Generate a meaningful message based on the number of errors
-  let message: string;
-  if (errorSources.length === 1) {
-    // Single error: use the error message directly
-    message = errorSources[0].message;
-  } else if (errorSources.length === 2) {
-    // Two errors: mention both fields
-    message = `Invalid input for ${errorSources.map(e => e.path).join(' and ')}`;
-  } else {
-    // Multiple errors: provide a count
-    message = `${errorSources.length} validation errors found. Please check your input.`;
-  }
-
-  return {
-    statusCode,
-    message,
-    errorSources,
-  };
+  return { statusCode: 400, message, errorSources };
 };
 
 export default handleZodError;

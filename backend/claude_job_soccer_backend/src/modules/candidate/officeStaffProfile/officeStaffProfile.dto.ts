@@ -22,6 +22,7 @@ const createOfficeStaffProfileDto = z.object({
     }),
   nationality: z.string().trim().min(1, "Nationality is required"),
   phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+  languages: z.string().trim().max(300, "Languages cannot exceed 300 characters").optional(),
   position: z.enum([
     "Administrative Director",
     "Community Manager",
@@ -36,7 +37,7 @@ const createOfficeStaffProfileDto = z.object({
   agent: z.string().trim().min(1, "Agent is required").optional(),
   socialMedia: z.string().trim().min(1, "Social media is required").optional(),
   currentClub: z.string().trim().min(1, "Current club is required"),
-  gender: z.enum(["Male", "Female","Other"]),
+  gender: z.enum(["Male", "Female","Other"]),
 });
 
 const updateOfficeStaffProfileDto = createOfficeStaffProfileDto.partial();

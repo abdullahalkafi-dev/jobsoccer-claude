@@ -1,24 +1,22 @@
 import mongoose from "mongoose";
 import { TErrorSources, TGenericErrorResponse } from "../shared/types/error";
-
+import { DEFAULT_LANG, Lang, translateMessage } from "../shared/i18n";
 
 const handleValidationError = (
   err: mongoose.Error.ValidationError,
+  lang: Lang = DEFAULT_LANG,
 ): TGenericErrorResponse => {
   const errorSources: TErrorSources = Object.values(err.errors).map(
-    (val: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
-      return {
-        path: val?.path,
-        message: val?.message,
-      };
-    },
+    (val: mongoose.Error.ValidatorError | mongoose.Error.CastError) => ({
+      path: val?.path,
+      message: translateMessage(val?.message ?? "", lang),
+    }),
   );
 
-  const statusCode = 400;
-
   return {
-    statusCode,
-    message: "Validation Error",
+    statusCode: 400,
+    // The first field's message says what is wrong; "Validation Error" alone helps nobody.
+    message: errorSources[0]?.message || translateMessage("Validation Error", lang),
     errorSources,
   };
 };

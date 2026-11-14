@@ -11,7 +11,7 @@ import sendResponse from "../../shared/util/sendResponse";
  */
 const searchCandidates = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id; // Optional - may be undefined for unauthenticated users
-  const result = await CandidateServices.searchCandidates(req.query, userId);
+  const result = await CandidateServices.searchCandidates(req.query, userId, req.lang);
      
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -28,7 +28,7 @@ const searchCandidates = catchAsync(async (req: Request, res: Response) => {
  */
 const getFeaturedCandidates = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id; // Optional - may be undefined for unauthenticated users
-  const result = await CandidateServices.getFeaturedCandidates(userId);
+  const result = await CandidateServices.getFeaturedCandidates(userId, req.lang);
   
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -43,7 +43,7 @@ const getFeaturedCandidates = catchAsync(async (req: Request, res: Response) => 
  */
 const getCandidateById = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id; // Optional - may be undefined for unauthenticated users
-  const result = await CandidateServices.getCandidateById(req.params.id as string, userId);
+  const result = await CandidateServices.getCandidateById(req.params.id as string, userId, req.lang);
   
   sendResponse(res, {
     statusCode: StatusCodes.OK,

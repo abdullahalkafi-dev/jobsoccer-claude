@@ -6,6 +6,7 @@ import {
   TQualityCategory,
   TQualityItem,
 } from "./profileQuality.interface";
+import { itemLabel, renderTip, TipParams } from "./profileQuality.i18n";
 
 /**
  * Profile Quality Score rules: pure functions, no database, no AI.
@@ -43,13 +44,18 @@ export type TQualitySnapshot = {
 
 type TItemSpec = {
   key: string;
-  label: string;
+  /** Key of the label in the en/es/fr catalog (profileQuality.i18n). */
+  labelKey: string;
   max: number;
   /** 0-1: how much of the item is earned. */
   fraction: number;
   /** Not counted when false (the category is scaled instead). */
   applicable?: boolean;
-  tip?: string;
+  /** Catalog key of the improvement tip (+ params), shown while the item is not complete. */
+  tipKey?: string;
+  tipParams?: TipParams;
+  /** The tip is only "waiting for an admin review": sorted after tips the candidate can act on. */
+  waiting?: boolean;
 };
 
 const PLAYER_ROLES: CandidateRole[] = [
@@ -80,37 +86,6 @@ const fieldShare = (profile: Record<string, any>, fields: string[]): number =>
 
 const missingFields = (profile: Record<string, any>, fields: string[]): string[] => fields.filter((field) => !filled(profile[field]));
 
-const FIELD_LABELS: Record<string, string> = {
-  dateOfBirth: "date of birth",
-  placeOfBirth: "place of birth",
-  nationality: "nationality",
-  country: "country",
-  gender: "gender",
-  currentClub: "current club",
-  phoneNumber: "phone number",
-  league: "league",
-  height: "height",
-  weight: "weight",
-  foot: "preferred foot",
-  position: "position",
-  division: "division",
-  teamsJoined: "teams joined",
-  contractExpires: "contract end date",
-  nationalTeamGames: "national team games",
-  schoolName: "school",
-  gpa: "GPA",
-  satOrAct: "SAT/ACT",
-  category: "category",
-  collegeOrUniversity: "college or university",
-  diploma: "diploma",
-  nationalTeamCategory: "national team category",
-};
-
-const describeMissing = (profile: Record<string, any>, fields: string[]): string => {
-  const missing = missingFields(profile, fields).map((field) => FIELD_LABELS[field] ?? field);
-  return missing.length ? `Add your ${missing.slice(0, 3).join(", ")}${missing.length > 3 ? " and more" : ""}.` : "";
-};
-
 const monthsSince = (date: Date | string | undefined, now: Date): number =>
   date ? (now.getTime() - new Date(date).getTime()) / (30 * 24 * 3600 * 1000) : Infinity;
 
@@ -129,6 +104,15 @@ export const heuristicExperienceQuality = (experiences: { description?: string }
 
 // ─── Category builders ───────────────────────────────────────────────────────
 
+/** Tip of an item: a catalog key plus params, so it can be shown in any language. */
+type TTipRef = { tipKey?: string; tipParams?: TipParams; waiting?: boolean };
+
+/** "Add your a, b, c and more." for the profile fields still empty (no tip when nothing is missing). */
+const missingTip = (profile: Record<string, any>, fields: string[]): TTipRef => {
+  const missing = missingFields(profile, fields);
+  return missing.length ? { tipKey: "addMissingFields", tipParams: { fields: missing.slice(0, 3), more: missing.length > 3 } } : {};
+};
+
 const STAFF_BASIC_FIELDS = ["dateOfBirth", "placeOfBirth", "nationality", "country", "gender", "currentClub", "phoneNumber"];
 
 const staffCompletion = (s: TQualitySnapshot): TItemSpec[] => {
@@ -137,29 +121,28 @@ const staffCompletion = (s: TQualitySnapshot): TItemSpec[] => {
   const experienceCount = s.experiences.length;
   const quality = s.ai?.experienceQuality ?? heuristicExperienceQuality(s.experiences);
   return [
-    { key: "basics", label: "Personal and role details", max: 8, fraction: fieldShare(s.profile, basics), tip: describeMissing(s.profile, basics) },
-    { key: "social", label: "Social media", max: 2, fraction: filled(s.profile.socialMedia) ? 1 : 0, tip: "Add a social media link so employers can see more of your work." },
+    { key: "basics", labelKey: "basicsStaff", max: 8, fraction: fieldShare(s.profile, basics), ...missingTip(s.profile, basics) },
+    { key: "social", labelKey: "social", max: 2, fraction: filled(s.profile.socialMedia) ? 1 : 0, tipKey: "addSocial" },
     {
       key: "experience",
-      label: "Experience history",
+      labelKey: "experience",
       max: 7,
       fraction: experienceCount ? 0.6 * (Math.min(experienceCount, 2) / 2) + 0.4 * quality : 0,
-      tip:
-        experienceCount === 0
-          ? "Add your work experience (clubs, roles and dates)."
-          : experienceCount < 2 || quality < 0.7
-          ? "Add one more role and describe what you did and achieved in each."
-          : undefined,
+      ...(experienceCount === 0
+        ? { tipKey: "addExperience" }
+        : experienceCount < 2 || quality < 0.7
+        ? { tipKey: "addMoreExperience" }
+        : {}),
     },
-    { key: "education", label: "Education", max: 4, fraction: s.educations.length ? 1 : 0, tip: "Add your education." },
+    { key: "education", labelKey: "education", max: 4, fraction: s.educations.length ? 1 : 0, tipKey: "addEducation" },
     {
       key: "licenses",
-      label: "Licences and certifications",
+      labelKey: "licenses",
       max: 4,
       fraction: s.licenses.length ? 1 : 0,
       // Not required for office roles (do not demand irrelevant qualifications).
       applicable: onField,
-      tip: "Add your coaching licences and certifications.",
+      tipKey: "addLicenses",
     },
   ];
 };
@@ -170,24 +153,24 @@ const staffVerification = (s: TQualitySnapshot): TItemSpec[] => {
   return [
     {
       key: "identity",
-      label: "Identity verified",
+      labelKey: "identity",
       max: 10,
       fraction: s.identityStatus === "approved" ? 1 : s.identityStatus === "pending" ? 0.3 : 0,
-      tip: s.identityStatus === "pending" ? "Your identity check is waiting for review." : "Request identity verification from your profile.",
+      ...(s.identityStatus === "pending" ? { tipKey: "identityWaiting", waiting: true } : { tipKey: "identityRequest" }),
     },
     {
       key: "credentials",
-      label: "Qualifications verified",
+      labelKey: "credentials",
       max: 8,
       fraction: credentialDocs >= 2 ? 1 : credentialDocs === 1 ? 0.6 : credentialPending ? 0.2 : 0,
-      tip: credentialPending && !credentialDocs ? "Your qualification documents are waiting for review." : "Upload a document for your latest licence or qualification so it can be verified.",
+      ...(credentialPending && !credentialDocs ? { tipKey: "credentialsWaiting", waiting: true } : { tipKey: "credentialsUpload" }),
     },
     {
       key: "history",
-      label: "Work history verified",
+      labelKey: "workHistoryVerified",
       max: 7,
       fraction: approvedCount(s.experiences) >= 1 ? 1 : pendingCount(s.experiences) ? 0.2 : 0,
-      tip: pendingCount(s.experiences) ? "Your work history document is waiting for review." : "Upload a document that confirms one of your roles (contract, letter or club page).",
+      ...(pendingCount(s.experiences) ? { tipKey: "workHistoryWaiting", waiting: true } : { tipKey: "workHistoryUpload" }),
     },
   ];
 };
@@ -196,39 +179,27 @@ const staffMedia = (s: TQualitySnapshot): TItemSpec[] => {
   const has = (kind: VideoKind) => s.videos.some((v) => v.kind === kind);
   const cvFraction = s.resume ? 0.6 + 0.4 * (s.ai?.cvRelevance ?? (s.resume.text ? 0.7 : 0.5)) : 0;
   return [
-    { key: "photo", label: "Profile photo", max: 5, fraction: s.profileImage ? 1 : 0, tip: "Add a clear profile photo." },
-    { key: "cv", label: "CV", max: 5, fraction: cvFraction, tip: s.resume ? "Update your CV so it matches your role." : "Upload your CV." },
+    { key: "photo", labelKey: "photo", max: 5, fraction: s.profileImage ? 1 : 0, tipKey: "addPhoto" },
+    { key: "cv", labelKey: "cv", max: 5, fraction: cvFraction, tipKey: s.resume ? "updateCv" : "uploadCv" },
     // The methodology video is optional (5 points); the interview carries the rest, so media always adds up to 35.
-    { key: "interview", label: "Video interview", max: 20, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tip: "Record your video interview." },
-    {
-      key: "methodology",
-      label: "Methodology video",
-      max: 5,
-      fraction: has(VideoKind.METHODOLOGY) ? 1 : 0,
-      tip: "Optional: add a methodology video to stand out to employers.",
-    },
+    { key: "interview", labelKey: "interview", max: 20, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tipKey: "recordInterview" },
+    { key: "methodology", labelKey: "methodology", max: 5, fraction: has(VideoKind.METHODOLOGY) ? 1 : 0, tipKey: "addMethodology" },
   ];
 };
 
 const maintenance = (s: TQualitySnapshot, weights: { availability: number; freshness: number; responsiveness: number }): TItemSpec[] => {
   const age = monthsSince(s.profile.updatedAt, s.now);
   return [
-    { key: "availability", label: "Availability up to date", max: weights.availability, fraction: filled(s.profile.availability) ? 1 : 0, tip: "Update your availability." },
-    {
-      key: "freshness",
-      label: "Profile recently updated",
-      max: weights.freshness,
-      fraction: age <= 6 ? 1 : age <= 12 ? 0.6 : 0.2,
-      tip: "Review your profile. It has not been updated for a while.",
-    },
+    { key: "availability", labelKey: "availability", max: weights.availability, fraction: filled(s.profile.availability) ? 1 : 0, tipKey: "updateAvailability" },
+    { key: "freshness", labelKey: "freshness", max: weights.freshness, fraction: age <= 6 ? 1 : age <= 12 ? 0.6 : 0.2, tipKey: "reviewProfile" },
     {
       key: "responsiveness",
-      label: "Replies to messages",
+      labelKey: "responsiveness",
       max: weights.responsiveness,
       fraction: s.responseRate === null ? 0 : s.responseRate >= 0.7 ? 1 : s.responseRate >= 0.4 ? 0.6 : 0.2,
       // Only rated once the candidate has actually received messages.
       applicable: s.responseRate !== null,
-      tip: "Reply to the messages you receive from employers.",
+      tipKey: "replyMessages",
     },
   ];
 };
@@ -244,53 +215,55 @@ const PLAYER_BACKGROUND_FIELDS: Partial<Record<CandidateRole, string[]>> = {
 const playerCompletion = (s: TQualitySnapshot): TItemSpec[] => {
   const sporting = ["position", "currentClub", s.role === CandidateRole.PROFESSIONAL_PLAYER ? "division" : "league"];
   const background = PLAYER_BACKGROUND_FIELDS[s.role];
+  const contactFields = ["phoneNumber", "socialMedia"];
+  const contactTip = missingTip(s.profile, contactFields);
   return [
-    { key: "basics", label: "Personal details", max: 10, fraction: fieldShare(s.profile, PLAYER_BASIC_FIELDS), tip: describeMissing(s.profile, PLAYER_BASIC_FIELDS) },
-    { key: "sporting", label: "Position and club", max: 6, fraction: fieldShare(s.profile, sporting), tip: describeMissing(s.profile, sporting) },
+    { key: "basics", labelKey: "basicsPlayer", max: 10, fraction: fieldShare(s.profile, PLAYER_BASIC_FIELDS), ...missingTip(s.profile, PLAYER_BASIC_FIELDS) },
+    { key: "sporting", labelKey: "sporting", max: 6, fraction: fieldShare(s.profile, sporting), ...missingTip(s.profile, sporting) },
     {
       key: "contact",
-      label: "Contact and social media",
+      labelKey: "contact",
       max: 6,
-      fraction: fieldShare(s.profile, ["phoneNumber", "socialMedia"]),
-      tip: describeMissing(s.profile, ["phoneNumber", "socialMedia"]) || "Add your phone number and social media.",
+      fraction: fieldShare(s.profile, contactFields),
+      ...(contactTip.tipKey ? contactTip : { tipKey: "addPhoneSocial" }),
     },
     {
       key: "background",
-      label: s.role === CandidateRole.HIGH_SCHOOL || s.role === CandidateRole.COLLEGE_UNIVERSITY ? "School details" : "Career details",
+      labelKey: s.role === CandidateRole.HIGH_SCHOOL || s.role === CandidateRole.COLLEGE_UNIVERSITY ? "schoolDetails" : "careerDetails",
       max: 8,
       fraction: background ? fieldShare(s.profile, background) : 0,
       applicable: !!background,
-      tip: background ? describeMissing(s.profile, background) : undefined,
+      ...(background ? missingTip(s.profile, background) : {}),
     },
-    { key: "history", label: "Club history", max: 5, fraction: s.experiences.length ? 1 : 0, tip: "Add the clubs you have played for." },
+    { key: "history", labelKey: "clubHistory", max: 5, fraction: s.experiences.length ? 1 : 0, tipKey: "addClubs" },
   ];
 };
 
 const playerVerification = (s: TQualitySnapshot): TItemSpec[] => [
   {
     key: "identity",
-    label: "Identity verified",
+    labelKey: "identity",
     max: 10,
     fraction: s.identityStatus === "approved" ? 1 : s.identityStatus === "pending" ? 0.3 : 0,
-    tip: s.identityStatus === "pending" ? "Your identity check is waiting for review." : "Request identity verification from your profile.",
+    ...(s.identityStatus === "pending" ? { tipKey: "identityWaiting", waiting: true } : { tipKey: "identityRequest" }),
   },
   {
     key: "history",
-    label: "Club history verified",
+    labelKey: "clubHistoryVerified",
     max: 10,
     fraction: approvedCount(s.experiences) >= 1 ? 1 : pendingCount(s.experiences) ? 0.2 : 0,
-    tip: pendingCount(s.experiences) ? "Your club history document is waiting for review." : "Upload a document that confirms one of your clubs (contract or club page).",
+    ...(pendingCount(s.experiences) ? { tipKey: "clubHistoryWaiting", waiting: true } : { tipKey: "clubHistoryUpload" }),
   },
 ];
 
 const playerMedia = (s: TQualitySnapshot): TItemSpec[] => [
-  { key: "photo", label: "Profile photo", max: 5, fraction: s.profileImage ? 1 : 0, tip: "Add a clear profile photo." },
+  { key: "photo", labelKey: "photo", max: 5, fraction: s.profileImage ? 1 : 0, tipKey: "addPhoto" },
   {
     key: "highlights",
-    label: "Highlight videos",
+    labelKey: "highlights",
     max: 30,
     fraction: Math.min(s.videos.filter((v) => v.kind === VideoKind.HIGHLIGHTS).length, 2) / 2,
-    tip: "Upload your two highlight videos.",
+    tipKey: "uploadHighlights",
   },
 ];
 
@@ -313,11 +286,35 @@ const buildCategory = (
     const max = round1(spec.max * scale);
     const earned = round1(Math.min(1, Math.max(0, spec.fraction)) * max);
     const done = earned >= max - 0.05;
-    return { key: spec.key, label: spec.label, earned, max, done, ...(done || !spec.tip ? {} : { tip: spec.tip }) };
+    const tip = done || !spec.tipKey ? undefined : renderTip(spec.tipKey, spec.tipParams, "en");
+    return {
+      key: spec.key,
+      label: itemLabel(spec.labelKey, "en"),
+      labelKey: spec.labelKey,
+      earned,
+      max,
+      done,
+      ...(tip
+        ? { tip, tipKey: spec.tipKey, ...(spec.tipParams ? { tipParams: spec.tipParams } : {}), ...(spec.waiting ? { waiting: true } : {}) }
+        : {}),
+    };
   });
   const earned = Math.min(categoryMax, Math.round(items.reduce((sum, item) => sum + item.earned, 0)));
   return { key, label, earned, max: categoryMax, items };
 };
+
+/**
+ * Items that still have a tip, best first: the most points still to win, with
+ * "waiting for review" notes last. Uses the item's own flag, never its (translated) text.
+ */
+export const selectTipItems = (categories: TQualityCategory[]): TQualityItem[] =>
+  categories
+    .flatMap((category) => category.items)
+    .filter((item) => !item.done && item.tip)
+    .sort((a, b) => {
+      if (!!a.waiting !== !!b.waiting) return a.waiting ? 1 : -1;
+      return b.max - b.earned - (a.max - a.earned);
+    });
 
 /** Calculate the Profile Quality Score from a snapshot of the candidate. */
 export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuality, "calculatedAt"> => {
@@ -339,16 +336,7 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
   const score = Math.min(100, categories.reduce((sum, category) => sum + category.earned, 0));
   const band = LEVEL_BANDS.find((b) => score >= b.min)!;
 
-  // Improvement actions: the items with the most points still to win come first.
-  const tips = categories
-    .flatMap((category) => category.items)
-    .filter((item) => !item.done && item.tip)
-    // Things the candidate can act on come first; "waiting for review" notes go last.
-    .sort((a, b) => {
-      const waiting = (i: { tip?: string }) => (i.tip ?? "").includes("waiting for review");
-      if (waiting(a) !== waiting(b)) return waiting(a) ? 1 : -1;
-      return b.max - b.earned - (a.max - a.earned);
-    })
+  const tips = selectTipItems(categories)
     .map((item) => item.tip as string)
     .slice(0, 5);
 

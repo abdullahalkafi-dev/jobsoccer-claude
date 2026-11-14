@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { langOf } from "../../shared/ai/i18n/lang";
 import catchAsync from "../../shared/util/catchAsync";
 import sendResponse from "../../shared/util/sendResponse";
 import { AiEvaluationService } from "./aiEvaluation.service";
@@ -8,13 +9,13 @@ const viewerOf = (req: Request) => ({ id: req.user.id as string, userType: req.u
 
 /** GET /ai-evaluation/me - the candidate's own latest assessment */
 const getMine = catchAsync(async (req: Request, res: Response) => {
-  const result = await AiEvaluationService.getLatestForCandidate(viewerOf(req), req.user.id);
+  const result = await AiEvaluationService.getLatestForCandidate(viewerOf(req), req.user.id, langOf(req));
   sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Assessment retrieved", data: result });
 });
 
 /** GET /ai-evaluation/candidate/:userId - candidate, admin, or a connection the candidate accepted */
 const getForCandidate = catchAsync(async (req: Request, res: Response) => {
-  const result = await AiEvaluationService.getLatestForCandidate(viewerOf(req), req.params.userId as string);
+  const result = await AiEvaluationService.getLatestForCandidate(viewerOf(req), req.params.userId as string, langOf(req));
   sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Assessment retrieved", data: result });
 });
 

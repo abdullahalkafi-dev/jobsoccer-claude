@@ -1,3 +1,4 @@
+import { accentInsensitiveRegex } from "../../shared/util/searchRegex";
 import { model, Schema } from "mongoose";
 import { IJob, JobStatus } from "./job.interface";
 
@@ -259,7 +260,7 @@ jobSchema.statics = {
     const query: any = { status: "active" };
 
     if (jobCategory) query.jobCategory = jobCategory;
-    if (location) query.location = new RegExp(location, "i");
+    if (location) query.location = accentInsensitiveRegex(String(location));
     if (country) query.country = country;
     if (contractType) query.contractType = contractType;
     if (employerRole) query["creator.creatorRole"] = employerRole;

@@ -25,6 +25,7 @@ import { ResetToken } from "../resetToken/resetToken.model";
 import { generateCryptoToken } from "../../shared/util/generateCryptoToken";
 import { OneTimeCode } from "../oneTimeCode/otp.model";
 import { logger } from "../../shared/logger/logger";
+import { DEFAULT_LANG, isLang, Lang } from "../../shared/i18n";
 
 export type TCreateUser = {
   firstName: string;
@@ -34,6 +35,8 @@ export type TCreateUser = {
   password: string;
   loginProvider: LoginProvider;
   userType?: string;
+  /** Language of the signup request (en, es, fr); saved on the user and used for e-mails. */
+  language?: Lang;
 };
 
 const getUserType = (
@@ -123,6 +126,7 @@ const createUser = async (user: TCreateUser) => {
               email: user.email,
               role: user.role,
               userType: userType,
+              language: isLang(user.language) ? user.language : DEFAULT_LANG,
               isVerified: true,
               authId: authEntry[0]._id,
             },
@@ -202,6 +206,7 @@ const createUser = async (user: TCreateUser) => {
               email: user.email,
               role: user.role,
               userType: userType,
+              language: isLang(user.language) ? user.language : DEFAULT_LANG,
               authId: authEntry[0]._id,
             },
           ],
@@ -233,6 +238,7 @@ const createUser = async (user: TCreateUser) => {
           otp: otp,
           theme: "theme-green",
           expiresIn: 30,
+          lang: isLang(user.language) ? user.language : DEFAULT_LANG,
         });
         await OtpService.createOtpEntry({
           userId: newUser[0]._id.toString(),
@@ -253,7 +259,7 @@ const createUser = async (user: TCreateUser) => {
 };
 
 // login
-const loginUser = async (payload: TLoginData) => {
+const loginUser = async (payload: TLoginData, lang?: Lang) => {
   const { email, password, loginProvider } = payload;
 
   // Ensure loginProvider is valid
@@ -298,7 +304,8 @@ const loginUser = async (payload: TLoginData) => {
       if (!payload.role) {
         throw new AppError(
           StatusCodes.BAD_REQUEST,
-          "Account does not exist. Please sign up first."
+          "Account does not exist. Please sign up first.",
+          { code: "ACCOUNT_NOT_FOUND" }
         );
       }
 
@@ -310,6 +317,7 @@ const loginUser = async (payload: TLoginData) => {
         loginProvider: LoginProvider.LINKEDIN,
         password: "",
         userType: payload.userType,
+        language: lang,
       };
 
       return createUser(createUserPayload);
@@ -368,7 +376,7 @@ const loginUser = async (payload: TLoginData) => {
   }
 };
 
-const forgetPasswordToDB = async (email: string) => {
+const forgetPasswordToDB = async (email: string, lang?: Lang) => {
   const isExistUser = await User.findOne({ email });
   if (!isExistUser) {
     throw new AppError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
@@ -381,6 +389,7 @@ const forgetPasswordToDB = async (email: string) => {
     email: isExistUser.email,
     name: isExistUser.firstName!,
     expiresIn: 30,
+    lang: isLang(isExistUser.language) ? isExistUser.language : lang,
     theme: "theme-red" as
       | "theme-green"
       | "theme-red"
@@ -422,7 +431,7 @@ const verifyEmailToDB = async (payload: TVerifyEmail) => {
     reason: payload.reason || "account_verification",
   });
   if (!isOtpValid) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Invalid or expired OTP");
+    throw new AppError(StatusCodes.BAD_REQUEST, "Invalid or expired OTP", { code: "OTP_INVALID" });
   }
   //create token ;
 
@@ -590,9 +599,11 @@ const deleteAccountToDB = async (user: JwtPayload) => {
 const resendOtp = async ({
   email,
   reason,
+  lang,
 }: {
   email: string;
   reason: string;
+  lang?: Lang;
 }) => {
   const isExistUser = await User.findOne({
     email,
@@ -614,6 +625,7 @@ const resendOtp = async ({
       | "theme-orange"
       | "theme-blue",
     expiresIn: 30,
+    lang: isLang(isExistUser.language) ? isExistUser.language : lang,
   };
   if (reason === "account_verification") {
     const createAccount = emailTemplate.createAccount(value);

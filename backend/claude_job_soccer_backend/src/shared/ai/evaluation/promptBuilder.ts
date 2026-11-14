@@ -1,3 +1,4 @@
+import { isEnglishLanguage, languageEnglishName } from "../i18n/aiTexts";
 import { listRubrics } from "../rubric/rubric.registry";
 import { Rubric } from "../rubric/rubric.schema";
 
@@ -105,8 +106,23 @@ export interface PromptMessages {
   user: string;
 }
 
-export const buildEvaluationPrompt = (rubric: Rubric, transcript: string): PromptMessages => ({
-  system: SYSTEM_PROMPT,
+/** What the scorer needs to know about how the transcript came about. */
+export type TTranscriptContext = {
+  /** Language Whisper detected (e.g. "spanish"). */
+  spokenLanguage?: string;
+  /** The transcript is an English machine translation of the spoken language. */
+  isTranslated?: boolean;
+};
+
+/** Extra rule for interviews given in another language (the candidate is scored on Whisper's English translation). */
+export const translatedTranscriptRule = (context: TTranscriptContext): string => {
+  if (!context.isTranslated && (!context.spokenLanguage || isEnglishLanguage(context.spokenLanguage))) return "";
+  const language = context.spokenLanguage && !/^unknown$/i.test(context.spokenLanguage) ? languageEnglishName(context.spokenLanguage) : "non-English";
+  return `- The transcript is an English machine translation of a ${language} interview. Do not penalise unusual phrasing, translated idioms or football terms that may be translated imperfectly; quote evidence from the translation exactly as given.`;
+};
+
+export const buildEvaluationPrompt = (rubric: Rubric, transcript: string, context: TTranscriptContext = {}): PromptMessages => ({
+  system: [SYSTEM_PROMPT, translatedTranscriptRule(context)].filter(Boolean).join("\n"),
   user: `${formatRubric(rubric)}
 
 Return one entry per question (questionId 1-${rubric.questionCount}).

@@ -28,7 +28,9 @@ describe("looksEnglish", () => {
 });
 
 describe("translateLinesToEnglish", () => {
-  beforeEach(() => chatCreate.mockReset());
+  beforeEach(() => {
+    chatCreate.mockReset(); // braces: a returned mock would be called by vitest as a cleanup hook
+  });
 
   it("keeps the timings and replaces the text", async () => {
     chatCreate.mockResolvedValue(reply(["Hello, I am Carlos.", "I develop players."]));
@@ -47,17 +49,34 @@ describe("translateLinesToEnglish", () => {
     expect(usage).toHaveLength(1);
   });
 
-  it("retries once when the line count is wrong, then gives up", async () => {
-    chatCreate.mockResolvedValue(reply(["only one line"]));
-    await expect(
-      translateLinesToEnglish(
-        [
-          { start: 0, end: 1, text: "uno" },
-          { start: 1, end: 2, text: "dos" },
-        ],
-        []
-      )
-    ).rejects.toThrow(/different number of lines/);
-    expect(chatCreate).toHaveBeenCalledTimes(2);
+  it("never fails the assessment because the line count is wrong: it splits the block and translates the parts", async () => {
+    // the whole block (2 lines) always comes back as one line; single lines are fine
+    chatCreate.mockImplementation(async (args: any) => {
+      const lines: string[] = JSON.parse(args.messages[1].content).lines;
+      return reply(lines.length === 1 ? ["EN(" + lines[0] + ")"] : ["only one line"]);
+    });
+    const result = await translateLinesToEnglish(
+      [
+        { start: 0, end: 1, text: "uno" },
+        { start: 1, end: 2, text: "dos" },
+      ],
+      []
+    );
+    expect(result).toEqual([
+      { start: 0, end: 1, text: "EN(uno)" },
+      { start: 1, end: 2, text: "EN(dos)" },
+    ]);
+  });
+
+  it("keeps the original line when a single line cannot be translated at all", async () => {
+    chatCreate.mockResolvedValue(reply([]));
+    const result = await translateLinesToEnglish([{ start: 0, end: 1, text: "uno" }], []);
+    expect(result).toEqual([{ start: 0, end: 1, text: "uno" }]);
+  });
+
+  it("joins a single line that comes back split into several", async () => {
+    chatCreate.mockResolvedValue(reply(["Hello", "there"]));
+    const result = await translateLinesToEnglish([{ start: 0, end: 1, text: "hola" }], []);
+    expect(result[0].text).toBe("Hello there");
   });
 });

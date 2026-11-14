@@ -23,6 +23,17 @@ describe("interpretSetup", () => {
     expect(flags).toContain("the camera does not show the candidate from head to knees");
   });
 
+  it("ignores the text-based script signal for translated transcripts (they always read like written prose)", () => {
+    const translated = { isTranslated: true, spokenLanguage: "spanish" };
+    expect(interpretSetup({ ...good, soundsReadFromScript: true }, translated)).toEqual([]);
+    // visual signals still count
+    const flags = interpretSetup({ ...good, soundsReadFromScript: true, notesScreenOrDeviceVisible: true }, translated);
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatch(/notes, a screen or a device/);
+    // an English interview keeps the signal
+    expect(interpretSetup({ ...good, soundsReadFromScript: true }, { isTranslated: false })).toHaveLength(1);
+  });
+
   it("flags notes or devices and possible script reading", () => {
     const flags = interpretSetup({ ...good, notesScreenOrDeviceVisible: true, soundsReadFromScript: true });
     expect(flags).toHaveLength(2);

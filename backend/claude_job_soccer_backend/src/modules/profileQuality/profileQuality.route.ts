@@ -1,11 +1,13 @@
 import express, { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
+import { langOf } from "../../shared/ai/i18n/lang";
 import auth from "../../shared/middlewares/auth";
 import catchAsync from "../../shared/util/catchAsync";
 import sendResponse from "../../shared/util/sendResponse";
 import { User } from "../user/user.model";
 import { UserType } from "../user/user.interface";
-import { PREMIUM_MIN_SCORE, LEVEL_BANDS } from "./profileQuality.interface";
+import { PREMIUM_MIN_SCORE } from "./profileQuality.interface";
+import { localizedBands } from "./profileQuality.view";
 import { ProfileQualityService } from "./profileQuality.service";
 
 const router = express.Router();
@@ -19,13 +21,19 @@ router.get(
   "/me",
   auth(UserType.CANDIDATE),
   catchAsync(async (req: Request, res: Response) => {
+    const lang = langOf(req);
     const user = await User.findById(req.user.id).select("profileQuality").lean();
     const quality = user?.profileQuality ?? (await ProfileQualityService.recalculate(req.user.id));
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
       message: "Profile quality retrieved",
-      data: { quality: quality ?? null, premiumMinScore: PREMIUM_MIN_SCORE, bands: LEVEL_BANDS },
+      data: {
+        // texts (labels, tips, level label) in the viewer's language; scores and keys never change
+        quality: quality ? await ProfileQualityService.localizedFor(req.user.id, quality as any, lang) : null,
+        premiumMinScore: PREMIUM_MIN_SCORE,
+        bands: localizedBands(lang),
+      },
     });
   })
 );

@@ -1,3 +1,4 @@
+import { accentInsensitiveRegex, escapedRegex } from "../../shared/util/searchRegex";
 import { User } from "../user/user.model";
 import { PaymentHistory } from "../paymentHistory/paymentHistory.model";
 import mongoose from "mongoose";
@@ -147,9 +148,9 @@ const getUserList = async (query: {
     // Search by name or email
     if (query.search) {
       matchQuery.$or = [
-        { firstName: { $regex: query.search, $options: "i" } },
-        { lastName: { $regex: query.search, $options: "i" } },
-        { email: { $regex: query.search, $options: "i" } },
+        { firstName: accentInsensitiveRegex(String(query.search)) },
+        { lastName: accentInsensitiveRegex(String(query.search)) },
+        { email: escapedRegex(String(query.search)) },
       ];
     }
 

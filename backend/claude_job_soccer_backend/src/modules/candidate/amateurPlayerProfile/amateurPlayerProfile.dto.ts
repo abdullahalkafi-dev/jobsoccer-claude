@@ -16,6 +16,7 @@ const createAmateurPlayerProfileDto = z.object({
   placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
   nationality: z.string().trim().min(1, "Nationality is required"),
   phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+  languages: z.string().trim().max(300, "Languages cannot exceed 300 characters").optional(),
   gender: z.string().trim().min(1, "Gender is required"),
   height: z.object({
     size: z.number().positive("Height must be positive"),
@@ -54,7 +55,7 @@ const createAmateurPlayerProfileDto = z.object({
   }),
   socialMedia: z.string().trim().min(1, "Social media is required").optional(),
   foot: z.enum(["Right", "Left", "Both"]),
-  league: z.string().trim().min(1, "League is required"),
+  league: z.string().trim().min(1, "League is required"),
 });
 
 const updateAmateurPlayerProfileDto = createAmateurPlayerProfileDto.partial();

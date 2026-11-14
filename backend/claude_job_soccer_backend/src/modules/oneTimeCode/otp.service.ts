@@ -50,16 +50,16 @@ const validateOtp = async ({
 
   const otpEntry = await OneTimeCode.findOne({ userId, reason });
   if (!otpEntry) {
-    throw new AppError(404, "OTP entry not found");
+    throw new AppError(404, "OTP entry not found", { code: "OTP_INVALID" });
   }
   const isValid = bcrypt.compareSync(oneTimeCode, otpEntry.oneTimeCodeHash);
   if (!isValid) {
-    throw new AppError(400, "Invalid OTP");
+    throw new AppError(400, "Invalid OTP", { code: "OTP_INVALID" });
   }
   const expireAt = otpEntry.expireAt ? new Date(otpEntry.expireAt) : null;
   if (expireAt && !isNaN(expireAt.getTime()) && expireAt < new Date()) {
     await OneTimeCode.findByIdAndDelete(otpEntry._id);
-    throw new AppError(400, "OTP expired");
+    throw new AppError(400, "OTP expired", { code: "OTP_EXPIRED" });
   }
 
   await OneTimeCode.findByIdAndDelete(otpEntry._id);
