@@ -23,7 +23,10 @@ router.get(
   catchAsync(async (req: Request, res: Response) => {
     const lang = langOf(req);
     const user = await User.findById(req.user.id).select("profileQuality").lean();
-    const quality = user?.profileQuality ?? (await ProfileQualityService.recalculate(req.user.id));
+    let quality = user?.profileQuality ?? (await ProfileQualityService.recalculate(req.user.id));
+    // Results saved before translations existed have tips without keys: recalculate them once so they can be shown in the user's language
+    const legacy = quality?.categories?.some((category: any) => category.items?.some((item: any) => item.tip && !item.tipKey));
+    if (legacy) quality = (await ProfileQualityService.recalculate(req.user.id)) ?? quality;
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
