@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -268,7 +269,7 @@ export default function CreateJobPostModal({
                         {t("deadline")}
                       </FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} className="mt-1" />
+                        <DatePicker value={field.value} onChange={field.onChange} onBlur={field.onBlur} aria-invalid={!!form.formState.errors.deadline} className="mt-1" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

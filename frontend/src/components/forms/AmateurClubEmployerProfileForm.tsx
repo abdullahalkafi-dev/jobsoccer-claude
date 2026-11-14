@@ -12,6 +12,7 @@ import { FormLayout } from "@/components/form/FormLayout";
 import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -53,6 +54,7 @@ export function AmateurClubEmployerProfileForm({
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<AmateurClubEmployerProfileFormData>({
     resolver: zodResolver(schema) as any,
@@ -195,10 +197,11 @@ export function AmateurClubEmployerProfileForm({
 
               {/* Founded and Website */}
               <FormField label={t("label.founded")} error={errors.founded?.message}>
-                <Input
-                  type="date"
-                  {...register("founded")}
-                  className="bg-gray-50 border-0"
+                <DatePicker
+                  value={watch("founded")}
+                  onChange={(v) => setValue("founded", v, { shouldValidate: true })}
+                  aria-invalid={!!errors.founded}
+                  className="bg-gray-50 border-0 hover:bg-gray-50"
                 />
               </FormField>
 
