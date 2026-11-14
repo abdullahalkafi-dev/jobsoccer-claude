@@ -57,6 +57,11 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (err?.name === "JsonWebTokenError" || err?.name === "TokenExpiredError" || err?.name === "NotBeforeError") {
+    // A broken or expired login token is the visitor's problem (401), not a server error (500)
+    statusCode = 401;
+    message = say("You are not authorized");
+    errorSources = [{ path: "", message }];
   } else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = say(err.message);
