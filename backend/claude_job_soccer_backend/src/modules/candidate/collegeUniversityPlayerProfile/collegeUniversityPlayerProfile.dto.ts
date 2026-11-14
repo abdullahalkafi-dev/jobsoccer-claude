@@ -16,6 +16,7 @@ const createCollegeUniversityPlayerProfileDto = z.object({
     placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
     nationality: z.string().trim().min(1, "Nationality is required"),
     phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+  languages: z.string().trim().max(300, "Languages cannot exceed 300 characters").optional(),
     gender: z.string().trim().min(1, "Gender is required"),
     height: z.object({
         size: z.number().positive("Height must be positive"),
@@ -49,7 +50,7 @@ const createCollegeUniversityPlayerProfileDto = z.object({
     schoolName: z.string().trim().min(1, "School name is required"),
     diploma: z.string().trim().min(1, "Diploma is required"),
     gpa: z.string().trim().min(1, "GPA is required").optional(),
-    country: z.string().min(1, "Country is required"),
+    country: z.string().min(1, "Country is required"),
 });
 
 const updateCollegeUniversityPlayerProfileDto = createCollegeUniversityPlayerProfileDto.partial();

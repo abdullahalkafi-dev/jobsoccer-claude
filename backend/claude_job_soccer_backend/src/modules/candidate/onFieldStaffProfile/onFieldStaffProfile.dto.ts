@@ -17,6 +17,7 @@ const createOnFieldStaffProfileDto = z.object({
     placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
     nationality: z.string().trim().min(1, "Nationality is required"),
     phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+  languages: z.string().trim().max(300, "Languages cannot exceed 300 characters").optional(),
     currentClub: z.string().trim().min(1, "Current club is required"),
     availability: z.string().trim().min(1, "Availability is required").optional(),
     country: z.string().min(1, "Country is required"),

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { NAME_REGEX } from "../../shared/util/nameRegex";
 
 const createUser = z.object({
   body: z
@@ -8,13 +9,13 @@ const createUser = z.object({
         .min(1, "First name is required")
         .max(50, "First name cannot exceed 50 characters")
         .trim()
-        .regex(/^[A-Za-z\s.'-]+$/, "First name contains invalid characters"),
+        .regex(NAME_REGEX, "First name contains invalid characters"),
       lastName: z
         .string()
         .min(1, "Last name is required")
         .max(50, "Last name cannot exceed 50 characters")
         .trim()
-        .regex(/^[A-Za-z\s.'-]+$/, "Last name contains invalid characters"),
+        .regex(NAME_REGEX, "Last name contains invalid characters"),
       email: z.string().email("Invalid email address").trim().toLowerCase(),
       address: z.string(),
       latitude: z
@@ -42,7 +43,7 @@ const updateUser = z.object({
         .min(1, "First name must be at least 1 characters long")
         .max(50, "First name can't be more than 50 characters")
         .regex(
-          /^[a-zA-ZÀ-ÿ\u00f1\u00d1'-\s]+$/,
+          NAME_REGEX,
           "First name contains invalid characters"
         )
         .trim()
@@ -52,7 +53,7 @@ const updateUser = z.object({
         .min(1, "Last name must be at least 1 characters long")
         .max(50, "Last name can't be more than 50 characters")
         .regex(
-          /^[a-zA-ZÀ-ÿ\u00f1\u00d1'-\s]+$/,
+          NAME_REGEX,
           "Last name contains invalid characters"
         )
         .trim()
@@ -78,6 +79,14 @@ const updateUser = z.object({
     .strict(),
 });
 
+const updateLanguage = z.object({
+  body: z
+    .object({
+      language: z.enum(["en", "es", "fr"], "Unsupported language"),
+    })
+    .strict(),
+});
+
 const updateUserActivationStatus = z.object({
   body: z
     .object({
@@ -99,6 +108,7 @@ const updateUserRole = z.object({
 export const UserValidation = {
   createUser,
   updateUser,
+  updateLanguage,
   updateUserActivationStatus,
   updateUserRole,
 };

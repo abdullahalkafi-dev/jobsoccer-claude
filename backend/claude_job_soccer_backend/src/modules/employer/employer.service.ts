@@ -1,3 +1,4 @@
+import { accentInsensitiveRegex, escapedRegex } from "../../shared/util/searchRegex";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import { User } from "../user/user.model";
@@ -89,8 +90,8 @@ const searchEmployers = async (
   // Search by name (firstName or lastName)
   if (searchTerm) {
     userQuery.$or = [
-      { firstName: { $regex: searchTerm, $options: "i" } },
-      { lastName: { $regex: searchTerm, $options: "i" } },
+      { firstName: accentInsensitiveRegex(String(searchTerm)) },
+      { lastName: accentInsensitiveRegex(String(searchTerm)) },
     ];
   }
 

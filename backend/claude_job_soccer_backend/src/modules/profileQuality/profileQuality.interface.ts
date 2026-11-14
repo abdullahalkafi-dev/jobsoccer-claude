@@ -13,8 +13,15 @@ export type TQualityItem = {
   earned: number;
   max: number;
   done: boolean;
-  /** What to do to earn the rest of the points (shown to the candidate). */
+  /** What to do to earn the rest of the points (shown to the candidate). English; see tipKey for other languages. */
   tip?: string;
+  /** Key of the label in the en/es/fr catalog. */
+  labelKey?: string;
+  /** Key (+ params) of the tip in the en/es/fr catalog, so the tip can be shown in the viewer's language. */
+  tipKey?: string;
+  tipParams?: { fields?: string[]; more?: boolean };
+  /** True when the tip only says the item is waiting for an admin review (sorted last). */
+  waiting?: boolean;
 };
 
 export type TQualityCategory = {
@@ -48,8 +55,10 @@ export type TAiJudgement = {
   experienceQuality: number;
   /** 0-1: how well the CV fits the candidate's role. */
   cvRelevance: number;
-  /** Up to 2 personal, role-specific improvement actions. */
+  /** Up to 2 personal, role-specific improvement actions (English, canonical). */
   tips: string[];
+  /** Cached translations of `tips`, filled the first time a viewer reads in that language. */
+  translations?: { es?: string[]; fr?: string[] };
   judgedAt: Date;
 };
 

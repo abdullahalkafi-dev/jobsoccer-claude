@@ -6,6 +6,7 @@ import { User } from "../user/user.model";
 import { Subscription } from "./subscription.model";
 import { STRIPE_PRICES } from "./subscription.constant";
 import { logger } from "../../shared/logger/logger";
+import { DEFAULT_LANG, isLang, Lang } from "../../shared/i18n";
 // Define subscription hierarchy for upgrades
 const SUBSCRIPTION_HIERARCHY = {
   monthly: 1,
@@ -23,14 +24,18 @@ const getIntervalFromPriceId = (priceId: string): string => {
 
 export const createCheckoutSession = async (
   userId: string,
-  priceId: string
+  priceId: string,
+  requestLang?: Lang
 ) => {
   try {
     const user = await User.findById(new mongoose.Types.ObjectId(userId));
+    // Stripe e-mails and the checkout page use the user's language (saved choice, else the request's)
+    const lang: Lang = isLang(user!.language) ? user!.language : requestLang ?? DEFAULT_LANG;
     let customerId = user!.stripeCustomerId;
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user!.email,
+        preferred_locales: [lang],
         metadata: { userId },
       });
 
@@ -92,6 +97,7 @@ export const createCheckoutSession = async (
     // Build checkout session options
     const sessionOptions: any = {
       mode: "subscription",
+      locale: lang,
       customer: customerId,
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],

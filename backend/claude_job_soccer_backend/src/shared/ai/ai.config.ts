@@ -7,7 +7,8 @@
  * Tiers:
  * - eval: important work (rubric scoring, summaries, review flags)  -> gpt-6.1-sol
  * - fast: cheap helper work (clean-up, pre-checks)                 -> gpt-6-luna
- * - transcribe: speech to text (language auto-detected, English output) -> whisper-1
+ * - transcribe: speech to text with language detection -> whisper-1
+ * - translate: speech to English text (other languages) -> whisper-1
  * - vision: recording-setup check on interview frames          -> same as eval by default
  */
 
@@ -45,7 +46,10 @@ export const aiConfig = {
   models: {
     eval: process.env.OPENAI_EVAL_MODEL || "gpt-6.1-sol",
     fast: process.env.OPENAI_FAST_MODEL || "gpt-6-luna",
+    /** Speech to text with language detection (/audio/transcriptions). */
     transcribe: process.env.OPENAI_TRANSCRIBE_MODEL || "whisper-1",
+    /** Speech to English text (/audio/translations). Only whisper-1 supports this endpoint, so it has its own setting. */
+    translate: process.env.OPENAI_TRANSLATE_MODEL || "whisper-1",
     vision: process.env.OPENAI_VISION_MODEL || process.env.OPENAI_EVAL_MODEL || "gpt-6.1-sol",
   },
 

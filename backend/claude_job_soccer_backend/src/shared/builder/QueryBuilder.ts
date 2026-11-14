@@ -1,3 +1,4 @@
+import { accentInsensitiveRegex } from "../util/searchRegex";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import { FilterQuery, Query } from "mongoose";
@@ -21,7 +22,7 @@ export class QueryBuilder<T> {
       $or: searchableFields.map(
         (field) =>
           ({
-            [field]: new RegExp(searchTerm, "i"),
+            [field]: accentInsensitiveRegex(searchTerm),
           } as FilterQuery<T>)
       ),
     });

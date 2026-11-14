@@ -95,7 +95,9 @@ const review = async (input: { adminId: string; type: TRecordType; recordId: str
     input.status === "approved" ? "Document approved" : "Document not approved",
     input.status === "approved"
       ? `Your ${LABELS[input.type]} document was verified. It now counts towards your Profile Quality Score.`
-      : `Your ${LABELS[input.type]} document was not approved: ${record.verificationNote}`
+      : `Your ${LABELS[input.type]} document was not approved: ${record.verificationNote}`,
+    input.status === "approved" ? "document_approved" : "document_rejected",
+    { document: input.type, note: record.verificationNote }
   ).catch((error: any) => logger.warn("Could not send verification notification", { error: error.message }));
   return record.toObject();
 };

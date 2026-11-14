@@ -1,4 +1,5 @@
 import { Model, Types } from "mongoose";
+import type { Lang } from "../../shared/i18n";
 import { TProfileQuality } from "../profileQuality/profileQuality.interface";
 
 export enum UserType {
@@ -29,6 +30,9 @@ export type TVideoConsent = {
   aiAt?: Date;
   playersAt?: Date;
   version?: string;
+  /** Language the consent texts were shown in (version stays the same across languages). */
+  aiLang?: string;
+  playersLang?: string;
 };
 
 export type TBaseUser = {
@@ -43,6 +47,8 @@ export type TBaseUser = {
   /** Candidates only: latest interview assessment, 0-100 (copy of the AiEvaluation result for cards and search). */
   interviewScore?: number | null;
   videoConsent?: TVideoConsent;
+  /** Language of the user (en, es, fr); default en. */
+  language?: Lang;
   profileId: string;
   userType: UserType;
   isVerified: boolean;

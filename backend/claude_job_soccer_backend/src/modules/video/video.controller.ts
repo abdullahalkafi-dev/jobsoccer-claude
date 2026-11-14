@@ -7,12 +7,12 @@ import { VideoService } from "./video.service";
 import { ResumableVideoUpload } from "./video.resumable";
 
 const getStatus = catchAsync(async (req: Request, res: Response) => {
-  const data = await VideoService.getStatus(req.user.id);
+  const data = await VideoService.getStatus(req.user.id, req.lang);
   sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Video status retrieved", data });
 });
 
 const saveConsent = catchAsync(async (req: Request, res: Response) => {
-  const data = await VideoService.saveConsent(req.user.id, req.body);
+  const data = await VideoService.saveConsent(req.user.id, req.body, req.lang);
   sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Consent saved", data });
 });
 

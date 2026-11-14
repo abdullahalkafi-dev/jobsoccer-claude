@@ -1,3 +1,5 @@
+import type { Lang } from "../i18n";
+
 
 
 export type TCreateAccount = {
@@ -11,6 +13,8 @@ export type TCreateAccount = {
     | "theme-orange"
     | "theme-blue";
   expiresIn?: Number;
+  /** Language of the e-mail (default en). */
+  lang?: Lang;
 };
 
 export type TResetPassword = {
@@ -24,6 +28,8 @@ export type TResetPassword = {
     | "theme-orange"
     | "theme-blue";
   expiresIn?: Number;
+  /** Language of the e-mail (default en). */
+  lang?: Lang;
 };
 
 export type ISendEmail = {

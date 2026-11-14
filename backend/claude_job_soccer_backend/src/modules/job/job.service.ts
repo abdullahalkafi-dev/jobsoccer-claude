@@ -1,3 +1,4 @@
+import { accentInsensitiveRegex } from "../../shared/util/searchRegex";
 import { Job } from "./job.model";
 import { IJob, JobStatus } from "./job.interface";
 import { QueryBuilder } from "../../shared/builder/QueryBuilder";
@@ -53,7 +54,7 @@ const getAllJobs = async (query: Record<string, any>, userId?: string) => {
 
   // Apply filterable fields in order of index importance
   if (query.jobCategory) queryFilter.jobCategory = query.jobCategory;
-  if (query.location) queryFilter.location = new RegExp(query.location, "i");
+  if (query.location) queryFilter.location = accentInsensitiveRegex(String(query.location));
   if (query.country) queryFilter.country = query.country;
   if (query.contractType) queryFilter.contractType = query.contractType;
   if (query.position) queryFilter.position = query.position;
@@ -193,7 +194,7 @@ const getActiveJobs = async (filters: {
 
   // Build query filters (order matters for index usage)
   if (jobCategory) queryFilter.jobCategory = jobCategory;
-  if (location) queryFilter.location = new RegExp(location, "i");
+  if (location) queryFilter.location = accentInsensitiveRegex(String(location));
   if (country) queryFilter.country = country;
   if (contractType) queryFilter.contractType = contractType;
   if (experience) queryFilter.experience = experience;

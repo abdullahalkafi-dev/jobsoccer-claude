@@ -27,6 +27,7 @@ vi.mock("../media/audioExtractor", () => ({
   removeTempFile: () => undefined,
 }));
 
+import { aiConfig } from "../ai.config";
 import { transcribeVideoFile } from "./transcriber";
 
 const tempFile = path.join(os.tmpdir(), `transcriber-test-${process.pid}.mp3`);
@@ -80,6 +81,54 @@ describe("transcribeVideoFile", () => {
     expect(result.text).toBe(WARM_UP);
     expect(result.segments).toEqual([{ start: 0, end: 2, text: WARM_UP }]);
     expect(result.language).toBe("spanish");
+  });
+
+  it("does not trust english when the text is clearly another language: translates it and keeps the original", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "english", text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP, segments: [{ start: 0, end: 2, text: WARM_UP }] });
+
+    const result = await transcribeVideoFile(tempFile);
+
+    expect(translationsCreate).toHaveBeenCalledTimes(1);
+    expect(result.text).toBe(WARM_UP);
+    expect(result.isTranslated).toBe(true);
+    expect(result.language).toBe("unknown");
+    expect(result.original?.text).toBe(WARM_UP_ES);
+  });
+
+  it("keeps true English as is (not translated, no original copy)", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "english", text: WARM_UP, segments: [] });
+    const result = await transcribeVideoFile(tempFile);
+    expect(result.isTranslated).toBe(false);
+    expect(result.original).toBeUndefined();
+  });
+
+  it("stores the original-language transcript next to the English one", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP, segments: [{ start: 0, end: 2, text: WARM_UP }] });
+    const result = await transcribeVideoFile(tempFile);
+    expect(result.isTranslated).toBe(true);
+    expect(result.original).toEqual({ language: "spanish", text: WARM_UP_ES, segments: [{ start: 0, end: 2, text: WARM_UP_ES }] });
+  });
+
+  it("uses the translation model for /audio/translations and the transcription model for detection", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: WARM_UP_ES, segments: [] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP, segments: [] });
+    await transcribeVideoFile(tempFile);
+    expect(transcriptionsCreate.mock.calls[0][0].model).toBe(aiConfig.models.transcribe);
+    expect(translationsCreate.mock.calls[0][0].model).toBe(aiConfig.models.translate);
+  });
+
+  it("falls back to the text (never to an empty transcript) when there are no segments to translate", async () => {
+    transcriptionsCreate.mockResolvedValue({ language: "spanish", text: WARM_UP_ES, segments: [] });
+    translationsCreate.mockResolvedValue({ text: WARM_UP_ES, segments: [] }); // Whisper returned the original unchanged
+    translateLines.mockImplementation(async (lines: any[]) => lines.map((line) => ({ ...line, text: WARM_UP })));
+
+    const result = await transcribeVideoFile(tempFile);
+
+    expect(translateLines.mock.calls[0][0]).toEqual([{ start: 0, end: 12, text: WARM_UP_ES }]);
+    expect(result.text).toBe(WARM_UP);
+    expect(result.segments).toEqual([]);
   });
 
   it("never turns an error into an empty transcript", async () => {

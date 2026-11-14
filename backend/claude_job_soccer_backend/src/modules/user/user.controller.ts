@@ -21,7 +21,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserById = catchAsync(async (req: Request, res: Response) => {
-  const user = await UserServices.getUserById(req.params.id as string, req.user?.id);
+  const user = await UserServices.getUserById(req.params.id as string, req.user?.id, req.lang);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -89,6 +89,16 @@ const updateUserRole = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateLanguage = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.updateLanguage(req.user.id, req.body.language);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Language updated",
+    data: result,
+  });
+});
+
 //get me
 const getMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -107,5 +117,6 @@ export const UserController = {
   updateUser,
   updateUserActivationStatus,
   updateUserRole,
+  updateLanguage,
   getMe,
 };

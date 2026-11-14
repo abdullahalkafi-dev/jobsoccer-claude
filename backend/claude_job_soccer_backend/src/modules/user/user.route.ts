@@ -29,6 +29,19 @@ router.get("/", auth(UserType.ADMIN), UserController.getAllUsers);
 router.get("/me", auth(), UserController.getMe);
 
 /**
+ * PATCH /api/v1/user/language
+ * Save the language the signed-in user chose (messages, emails and notifications use it)
+ * Body: { language: "en" | "es" | "fr" }
+ * Auth: Required. Must stay above the "/:id" routes.
+ */
+router.patch(
+  "/language",
+  auth(),
+  validateRequest(UserValidation.updateLanguage),
+  UserController.updateLanguage
+);
+
+/**
  * GET /api/v1/user/:id
  * Get a specific user by ID
  * Params:

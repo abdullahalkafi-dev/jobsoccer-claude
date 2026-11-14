@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { CandidateRole, EmployerRole, TBaseUser } from "./user.interface";
 import { Auth } from "../auth/auth.model";
+import { NAME_REGEX } from "../../shared/util/nameRegex";
 const userSchema = new Schema<TBaseUser>(
   {
     firstName: {
@@ -10,7 +11,7 @@ const userSchema = new Schema<TBaseUser>(
       minlength: [1, "First name must be at least 1 characters long"],
       maxlength: [50, "First name can't be more than 50 characters"],
       match: [
-        /^[a-zA-ZÀ-ÿ\u00f1\u00d1'-\s]+$/,
+        NAME_REGEX,
         "First name contains invalid characters",
       ],
     },
@@ -21,7 +22,7 @@ const userSchema = new Schema<TBaseUser>(
       minlength: [1, "Last name must be at least 1 characters long"],
       maxlength: [50, "Last name can't be more than 50 characters"],
       match: [
-        /^[a-zA-ZÀ-ÿ\u00f1\u00d1'-\s]+$/,
+        NAME_REGEX,
         "Last name contains invalid characters",
       ],
     },
@@ -77,7 +78,12 @@ const userSchema = new Schema<TBaseUser>(
       aiAt: { type: Date },
       playersAt: { type: Date },
       version: { type: String },
+      // Language the consent texts were shown in (the version string stays the same across languages).
+      aiLang: { type: String },
+      playersLang: { type: String },
     },
+    // Language the user chose (en, es, fr): API messages, emails and notifications are sent in it.
+    language: { type: String, enum: ["en", "es", "fr"], default: "en" },
     isDeleted: { type: Boolean, default: false },
   },
   {

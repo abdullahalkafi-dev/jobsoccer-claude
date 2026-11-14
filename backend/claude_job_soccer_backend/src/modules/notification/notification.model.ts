@@ -13,6 +13,8 @@ const notificationSchema = new Schema<TNotification>(
       required: true,
       trim: true,
     },
+    type: { type: String, trim: true },
+    params: { type: Schema.Types.Mixed },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -11,13 +11,17 @@ import { TNotification } from "./notification.interface";
 export const sendNotification = async (
   userId: string,
   title: string,
-  description: string
+  description: string,
+  type?: string,
+  params?: Record<string, unknown>
 ): Promise<TNotification> => {
   // Create notification in database
   const notification = await NotificationService.sendNotificationToUser(
     userId,
     title,
-    description
+    description,
+    type,
+    params
   );
 
   return notification;

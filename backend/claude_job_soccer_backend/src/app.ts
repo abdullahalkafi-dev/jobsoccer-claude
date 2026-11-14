@@ -12,6 +12,8 @@ import winstonLogger from "./shared/logger/winstonExpressLogger";
 // import { logger } from "./shared/logger/logger";
 import { stripeWebhook } from "./modules/subscription/subscription.webhook";
 import { serveFromStorage } from "./shared/middlewares/storedFileServer";
+import { languageMiddleware } from "./shared/i18n/languageMiddleware";
+import { resolveLang, translateMessage } from "./shared/i18n";
 
 const app: express.Application = express();
 
@@ -53,7 +55,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID", "Accept-Language"],
   exposedHeaders: ["X-Request-ID"],
 };
 
@@ -78,6 +80,8 @@ app.post(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
+// Sets req.lang (saved user language -> Accept-Language -> en) for messages, emails and notifications
+app.use(languageMiddleware);
 
 //express-winston - only error logging in production
 app.use(winstonLogger.errorLogger);
@@ -130,11 +134,11 @@ app.use(globalErrorHandler);
 app.use((req, res) => {
   res.status(StatusCodes.NOT_FOUND).json({
     success: false,
-    message: "Route not found",
+    message: translateMessage("Route not found", req.lang ?? resolveLang(req)),
     errorSources: [
       {
         path: req.originalUrl,
-        message: "API DOESN'T EXIST",
+        message: translateMessage("API DOESN'T EXIST", req.lang ?? resolveLang(req)),
       },
     ],
   });

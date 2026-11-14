@@ -27,6 +27,8 @@ export type TCollegeUniversityPlayerProfile = {
   placeOfBirth: string;
   nationality: string;
   phoneNumber?: string;
+  /** Spoken languages, free text ("English, Spanish"). */
+  languages?: string;
   gender: string;
   height: { size: number; unit: string };
   currentClub: string;
@@ -53,6 +55,7 @@ const collegeOrUniversitySchema = new Schema<TCollegeUniversityPlayerProfile>(
     placeOfBirth: { type: String, required: true, trim: true },
     nationality: { type: String, required: true, trim: true },
     phoneNumber: { type: String, required: false, trim: true },
+    languages: { type: String, required: false, trim: true },
     gender: { type: String, required: true, trim: true },
     height: {
       size: { type: Number, required: true },

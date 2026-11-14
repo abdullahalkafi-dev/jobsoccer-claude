@@ -11,6 +11,8 @@ export type TOnFieldStaffProfile = {
   placeOfBirth: string;
   nationality: string;
   phoneNumber?: string;
+  /** Spoken languages, free text ("English, Spanish"). */
+  languages?: string;
   currentClub: string;
   availability: string;
   gender: "Male" | "Female"|"Other";
@@ -20,7 +22,7 @@ export type TOnFieldStaffProfile = {
   socialMedia?: string;
   agent?: string;
   position: OnFieldStaffPosition;
-  videos: TProfileVideo[];
+  videos: TProfileVideo[];
 };
 const onFieldStaffProfileSchema = new Schema<TOnFieldStaffProfile>(
   {
@@ -28,6 +30,7 @@ const onFieldStaffProfileSchema = new Schema<TOnFieldStaffProfile>(
     placeOfBirth: { type: String, required: true, trim: true },
     nationality: { type: String, required: true, trim: true },
     phoneNumber: { type: String, required: false, trim: true },
+    languages: { type: String, required: false, trim: true },
     currentClub: { type: String, required: true, trim: true },
     availability: { type: String, required: false, trim: true },
     country: {
@@ -45,7 +48,7 @@ const onFieldStaffProfileSchema = new Schema<TOnFieldStaffProfile>(
       enum: Object.values(OnFieldStaffPosition),
       required: true,
     },
-    videos: { type: [profileVideoSchema], default: [] },
+    videos: { type: [profileVideoSchema], default: [] },
   },
   {
     timestamps: true,

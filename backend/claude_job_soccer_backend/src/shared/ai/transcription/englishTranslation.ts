@@ -57,16 +57,34 @@ const translateBatch = async (lines: string[], usage: UsageRecord[]): Promise<st
   return translationSchema.parse(JSON.parse(completion.choices[0]?.message?.content ?? "{}")).lines;
 };
 
-/** English version of timed caption lines, same timings. Throws if the model cannot keep the line count. */
+/**
+ * Translate one block of lines and always return exactly one English line per input line.
+ * Captions are optional, so a model that cannot keep the line count never fails the assessment:
+ *  1. the block is tried twice,
+ *  2. then it is split in halves and each half is translated on its own (coarser alignment is fine),
+ *  3. a single line that still comes back wrongly is joined into one text,
+ *  4. only if the model returns nothing at all for a single line, the original line is kept.
+ */
+const translateBlock = async (lines: string[], usage: UsageRecord[], attempts = 2): Promise<string[]> => {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const result = await translateBatch(lines, usage);
+    if (result.length === lines.length) return result;
+    if (lines.length === 1 && result.some((line) => line.trim())) return [result.join(" ")];
+  }
+  if (lines.length === 1) return lines; // nothing usable came back: keep the original line
+  const middle = Math.ceil(lines.length / 2);
+  const left = await translateBlock(lines.slice(0, middle), usage, 1);
+  const right = await translateBlock(lines.slice(middle), usage, 1);
+  return [...left, ...right];
+};
+
+/** English version of timed caption lines, same timings. Never fails because of the caption alignment. */
 export const translateLinesToEnglish = async (lines: TLine[], usage: UsageRecord[]): Promise<TLine[]> => {
   const BATCH = 60;
   const translated: string[] = [];
   for (let from = 0; from < lines.length; from += BATCH) {
     const batch = lines.slice(from, from + BATCH).map((line) => line.text);
-    let result = await translateBatch(batch, usage);
-    if (result.length !== batch.length) result = await translateBatch(batch, usage); // one retry
-    if (result.length !== batch.length) throw new Error("Caption translation returned a different number of lines.");
-    translated.push(...result);
+    translated.push(...(await translateBlock(batch, usage)));
   }
-  return lines.map((line, index) => ({ ...line, text: translated[index].trim() }));
+  return lines.map((line, index) => ({ ...line, text: (translated[index] ?? line.text).trim() }));
 };

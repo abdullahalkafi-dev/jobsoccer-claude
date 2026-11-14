@@ -1,3 +1,4 @@
+import { AI_TEXTS } from "../i18n/aiTexts";
 import { bandFor } from "../rubric/rubric.registry";
 import { Rubric } from "../rubric/rubric.schema";
 import {
@@ -14,8 +15,11 @@ import {
  * enforced here in code, not only requested in the prompt.
  */
 
-export const DISCLAIMER =
-  "AI-assisted assessment of the interview answers only. It is guidance for recruiters, not an objective fact or a hiring decision. Qualifications, references and practical work have not been verified.";
+/** English (stored) text; the viewer's language comes from the catalog in ../i18n/aiTexts. */
+export const DISCLAIMER = AI_TEXTS.disclaimer.en;
+
+/** Stored summary when the video has no speech (see aiTexts for es/fr). */
+export const NO_SPEECH_SUMMARY = AI_TEXTS.noSpeechSummary.en;
 
 const normalise = (text: string): string =>
   text
@@ -61,7 +65,7 @@ export const applyQuestionRules = (
       evidence: [],
       missingEvidence: proposal?.missingEvidence ?? [],
       redFlags: proposal?.redFlags ?? [],
-      rationale: proposal?.rationale || "No answer to this question was found in the interview.",
+      rationale: proposal?.rationale || AI_TEXTS.noAnswer.en,
       adjustments: proposal ? [] : ["question missing from model output"],
     };
   }

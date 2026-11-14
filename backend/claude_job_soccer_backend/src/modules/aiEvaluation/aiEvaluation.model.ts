@@ -30,6 +30,15 @@ const aiEvaluationSchema = new Schema<TAiEvaluation>(
     transcript: { type: String },
     /** Language the candidate spoke (detected automatically); the transcript is always English. */
     detectedLanguage: { type: String },
+    /** True when the transcript is an English translation of the spoken language (scored on the translation). */
+    isTranslated: { type: Boolean },
+    /** What the candidate said, in the spoken language (only when translated). Shown to admins next to the English text. */
+    originalTranscript: { type: String },
+    /**
+     * Cached translations of the AI texts (summary, strengths, weaknesses) for the viewer languages,
+     * generated on first read. The English text on the report stays the canonical one.
+     */
+    translations: { type: Schema.Types.Mixed },
     /** Recording-setup check (frames + transcript). Only flags for an admin, never changes the score. */
     setupCheck: { type: Schema.Types.Mixed },
     report: { type: Schema.Types.Mixed },
@@ -72,6 +81,11 @@ const aiTranscriptSchema = new Schema<TAiTranscript>(
     /** English text (translated when the speech was in another language). */
     text: { type: String, required: true },
     detectedLanguage: { type: String },
+    /** True when `text` is a translation. Missing on rows cached before this field existed. */
+    isTranslated: { type: Boolean },
+    /** What was said in the spoken language (only for translated speech). */
+    originalText: { type: String },
+    originalSegments: { type: Schema.Types.Mixed },
     /** English caption cues, for the WebVTT subtitles. */
     segments: { type: Schema.Types.Mixed, default: [] },
     durationSeconds: { type: Number },

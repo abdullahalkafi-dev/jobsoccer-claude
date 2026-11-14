@@ -8,6 +8,9 @@ import { saveCaptions } from "../../shared/ai/captions/captions";
 import { EvaluationError, evaluateTranscript } from "../../shared/ai/evaluation/evaluator";
 import { EvaluationReport } from "../../shared/ai/evaluation/evaluation.types";
 import { buildReport, computeTotals } from "../../shared/ai/evaluation/guardrails";
+import { AiLang } from "../../shared/ai/i18n/lang";
+import { aiText, interviewLanguageNote, isEnglishLanguage, localizeFixedText } from "../../shared/ai/i18n/aiTexts";
+import { NO_SPEECH_SUMMARY } from "../../shared/ai/evaluation/guardrails";
 import { checkRecordingSetup, TSetupCheck } from "../../shared/ai/frameCheck/frameCheck";
 import { enqueueJob } from "../../shared/ai/queue/aiQueue";
 import { getRubric, listRubrics, resolveRubric } from "../../shared/ai/rubric/rubric.registry";
@@ -26,6 +29,7 @@ import { VideoKind } from "../video/video.constant";
 import { VideoService } from "../video/video.service";
 import { TAiEvaluation } from "./aiEvaluation.interface";
 import { AiEvaluation } from "./aiEvaluation.model";
+import { getLocalizedTexts } from "./aiTranslations";
 import { transcribeCached } from "./transcriptCache";
 
 type Viewer = { id: string; userType: string };
@@ -110,7 +114,9 @@ const completeEvaluation = async (evaluation: any, report: EvaluationReport) => 
   await NotificationService.sendNotificationToUser(
     userId,
     "Interview assessment ready",
-    `Your ${report.displayName} interview assessment is ready on your profile.`
+    `Your ${report.displayName} interview assessment is ready on your profile.`,
+    "interview_assessment_ready",
+    { displayName: report.displayName }
   ).catch((error: any) => logger.warn("Could not send AI notification", { error: error.message }));
 };
 
@@ -137,6 +143,8 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     announce(userId, evaluationId, "transcribing");
 
     const parts: string[] = [];
+    const originalParts: string[] = [];
+    let isTranslated = false;
     const setupTasks: Promise<{ check: TSetupCheck; usage: UsageRecord } | null>[] = [];
     for (const video of evaluation.videos) {
       const copy = await getLocalCopy(video.url);
@@ -147,7 +155,11 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       video.durationSeconds = transcript.durationSeconds;
       video.transcriptChars = transcript.text.trim().length;
       evaluation.detectedLanguage = transcript.detectedLanguage;
-      if (transcript.text.trim()) parts.push(transcript.text.trim());
+      if (transcript.text.trim()) {
+        parts.push(transcript.text.trim());
+        isTranslated = isTranslated || transcript.isTranslated;
+        if (transcript.isTranslated && transcript.originalText?.trim()) originalParts.push(transcript.originalText.trim());
+      }
 
       // English captions for the video player (best effort: never blocks the score).
       if (video.videoId) {
@@ -158,7 +170,10 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       // Recording-setup check starts now and runs while the answers are scored.
       if (transcript.text.trim() && (transcript.durationSeconds ?? 0) > 0) {
         setupTasks.push(
-          checkRecordingSetup(copy.path, transcript.durationSeconds!, transcript.text).catch((error: any) => {
+          checkRecordingSetup(copy.path, transcript.durationSeconds!, transcript.text, {
+            spokenLanguage: transcript.detectedLanguage,
+            isTranslated: transcript.isTranslated,
+          }).catch((error: any) => {
             logger.warn("Recording setup check failed (non-blocking)", { error: error.message });
             return null;
           })
@@ -167,6 +182,8 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     }
     const transcriptText = parts.join("\n\n");
     evaluation.transcript = transcriptText;
+    evaluation.isTranslated = isTranslated;
+    evaluation.originalTranscript = originalParts.length ? originalParts.join("\n\n") : undefined;
     evaluation.idempotencyKey = crypto
       .createHash("sha256")
       .update([...evaluation.videos.map((v) => v.sha256), rubric.rubricId, rubric.version, aiConfig.promptVersion, aiConfig.models.eval].join("|"))
@@ -185,6 +202,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       evaluation.promptVersion = previous.promptVersion;
       evaluation.rawModelOutput = previous.rawModelOutput;
       evaluation.setupCheck = previous.setupCheck;
+      evaluation.translations = previous.translations;
       evaluation.usage = usage;
       evaluation.costUsd = totalCost(usage);
       await completeEvaluation(evaluation, previous.report);
@@ -201,7 +219,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
           questions: [],
           strongestAreas: [],
           mainWeaknesses: [],
-          summary: "No speech could be found in the interview video, so the answers could not be assessed.",
+          summary: NO_SPEECH_SUMMARY,
           overallConfidence: "low",
           audioOrTranscriptProblem: true,
           instructionAttempt: false,
@@ -215,13 +233,17 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       await NotificationService.sendNotificationToUser(
         userId,
         "We could not hear your interview",
-        "No speech was found in your interview video. Please upload it again with your microphone close to you."
+        "No speech was found in your interview video. Please upload it again with your microphone close to you.",
+        "interview_no_speech"
       ).catch(() => undefined);
     } else {
       evaluation.status = "evaluating";
       await evaluation.save();
       announce(userId, evaluationId, "evaluating");
-      const result = await evaluateTranscript(rubric, transcriptText);
+      const result = await evaluateTranscript(rubric, transcriptText, {
+        spokenLanguage: evaluation.detectedLanguage,
+        isTranslated,
+      });
       usage.push(...result.usage);
       report = buildReport(rubric, result.output, transcriptText);
       evaluation.aiModel = result.model;
@@ -322,26 +344,41 @@ export const applyCorrections = (rubric: Rubric | null, doc: Pick<TAiEvaluation,
   return { ...report, questions, totals, legacyScore100: Math.round(totals.percentage) };
 };
 
-/** The overall section (client section 5): what candidates and employers see. */
-const toOverallView = (doc: TAiEvaluation) => {
+/**
+ * The overall section (client section 5): what candidates and employers see, in the viewer's language.
+ * Stored texts are English; es/fr come from the fixed catalog (disclaimer, no-speech summary) or the
+ * cached on-read translation (summary, strengths, weaknesses). Score values never change with the language.
+ */
+export const toOverallView = async (doc: TAiEvaluation, lang: AiLang = "en") => {
   const report = applyCorrections(getRubric(doc.rubricId), doc);
+  const texts = report
+    ? await getLocalizedTexts(doc, { summary: report.summary, strongestAreas: report.strongestAreas, mainWeaknesses: report.mainWeaknesses }, lang)
+    : null;
+  // rows saved before isTranslated existed: any non-English speech was translated
+  const isTranslated = doc.isTranslated ?? (!!doc.detectedLanguage && !isEnglishLanguage(doc.detectedLanguage));
   return {
     id: doc._id,
     status: doc.status,
     position: doc.position,
     displayName: report?.displayName,
     evaluatedAt: doc.finishedAt,
-    ...(report && {
+    /** Language the candidate spoke in the interview (as detected, e.g. "spanish"). */
+    spokenLanguage: doc.detectedLanguage ?? null,
+    /** True when the interview was scored on an English translation. */
+    isTranslated,
+    /** Ready-to-show note in the viewer's language, e.g. "Interview given in Spanish (scored on an English translation)". Null for English interviews. */
+    languageNote: interviewLanguageNote(doc.detectedLanguage, isTranslated, lang),
+    ...(report && texts && {
       totalScore: report.totals.earned,
       maxScore: report.totals.max,
       percentage: report.totals.percentage,
       classification: report.totals.band,
       notAnsweredCount: report.totals.notAnsweredCount,
-      strongestAreas: report.strongestAreas,
-      mainWeaknesses: report.mainWeaknesses,
-      summary: report.summary,
+      strongestAreas: texts.strongestAreas,
+      mainWeaknesses: texts.mainWeaknesses,
+      summary: localizeFixedText(texts.summary, lang),
       underReview: report.needsHumanReview && !doc.corrections?.some((c) => c.reviewStatus === "reviewed"),
-      disclaimer: report.disclaimer,
+      disclaimer: localizeFixedText(report.disclaimer, lang) || aiText("disclaimer", lang),
     }),
   };
 };
@@ -351,7 +388,7 @@ const toAdminView = (doc: TAiEvaluation) => ({
   reviewedReport: applyCorrections(getRubric(doc.rubricId), doc),
 });
 
-const getLatestForCandidate = async (viewer: Viewer, candidateUserId: string) => {
+const getLatestForCandidate = async (viewer: Viewer, candidateUserId: string, lang: AiLang = "en") => {
   if (!Types.ObjectId.isValid(candidateUserId)) throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate id");
   if (!(await canViewCandidate(viewer, candidateUserId))) {
     throw new AppError(StatusCodes.FORBIDDEN, "The candidate has not given you access to this assessment");
@@ -361,7 +398,7 @@ const getLatestForCandidate = async (viewer: Viewer, candidateUserId: string) =>
   const pending = inProgress && (!latest || inProgress.createdAt! > latest.createdAt!) ? { status: inProgress.status } : null;
   if (!latest) return { report: null, pending };
   return {
-    report: viewer.userType === UserType.ADMIN ? toAdminView(latest) : toOverallView(latest),
+    report: viewer.userType === UserType.ADMIN ? toAdminView(latest) : await toOverallView(latest, lang),
     pending,
   };
 };

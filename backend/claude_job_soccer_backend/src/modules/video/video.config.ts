@@ -1,6 +1,8 @@
 import { CandidateRole } from "../user/user.interface";
 import { OfficeStaffPosition, OnFieldStaffPosition } from "../../shared/constant/position.constant";
 import { VIDEO_CONSENT_VERSION, VIDEO_LIMITS, VideoKind } from "./video.constant";
+import type { Lang } from "../../shared/i18n";
+import { localizePlan } from "./video.i18n";
 
 /**
  * What each candidate must upload, and what the screen tells them to record.
@@ -280,7 +282,7 @@ const playersMustUpload = (role: CandidateRole): boolean =>
  * The video plan for one candidate. Returns null for a staff role/position
  * that has no configuration (the caller answers 400 with a clear message).
  */
-export const getVideoPlan = (role: CandidateRole, position?: string | null): TVideoPlan | null => {
+const buildPlan = (role: CandidateRole, position?: string | null): TVideoPlan | null => {
   const base = {
     role,
     position: position ?? null,
@@ -302,7 +304,7 @@ export const getVideoPlan = (role: CandidateRole, position?: string | null): TVi
         players: { required: false, text: PLAYERS_CONSENT_TEXT },
         version: VIDEO_CONSENT_VERSION,
       },
-      fileNameHint: "Firstname-Lastname-Position-Date (example: John-Smith-Midfielder-10-02-2026)",
+      fileNameHint: "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-Midfielder-2026-02-10)",
     };
   }
 
@@ -320,7 +322,7 @@ export const getVideoPlan = (role: CandidateRole, position?: string | null): TVi
         players: { required: true, text: PLAYERS_CONSENT_TEXT },
         version: VIDEO_CONSENT_VERSION,
       },
-      fileNameHint: "Firstname-Lastname-Position-Date (example: John-Smith-U15HeadCoach-10-02-2026)",
+      fileNameHint: "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-U15HeadCoach-2026-02-10)",
     };
   }
 
@@ -337,11 +339,17 @@ export const getVideoPlan = (role: CandidateRole, position?: string | null): TVi
         players: { required: false, text: PLAYERS_CONSENT_TEXT },
         version: VIDEO_CONSENT_VERSION,
       },
-      fileNameHint: "Firstname-Lastname-Position-Date (example: Jane-Doe-OperationsManager-10-15-26)",
+      fileNameHint: "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: Jane-Doe-OperationsManager-2026-10-15)",
     };
   }
 
   return null;
+};
+
+/** The plan in the user's language (en, es, fr); the structure is the same for everyone. */
+export const getVideoPlan = (role: CandidateRole, position?: string | null, lang: Lang = "en"): TVideoPlan | null => {
+  const plan = buildPlan(role, position);
+  return plan ? localizePlan(plan, lang) : null;
 };
 
 /** The slot for one kind inside a plan, or undefined when the role does not use it. */

@@ -15,6 +15,7 @@ import { CandidateExperience } from "../candidateExperience/candidateExperience.
 import { PREMIUM_MIN_SCORE } from "../profileQuality/profileQuality.interface";
 import { VideoService } from "../video/video.service";
 import { JobMatchService } from "./jobMatch.service";
+import type { Lang } from "../../shared/i18n";
 
 /**
  * Who may apply to which job:
@@ -107,7 +108,8 @@ const applyToJob = async (candidateId: string, jobId: string, resumeUrl?: string
 const getApplicationsByJob = async (
   jobId: string,
   query: Record<string, any>,
-  viewer?: { id: string; userType: string }
+  viewer?: { id: string; userType: string },
+  lang: Lang = "en"
 ) => {
   // Validate job ID
   if (!Types.ObjectId.isValid(jobId)) {
@@ -157,7 +159,7 @@ const getApplicationsByJob = async (
   });
 
   // Format response
-  const formattedApplications = applications.map((app: any) => ({
+  const formattedApplications = await Promise.all(applications.map(async (app: any) => ({
     _id: app._id,
     applicantName: `${app.candidateId.firstName} ${app.candidateId.lastName}`,
     applicantEmail: app.candidateId.email,
@@ -166,20 +168,11 @@ const getApplicationsByJob = async (
     candidateRole: app.candidateId.role,
     matchScore: app.matchScore ?? null,
     matchStatus: app.matchStatus ?? (app.matchScore !== undefined ? "completed" : null),
-    matchReasons: app.matchDetails
-      ? {
-          metRequirements: app.matchDetails.metRequirements,
-          missingRequirements: app.matchDetails.missingRequirements,
-          summary: app.matchDetails.summary,
-          confidence: app.matchDetails.confidence,
-          usedResume: app.matchDetails.usedResume,
-          usedInterview: app.matchDetails.usedInterview,
-        }
-      : null,
+    matchReasons: app.matchDetails ? await JobMatchService.reasonsFor(app._id, app.matchDetails, lang) : null,
     resumeUrl: app.resumeUrl || null,
     appliedAt: app.appliedAt,
     createdAt: app.createdAt,
-  }));
+  })));
 
   return {
     data: formattedApplications,

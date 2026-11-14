@@ -32,7 +32,7 @@ const createNotification = catchAsync(async (req: Request, res: Response) => {
 const getNotifications = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
-  const result = await NotificationService.getNotifications(userId!, req.query);
+  const result = await NotificationService.getNotifications(userId!, req.query, req.lang);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -77,7 +77,7 @@ const markAsRead = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const { notificationId } = req.params as any;
 
-  const result = await NotificationService.markAsRead(notificationId, userId!);
+  const result = await NotificationService.markAsRead(notificationId, userId!, req.lang);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

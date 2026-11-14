@@ -16,6 +16,7 @@ const createProfessionalPlayerProfileDto = z.object({
   placeOfBirth: z.string().trim().min(1, "Place of birth is required"),
   nationality: z.string().trim().min(1, "Nationality is required"),
   phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
+  languages: z.string().trim().max(300, "Languages cannot exceed 300 characters").optional(),
   gender: z.string().trim().min(1, "Gender is required"),
   height: z.object({
     size: z.number().positive("Height must be positive"),
@@ -60,7 +61,7 @@ const createProfessionalPlayerProfileDto = z.object({
   socialMedia: z.string().trim().min(1, "Social media is required").optional(),
   foot: z.enum(["Right", "Left", "Both"]),
   teamsJoined: z.string().trim().min(1, "Teams joined is required"),
-  contractExpires: z.string().trim().min(1, "Contract expires is required"),
+  contractExpires: z.string().trim().min(1, "Contract expires is required"),
 });
 
 const updateProfessionalPlayerProfileDto = createProfessionalPlayerProfileDto.partial();

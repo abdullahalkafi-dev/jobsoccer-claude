@@ -6,7 +6,8 @@ import { AuthService } from "./auth.service";
 
 // Create user (signup)
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  const userData = req.body;
+  // The language of the signup request is saved on the new user and used for the verification e-mail.
+  const userData = { ...req.body, language: req.lang };
   const result = await AuthService.createUser(userData);
 
   
@@ -35,7 +36,7 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const loginData = req.body;
 
-  const result = await AuthService.loginUser(loginData);
+  const result = await AuthService.loginUser(loginData, req.lang);
 
   sendResponse(res, {
     success: true,
@@ -48,7 +49,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 // Forget password
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.body;
-  const result = await AuthService.forgetPasswordToDB(email);
+  const result = await AuthService.forgetPasswordToDB(email, req.lang);
 
   sendResponse(res, {
     success: true,
@@ -102,7 +103,7 @@ const deleteAccount = catchAsync(async (req: Request, res: Response) => {
 // Resend OTP
 const resendOtp = catchAsync(async (req: Request, res: Response) => {
   const { email, reason } = req.body;
-  const result = await AuthService.resendOtp({ email, reason });
+  const result = await AuthService.resendOtp({ email, reason, lang: req.lang });
 
   sendResponse(res, {
     success: true,

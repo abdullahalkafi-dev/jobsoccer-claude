@@ -238,7 +238,18 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
           {showTranscript ? "Hide transcript" : "Show transcript"}
         </Button>
         {showTranscript && (
-          <pre className="mt-2 max-h-80 overflow-auto whitespace-pre-wrap rounded bg-gray-50 p-3 text-xs">{doc.transcript}</pre>
+          <div className={doc.originalTranscript ? "mt-2 grid gap-3 md:grid-cols-2" : "mt-2"}>
+            {doc.originalTranscript && (
+              <div>
+                <p className="mb-1 text-xs font-medium text-gray-600">Original ({doc.detectedLanguage ?? "spoken language"})</p>
+                <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded bg-gray-50 p-3 text-xs">{doc.originalTranscript}</pre>
+              </div>
+            )}
+            <div>
+              {doc.originalTranscript && <p className="mb-1 text-xs font-medium text-gray-600">English translation (used for scoring)</p>}
+              <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded bg-gray-50 p-3 text-xs">{doc.transcript}</pre>
+            </div>
+          </div>
         )}
       </div>
     </div>
