@@ -180,11 +180,12 @@ function DatePicker({
             root: "w-fit",
             months: "relative flex flex-col",
             month: "flex flex-col gap-3",
-            nav: "absolute inset-x-0 top-0 z-10 flex h-8 items-center justify-between",
+            // The bar spans the whole header row: it must let clicks through to the month/year dropdowns underneath (only the two arrows take clicks)
+            nav: "pointer-events-none absolute inset-x-0 top-0 z-10 flex h-8 items-center justify-between",
             button_previous:
-              "inline-flex size-8 items-center justify-center rounded-md hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none disabled:opacity-40",
+              "pointer-events-auto inline-flex size-8 items-center justify-center rounded-md hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none disabled:opacity-40",
             button_next:
-              "inline-flex size-8 items-center justify-center rounded-md hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none disabled:opacity-40",
+              "pointer-events-auto inline-flex size-8 items-center justify-center rounded-md hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none disabled:opacity-40",
             month_caption: "flex h-8 items-center justify-center px-9",
             dropdowns: "flex items-center justify-center gap-1 text-sm font-medium",
             dropdown_root:
