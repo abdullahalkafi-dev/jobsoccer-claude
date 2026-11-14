@@ -13,10 +13,12 @@ import {
   useResendOtpMutation,
 } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
 
 function EmailVerificationPageContent() {
+  const t = useTranslations("auth");
   // local state
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
 
@@ -82,21 +84,21 @@ function EmailVerificationPageContent() {
 
     try {
       await resendOtp({ email, reason }).unwrap();
-      toast.success("Verification code resent successfully!");
+      toast.success(t("verify.resent"));
     } catch (error: any) {
-      toast.error("Failed to resend verification code. Please try again.");
+      toast.error(t("verify.resendFailed"));
     }
   };
 
   const handleVerify = async () => {
     if (!email || !reason) {
-      toast.error("Email and reason are required");
+      toast.error(t("verify.emailRequired"));
       return;
     }
 
     const stringOtp = otp.join("");
     if (stringOtp.length !== 6) {
-      toast.error("Please enter a complete verification code");
+      toast.error(t("verify.incomplete"));
       return;
     }
 
@@ -110,7 +112,7 @@ function EmailVerificationPageContent() {
       const res = await emailVerify(payload).unwrap();
 
       if (res.success) {
-        toast.success("Email verified successfully!");
+        toast.success(t("verify.verified"));
 
         if (user?.data.userType) {
           if (user.data.userType === "candidate")
@@ -127,14 +129,17 @@ function EmailVerificationPageContent() {
         }
       }
     } catch (error) {
-      const serverMessage = (error as { data?: { message?: string } })?.data?.message;
+      const errorData = (error as { data?: { message?: string; code?: string } })?.data;
+      const serverMessage = errorData?.message;
       const text = (serverMessage || "").toLowerCase();
+      const expired = errorData?.code === "OTP_EXPIRED" || text.includes("expired");
+      const invalid = errorData?.code === "OTP_INVALID" || text.includes("invalid");
       toast.error(
-        text.includes("expired")
-          ? "This code has expired. Please request a new code."
-          : text.includes("invalid")
-            ? "That code is not correct. Please check it and try again."
-            : serverMessage || "Failed to verify email. Please try again."
+        expired
+          ? t("verify.expired")
+          : invalid
+            ? t("verify.invalid")
+            : serverMessage || t("verify.failed")
       );
       // Clear OTP fields on error
       setOtp(["", "", "", "", "", ""]);
@@ -149,11 +154,10 @@ function EmailVerificationPageContent() {
       <div className="hidden flex-1 md:flex items-center justify-center px-2 md:px-5 lg:px-8 bg-primary">
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
-            Confirm Your Email to Activate Your Soccer Job Profile.
+            {t("verify.heroTitle")}
           </h2>
           <p className="text-[#837E5B] mt-1">
-            We’ve sent a verification code to your email — enter it below to
-            continue.
+            {t("verify.heroSubtitle")}
           </p>
         </div>
       </div>
@@ -164,7 +168,7 @@ function EmailVerificationPageContent() {
           <div className="bg-white rounded-2xl p-5 sm:p-8 shadow-sm border border-gray-100">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                Verify Your Email
+                {t("verify.title")}
               </h2>
             </div>
 
@@ -177,6 +181,7 @@ function EmailVerificationPageContent() {
                     inputRefs.current[index] = el;
                   }}
                   type="text"
+                  aria-label={t("verify.digitLabel", { n: index + 1 })}
                   inputMode="numeric"
                   maxLength={1}
                   value={digit}
@@ -190,14 +195,14 @@ function EmailVerificationPageContent() {
             {/* Resend Code */}
             <div className="text-center mb-6">
               <p className="text-sm text-gray-500 mb-1">
-                {"Didn't get OTP Code?"}
+                {t("verify.noCode")}
               </p>
               <button
                 onClick={handleResendCode}
                 disabled={isResending || !email}
                 className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
               >
-                {isResending ? "Resending..." : "Resend Code"}
+                {isResending ? t("verify.resending") : t("verify.resend")}
               </button>
             </div>
 
@@ -207,7 +212,7 @@ function EmailVerificationPageContent() {
               disabled={otp.some((digit) => !digit) || isLoading || !email}
               onClick={handleVerify}
             >
-              {isLoading ? <Spinner /> : "Verify"}
+              {isLoading ? <Spinner /> : t("verify.submit")}
             </Button>
           </div>
         </div>
@@ -217,8 +222,9 @@ function EmailVerificationPageContent() {
 }
 
 export default function EmailVerificationPage() {
+  const t = useTranslations("auth");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t("loading")}</div>}>
       <EmailVerificationPageContent />
     </Suspense>
   );

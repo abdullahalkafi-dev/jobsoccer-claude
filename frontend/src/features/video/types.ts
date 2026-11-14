@@ -58,3 +58,19 @@ export type TVideoStatus = {
   isComplete: boolean;
   consent: { aiAt?: string; playersAt?: string; version?: string; currentVersion: string };
 };
+
+/**
+ * Upload problems are reported as a stable code (plus numbers); the screen turns them into a
+ * message in the visitor's language. SERVER carries the text the server sent (already translated by the server).
+ */
+export type TUploadErrorInfo = {
+  code: "TIMEOUT" | "TOO_LARGE" | "NETWORK" | "CANCELLED" | "FAILED" | "SERVER" | "FILE_TYPE" | "FILE_SIZE" | "FILE_LONG" | "FILE_RESOLUTION";
+  params?: Record<string, string | number>;
+  message?: string;
+};
+
+export class UploadError extends Error {
+  constructor(public info: TUploadErrorInfo) {
+    super(info.message ?? info.code);
+  }
+}

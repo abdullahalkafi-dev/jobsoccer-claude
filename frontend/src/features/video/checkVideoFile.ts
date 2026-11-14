@@ -1,6 +1,8 @@
+import type { TUploadErrorInfo } from "./types";
+
 const formatClock = (seconds: number): string => `${Math.floor(seconds / 60)}:${String(Math.round(seconds % 60)).padStart(2, "0")}`;
 
-export type TFileCheck = { ok: true; durationSeconds: number | null } | { ok: false; message: string };
+export type TFileCheck = { ok: true; durationSeconds: number | null } | { ok: false; error: TUploadErrorInfo };
 
 /** Read length and size from the file in the browser (null when the browser cannot decode it). */
 const readMetadata = (file: File): Promise<{ duration: number; width: number; height: number } | null> =>
@@ -28,19 +30,19 @@ export const checkVideoFile = async (
   file: File,
   limits: { maxSeconds: number; maxMegabytes: number; minShortSide: number }
 ): Promise<TFileCheck> => {
-  if (!/\.(mp4|mov)$/i.test(file.name)) return { ok: false, message: "Please choose an MP4 or MOV video." };
+  if (!/\.(mp4|mov)$/i.test(file.name)) return { ok: false, error: { code: "FILE_TYPE" } };
   if (file.size > limits.maxMegabytes * 1024 * 1024) {
-    return { ok: false, message: `This video is ${(file.size / 1024 / 1024).toFixed(0)} MB. The maximum is ${limits.maxMegabytes} MB.` };
+    return { ok: false, error: { code: "FILE_SIZE", params: { size: Math.round(file.size / 1024 / 1024), max: limits.maxMegabytes } } };
   }
 
   const meta = await readMetadata(file);
   if (!meta) return { ok: true, durationSeconds: null };
 
   if (meta.duration > limits.maxSeconds + 1) {
-    return { ok: false, message: `This video is ${formatClock(meta.duration)} long. The maximum is ${formatClock(limits.maxSeconds)}.` };
+    return { ok: false, error: { code: "FILE_LONG", params: { length: formatClock(meta.duration), max: formatClock(limits.maxSeconds) } } };
   }
   if (Math.min(meta.width, meta.height) > 0 && Math.min(meta.width, meta.height) < limits.minShortSide) {
-    return { ok: false, message: `This video is ${meta.width}x${meta.height}. The minimum quality is 720p (1280x720).` };
+    return { ok: false, error: { code: "FILE_RESOLUTION", params: { width: meta.width, height: meta.height } } };
   }
   return { ok: true, durationSeconds: meta.duration };
 };

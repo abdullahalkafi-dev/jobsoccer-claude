@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useAgentRating } from "@/hooks/useAgentRating";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface AgentRatingComponentProps {
   agentUserId: string;
@@ -16,6 +17,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
   agentUserType,
   onSuccess,
 }) => {
+  const t = useTranslations("common");
   const [hoverRating, setHoverRating] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -40,6 +42,18 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
 
   const ratingCheck = canRate();
 
+  // Texts returned by the rating hook (English) mapped to translated ones
+  const translateReason = (reason?: string) => {
+    const map: Record<string, string> = {
+      "Only candidates can rate agents": "agentRating.onlyCandidates",
+      "Only agents can be rated": "agentRating.onlyAgents",
+      "You cannot rate yourself": "agentRating.cannotRateSelf",
+      "You have already rated this agent": "agentRating.alreadyRated",
+      "Failed to submit rating": "agentRating.submitFailed",
+    };
+    return reason && map[reason] ? t(map[reason]) : reason;
+  };
+
   const handleSubmitRating = async (rating: number) => {
     setError(null);
     setSuccess(false);
@@ -50,7 +64,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       setTimeout(() => setSuccess(false), 3000);
       onSuccess?.();
     } catch (err: any) {
-      setError(err.message);
+      setError(translateReason(err.message) ?? null);
     }
   };
 
@@ -58,7 +72,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="text-gray-500">Loading rating information...</div>
+        <div className="text-gray-500">{t("agentRating.loading")}</div>
       </div>
     );
   }
@@ -67,7 +81,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
   if (!isLoggedIn) {
     return (
       <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-center text-amber-700 text-sm">
-        Please log in to rate this agent
+        {t("agentRating.loginToRate")}
       </div>
     );
   }
@@ -80,7 +94,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="text-2xl font-bold">
-              {averageRating > 0 ? averageRating.toFixed(1) : "No"}
+              {averageRating > 0 ? averageRating.toFixed(1) : t("agentRating.noRatingShort")}
             </div>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -98,8 +112,8 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
           </div>
           <p className="text-sm text-gray-600">
             {totalRatings > 0
-              ? `${totalRatings} rating${totalRatings !== 1 ? "s" : ""}`
-              : "No ratings yet"}
+              ? t("agentRating.ratingCount", { count: totalRatings })
+              : t("agentRating.noRatings")}
           </p>
         </div>
       </div>
@@ -110,7 +124,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
   if (!isCandidate) {
     return (
       <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-600 text-sm">
-        Only candidates can rate agents
+        {t("agentRating.onlyCandidates")}
       </div>
     );
   }
@@ -121,7 +135,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="text-2xl font-bold">
-            {averageRating > 0 ? averageRating.toFixed(1) : "No"}
+            {averageRating > 0 ? averageRating.toFixed(1) : t("agentRating.noRatingShort")}
           </div>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -139,8 +153,8 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
         </div>
         <p className="text-sm text-gray-600">
           {totalRatings > 0
-            ? `${totalRatings} rating${totalRatings !== 1 ? "s" : ""}`
-            : "No ratings yet"}
+            ? t("agentRating.ratingCount", { count: totalRatings })
+            : t("agentRating.noRatings")}
         </p>
       </div>
 
@@ -148,7 +162,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       {ratingCheck.allowed && !hasRated && (
         <div className="space-y-3">
           <p className="text-sm font-medium text-gray-700">
-            Share your experience with this agent
+            {t("agentRating.shareExperience")}
           </p>
           <div className="flex justify-center gap-2">
             {[1, 2, 3, 4, 5].map((rating) => (
@@ -159,7 +173,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
                 onMouseLeave={() => setHoverRating(0)}
                 disabled={isRating}
                 className="transition-transform hover:scale-110 disabled:opacity-50"
-                title={`Rate ${rating} star${rating !== 1 ? "s" : ""}`}
+                title={t("agentRating.rateStars", { count: rating })}
               >
                 <Star
                   size={32}
@@ -178,7 +192,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       {/* User Rating Display */}
       {hasRated && userRating && (
         <div className="p-3 bg-blue-50 rounded-lg text-center">
-          <p className="text-sm text-gray-700 mb-2">You rated this agent</p>
+          <p className="text-sm text-gray-700 mb-2">{t("agentRating.youRated")}</p>
           <div className="flex justify-center gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
@@ -198,7 +212,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       {/* Cannot Rate Message */}
       {!ratingCheck.allowed && !hasRated && (
         <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-center text-gray-600 text-sm">
-          {ratingCheck.reason}
+          {translateReason(ratingCheck.reason)}
         </div>
       )}
 
@@ -212,7 +226,7 @@ export const AgentRatingComponent: React.FC<AgentRatingComponentProps> = ({
       {/* Success Message */}
       {success && (
         <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-600">
-          ✓ Rating submitted successfully!
+          ✓ {t("agentRating.success")}
         </div>
       )}
     </div>

@@ -13,7 +13,9 @@ import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import userPlaceholder from "@/assets/user-placeholder.png";
-import { formatTimeAgo } from "@/lib/utils";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
+import { useTranslations } from "next-intl";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import {
@@ -34,7 +36,10 @@ type HomeJobCardProps = {
   index: number
 };
 
-export function HomeJobCard({ job, index }: HomeJobCardProps) {
+export function HomeJobCard({ job }: HomeJobCardProps) {
+  const t = useTranslations("cards.job");
+  const label = useOptionLabel();
+  const f = useFormats();
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
@@ -57,11 +62,11 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
     creatorId: job.creator?.creatorId?._id,
     company:
       `${job.creator?.creatorId?.firstName || ""} ${job.creator?.creatorId?.lastName || ""}`.trim() ||
-      "Trappes FC",
-    location: job.location || "Trappes, France",
+      t("notAvailable"),
+    location: job.location || "",
     image: job.creator?.creatorId?.profileImage,
     applicantCount: job.applicationCount ?? 0,
-    postedTime: formatTimeAgo(job.createdAt),
+    postedTime: f.ago(job.createdAt),
     applicantImages: [user1, user2, user3, user4],
     position: job.position,
     contractType: job.contractType,
@@ -92,13 +97,13 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
         : await saveJob(jobData.id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!",
+          willBeSaved ? t("saved") : t("unsaved"),
         );
       }
     } catch (error: any) {
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to save job. Please try again.",
+        error.data?.message || t("saveFailed"),
       );
       console.error("Failed to save job:", error);
     }
@@ -129,15 +134,13 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
         : await saveJob(jobData.id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved
-            ? "Job shortlisted successfully!"
-            : "Job removed from shortlist!",
+          willBeSaved ? t("shortlistedToast") : t("removedFromShortlist"),
         );
       }
     } catch (error: any) {
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to update job. Please try again.",
+        error.data?.message || t("updateFailed"),
       );
       console.error("Failed to update job:", error);
     }
@@ -161,10 +164,10 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
       const result = await applyJob({ jobId: jobData.id, resumeUrl }).unwrap();
       dispatch(addAppliedJob(result.data));
       setLocalIsApplied(true);
-      toast.success("Application submitted successfully!");
+      toast.success(t("applySuccess"));
     } catch (error: any) {
       const errorMessage =
-        error.data?.message || "Failed to apply. Please try again.";
+        error.data?.message || t("applyFailed");
       toast.error(errorMessage);
       console.error("Failed to apply:", error);
     }
@@ -232,12 +235,12 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
         <Link
           href={`/jobs/${jobData.id}`}
           className="cursor-pointer block"
-          title="View Job Details"
+          title={t("viewDetails")}
         >
           <div className="flex flex-col gap-2 mb-4">
             <div>
               <span className="inline-flex items-center rounded-full bg-yellow-300 px-3 py-1 text-xs font-semibold text-gray-900">
-                {jobData.position}
+                {label("position", jobData.position)}
               </span>
 
             </div>
@@ -245,18 +248,18 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
 
             <div>     <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
               {jobData.contractType === "FullTime"
-                ? "Full Time"
+                ? t("fullTime")
                 : jobData.contractType === "PartTime"
-                  ? "Part Time"
+                  ? t("partTime")
                   : jobData.contractType === "Contract"
-                    ? "Contract"
-                    : "Not specified"}
+                    ? t("contract")
+                    : t("notSpecified")}
             </span>
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                {index == 0 && "Office staff "}
-                {index == 1 && "On-field staff "}
-                {index == 2 && " On-field staff"}
-              </span>
+              {job.jobCategory && (
+                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                  {label("role", job.jobCategory)}
+                </span>
+              )}
 
             </div>
           </div>
@@ -268,7 +271,7 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
                 <div key={index} className="relative">
                   <Image
                     src={image || "/placeholder.svg"}
-                    alt={`Applicant ${index + 1}`}
+                    alt={t("applicantAlt", { number: index + 1 })}
                     className="w-8 h-8 rounded-full border-2 border-white object-cover"
                   />
                 </div>
@@ -283,7 +286,7 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex flex-col gap-1">
               <span className="text-gray-600 text-sm font-medium">
-                {jobData.applicantCount} Applicant
+                {t("applicants", { count: jobData.applicantCount })}
               </span>
               <div className="flex items-center gap-1 text-gray-400 text-xs">
                 <Clock className="w-3 h-3" />
@@ -306,14 +309,14 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
           {isSavingLoading || isUnsavingLoading ? (
             <>
               <Spinner />
-              {isSavingLoading ? "Adding..." : "Removing..."}
+              {isSavingLoading ? t("adding") : t("removing")}
             </>
           ) : (
             <>
               <Bookmark
                 className={`w-5 h-5 ${isSaved ? "fill-current" : ""}`}
               />
-              {isSaved ? "Shortlisted" : "Shortlist"}
+              {isSaved ? t("shortlisted") : t("shortlist")}
             </>
           )}
         </Button>
@@ -326,10 +329,10 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
           {isApplyingLoading ? (
             <>
               <Spinner />
-              Applying...
+              {t("applying")}
             </>
           ) : (
-            <>{isApplied ? "Applied" : "Apply"}</>
+            <>{isApplied ? t("applied") : t("apply")}</>
           )}
         </Button>
       </div>
@@ -346,7 +349,7 @@ export function HomeJobCard({ job, index }: HomeJobCardProps) {
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to continue."
+        message={t("loginMessage")}
       />
     </div>
   );

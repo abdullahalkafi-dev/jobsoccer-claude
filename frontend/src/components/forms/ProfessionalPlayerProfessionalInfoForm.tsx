@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
@@ -14,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { professionalPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
+import { getProfessionalPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
 import {
   countryList,
   divisionLevelOptions,
@@ -45,13 +48,18 @@ export function ProfessionalPlayerProfessionalInfoForm({
   initialData,
   steps,
 }: IProfessionalPlayerProfessionalInfoFormProps) {
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
+  const schema = useMemo(() => getProfessionalPlayerProfessionalInfoSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
     setValue: rawSetValue,
     formState: { errors, isValid },
   } = useForm<TProfessionalPlayerProfessionalInfo>({
-    resolver: zodResolver(professionalPlayerProfessionalInfoSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       ...initialData,
       height: {
@@ -83,11 +91,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
       isNextDisabled={!isValid}
     >
       <form className="space-y-8">
-        <FormSection title="Professional Information">
+        <FormSection title={t("section.professionalInformation")}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Gender */}
-            <FormField label="Gender" error={errors.gender?.message}>
+            <FormField label={t("label.gender")} error={errors.gender?.message}>
               <Select
+                defaultValue={initialData?.gender as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "gender" as const,
@@ -100,12 +109,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select gender" />
+                  <SelectValue placeholder={t("placeholder.selectGender")} />
                 </SelectTrigger>
                 <SelectContent>
                   {genderOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("gender", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -114,24 +123,24 @@ export function ProfessionalPlayerProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Available from (optional)"
+              label={t("label.availableFromOptional")}
               error={errors.availability?.message}
             >
               <Input
                 {...register("availability")}
-                placeholder="Ex. Immediately, or January 2027"
+                placeholder={t("placeholder.exImmediatelyOrJanuary2027")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Height */}
-            <FormField label="Height" error={errors.height?.size?.message}>
+            <FormField label={t("label.height")} error={errors.height?.size?.message}>
               <div className="flex space-x-2">
                 <Input
                   type="number"
                   step="any"
                   {...register("height.size" as const, { valueAsNumber: true })}
-                  placeholder="Ex. 5.7"
+                  placeholder={t("placeholder.ex57")}
                   className="bg-gray-50 border-0"
                 />
                 <Select
@@ -148,12 +157,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                   }
                 >
                   <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue placeholder="Select unit" />
+                    <SelectValue placeholder={t("placeholder.selectUnit")} />
                   </SelectTrigger>
                   <SelectContent>
                     {heightUnitOptions.map((item) => (
                       <SelectItem key={item} value={item}>
-                        {item}
+                        {label("unit", item)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -162,13 +171,13 @@ export function ProfessionalPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Weight */}
-            <FormField label="Weight" error={errors.weight?.size?.message}>
+            <FormField label={t("label.weight")} error={errors.weight?.size?.message}>
               <div className="flex space-x-2">
                 <Input
                   type="number"
                   step="any"
                   {...register("weight.size" as const, { valueAsNumber: true })}
-                  placeholder="Ex. 75"
+                  placeholder={t("placeholder.ex75")}
                   className="bg-gray-50 border-0"
                 />
                 <Select
@@ -185,12 +194,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                   }
                 >
                   <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue placeholder="Select unit" />
+                    <SelectValue placeholder={t("placeholder.selectUnit")} />
                   </SelectTrigger>
                   <SelectContent>
                     {weightUnitOptions.map((item) => (
                       <SelectItem key={item} value={item}>
-                        {item}
+                        {label("unit", item)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -199,8 +208,9 @@ export function ProfessionalPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Country */}
-            <FormField label="Country" error={errors.country?.message}>
+            <FormField label={t("label.country")} error={errors.country?.message}>
               <Select
+                defaultValue={initialData?.country as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "country",
@@ -210,12 +220,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t("placeholder.selectCountry")} />
                 </SelectTrigger>
                 <SelectContent>
                   {countryList.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("country", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -223,20 +233,21 @@ export function ProfessionalPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Current Club */}
-            <FormField label="Current club" error={errors.currentClub?.message}>
+            <FormField label={t("label.currentClub")} error={errors.currentClub?.message}>
               <Input
                 {...register("currentClub")}
-                placeholder="Ex. Real Madrid"
+                placeholder={t("placeholder.exRealMadrid")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* National Team Category */}
             <FormField
-              label="National Team Category"
+              label={t("label.nationalTeamCategory")}
               error={errors.nationalTeamCategory?.message}
             >
               <Select
+                defaultValue={initialData?.nationalTeamCategory as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "nationalTeamCategory",
@@ -246,12 +257,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue placeholder={t("placeholder.selectCategory")} />
                 </SelectTrigger>
                 <SelectContent>
                   {professionalPlayerNationalTeamCategoryOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("category", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -260,19 +271,20 @@ export function ProfessionalPlayerProfessionalInfoForm({
 
             {/* nationalTeamGames */}
             <FormField
-              label="National Team Games"
+              label={t("label.nationalTeamGames")}
               error={errors.nationalTeamGames?.message}
             >
               <Input
                 {...register("nationalTeamGames")}
-                placeholder="Ex. 10"
+                placeholder={t("placeholder.ex10")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Foot */}
-            <FormField label="Foot" error={errors.foot?.message}>
+            <FormField label={t("label.foot")} error={errors.foot?.message}>
               <Select
+                defaultValue={initialData?.foot as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "foot",
@@ -282,12 +294,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select foot" />
+                  <SelectValue placeholder={t("placeholder.selectFoot")} />
                 </SelectTrigger>
                 <SelectContent>
                   {footOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("foot", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -295,8 +307,9 @@ export function ProfessionalPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Position */}
-            <FormField label="Position" error={errors.position?.message}>
+            <FormField label={t("label.position")} error={errors.position?.message}>
               <Select
+                defaultValue={initialData?.position as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "position",
@@ -306,12 +319,12 @@ export function ProfessionalPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select position" />
+                  <SelectValue placeholder={t("placeholder.selectPosition")} />
                 </SelectTrigger>
                 <SelectContent>
                   {playerPositionOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("position", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -320,24 +333,24 @@ export function ProfessionalPlayerProfessionalInfoForm({
 
             {/* Social Media */}
             <FormField
-              label="Social Media (optional)"
+              label={t("label.socialMediaOptional")}
               error={errors.socialMedia?.message}
             >
               <Input
                 {...register("socialMedia")}
-                placeholder="https://www.example.com"
+                placeholder={t("placeholder.httpsWwwExampleCom")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Division level */}
             <FormField
-              label="Division Level"
-              error={errors.nationalTeamGames?.message}
+              label={t("label.divisionLevel")}
+              error={errors.division?.message}
             >
-              <Select onValueChange={(value) => setValue("division", value)}>
+              <Select defaultValue={initialData?.division as string | undefined} onValueChange={(value) => setValue("division", value)}>
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select division" />
+                  <SelectValue placeholder={t("placeholder.selectDivision")} />
                 </SelectTrigger>
                 <SelectContent>
                   {divisionLevelOptions.map((item) => (
@@ -351,36 +364,36 @@ export function ProfessionalPlayerProfessionalInfoForm({
 
             {/* Teams Joined */}
             <FormField
-              label="Team's Joined"
+              label={t("label.teamSJoined")}
               error={errors.teamsJoined?.message}
             >
               <Input
                 {...register("teamsJoined")}
-                placeholder="Your Joined details"
-                className="bg-gray-50 bord er-0"
+                placeholder={t("placeholder.yourJoinedDetails")}
+                className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Agent */}
             <FormField
-              label="Agent (if applicable)"
+              label={t("label.agentIfApplicable")}
               error={errors.agent?.message}
             >
               <Input
                 {...register("agent")}
-                placeholder="Agent name"
+                placeholder={t("placeholder.agentName")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Contract Expires */}
             <FormField
-              label="Contract Expires"
+              label={t("label.contractExpires")}
               error={errors.contractExpires?.message}
             >
               <Input
                 {...register("contractExpires")}
-                placeholder="Contract expires"
+                placeholder={t("placeholder.contractExpires")}
                 className="bg-gray-50 border-0"
               />
             </FormField>

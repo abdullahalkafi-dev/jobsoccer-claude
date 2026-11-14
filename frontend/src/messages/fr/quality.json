@@ -1,1 +1,47 @@
-{}
+{
+  "title": "Qualité du profil",
+  "tooltip": "Qualité du profil : {label}",
+  "starsAria": "{stars} étoiles sur 5",
+  "levels": {
+    "incomplete": "Incomplet",
+    "developing": "En développement",
+    "complete": "Complet",
+    "advanced": "Avancé",
+    "premium": "Premium qualifié"
+  },
+  "card": {
+    "category": "Catégorie",
+    "earned": "Obtenus",
+    "maximum": "Maximum",
+    "premiumQualified": "Vous êtes <b>Premium qualifié</b> : vous pouvez postuler aux offres premium.",
+    "morePoints": "<b>{points, plural, one {# point de plus} other {# points de plus}}</b> pour débloquer les offres premium (5 étoiles).",
+    "howToImprove": "Comment l'améliorer",
+    "disclaimer": "Ce score indique à quel point votre profil est complet et vérifié. Il ne mesure pas vos compétences professionnelles et un score élevé ne garantit pas un emploi."
+  },
+  "premium": {
+    "badge": "Premium",
+    "badgeTitle": "Offre premium : les candidats doivent avoir une qualité du profil de 5 étoiles pour postuler",
+    "canApply": "Il s'agit d'une offre premium. Votre profil Premium qualifié peut postuler.",
+    "title": "Offre premium",
+    "needMore": "Les offres premium sont ouvertes aux candidats ayant une qualité du profil de 5 étoiles (Premium qualifié). Il vous manque <b>{points, plural, one {# point} other {# points}}</b>. <link>Découvrez comment améliorer votre profil</link>",
+    "guest": "Tout le monde peut consulter cette offre. Pour postuler, vous avez besoin d'un profil de candidat avec une qualité du profil de 5 étoiles (Premium qualifié)."
+  },
+  "assessment": {
+    "title": "Évaluation de l'entretien",
+    "pending": {
+      "queued": "Votre évaluation d'entretien est en attente de démarrage.",
+      "transcribing": "Nous écoutons la vidéo de votre entretien.",
+      "evaluating": "Vos réponses sont en cours d'évaluation.",
+      "failed": "L'évaluation n'a pas pu être terminée. Notre équipe a été prévenue."
+    },
+    "notAnswered": "{count, plural, one {# question est restée sans réponse} other {# questions sont restées sans réponse}} lors de l'entretien, aucun niveau global n'est donc attribué.",
+    "underReview": "Cette évaluation est en cours de vérification par notre équipe.",
+    "strongest": "Points forts",
+    "weaknesses": "Principaux points faibles",
+    "summary": "Synthèse"
+  },
+  "guide": {
+    "title": "{name} – Questionnaire d'entretien ({count} questions)",
+    "intro": "Lors de votre entretien vidéo, répondez à ces questions dans l'ordre indiqué. Vous pouvez en passer une : elle apparaîtra comme « Sans réponse » et obtiendra 0 point."
+  }
+}

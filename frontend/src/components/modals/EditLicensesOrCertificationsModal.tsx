@@ -32,21 +32,24 @@ import { Button } from "@/components/ui/button";
 import { months, years } from "@/constants/profile";
 import { useUpdateCertificateMutation } from "@/redux/features/certificate/certificateApi";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { CertificateData } from "@/types/certificate";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  issuingOrganization: z.string().min(1, "Issuing organization is required"),
+const getFormSchema = (t: (key: string) => string) =>
+  z.object({
+  name: z.string().min(1, t("certificate.nameRequired")),
+  issuingOrganization: z.string().min(1, t("certificate.organizationRequired")),
   credentialId: z.string().optional(),
   credentialUrl: z.string().optional(),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
+  startMonth: z.string().min(1, t("certificate.startMonthRequired")),
+  startYear: z.string().min(1, t("certificate.startYearRequired")),
   endMonth: z.string().optional(),
   endYear: z.string().optional(),
   description: z.string().optional(),
 });
 
-export type FormData = z.infer<typeof formSchema>;
+export type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 
 interface EditLicenseOrCertificationsModalProps {
   isOpen: boolean;
@@ -59,10 +62,12 @@ export default function EditLicenseOrCertificationsModal({
   onClose,
   certificationData,
 }: EditLicenseOrCertificationsModalProps) {
+  const t = useTranslations("modals");
+  const label = useOptionLabel();
   const [updateCertificate, { isLoading }] = useUpdateCertificateMutation();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormData>({
+    resolver: zodResolver(getFormSchema(t)),
     defaultValues: {
       name: "",
       issuingOrganization: "",
@@ -107,7 +112,7 @@ export default function EditLicenseOrCertificationsModal({
 
   const onSubmit = async (data: FormData) => {
     if (!certificationData?._id) {
-      toast.error("Certificate ID is missing");
+      toast.error(t("certificate.idMissing"));
       return;
     }
 
@@ -130,14 +135,13 @@ export default function EditLicenseOrCertificationsModal({
       }).unwrap();
 
       if (result.success) {
-        toast.success(result.message || "Certificate updated successfully!");
+        toast.success(result.message || t("certificate.updated"));
         form.reset();
         onClose();
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.message ||
-          "Failed to update certificate. Please try again."
+        error?.data?.message || t("certificate.updateFailed")
       );
       console.error("Error updating certificate:", error);
     }
@@ -154,7 +158,7 @@ export default function EditLicenseOrCertificationsModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold">
-              Edit License or Certification
+              {t("certificate.editTitle")}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -168,11 +172,11 @@ export default function EditLicenseOrCertificationsModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Name
+                    {t("certificate.name")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: UEFA Pro License"
+                      placeholder={t("certificate.namePh")}
                       {...field}
                       className="mt-1"
                     />
@@ -189,10 +193,10 @@ export default function EditLicenseOrCertificationsModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Issuing Organization
+                    {t("certificate.issuingOrganization")}
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Ex: UEFA" {...field} className="mt-1" />
+                    <Input placeholder={t("certificate.issuingOrganizationPh")} {...field} className="mt-1" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,7 +206,7 @@ export default function EditLicenseOrCertificationsModal({
             {/* Start Date */}
             <div>
               <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                Start date
+                {t("common.startDate")}
               </FormLabel>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -217,13 +221,13 @@ export default function EditLicenseOrCertificationsModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Month" />
+                            <SelectValue placeholder={t("common.month")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {months.map((month) => (
                             <SelectItem key={month} value={month}>
-                              {month}
+                              {label("month", month)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -244,7 +248,7 @@ export default function EditLicenseOrCertificationsModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Year" />
+                            <SelectValue placeholder={t("common.year")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -265,7 +269,7 @@ export default function EditLicenseOrCertificationsModal({
             {/* End Date */}
             <div>
               <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                End date
+                {t("common.endDate")}
               </FormLabel>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -280,13 +284,13 @@ export default function EditLicenseOrCertificationsModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Month" />
+                            <SelectValue placeholder={t("common.month")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {months.map((month) => (
                             <SelectItem key={month} value={month}>
-                              {month}
+                              {label("month", month)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -307,7 +311,7 @@ export default function EditLicenseOrCertificationsModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Year" />
+                            <SelectValue placeholder={t("common.year")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -332,11 +336,11 @@ export default function EditLicenseOrCertificationsModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Credential ID
+                    {t("certificate.credentialId")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: 12345678"
+                      placeholder={t("certificate.credentialIdPh")}
                       {...field}
                       className="mt-1"
                     />
@@ -353,7 +357,7 @@ export default function EditLicenseOrCertificationsModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Credential URL
+                    {t("certificate.credentialUrl")}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -374,11 +378,11 @@ export default function EditLicenseOrCertificationsModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Description
+                    {t("certificate.description")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe your license or certification"
+                      placeholder={t("certificate.descriptionEditPh")}
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -396,14 +400,14 @@ export default function EditLicenseOrCertificationsModal({
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? "Updating..." : "Update"}
+                {isLoading ? t("common.updating") : t("common.update")}
               </Button>
             </div>
           </form>

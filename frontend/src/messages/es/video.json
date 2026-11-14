@@ -1,1 +1,71 @@
-{}
+{
+  "kind": {
+    "Interview": "de entrevista",
+    "Methodology": "de metodología",
+    "Highlights": "de mejores jugadas"
+  },
+  "consent": {
+    "title": "Antes de subir el vídeo"
+  },
+  "setup": {
+    "ariaLabel": "Cómo prepararte para la entrevista en vídeo",
+    "correctAlt": "Colocación correcta: sentado en un sofá, visible de la cabeza a las rodillas",
+    "wrongAlt": "Colocación incorrecta: sentado detrás de una mesa, visible de la cintura hacia arriba",
+    "correctText": "<b>Haz esto:</b> siéntate en una silla o sofá (o ponte de pie); la cámara debe mostrarte de la cabeza a las rodillas, con las manos a la vista.",
+    "wrongText": "<b>No hagas esto:</b> detrás de un escritorio o una mesa, cortado a la altura de la cintura. Podrían quedar ocultas notas o pantallas."
+  },
+  "slot": {
+    "required": "Obligatorio",
+    "optional": "Opcional",
+    "upTo": "hasta {max}",
+    "upToEach": "hasta {max} cada uno",
+    "recordingGuide": "Guía de grabación",
+    "fileName": "Nombre de archivo recomendado: {name}",
+    "captionsReady": "{length} · subtítulos en inglés listos",
+    "captionsCreating": "{length} · se están creando los subtítulos",
+    "lockedUntil": "Bloqueado hasta el {date}",
+    "replace": "Reemplazar",
+    "chooseHighlight": "Elige el vídeo de mejores jugadas {n}",
+    "chooseVideo": "Elige tu vídeo",
+    "fileHint": "MP4 o MOV, de hasta {max} MB",
+    "tickConsent": "Marca las confirmaciones de arriba antes de subir el vídeo."
+  },
+  "upload": {
+    "bytes": "{done} de {total} MB",
+    "speedMb": "{value} MB/s",
+    "speedKb": "{value} KB/s",
+    "timeEstimating": "calculando el tiempo restante…",
+    "timeLessMinute": "queda menos de un minuto",
+    "timeMinutes": "quedan unos {minutes} min",
+    "timeHoursMinutes": "quedan unas {hours} h {minutes} min",
+    "progress": "Subiendo… {percent}% · {done} · {left}",
+    "progressSpeed": "Subiendo… {percent}% · {done} · {speed} · {left}",
+    "retryCountdown": "Se perdió la conexión tras {done}. Reintentando en {seconds} s… No se pierde nada: la subida continúa desde donde se detuvo.",
+    "retryNow": "Se perdió la conexión tras {done}. Reintentando… No se pierde nada: la subida continúa desde donde se detuvo.",
+    "resumed": "Continuando tu subida anterior de este archivo desde {done} MB.",
+    "checking": "Subida completada. Estamos revisando tu vídeo (duración, calidad, sonido)…",
+    "saving": "Guardando tu vídeo…",
+    "hint": "Puedes seguir usando el sitio mientras se sube. Si la conexión se interrumpe, la subida continúa sola. Si cierras esta pestaña, elige el mismo archivo otra vez para continuar donde se detuvo.",
+    "errors": {
+      "FILE_TYPE": "Elige un vídeo en formato MP4 o MOV.",
+      "FILE_SIZE": "Este vídeo pesa {size} MB. El máximo es {max} MB.",
+      "FILE_LONG": "Este vídeo dura {length}. El máximo es {max}.",
+      "FILE_RESOLUTION": "Este vídeo es de {width}x{height}. La calidad mínima es 720p (1280x720).",
+      "TIMEOUT": "La subida tardó más de {minutes} minutos y se detuvo. Inténtalo de nuevo con una conexión más rápida o exporta el vídeo a 720p para que el archivo pese menos.",
+      "TOO_LARGE": "Este vídeo supera los {megabytes} MB.",
+      "NETWORK": "La conexión se interrumpió durante la subida, por lo que el vídeo no se guardó. Comprueba tu conexión a internet y súbelo de nuevo.",
+      "CANCELLED": "Subida cancelada.",
+      "FAILED": "La subida ha fallado. Inténtalo de nuevo.",
+      "SERVER": "La subida ha fallado. Inténtalo de nuevo."
+    }
+  },
+  "step": {
+    "loadError": "No pudimos cargar los requisitos de tus vídeos. Actualiza la página.",
+    "stillNeeded": "Aún falta: tu vídeo {kinds}. Este vídeo es obligatorio para completar tu perfil y postularte a empleos.",
+    "stillNeededMany": "Aún falta: tu vídeo {kinds}. Estos vídeos son obligatorios para completar tu perfil y postularte a empleos.",
+    "subtitle": "Los empleadores ven estos vídeos para conocerte.",
+    "subtitleInterview": "Los empleadores ven estos vídeos para conocerte. Tu entrevista la puntúa una IA en segundo plano, así que puedes seguir usando el sitio mientras se revisa.",
+    "title": "Sube tus vídeos",
+    "complete": "Completar"
+  }
+}

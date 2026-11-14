@@ -3,5 +3,54 @@
     "title": "Jobsoccer",
     "description": "Explora empleos de fútbol en todo el mundo para entrenadores, ojeadores, analistas y más. ¡Tu carrera en el fútbol empieza aquí!"
   },
-  "language": { "label": "Idioma" }
+  "language": {
+    "label": "Idioma"
+  },
+  "ui": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "loading": "Cargando…",
+    "close": "Cerrar",
+    "search": "Buscar"
+  },
+  "loginRequired": {
+    "title": "Inicio de sesión necesario",
+    "message": "Inicia sesión para continuar con esta acción.",
+    "login": "Iniciar sesión"
+  },
+  "logout": {
+    "closeAria": "Cerrar ventana",
+    "title": "Confirmar cierre de sesión",
+    "description": "¿Seguro que quieres cerrar sesión? Tendrás que iniciar sesión de nuevo para acceder a tu cuenta.",
+    "confirm": "Sí, cerrar sesión"
+  },
+  "footer": {
+    "logoAria": "Logotipo de Jobsoccer",
+    "logoAlt": "JOBSOCCER.COM - Donde empiezan las carreras en el fútbol",
+    "home": "Inicio",
+    "about": "Sobre nosotros",
+    "faq": "Preguntas frecuentes",
+    "contact": "Contacto",
+    "terms": "Términos de uso",
+    "privacy": "Política de privacidad",
+    "newsletterTitle": "Suscríbete a nuestro boletín",
+    "emailPlaceholder": "Escribe tu correo electrónico",
+    "subscribe": "Suscribirme"
+  },
+  "agentRating": {
+    "loading": "Cargando la información de valoraciones...",
+    "loginToRate": "Inicia sesión para valorar a este agente",
+    "noRatingShort": "Sin",
+    "ratingCount": "{count, plural, one {# valoración} other {# valoraciones}}",
+    "noRatings": "Aún no hay valoraciones",
+    "onlyCandidates": "Solo los candidatos pueden valorar a los agentes",
+    "onlyAgents": "Solo se puede valorar a los agentes",
+    "cannotRateSelf": "No puedes valorarte a ti mismo",
+    "alreadyRated": "Ya has valorado a este agente",
+    "submitFailed": "No se pudo enviar la valoración",
+    "shareExperience": "Comparte tu experiencia con este agente",
+    "rateStars": "Valorar con {count, plural, one {# estrella} other {# estrellas}}",
+    "youRated": "Has valorado a este agente",
+    "success": "¡Valoración enviada con éxito!"
+  }
 }

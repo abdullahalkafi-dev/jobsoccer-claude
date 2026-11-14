@@ -5,7 +5,10 @@
  * to add a "Message" button that creates/opens a chat
  */
 
+"use client";
+
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Loader2 } from "lucide-react";
@@ -23,6 +26,7 @@ export function StartChatButton({
   userId,
   className,
 }: StartChatButtonProps) {
+  const t = useTranslations("messages");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
@@ -63,12 +67,12 @@ export function StartChatButton({
         {loading ? (
           <>
             <Loader2 className="animate-spin" />
-            Loading...
+            {t("startChat.loading")}
           </>
         ) : (
           <>
             <MessageCircle />
-            Message 
+            {t("startChat.message")}
           </>
         )}
       </Button>
@@ -78,7 +82,7 @@ export function StartChatButton({
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to send messages."
+        message={t("startChat.loginRequired")}
       />
     </>
   );

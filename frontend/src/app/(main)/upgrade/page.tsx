@@ -2,138 +2,143 @@
 
 import React from "react";
 import { Check, X } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import { PlanCard, PlanCardProps } from "@/components/cards/PlanCard";
 
-type PlanGroup = {
-  label: string;
-  plans: PlanCardProps[];
+type PlanTier = "basic" | "silver" | "gold";
+
+type PlanDef = {
+  id: string;
+  tier: PlanTier;
+  price: number;
+  badge?: "popular" | "free";
+  highlight?: boolean;
+  /** [feature key in upgrade.features, included] */
+  features: [string, boolean][];
 };
 
-const pricingGroups: PlanGroup[] = [
+type PlanGroupDef = {
+  key: "staff" | "amateur" | "pro";
+  plans: PlanDef[];
+};
+
+const pricingGroups: PlanGroupDef[] = [
   {
-    label: "STAFF",
+    key: "staff",
     plans: [
       {
         id: "staff-basic",
-        name: "Basic plan",
-        price: "$9.99",
-        period: "/month",
+        tier: "basic",
+        price: 9.99,
         features: [
-          { label: "Verified professional profile", included: true },
-          { label: "Apply to open roles", included: true },
-          { label: "Upload CV & certifications", included: true },
-          { label: "Profile views tracker", included: true },
-          { label: "Priority in recruiter searches", included: false },
-          { label: "Advanced analytics dashboard", included: false },
+          ["verifiedProfile", true],
+          ["applyRoles", true],
+          ["uploadCv", true],
+          ["profileViews", true],
+          ["priorityRecruiter", false],
+          ["advancedAnalytics", false],
         ],
       },
       {
         id: "staff-gold",
-        name: "Gold plan",
-        price: "$39.99",
-        period: "/month",
-        badge: "Most popular",
+        tier: "gold",
+        price: 39.99,
+        badge: "popular",
         highlight: true,
         features: [
-          { label: "Everything in Basic", included: true },
-          { label: "Priority in recruiter searches", included: true },
-          { label: "Advanced analytics dashboard", included: true },
-          { label: "Direct club & agent messaging", included: true },
-          { label: "Webinars & career events access", included: true },
-          { label: "AI profile optimization feedback", included: true },
+          ["everythingBasic", true],
+          ["priorityRecruiter", true],
+          ["advancedAnalytics", true],
+          ["directMessaging", true],
+          ["webinars", true],
+          ["aiFeedback", true],
         ],
       },
     ],
   },
   {
-    label: "AMATEUR PLAYER",
+    key: "amateur",
     plans: [
       {
         id: "amateur-basic",
-        name: "Basic plan",
-        price: "$0",
-        period: "/month",
-        badge: "Free",
+        tier: "basic",
+        price: 0,
+        badge: "free",
         features: [
-          { label: "Create a public profile", included: true },
-          { label: "Apply to amateur opportunities", included: true },
-          { label: "Upload 1 highlight video", included: true },
-          { label: "AI profile score & feedback", included: true },
-          { label: "Priority visibility", included: false },
+          ["publicProfile", true],
+          ["applyAmateur", true],
+          ["oneVideo", true],
+          ["aiScore", true],
+          ["priorityVisibility", false],
         ],
       },
       {
         id: "amateur-silver",
-        name: "Silver plan",
-        price: "$9.99",
-        period: "/month",
+        tier: "silver",
+        price: 9.99,
         features: [
-          { label: "Everything in Basic", included: true },
-          { label: "Multiple video uploads", included: true },
-          { label: "Profile views tracker", included: true },
-          { label: "Job alerts & saved searches", included: true },
-          { label: "AI-driven PRO score boost", included: false },
+          ["everythingBasic", true],
+          ["multiVideo", true],
+          ["profileViews", true],
+          ["jobAlerts", true],
+          ["proBoost", false],
         ],
       },
       {
         id: "amateur-gold",
-        name: "Gold plan",
-        price: "$29.99",
-        period: "/month",
-        badge: "Most popular",
+        tier: "gold",
+        price: 29.99,
+        badge: "popular",
         highlight: true,
         features: [
-          { label: "Everything in Silver", included: true },
-          { label: "AI-driven PRO score boost", included: true },
-          { label: "Personality & behavioral profile", included: true },
-          { label: "Global exposure to clubs", included: true },
-          { label: "Direct messaging with agents", included: true },
+          ["everythingSilver", true],
+          ["proBoost", true],
+          ["personality", true],
+          ["globalExposure", true],
+          ["agentMessaging", true],
         ],
       },
     ],
   },
   {
-    label: "PRO PLAYER",
+    key: "pro",
     plans: [
       {
         id: "pro-basic",
-        name: "Basic plan",
-        price: "$9.99",
-        period: "/month",
+        tier: "basic",
+        price: 9.99,
         features: [
-          { label: "Verified pro profile", included: true },
-          { label: "Apply to pro roles", included: true },
-          { label: "CV & stats upload", included: true },
-          { label: "Video session analysis", included: true },
-          { label: "AI performance report", included: false },
+          ["verifiedPro", true],
+          ["applyPro", true],
+          ["cvStats", true],
+          ["videoAnalysis", true],
+          ["aiReport", false],
         ],
       },
       {
         id: "pro-silver",
-        name: "Silver plan",
-        price: "$29.99",
-        period: "/month",
+        tier: "silver",
+        price: 29.99,
         features: [
-          { label: "Everything in Basic", included: true },
-          { label: "Video session analysis", included: true },
-          { label: "Shortlist & trial alerts", included: true },
-          { label: "Network with clubs & agents", included: true },
-          { label: "Spotlight placement", included: false },
+          ["everythingBasic", true],
+          ["videoAnalysis", true],
+          ["shortlistAlerts", true],
+          ["networkClubs", true],
+          ["spotlight", false],
         ],
       },
       {
         id: "pro-gold",
-        name: "Gold plan",
-        price: "$59.99",
-        period: "/month",
-        badge: "Most popular",
+        tier: "gold",
+        price: 59.99,
+        badge: "popular",
         highlight: true,
         features: [
-          { label: "Everything in Silver", included: true },
-          { label: "AI performance report", included: true },
-          { label: "Spotlight placement", included: true },
-          { label: "Psychometric profiling", included: true },
-          { label: "Early access to premium jobs", included: true },
+          ["everythingSilver", true],
+          ["aiReport", true],
+          ["spotlight", true],
+          ["psychometric", true],
+          ["earlyAccess", true],
         ],
       },
     ],
@@ -142,39 +147,33 @@ const pricingGroups: PlanGroup[] = [
 
 // ─── Employer pricing data ────────────────────────────────────────────────────
 
-type EmployerType = {
-  label: string;
-  basicPrice: string;
-  goldPrice: string;
-};
-
-const employerTypes: EmployerType[] = [
-  { label: "Professional Clubs", basicPrice: "$19.99", goldPrice: "$59.99" },
-  { label: "Amateur Clubs",      basicPrice: "$9.99",  goldPrice: "$29.99" },
-  { label: "Academy",           basicPrice: "$9.99",  goldPrice: "$29.99" },
-  { label: "College / University", basicPrice: "$19.99", goldPrice: "$59.99" },
-  { label: "Consulting Company", basicPrice: "$19.99", goldPrice: "$59.99" },
-  { label: "Agents / Agency",   basicPrice: "$19.99", goldPrice: "$59.99" },
+const employerTypes: { key: string; basicPrice: number; goldPrice: number }[] = [
+  { key: "proClubs", basicPrice: 19.99, goldPrice: 59.99 },
+  { key: "amateurClubs", basicPrice: 9.99, goldPrice: 29.99 },
+  { key: "academy", basicPrice: 9.99, goldPrice: 29.99 },
+  { key: "college", basicPrice: 19.99, goldPrice: 59.99 },
+  { key: "consulting", basicPrice: 19.99, goldPrice: 59.99 },
+  { key: "agents", basicPrice: 19.99, goldPrice: 59.99 },
 ];
 
-const employerBasicFeatures = [
-  { label: "Post up to 3 active job listings",     included: true  },
-  { label: "Access candidate profiles & CVs",      included: true  },
-  { label: "View pre-recorded video interviews",   included: true  },
-  { label: "Organization profile page",            included: true  },
-  { label: "AI candidate matching",                included: false },
-  { label: "Hiring analytics dashboard",           included: false },
-  { label: "Talent pool builder",                  included: false },
+const employerBasicFeatures: [string, boolean][] = [
+  ["employerPost3", true],
+  ["employerAccessProfiles", true],
+  ["employerViewInterviews", true],
+  ["employerOrgPage", true],
+  ["employerAiMatching", false],
+  ["employerAnalytics", false],
+  ["employerTalentPool", false],
 ];
 
-const employerGoldFeatures = [
-  { label: "Everything in Basic",                      included: true },
-  { label: "AI candidate matching & shortlists",       included: true },
-  { label: "Hiring analytics dashboard",               included: true },
-  { label: "Talent pool builder",                      included: true },
-  { label: "Advanced search & psychometric filters",   included: true },
-  { label: "Team collaboration tools",                 included: true },
-  { label: "Unlimited job postings",                   included: true },
+const employerGoldFeatures: [string, boolean][] = [
+  ["everythingBasic", true],
+  ["employerAiShortlists", true],
+  ["employerAnalytics", true],
+  ["employerTalentPool", true],
+  ["employerAdvancedSearch", true],
+  ["employerTeamTools", true],
+  ["employerUnlimited", true],
 ];
 
 // ─── Small helper ─────────────────────────────────────────────────────────────
@@ -191,21 +190,46 @@ const FeatureItem = ({ label, included }: { label: string; included: boolean }) 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function UpgradePage() {
+  const t = useTranslations("upgrade");
+  const format = useFormatter();
+  // Plan prices have cents (9.99), so they are not rounded like the shared money() helper does
+  const price = (value: number) =>
+    format.number(value, {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+      maximumFractionDigits: 2,
+    });
+
+  const groups: { key: string; label: string; plans: PlanCardProps[] }[] = pricingGroups.map((group) => ({
+    key: group.key,
+    label: t(`groups.${group.key}`),
+    plans: group.plans.map((plan) => ({
+      id: plan.id,
+      name: t(`planName.${plan.tier}`),
+      price: price(plan.price),
+      period: t("perMonth"),
+      badge: plan.badge,
+      highlight: plan.highlight,
+      features: plan.features.map(([key, included]) => ({ label: t(`features.${key}`), included })),
+    })),
+  }));
+
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-10">
       <div className="mx-auto max-w-5xl">
         <div className="rounded-xl bg-yellow-300 py-3 text-center text-lg font-semibold shadow">
-          Jobsoccer - Pricing Plans
+          {t("title")}
         </div>
 
         {/* ── Candidates ── */}
         <div className="mt-8">
           <h2 className="text-sm font-semibold uppercase tracking-wide">
-            Candidates
+            {t("candidates")}
           </h2>
 
-          {pricingGroups.map((group) => (
-            <section key={group.label} className="mt-5">
+          {groups.map((group) => (
+            <section key={group.key} className="mt-5">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                 {group.label}
               </h3>
@@ -225,26 +249,28 @@ export default function UpgradePage() {
         {/* ── Employers ── */}
         <div className="mt-12 border-t border-gray-200 pt-8">
           <h2 className="mb-5 text-sm font-semibold uppercase tracking-wide">
-            Employers
+            {t("employers")}
           </h2>
 
           {/* Employer-type pricing grid */}
           <div className="grid gap-3 sm:grid-cols-2">
             {employerTypes.map((et) => (
               <div
-                key={et.label}
-                className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm"
+                key={et.key}
+                className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm"
               >
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">{et.label}</p>
+                  <p className="text-sm font-semibold text-gray-800">{t(`employerTypes.${et.key}`)}</p>
                   <p className="mt-1 text-xs text-gray-500">
-                    Basic —{" "}
-                    <span className="font-medium text-gray-700">{et.basicPrice}/mo</span>
+                    {t.rich("basicLine", {
+                      price: price(et.basicPrice),
+                      b: (chunks) => <span className="font-medium text-gray-700">{chunks}</span>,
+                    })}
                   </p>
                 </div>
                 <div className="rounded-lg bg-yellow-300 px-4 py-2 text-right">
-                  <p className="text-xs font-semibold ">Gold</p>
-                  <p className="text-sm font-bold">{et.goldPrice}/mo</p>
+                  <p className="text-xs font-semibold ">{t("planName.goldShort")}</p>
+                  <p className="text-sm font-bold">{t("perMonthShort", { price: price(et.goldPrice) })}</p>
                 </div>
               </div>
             ))}
@@ -253,16 +279,16 @@ export default function UpgradePage() {
           {/* Basic vs Gold feature comparison */}
           <div className="mt-8">
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-gray-400">
-              What&apos;s Included — Basic vs Gold
+              {t("comparison")}
             </p>
 
             <div className="grid gap-4 md:grid-cols-2">
               {/* Basic column */}
               <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-                <p className="mb-4 text-sm font-semibold text-gray-700">Basic plan</p>
+                <p className="mb-4 text-sm font-semibold text-gray-700">{t("planName.basic")}</p>
                 <ul className="space-y-2.5">
-                  {employerBasicFeatures.map((f) => (
-                    <FeatureItem key={f.label} label={f.label} included={f.included} />
+                  {employerBasicFeatures.map(([key, included]) => (
+                    <FeatureItem key={key} label={t(`features.${key}`)} included={included} />
                   ))}
                 </ul>
               </div>
@@ -272,13 +298,13 @@ export default function UpgradePage() {
                 {/* Recommended banner */}
                 <div className="mb-4 flex justify-center">
                   <h3 className="rounded-md w-full text-center bg-yellow-300 px-6 py-1 text-xs font-semibold uppercase tracking-wide shadow">
-                    Recommended
+                    {t("recommended")}
                   </h3>
                 </div>
-                <p className="mb-4 text-sm font-semibold text-gray-700">Gold plan</p>
+                <p className="mb-4 text-sm font-semibold text-gray-700">{t("planName.gold")}</p>
                 <ul className="space-y-2.5">
-                  {employerGoldFeatures.map((f) => (
-                    <FeatureItem key={f.label} label={f.label} included={f.included} />
+                  {employerGoldFeatures.map(([key, included]) => (
+                    <FeatureItem key={key} label={t(`features.${key}`)} included={included} />
                   ))}
                 </ul>
               </div>
@@ -287,7 +313,7 @@ export default function UpgradePage() {
 
           {/* Footnote */}
           <p className="mt-6 text-center text-xs text-gray-400">
-            All prices are per month &middot; Annual billing options available &middot; Prices in USD
+            {t("footnote")}
           </p>
         </div>
       </div>

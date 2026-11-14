@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { Search, Filter, Download, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -51,15 +53,13 @@ const billingData: BillingRecord[] = [
   },
 ];
 
-const features = [
-  "Free e-mail alerts",
-  "Automatic job recommendations",
-  "Unlimited job applications",
-  "Job insights",
-  "Top applicant badge",
-];
+const featureKeys = ["alerts", "recommendations", "applications", "insights", "badge"] as const;
 
 export default function BillingPage() {
+  const t = useTranslations("upgrade");
+  const f = useFormats();
+  const planLabel = (plan: BillingRecord["plan"]) =>
+    t(plan === "Monthly" ? "billing.plan.monthly" : "billing.plan.halfYearly");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
 
@@ -67,7 +67,8 @@ export default function BillingPage() {
     const matchesSearch =
       record.invoice.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.billingDate.includes(searchTerm) ||
-      record.plan.toLowerCase().includes(searchTerm.toLowerCase());
+      record.plan.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      planLabel(record.plan).toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter =
       selectedFilter === "all" || record.plan.toLowerCase() === selectedFilter;
     return matchesSearch && matchesFilter;
@@ -83,22 +84,22 @@ export default function BillingPage() {
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
                 <h2 className="text-2xl font-semibold text-gray-900">
-                  Monthly
+                  {t("billing.plan.monthly")}
                 </h2>
                 <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Active
+                  {t("billing.active")}
                 </span>
               </div>
               <p className="text-gray-600 text-sm mb-4">
-                You can use one month
+                {t("billing.oneMonth")}
               </p>
 
               {/* Features List */}
               <div className="space-y-2">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                {featureKeys.map((feature) => (
+                  <div key={feature} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                    <span className="text-sm text-gray-700">{t(`billing.features.${feature}`)}</span>
                   </div>
                 ))}
               </div>
@@ -106,7 +107,7 @@ export default function BillingPage() {
 
             {/* Price */}
             <div className="text-right">
-              <div className="text-4xl font-bold text-gray-900">$29</div>
+              <div className="text-4xl font-bold text-gray-900">{f.money(29)}</div>
             </div>
           </div>
         </div>
@@ -115,7 +116,7 @@ export default function BillingPage() {
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <h3 className="text-xl font-semibold text-gray-900">
-              Billing history
+              {t("billing.history")}
             </h3>
 
             {/* Search and Filter */}
@@ -126,7 +127,8 @@ export default function BillingPage() {
                   <Search className="h-4 w-4 text-gray-400" />
                 </div>
                 <Input
-                  placeholder="Search"
+                  placeholder={t("billing.search")}
+                  aria-label={t("billing.search")}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 h-9 text-sm border-gray-300 focus:ring-blue-500 focus:border-blue-500"
@@ -135,14 +137,14 @@ export default function BillingPage() {
 
               {/* Filter Select */}
               <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-                <SelectTrigger className="w-24 h-9 text-sm border-gray-300">
+                <SelectTrigger className="min-w-24 h-9 text-sm border-gray-300">
                   <Filter className="h-4 w-4 mr-1" />
-                  <SelectValue placeholder="Filter" />
+                  <SelectValue placeholder={t("billing.filter")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="half-yearly">Half-yearly</SelectItem>
+                  <SelectItem value="all">{t("billing.all")}</SelectItem>
+                  <SelectItem value="monthly">{t("billing.plan.monthly")}</SelectItem>
+                  <SelectItem value="half-yearly">{t("billing.plan.halfYearly")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -151,18 +153,20 @@ export default function BillingPage() {
           {/* Active Filter Display */}
           {selectedFilter !== "all" && (
             <div className="mb-4 flex items-center gap-2">
-              <span className="text-sm text-gray-600">Filtered by:</span>
+              <span className="text-sm text-gray-600">{t("billing.filteredBy")}</span>
               <Button
                 variant="secondary"
                 size="sm"
                 className="h-6 px-2 text-xs rounded-full"
                 onClick={() => setSelectedFilter("all")}
               >
-                {selectedFilter.charAt(0).toUpperCase() +
-                  selectedFilter.slice(1)}
+                {selectedFilter === "monthly"
+                  ? t("billing.plan.monthly")
+                  : t("billing.plan.halfYearly")}
                 <button
                   onClick={() => setSelectedFilter("all")}
                   className="ml-1 hover:text-gray-600"
+                  aria-label={t("billing.clearFilter")}
                 >
                   ×
                 </button>
@@ -172,10 +176,10 @@ export default function BillingPage() {
 
           {/* Table Header */}
           <div className="hidden sm:grid sm:grid-cols-4 gap-4 pb-3 border-b border-gray-200 text-sm font-medium text-gray-500">
-            <div>Invoice</div>
-            <div>Billing date</div>
-            <div>Plan</div>
-            <div>Download</div>
+            <div>{t("billing.invoice")}</div>
+            <div>{t("billing.billingDate")}</div>
+            <div>{t("billing.planColumn")}</div>
+            <div>{t("billing.download")}</div>
           </div>
 
           {/* Billing Records */}
@@ -201,6 +205,7 @@ export default function BillingPage() {
                         variant="ghost"
                         size="sm"
                         className="text-blue-600 hover:text-blue-700 p-1"
+                        aria-label={t("billing.download")}
                       >
                         <Download className="w-4 h-4" />
                       </Button>
@@ -208,7 +213,7 @@ export default function BillingPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <span className="text-sm text-gray-700">
-                        {record.plan}
+                        {planLabel(record.plan)}
                       </span>
                     </div>
                   </div>
@@ -221,7 +226,7 @@ export default function BillingPage() {
                     <div className="text-gray-600">{record.billingDate}</div>
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-gray-700">{record.plan}</span>
+                      <span className="text-gray-700">{planLabel(record.plan)}</span>
                     </div>
                     <div>
                       <Button
@@ -229,7 +234,7 @@ export default function BillingPage() {
                         size="sm"
                         className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 p-2"
                       >
-                        Download
+                        {t("billing.download")}
                       </Button>
                     </div>
                   </div>
@@ -241,10 +246,10 @@ export default function BillingPage() {
                   <Search className="w-6 h-6 text-gray-400" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No billing records found
+                  {t("billing.noRecords")}
                 </h3>
                 <p className="text-gray-500 mb-4">
-                  Try adjusting your search terms or filters.
+                  {t("billing.noRecordsHint")}
                 </p>
                 <Button
                   variant="outline"
@@ -253,7 +258,7 @@ export default function BillingPage() {
                     setSelectedFilter("all");
                   }}
                 >
-                  Clear all filters
+                  {t("billing.clearAll")}
                 </Button>
               </div>
             )}
@@ -264,10 +269,9 @@ export default function BillingPage() {
             <div className="mt-6 pt-4 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm text-gray-600">
                 <span>
-                  Showing {filteredBilling.length} of {billingData.length}{" "}
-                  records
+                  {t("billing.showing", { shown: filteredBilling.length, total: billingData.length })}
                 </span>
-                <span>Total billing records: {billingData.length}</span>
+                <span>{t("billing.total", { total: billingData.length })}</span>
               </div>
             </div>
           )}

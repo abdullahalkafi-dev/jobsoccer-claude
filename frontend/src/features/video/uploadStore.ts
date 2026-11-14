@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { TVideoKind } from "./types";
+import { UploadError, type TUploadErrorInfo, type TVideoKind } from "./types";
 import { uploadVideoResumable } from "./uploadVideo";
 
 /**
@@ -28,7 +28,7 @@ export type TUploadState = {
   resumedFromBytes: number | null;
 };
 
-type TEntry = { state: TUploadState | null; error: string | null };
+type TEntry = { state: TUploadState | null; error: TUploadErrorInfo | null };
 
 const entries = new Map<TVideoKind, TEntry>();
 const listeners = new Set<() => void>();
@@ -46,7 +46,7 @@ const isAnyUploading = () => [...entries.values()].some((entry) => entry.state !
 const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
   event.preventDefault();
   // Older browsers need a value; the text itself is not shown by modern browsers
-  event.returnValue = "Your video is still uploading. If you leave now, the upload pauses until you choose the same file again.";
+  event.returnValue = "Video upload in progress";
 };
 let warningOn = false;
 const syncLeaveWarning = () => {
@@ -120,7 +120,7 @@ export const startVideoUpload = async (input: {
     set(kind, EMPTY);
     return true;
   } catch (error) {
-    set(kind, { state: null, error: error instanceof Error ? error.message : "The upload failed." });
+    set(kind, { state: null, error: error instanceof UploadError ? error.info : { code: "FAILED" } });
     return false;
   }
 };
@@ -133,7 +133,7 @@ export const setUploadStage = (kind: TVideoKind, stage: TUploadStage) => {
 };
 
 /** Show a problem found before the upload started (wrong format, too long, too large). */
-export const setUploadError = (kind: TVideoKind, error: string | null) => {
+export const setUploadError = (kind: TVideoKind, error: TUploadErrorInfo | null) => {
   set(kind, { state: entries.get(kind)?.state ?? null, error });
 };
 
@@ -149,24 +149,3 @@ export const useVideoUpload = (kind: TVideoKind): TEntry =>
     () => entries.get(kind) ?? EMPTY,
     () => EMPTY
   );
-
-/** "3.4 MB/s", "850 KB/s" */
-export const formatSpeed = (bytesPerSecond: number): string =>
-  bytesPerSecond >= 1024 * 1024
-    ? `${(bytesPerSecond / (1024 * 1024)).toFixed(1)} MB/s`
-    : `${Math.max(1, Math.round(bytesPerSecond / 1024))} KB/s`;
-
-/** "about 4 min left", "less than a minute left" */
-export const formatTimeLeft = (seconds: number | null): string => {
-  if (seconds === null) return "estimating time left…";
-  if (seconds < 60) return "less than a minute left";
-  const minutes = Math.round(seconds / 60);
-  return minutes >= 60 ? `about ${Math.floor(minutes / 60)} h ${minutes % 60} min left` : `about ${minutes} min left`;
-};
-
-/** "123 of 480 MB"; small files keep one decimal ("0.4 of 1.5 MB") */
-export const formatProgressBytes = (loaded: number, total: number): string => {
-  const mb = (bytes: number) => bytes / (1024 * 1024);
-  const digits = mb(total) < 10 ? 1 : 0;
-  return `${mb(loaded).toFixed(digits)} of ${mb(total).toFixed(digits)} MB`;
-};

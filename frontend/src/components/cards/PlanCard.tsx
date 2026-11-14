@@ -1,5 +1,6 @@
 import React from "react";
 import { Check, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type PlanFeature = {
   label: string;
@@ -8,10 +9,13 @@ type PlanFeature = {
 
 type PlanCardProps = {
   id: string;
+  /** Already translated plan name */
   name: string;
+  /** Already formatted price */
   price: string;
+  /** Already translated period, e.g. "/month" */
   period: string;
-  badge?: "Most popular" | "Free";
+  badge?: "popular" | "free";
   highlight?: boolean;
   features: PlanFeature[];
 };
@@ -38,40 +42,43 @@ const PlanCard = ({
   badge,
   highlight,
   features,
-}: PlanCardProps) => (
-  <div
-    className={`relative rounded-xl border bg-white p-5 shadow-sm ${
-      highlight ? "border-yellow-300 shadow-md" : "border-gray-200"
-    }`}
-  >
-    {badge && (
-      <div
-        className={`-mt-2 mb-3 inline-flex w-full justify-center rounded-md px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-          badge === "Free"
-            ? "bg-yellow-300 text-gray-500"
-            : "bg-yellow-300 text-gray-900"
-        }`}
-      >
-        {badge}
+}: PlanCardProps) => {
+  const t = useTranslations("upgrade");
+  return (
+    <div
+      className={`relative rounded-xl border bg-white p-5 shadow-sm ${
+        highlight ? "border-yellow-300 shadow-md" : "border-gray-200"
+      }`}
+    >
+      {badge && (
+        <div
+          className={`-mt-2 mb-3 inline-flex w-full justify-center rounded-md px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+            badge === "free"
+              ? "bg-yellow-300 text-gray-500"
+              : "bg-yellow-300 text-gray-900"
+          }`}
+        >
+          {badge === "free" ? t("badge.free") : t("badge.popular")}
+        </div>
+      )}
+      <div className="text-sm font-semibold text-gray-600">{name}</div>
+      <div className="mt-1 flex items-end gap-1">
+        <span className="text-3xl font-bold text-gray-900">{price}</span>
+        <span className="pb-1 text-xs text-gray-500">{period}</span>
       </div>
-    )}
-    <div className="text-sm font-semibold text-gray-600">{name}</div>
-    <div className="mt-1 flex items-end gap-1">
-      <span className="text-3xl font-bold text-gray-900">{price}</span>
-      <span className="pb-1 text-xs text-gray-500">{period}</span>
+      <div className="my-4 h-px bg-gray-200" />
+      <ul className="space-y-2">
+        {features.map((feature) => (
+          <FeatureRow
+            key={`${name}-${feature.label}`}
+            label={feature.label}
+            included={feature.included}
+          />
+        ))}
+      </ul>
     </div>
-    <div className="my-4 h-px bg-gray-200" />
-    <ul className="space-y-2">
-      {features.map((feature) => (
-        <FeatureRow
-          key={`${name}-${feature.label}`}
-          label={feature.label}
-          included={feature.included}
-        />
-      ))}
-    </ul>
-  </div>
-);
+  );
+};
 
 export type { PlanCardProps, PlanFeature };
 export { PlanCard };

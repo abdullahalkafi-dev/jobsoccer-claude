@@ -7,29 +7,19 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log("Exchange API received body:", body);
 
     const { code } = body;
 
     if (!code) {
-      console.error("No code provided in request");
       return NextResponse.json(
         { error: "Authorization code is required" },
         { status: 400 }
       );
     }
 
-    console.log("Processing code:", code.substring(0, 20) + "...");
-
     const redirectUri =
       process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URI ||
       `${request.nextUrl.origin}/api/linkedin/callback`;
-
-    console.log("Token exchange params:", {
-      client_id: process.env.NEXT_PUBLIC_CLIENT_ID,
-      redirect_uri: redirectUri,
-      code_length: code.length,
-    });
 
     // Exchange code for access token
     const tokenResponse = await fetch(
@@ -51,13 +41,8 @@ export async function POST(request: NextRequest) {
 
     const tokenData = await tokenResponse.json();
 
-    console.log("LinkedIn token response:", {
-      status: tokenResponse.status,
-      data: tokenData,
-    });
-
     if (!tokenResponse.ok) {
-      console.error("LinkedIn token exchange failed:", tokenData);
+      console.error("LinkedIn token exchange failed with status", tokenResponse.status);
       return NextResponse.json(
         {
           error:

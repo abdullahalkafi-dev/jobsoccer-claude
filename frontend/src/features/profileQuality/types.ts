@@ -35,11 +35,3 @@ export type TMyQualityResponse = {
   premiumMinScore: number;
   bands: TQualityBand[];
 };
-
-export const LEVEL_LABELS: Record<TProfileLevel, string> = {
-  incomplete: "Incomplete",
-  developing: "Developing",
-  complete: "Complete",
-  advanced: "Advanced",
-  premium: "Premium Qualified",
-};

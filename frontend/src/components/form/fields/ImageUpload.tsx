@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { Upload, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface ImageUploadProps {
   value?: string | File;
@@ -14,9 +15,10 @@ interface ImageUploadProps {
 export function ImageUpload({
   value,
   onChange,
-  placeholder = "Upload your image",
+  placeholder,
   className = "",
 }: ImageUploadProps) {
+  const t = useTranslations("forms");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -47,7 +49,7 @@ export function ImageUpload({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={getImageSrc()}
-            alt="Uploaded"
+            alt={t("alt.uploaded")}
             className="w-full h-full rounded-full object-cover"
           />
         ) : (
@@ -63,9 +65,9 @@ export function ImageUpload({
           className="text-blue-600 hover:text-blue-700 cursor-pointer"
         >
           <Upload className="w-4 h-4 mr-1" />
-          {placeholder}
+          {placeholder ?? t("imageUpload.upload")}
         </Button>
-        <span className="text-sm text-[#9E9E9E] ml-3">Max 100px/100px</span>
+        <span className="text-sm text-[#9E9E9E] ml-3">{t("imageUpload.maxSize")}</span>
       </div>
       <input
         ref={fileInputRef}

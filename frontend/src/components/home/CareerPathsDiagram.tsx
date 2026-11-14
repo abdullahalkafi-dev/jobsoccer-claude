@@ -3,11 +3,12 @@
 import { memo, useCallback, useMemo, useState } from "react";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
+import { useTranslations } from "next-intl";
 
 // Types
 interface CareerPath {
   id: number;
-  label: string;
+  key: string;
 }
 
 interface CareerNodeProps {
@@ -37,12 +38,12 @@ const DIAGRAM_CONFIG = {
 } as const;
 
 const CAREER_PATHS: readonly CareerPath[] = [
-  { id: 1, label: "On The Field Staff" },
-  { id: 2, label: "Player" },
-  { id: 3, label: "Club" },
-  { id: 4, label: "Office Staff" },
-  { id: 5, label: "College & University" },
-  { id: 6, label: "Agent" },
+  { id: 1, key: "onFieldStaff" },
+  { id: 2, key: "player" },
+  { id: 3, key: "club" },
+  { id: 4, key: "officeStaff" },
+  { id: 5, key: "college" },
+  { id: 6, key: "agent" },
 ] as const;
 
 // Career Node Component
@@ -61,7 +62,7 @@ const CareerNode = memo<CareerNodeProps>(
       `}
       style={{ animationDelay: `${animationDelay}s` }}
     >
-      <span className="text-sm md:text-base font-medium text-gray-700 whitespace-nowrap">
+      <span className="text-sm md:text-base font-medium text-gray-700 whitespace-nowrap text-center">
         {children}
       </span>
     </div>
@@ -110,7 +111,9 @@ const ConnectionLine = memo<ConnectionLineProps>(
 ConnectionLine.displayName = "ConnectionLine";
 
 // Central Logo Component
-const CentralLogo = memo(() => (
+const CentralLogo = memo(() => {
+  const t = useTranslations("home");
+  return (
   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
     <div className="relative w-32 h-32 animate-breathing-glow rounded-full">
       {/* Outer decorative rings */}
@@ -119,16 +122,18 @@ const CentralLogo = memo(() => (
 
       {/* Main circle with logo */}
       <div className="absolute inset-4 rounded-full flex items-center justify-center border border-gray-400">
-        <Image src={logo} alt="JS Logo" width={80} height={80} priority />
+        <Image src={logo} alt={t("diagram.logoAlt")} width={80} height={80} priority />
       </div>
     </div>
   </div>
-));
+  );
+});
 
 CentralLogo.displayName = "CentralLogo";
 
 // Main Career Paths Diagram Component
 export const CareerPathsDiagram = memo(() => {
+  const t = useTranslations("home");
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const handleMouseEnter = useCallback((id: number) => {
@@ -198,7 +203,7 @@ export const CareerPathsDiagram = memo(() => {
                   isHovered={hoveredId === path.id}
                   animationDelay={i * 0.2}
                 >
-                  {path.label}
+                  {t(`diagram.${path.key}`)}
                 </CareerNode>
               </div>
             </div>

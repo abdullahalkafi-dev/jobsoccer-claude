@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/redux/hooks";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -28,6 +29,7 @@ import { HighSchoolEmployerProfileForm } from "@/components/forms/HighSchoolEmpl
 import { ProfessionalClubEmployerProfileForm } from "@/components/forms/ProfessionalClubEmployerProfileForm";
 
 export default function EmployerProfilePage() {
+  const t = useTranslations("auth");
   const [formData, setFormData] = useState<{
     profileInfo?:
       | TAcademyEmployerProfile
@@ -117,10 +119,10 @@ export default function EmployerProfilePage() {
 
     const { data: userProfile } = await createUserProfile(formDataToSend);
     if (userProfile?.data.profileId) {
-      toast.success("Profile completed successfully!");
+      toast.success(t("profile.completed"));
       router.push("/");
     } else {
-      toast.error("Failed to create profile. Please try again.");
+      toast.error(t("profile.createFailed"));
     }
   };
 
@@ -201,7 +203,7 @@ export default function EmployerProfilePage() {
         className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
       >
         <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-        <span className="text-sm">Home</span>
+        <span className="text-sm">{t("home")}</span>
       </Link>
 
       {renderProfileForm()}

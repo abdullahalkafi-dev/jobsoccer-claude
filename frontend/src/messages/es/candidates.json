@@ -1,1 +1,111 @@
-{}
+{
+  "page": {
+    "onFieldStaff": "Personal de campo",
+    "officeStaff": "Personal de oficina",
+    "highSchoolPlayers": "Jugadores de secundaria",
+    "collegePlayers": "Jugadores universitarios",
+    "professionalPlayers": "Jugadores profesionales",
+    "amateurPlayers": "Jugadores amateur",
+    "empty": "No hay candidatos disponibles por el momento."
+  },
+  "search": {
+    "results": "Resultados de búsqueda",
+    "found": "{count, plural, one {<green>#</green> candidato encontrado} other {<green>#</green> candidatos encontrados}}",
+    "activeSearch": "Búsqueda activa:",
+    "searchFilter": "Búsqueda: <strong>{value}</strong>",
+    "roleFilter": "Rol: <strong>{value}</strong>",
+    "locationFilter": "Ubicación: <strong>{value}</strong>",
+    "noneTitle": "No se encontraron candidatos",
+    "noneHint": "Prueba a ajustar los criterios de búsqueda para encontrar más candidatos",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Página {page} de {total}",
+    "loading": "Cargando..."
+  },
+  "section": {
+    "seeAll": "Ver todo"
+  },
+  "preRecorded": {
+    "title": "¿Qué es una entrevista en video pregrabada?",
+    "intro": "En lugar de esperar a que un club programe una llamada, grabas un breve video respondiendo preguntas profesionales clave a tu ritmo y cuando quieras. Los clubes y las academias ven tu video antes incluso de contactarte. Así, cuando se pongan en contacto contigo, ya sabrán quién eres. Sin postulaciones en frío. Sin esperas. Solo oportunidades directas de clubes que ya están interesados en ti.",
+    "bullet": "Sé preseleccionado, destaca y consigue empleo más rápido que nunca"
+  },
+  "dreamTeam": {
+    "op1": "Crea tu perfil profesional y deja que clubes, agentes y ojeadores de todo el mundo te descubran",
+    "op2": "Sube tus videos de mejores jugadas y deja que tu juego hable por ti",
+    "op3": "Postúlate a ofertas de empleo de todos los niveles, profesionales y amateur, en todo el mundo",
+    "op4": "Jugadores: conecta con clubes, agentes y entrenadores para abrir puertas en todos los niveles del fútbol",
+    "op5": "Personal: ya seas entrenador, preparador físico, analista u ojeador, crea tu perfil profesional y graba tu entrevista en video pregrabada para que clubes y academias te encuentren según tu experiencia y conocimientos",
+    "title": "¡Tu carrera en el fútbol empieza aquí!",
+    "subtitle": "Para jugadores, entrenadores, analistas y personal: tu próxima oportunidad en el fútbol empieza aquí",
+    "jobPostings": "Ofertas de empleo",
+    "noJobs": "No hay empleos nuevos disponibles",
+    "seeAll": "Ver todo"
+  },
+  "detail": {
+    "loginToFollow": "Inicia sesión para seguir a candidatos",
+    "unfollowed": "Has dejado de seguir",
+    "followed": "Ahora sigues a este candidato",
+    "unfollowFailed": "No se pudo dejar de seguir al candidato",
+    "followFailed": "No se pudo seguir al candidato",
+    "friendRequestSent": "Solicitud enviada correctamente",
+    "friendRequestFailed": "No se pudo enviar la solicitud",
+    "user": "Usuario",
+    "notFoundTitle": "Usuario no encontrado",
+    "notFoundText": "El perfil que buscas no existe o ha sido eliminado.",
+    "bannerAlt": "Banner",
+    "verified": "Verificado",
+    "unfollowing": "Dejando de seguir...",
+    "following": "Siguiendo...",
+    "unfollow": "Dejar de seguir",
+    "follow": "Seguir",
+    "profileInformation": "Información del perfil",
+    "position": "Posición",
+    "nationality": "Nacionalidad",
+    "gender": "Género",
+    "height": "Estatura",
+    "weight": "Peso",
+    "currentClub": "Club actual",
+    "availableFrom": "Disponible desde",
+    "foot": "Pie",
+    "league": "Liga",
+    "country": "País",
+    "agent": "Agente",
+    "socialMedia": "Redes sociales",
+    "schoolName": "Nombre del colegio",
+    "collegeUniversity": "Universidad",
+    "diploma": "Titulación",
+    "profileQuality": "Calidad del perfil",
+    "followers": "Seguidores"
+  },
+  "accessModal": {
+    "title": "Solicitud de acceso",
+    "description": "Para ver más detalles del usuario, primero debes conectar con él",
+    "cancel": "Cancelar",
+    "sending": "Enviando...",
+    "requestAccess": "Solicitar acceso"
+  },
+  "videoModal": {
+    "candidate": "Candidato",
+    "videosOf": "Videos de {name}",
+    "videoN": "Video {number}",
+    "previous": "Video anterior",
+    "next": "Video siguiente",
+    "now": "Ahora"
+  },
+  "requests": {
+    "accepted": "Solicitud aceptada correctamente",
+    "acceptFailed": "No se pudo aceptar la solicitud",
+    "rejected": "Solicitud rechazada correctamente",
+    "rejectFailed": "No se pudo rechazar la solicitud",
+    "title": "Solicitudes de acceso",
+    "tabRequest": "Pendientes",
+    "tabAccepted": "Aceptadas",
+    "loadingRequests": "Cargando solicitudes...",
+    "loadRequestsFailed": "No se pudieron cargar las solicitudes",
+    "noPending": "No hay solicitudes pendientes",
+    "loadingFriends": "Cargando contactos...",
+    "loadFriendsFailed": "No se pudieron cargar los contactos",
+    "noAccepted": "No hay solicitudes aceptadas"
+  }
+}

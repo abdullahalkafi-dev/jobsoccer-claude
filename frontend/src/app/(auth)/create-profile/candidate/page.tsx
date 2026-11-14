@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { PersonalInfoForm } from "@/components/forms/PersonalInfoForm";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   type TPersonalInfo,
   type TProfessionalPlayerProfessionalInfo,
@@ -55,6 +56,7 @@ const buildProfileForm = (data: FormData): globalThis.FormData => {
 };
 
 export default function CandidateProfilePage() {
+  const t = useTranslations("auth");
   const user = useAppSelector((state) => state.auth.user);
   // A candidate who already saved the profile but left before uploading videos continues at the video step.
   const [currentStep, setCurrentStep] = useState(user?.profileId ? 3 : 1);
@@ -69,24 +71,24 @@ export default function CandidateProfilePage() {
     () => [
       {
         id: 1,
-        label: "Step 1",
+        label: t("profile.step", { n: 1 }),
         completed: currentStep > 1,
         active: currentStep === 1,
       },
       {
         id: 2,
-        label: "Step 2",
+        label: t("profile.step", { n: 2 }),
         completed: currentStep > 2,
         active: currentStep === 2,
       },
       {
         id: 3,
-        label: "Step 3",
+        label: t("profile.step", { n: 3 }),
         completed: currentStep > 3,
         active: currentStep === 3,
       },
     ],
-    [currentStep],
+    [currentStep, t],
   );
 
   if (!userRole) {
@@ -110,12 +112,12 @@ export default function CandidateProfilePage() {
       if ("error" in response) {
         const data = (response.error as { data?: { message?: string; errorSources?: { message?: string }[] } })?.data;
         const detail = data?.errorSources?.[0]?.message ?? data?.message;
-        toast.error(detail ?? "Could not save your profile. Please check the details and try again.");
+        toast.error(detail ?? t("profile.saveFailed"));
         return;
       }
       setCurrentStep(3);
     } catch (error) {
-      toast.error("An error occurred while saving your profile.");
+      toast.error(t("profile.saveError"));
       console.error("Profile creation error:", error);
     }
   };
@@ -222,7 +224,7 @@ export default function CandidateProfilePage() {
         className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
       >
         <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-        <span className="text-sm">Home</span>
+        <span className="text-sm">{t("home")}</span>
       </Link>
 
       {currentStep === 1 && (
@@ -237,7 +239,7 @@ export default function CandidateProfilePage() {
         <VideoUploadStep
           steps={steps}
           onFinish={() => {
-            toast.success("Profile completed successfully!");
+            toast.success(t("profile.completed"));
             router.push("/");
           }}
         />

@@ -29,8 +29,14 @@ import { AgentRatingComponent } from "@/components/shared/AgentRatingComponent";
 import { useGetEmployerByIdQuery } from "@/redux/features/employer/employerApi";
 import { detectSocialPlatform, formatUrl } from "@/utils/socialMedia";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
 
 export default function EmployerDetailsPage() {
+  const t = useTranslations("employers.detail");
+  const label = useOptionLabel();
+  const f = useFormats();
   const params = useParams();
   const employerId = params?.id as string;
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -71,7 +77,7 @@ export default function EmployerDetailsPage() {
   // Handle follow/unfollow
   const handleFollowToggle = async () => {
     if (!currentUser) {
-      toast.error("Please log in to follow employers");
+      toast.error(t("loginToFollow"));
       return;
     }
 
@@ -88,11 +94,11 @@ export default function EmployerDetailsPage() {
       if (isFollowing) {
         // Unfollow
         await unfollowEmployer(employerId).unwrap();
-        toast.success("Unfollowed successfully");
+        toast.success(t("unfollowed"));
       } else {
         // Follow
         await followEmployer(employerId).unwrap();
-        toast.success("Followed successfully");
+        toast.success(t("followed"));
       }
     } catch (error) {
       // Revert on error
@@ -101,7 +107,7 @@ export default function EmployerDetailsPage() {
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
-        `Failed to ${isFollowing ? "unfollow" : "follow"} employer`
+        (isFollowing ? t("unfollowFailed") : t("followFailed"))
       );
     }
   };
@@ -110,7 +116,7 @@ export default function EmployerDetailsPage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
   const displayName = employer
     ? `${employer.firstName} ${employer.lastName}`.trim()
-    : "Employer";
+    : t("employer");
 
   const displayAvatar = employer?.profileImage
     ? `${BASE_URL}${employer.profileImage}`
@@ -120,19 +126,15 @@ export default function EmployerDetailsPage() {
     ? `${BASE_URL}${employer.bannerImage}`
     : null;
 
-  const displayRole = employer?.role;
+  const displayRole = label("role", employer?.role);
 
   // Get verification status
   const verificationStatus = employer?.adminVerificationStatus;
 
   // Format founded date
   const formatFoundedDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    if (!dateString) return t("notAvailable");
+    return f.dateLong(dateString);
   };
 
   // Loading state
@@ -148,11 +150,10 @@ export default function EmployerDetailsPage() {
           <CardContent className="p-6 text-center">
             <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Employer Not Found
+              {t("notFoundTitle")}
             </h3>
             <p className="text-gray-600">
-              The employer profile you&apos;re looking for doesn&apos;t exist or
-              has been removed.
+              {t("notFoundText")}
             </p>
           </CardContent>
         </Card>
@@ -167,7 +168,7 @@ export default function EmployerDetailsPage() {
         {displayBanner && (
           <Image
             src={displayBanner}
-            alt="Banner"
+            alt={t("bannerAlt")}
             fill
             className="object-cover"
           />
@@ -259,18 +260,18 @@ export default function EmployerDetailsPage() {
                   }`}
               >
                 {isLoading ? (
-                  <>{isFollowing ? "Unfollowing..." : "Following..."}</>
+                  <>{isFollowing ? t("unfollowing") : t("following")}</>
                 ) : (
                   <>
                     {isFollowing ? (
                       <>
                         <UserMinus className="h-4 w-4" />
-                        Unfollow
+                        {t("unfollow")}
                       </>
                     ) : (
                       <>
                         <UserPlus className="h-4 w-4" />
-                        Follow
+                        {t("follow")}
                       </>
                     )}
                   </>
@@ -285,7 +286,7 @@ export default function EmployerDetailsPage() {
         {employer?.profile?.clubDescription && (
           <div className="mb-6 sm:mb-8">
             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
-              Overview
+              {t("overview")}
             </h2>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
               {employer.profile.clubDescription}
@@ -297,7 +298,7 @@ export default function EmployerDetailsPage() {
         {employer?.role === "Agent" && employer?.userType === "employer" && (
           <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-              Agent Rating
+              {t("agentRating")}
             </h2>
             <AgentRatingComponent
               agentUserId={employerId}
@@ -311,7 +312,7 @@ export default function EmployerDetailsPage() {
         <div className="bg-white rounded-lg border shadow border-gray-200 p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-              Professional Information
+              {t("professionalInformation")}
             </h2>
           </div>
 
@@ -320,7 +321,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.clubName && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Club Name
+                  {t("clubName")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.clubName}
@@ -332,7 +333,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.fifaLicenseNumber && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  License number
+                  {t("licenseNumber")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.fifaLicenseNumber}
@@ -344,10 +345,10 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.country && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Country
+                  {t("country")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
-                  {employer.profile.country}
+                  {label("country", employer.profile.country)}
                 </p>
               </div>
             )}
@@ -356,7 +357,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.phoneNumber && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Phone Number
+                  {t("phoneNumber")}
                 </label>
                 <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
                   <Phone className="h-4 w-4 text-gray-500 shrink-0" />
@@ -395,7 +396,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.address && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Address
+                  {t("address")}
                 </label>
                 <p className="text-gray-900 font-medium flex items-start gap-2 text-sm sm:text-base">
                   <MapPin className="h-4 w-4 text-gray-500 shrink-0 mt-0.5" />
@@ -408,7 +409,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.location && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Location
+                  {t("location")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.location}
@@ -420,7 +421,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.founded && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Founded
+                  {t("founded")}
                 </label>
                 <p className="text-gray-900 font-medium flex items-center gap-2 text-sm sm:text-base">
                   <Calendar className="h-4 w-4 text-gray-500 shrink-0" />
@@ -433,10 +434,10 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.level && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Level
+                  {t("level")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
-                  {employer.profile.level}
+                  {label("division", employer.profile.level)}
                 </p>
               </div>
             )}
@@ -445,10 +446,10 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.nationality && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Nationality
+                  {t("nationality")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
-                  {employer.profile.nationality}
+                  {label("country", employer.profile.nationality)}
                 </p>
               </div>
             )}
@@ -457,7 +458,7 @@ export default function EmployerDetailsPage() {
             {employer?.profile?.clubContact && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                  Club Contact
+                  {t("clubContact")}
                 </label>
                 <p className="text-gray-900 font-medium text-sm sm:text-base">
                   {employer.profile.clubContact}
@@ -468,7 +469,7 @@ export default function EmployerDetailsPage() {
             {/* Follower Count */}
             <div>
               <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                Followers
+                {t("followers")}
               </label>
               <p className="text-gray-900 font-medium text-sm sm:text-base">
                 {followerCount}

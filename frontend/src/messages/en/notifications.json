@@ -1,1 +1,21 @@
-{}
+{
+  "title": "Notifications",
+  "unreadCount": "{count, plural, one {# unread notification} other {# unread notifications}}",
+  "close": "Close",
+  "delete": "Delete notification",
+  "tabs": {
+    "all": "All",
+    "allCount": "All ({count})",
+    "unread": "Unread",
+    "unreadCount": "Unread ({count})"
+  },
+  "markAllRead": "Mark all as read",
+  "allCaughtUp": "All caught up!",
+  "noUnread": "No unread notifications",
+  "none": "You have no notifications",
+  "noneShort": "No notifications",
+  "previous": "Previous",
+  "next": "Next",
+  "pageOf": "Page {page} of {total}",
+  "justNow": "Just now"
+}

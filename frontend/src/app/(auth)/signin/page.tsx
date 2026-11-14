@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signInSchema, type SignInFormData } from "@/schemas/signinValidation";
+import { getSignInSchema, type SignInFormData } from "@/schemas/signinValidation";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
@@ -31,6 +32,9 @@ const readNextPath = (): string | null =>
   typeof window === "undefined" ? null : safeNextPath(new URLSearchParams(window.location.search).get("next"));
 
 export default function SignInPage() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
+  const signInSchema = useMemo(() => getSignInSchema(tv), [tv]);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
 
@@ -76,8 +80,8 @@ export default function SignInPage() {
         return;
       }
       if (res?.data?.accessToken) {
-        toast.success("Welcome back!", {
-          description: "You have successfully signed in to your account.",
+        toast.success(t("signin.welcomeBack"), {
+          description: t("signin.signedIn"),
         });
 
         form.reset();
@@ -96,7 +100,7 @@ export default function SignInPage() {
       const errorMessage =
         err?.data?.message ||
         err?.data?.errorSources?.[0]?.message ||
-        "Sign in failed. Please check your credentials and try again.";
+        t("signin.failed");
       setError(errorMessage);
       console.error("Sign in error:", error);
     }
@@ -125,11 +129,11 @@ export default function SignInPage() {
           className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
         >
           <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-          <span className="text-sm">Home</span>
+          <span className="text-sm">{t("home")}</span>
         </Link>
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
-            Welcome Back to Your Soccer Career Hub
+            {t("signin.heroTitle")}
           </h2>
         </div>
       </div>
@@ -139,7 +143,7 @@ export default function SignInPage() {
         <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              Sign in your account
+              {t("signin.title")}
             </h2>
           </div>
 
@@ -148,7 +152,7 @@ export default function SignInPage() {
               {/* Error Message */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
-                  <p className="font-medium">Error</p>
+                  <p className="font-medium">{t("error")}</p>
                   <p className="mt-1">{error}</p>
                 </div>
               )}
@@ -160,12 +164,12 @@ export default function SignInPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Email
+                      {t("fields.email")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
-                          placeholder="Enter your email"
+                          placeholder={t("fields.emailPlaceholder")}
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
@@ -184,19 +188,20 @@ export default function SignInPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Password
+                      {t("fields.password")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter your Password"
+                          placeholder={t("fields.passwordPlaceholder")}
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? t("fields.hidePassword") : t("fields.showPassword")}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2"
                         >
                           {showPassword ? (
@@ -218,7 +223,7 @@ export default function SignInPage() {
                 onClick={handleForgotPassword}
                 className="text-sm text-gray-600 hover:text-gray-800  cursor-pointer"
               >
-                Forgot Password?
+                {t("signin.forgot")}
               </button>
 
               {/* Login Button */}
@@ -227,7 +232,7 @@ export default function SignInPage() {
                 disabled={isLoggingIn}
                 className="w-full bg-primary hover:bg-amber-300 text-[#010A18] py-3 rounded-md"
               >
-                {isLoggingIn ? <Spinner /> : "Login"}
+                {isLoggingIn ? <Spinner /> : t("signin.submit")}
               </Button>
             </form>
           </Form>
@@ -238,22 +243,25 @@ export default function SignInPage() {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or</span>
+              <span className="px-2 bg-white text-gray-500">{t("or")}</span>
             </div>
           </div>
 
           {/* LinkedIn Login Button */}
           <LinkedInButton
             onClick={handleLinkedInLogin}
-            label="Sign in with LinkedIn"
+            label={t("signin.linkedin")}
           />
 
           {/* Sign up link */}
           <div className="text-center text-sm text-gray-600 mt-6">
-            Don&apos;t haven an account?{" "}
-            <Link href="/signup" className="underline">
-              Sign up free
-            </Link>
+            {t.rich("signin.noAccount", {
+              link: (chunks) => (
+                <Link href="/signup" className="underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
           </div>
         </div>
       </div>

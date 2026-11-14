@@ -2,6 +2,7 @@ import CandidateCard from "@/components/cards/CandidateCard";
 import { Button } from "@/components/ui/button";
 import { ICandidate } from "@/types/user";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface CandidateSectionProps {
   title: string;
@@ -14,6 +15,7 @@ const CandidateSection: React.FC<CandidateSectionProps> = ({
   candidates,
   searchRole,
 }) => {
+  const t = useTranslations("candidates.section");
   if (!candidates || candidates.length === 0) return null;
 
   return (
@@ -27,7 +29,7 @@ const CandidateSection: React.FC<CandidateSectionProps> = ({
           <Link
             href={`/candidates/search?role=${encodeURIComponent(searchRole)}`}
           >
-            See All
+            {t("seeAll")}
           </Link>
         </Button>
       </div>

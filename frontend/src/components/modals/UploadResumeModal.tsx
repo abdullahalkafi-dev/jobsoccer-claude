@@ -17,6 +17,8 @@ import {
 } from "@/redux/features/resume/resumeApi";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 
 interface UploadedFile {
   id: string;
@@ -39,6 +41,8 @@ export default function UploadResumeModal({
   onSubmitSuccess,
   mode = "jobApplication",
 }: UploadResumeModalProps) {
+  const t = useTranslations("modals");
+  const f = useFormats();
   const userId = useAppSelector((state) => state.auth.user?._id);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -104,7 +108,7 @@ export default function UploadResumeModal({
 
   const handleSubmit = async () => {
     if (!userId) {
-      toast.error("User not authenticated");
+      toast.error(t("resume.notAuthenticated"));
       return;
     }
 
@@ -119,7 +123,7 @@ export default function UploadResumeModal({
 
         const result = await createResume(formData).unwrap();
         resumeUrl = result.data?.resumeUrl || "";
-        toast.success("Resume uploaded successfully!");
+        toast.success(t("resume.uploaded"));
 
         // Reset form
         setUploadedFiles([]);
@@ -132,15 +136,15 @@ export default function UploadResumeModal({
         resumeUrl = selectedResume?.resumeUrl || "";
 
         if (mode === "profile") {
-          toast.success("Resume already in your profile!");
+          toast.success(t("resume.alreadyInProfile"));
         }
       } else {
-        toast.error("Please upload or select a resume");
+        toast.error(t("resume.selectFirst"));
         return;
       }
 
       if (!resumeUrl) {
-        toast.error("Failed to get resume URL");
+        toast.error(t("resume.noUrl"));
         return;
       }
 
@@ -160,7 +164,7 @@ export default function UploadResumeModal({
       }
     } catch (error: any) {
       console.log("=== UploadResumeModal: Error in handleSubmit ===", error);
-      toast.error(error.data?.message || "Failed to upload resume");
+      toast.error(error.data?.message || t("resume.uploadFailed"));
       console.error("Failed to upload resume:", error);
     }
   };
@@ -175,9 +179,7 @@ export default function UploadResumeModal({
       <DialogContent className="sm:max-w-[500px] md:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-left text-gray-900 font-medium">
-            {mode === "profile"
-              ? "Upload Your Resume"
-              : "You have to upload your resume (pdf) for applying this job"}
+            {mode === "profile" ? t("resume.titleProfile") : t("resume.titleApply")}
           </DialogTitle>
         </DialogHeader>
 
@@ -199,14 +201,16 @@ export default function UploadResumeModal({
               </div>
               <div>
                 <p className="text-gray-700 font-medium">
-                  Drag & Drop or{" "}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-blue-600 hover:text-blue-700 underline font-medium"
-                  >
-                    Choose file
-                  </button>{" "}
-                  to upload
+                  {t.rich("resume.dragDrop", {
+                    choose: (chunks) => (
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-blue-600 hover:text-blue-700 underline font-medium"
+                      >
+                        {chunks}
+                      </button>
+                    ),
+                  })}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">pdf</p>
               </div>
@@ -227,7 +231,7 @@ export default function UploadResumeModal({
           {existingResumes?.data && existingResumes.data.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-gray-700">
-                Your Uploaded Resumes
+                {t("resume.yourResumes")}
               </h4>
               <div className="space-y-2">
                 {existingResumes.data.map((resume: any) => (
@@ -246,10 +250,10 @@ export default function UploadResumeModal({
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          {resume.resumeFileName || "Resume.pdf"}
+                          {resume.resumeFileName || t("resume.defaultName")}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {new Date(resume.createdAt).toLocaleDateString()}
+                          {f.date(resume.createdAt)}
                         </p>
                       </div>
                     </div>
@@ -263,7 +267,7 @@ export default function UploadResumeModal({
           {uploadedFiles.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-gray-700">
-                New File to Upload
+                {t("resume.newFile")}
               </h4>
               <div className="space-y-2">
                 {uploadedFiles.map((file) => (
@@ -299,7 +303,7 @@ export default function UploadResumeModal({
 
         <DialogFooter className="flex-row justify-between sm:justify-between">
           <Button variant="outline" onClick={onClose} disabled={isCreating}>
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -309,10 +313,10 @@ export default function UploadResumeModal({
             className="bg-green-600 hover:bg-green-700 text-white"
           >
             {isCreating
-              ? "Uploading..."
+              ? t("resume.uploading")
               : mode === "profile"
-              ? "Upload Resume"
-              : "Submit Now"}
+              ? t("resume.uploadButton")
+              : t("resume.submitNow")}
           </Button>
         </DialogFooter>
       </DialogContent>

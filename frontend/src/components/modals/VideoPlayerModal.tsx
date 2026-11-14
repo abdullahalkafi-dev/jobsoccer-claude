@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Video } from "@/types/user";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface VideoPlayerModalProps {
   isOpen: boolean;
@@ -41,8 +42,10 @@ export default function VideoPlayerModal({
   onClose,
   videos,
   initialVideoIndex = 0,
-  candidateName = "Candidate",
+  candidateName,
 }: VideoPlayerModalProps) {
+  const t = useTranslations("candidates.videoModal");
+  const displayName = candidateName || t("candidate");
   const [currentIndex, setCurrentIndex] = useState(initialVideoIndex);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -250,10 +253,10 @@ export default function VideoPlayerModal({
           <div className="flex items-center justify-between gap-2">
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-white text-base sm:text-lg md:text-xl font-semibold truncate">
-                {candidateName}&apos;s Videos
+                {t("videosOf", { name: displayName })}
               </DialogTitle>
               <p className="text-gray-400 text-xs sm:text-sm mt-1 truncate">
-                {currentVideo?.title || `Video ${currentIndex + 1}`}
+                {currentVideo?.title || t("videoN", { number: currentIndex + 1 })}
               </p>
             </div>
             <Button
@@ -288,7 +291,7 @@ export default function VideoPlayerModal({
               crossOrigin="anonymous"
               playsInline
               preload="metadata"
-              aria-label={currentVideo?.title || `Video ${currentIndex + 1}`}
+              aria-label={currentVideo?.title || t("videoN", { number: currentIndex + 1 })}
             />
 
             {/* Play/Pause Overlay */}
@@ -375,7 +378,7 @@ export default function VideoPlayerModal({
                 size="icon"
                 variant="ghost"
                 className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 text-white hover:text-white bg-black/50 hover:bg-black/70 h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full z-20"
-                aria-label="Previous video"
+                aria-label={t("previous")}
               >
                 <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
@@ -385,7 +388,7 @@ export default function VideoPlayerModal({
                 size="icon"
                 variant="ghost"
                 className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 text-white hover:text-white bg-black/50 hover:bg-black/70 h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full z-20"
-                aria-label="Next video"
+                aria-label={t("next")}
               >
                 <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
@@ -424,12 +427,12 @@ export default function VideoPlayerModal({
                     </div>
                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent flex items-end p-1 sm:p-2">
                       <span className="text-white text-[10px] sm:text-xs font-medium truncate w-full">
-                        {video.title || `Video ${index + 1}`}
+                        {video.title || t("videoN", { number: index + 1 })}
                       </span>
                     </div>
                     {currentIndex === index && (
                       <div className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 bg-yellow-400 text-black text-[9px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-full font-semibold">
-                        Now
+                        {t("now")}
                       </div>
                     )}
                   </button>

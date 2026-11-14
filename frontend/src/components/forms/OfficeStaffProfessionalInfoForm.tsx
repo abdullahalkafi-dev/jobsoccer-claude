@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
@@ -14,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { officeStaffProfessionalInfoSchema } from "@/schemas/profileValidation";
+import { getOfficeStaffProfessionalInfoSchema } from "@/schemas/profileValidation";
 import { TOfficeStaffProfessionalInfo } from "@/types/profile";
 import {
   countryList,
@@ -40,13 +43,18 @@ export function OfficeStaffProfessionalInfoForm({
   initialData,
   steps,
 }: IOfficeStaffProfessionalInfoFormProps) {
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
+  const schema = useMemo(() => getOfficeStaffProfessionalInfoSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
     setValue: rawSetValue,
     formState: { errors, isValid },
   } = useForm<TOfficeStaffProfessionalInfo>({
-    resolver: zodResolver(officeStaffProfessionalInfoSchema),
+    resolver: zodResolver(schema),
     defaultValues: initialData,
     mode: "onChange",
   });
@@ -68,30 +76,30 @@ export function OfficeStaffProfessionalInfoForm({
       isNextDisabled={!isValid}
     >
       <form className="space-y-8">
-        <FormSection title="Professional Information">
+        <FormSection title={t("section.professionalInformation")}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Current Employer */}
             <FormField
-              label="Current Employer"
+              label={t("label.currentEmployer")}
               error={errors.currentClub?.message}
             >
               <Input
                 {...register("currentClub")}
-                placeholder="Ex. Real Madrid"
+                placeholder={t("placeholder.exRealMadrid")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Gender */}
-            <FormField label="Gender" error={errors.gender?.message}>
-              <Select onValueChange={(value) => setValue("gender", value)}>
+            <FormField label={t("label.gender")} error={errors.gender?.message}>
+              <Select defaultValue={initialData?.gender as string | undefined} onValueChange={(value) => setValue("gender", value)}>
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select gender" />
+                  <SelectValue placeholder={t("placeholder.selectGender")} />
                 </SelectTrigger>
                 <SelectContent>
                   {genderOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("gender", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -100,26 +108,26 @@ export function OfficeStaffProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Available from (optional)"
+              label={t("label.availableFromOptional")}
               error={errors.availability?.message}
             >
               <Input
                 {...register("availability")}
-                placeholder="Ex. Immediately, or January 2027"
+                placeholder={t("placeholder.exImmediatelyOrJanuary2027")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Country */}
-            <FormField label="Country" error={errors.country?.message}>
-              <Select onValueChange={(value) => setValue("country", value)}>
+            <FormField label={t("label.country")} error={errors.country?.message}>
+              <Select defaultValue={initialData?.country as string | undefined} onValueChange={(value) => setValue("country", value)}>
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t("placeholder.selectCountry")} />
                 </SelectTrigger>
                 <SelectContent>
                   {countryList.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("country", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -128,29 +136,29 @@ export function OfficeStaffProfessionalInfoForm({
 
             {/* Agent */}
             <FormField
-              label="Agent (if applicable)"
+              label={t("label.agentIfApplicable")}
               error={errors.agent?.message}
             >
               <Input
                 {...register("agent")}
-                placeholder="Write your agent's name"
+                placeholder={t("placeholder.writeYourAgentSName")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Position */}
             <FormField
-              label="Select Your Position"
+              label={t("label.selectYourPosition")}
               error={errors.position?.message}
             >
-              <Select onValueChange={(value) => setValue("position", value)}>
+              <Select defaultValue={initialData?.position as string | undefined} onValueChange={(value) => setValue("position", value)}>
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select position" />
+                  <SelectValue placeholder={t("placeholder.selectPosition")} />
                 </SelectTrigger>
                 <SelectContent>
                   {officeStaffPositionOptions.map((pos) => (
                     <SelectItem key={pos} value={pos}>
-                      {pos}
+                      {label("position", pos)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -158,22 +166,22 @@ export function OfficeStaffProfessionalInfoForm({
             </FormField>
 
             {/* Languages */}
-            <FormField label="Languages" error={errors.languages?.message}>
+            <FormField label={t("label.languages")} error={errors.languages?.message}>
               <Input
                 {...register("languages")}
-                placeholder="Write your languages"
+                placeholder={t("placeholder.writeYourLanguages")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Social Media */}
             <FormField
-              label="Social Media (optional)"
+              label={t("label.socialMediaOptional")}
               error={errors.socialMedia?.message}
             >
               <Input
                 {...register("socialMedia")}
-                placeholder="https://www.example.com"
+                placeholder={t("placeholder.httpsWwwExampleCom")}
                 className="bg-gray-50 border-0"
               />
             </FormField>

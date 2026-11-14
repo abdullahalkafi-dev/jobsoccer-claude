@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface AccessRequestModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function AccessRequestModal({
   onRequestAccess,
   isLoading = false,
 }: AccessRequestModalProps) {
+  const t = useTranslations("candidates.accessModal");
   return (
     <Dialog open={isOpen} onOpenChange={isLoading ? undefined : onClose}>
       <DialogContent
@@ -33,11 +35,10 @@ export default function AccessRequestModal({
       >
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
-            Access Request
+            {t("title")}
           </DialogTitle>
           <DialogDescription className="text-gray-600 pt-3 text-center">
-            To view more details about the user, you need to connect with them
-            first
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -49,7 +50,7 @@ export default function AccessRequestModal({
             disabled={isLoading}
             className="w-full sm:w-auto order-2 sm:order-1"
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             type="button"
@@ -60,10 +61,10 @@ export default function AccessRequestModal({
             {isLoading ? (
               <>
                 <span className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Sending...
+                {t("sending")}
               </>
             ) : (
-              "Request Access"
+              t("requestAccess")
             )}
           </Button>
         </DialogFooter>

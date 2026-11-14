@@ -1,1 +1,71 @@
-{}
+{
+  "kind": {
+    "Interview": "interview",
+    "Methodology": "methodology",
+    "Highlights": "highlights"
+  },
+  "consent": {
+    "title": "Before you upload"
+  },
+  "setup": {
+    "ariaLabel": "How to set yourself up for the video interview",
+    "correctAlt": "Correct set-up: sitting on a sofa, shown from head to knees",
+    "wrongAlt": "Not this: sitting behind a table, shown from the waist up",
+    "correctText": "<b>Do this:</b> sit on a chair or sofa (or stand), camera shows you from head to knees, hands in view.",
+    "wrongText": "<b>Not this:</b> behind a desk or table, cut off at the waist. Notes or screens could be hidden."
+  },
+  "slot": {
+    "required": "Required",
+    "optional": "Optional",
+    "upTo": "up to {max}",
+    "upToEach": "up to {max} each",
+    "recordingGuide": "Recording guide",
+    "fileName": "Recommended file name: {name}",
+    "captionsReady": "{length} · English captions ready",
+    "captionsCreating": "{length} · captions are being created",
+    "lockedUntil": "Locked until {date}",
+    "replace": "Replace",
+    "chooseHighlight": "Choose highlight video {n}",
+    "chooseVideo": "Choose your video",
+    "fileHint": "MP4 or MOV, up to {max} MB",
+    "tickConsent": "Please tick the confirmations above before uploading."
+  },
+  "upload": {
+    "bytes": "{done} of {total} MB",
+    "speedMb": "{value} MB/s",
+    "speedKb": "{value} KB/s",
+    "timeEstimating": "estimating time left…",
+    "timeLessMinute": "less than a minute left",
+    "timeMinutes": "about {minutes} min left",
+    "timeHoursMinutes": "about {hours} h {minutes} min left",
+    "progress": "Uploading… {percent}% · {done} · {left}",
+    "progressSpeed": "Uploading… {percent}% · {done} · {speed} · {left}",
+    "retryCountdown": "Connection lost after {done}. Trying again in {seconds} s… Nothing is lost: the upload continues from where it stopped.",
+    "retryNow": "Connection lost after {done}. Trying again… Nothing is lost: the upload continues from where it stopped.",
+    "resumed": "Continuing your earlier upload of this file from {done} MB.",
+    "checking": "Upload complete. Checking your video (length, quality, sound)…",
+    "saving": "Saving your video…",
+    "hint": "You can keep using the website while it uploads. If the connection drops, the upload continues by itself. If you close this tab, choose the same file again to continue where it stopped.",
+    "errors": {
+      "FILE_TYPE": "Please choose an MP4 or MOV video.",
+      "FILE_SIZE": "This video is {size} MB. The maximum is {max} MB.",
+      "FILE_LONG": "This video is {length} long. The maximum is {max}.",
+      "FILE_RESOLUTION": "This video is {width}x{height}. The minimum quality is 720p (1280x720).",
+      "TIMEOUT": "The upload took longer than {minutes} minutes and was stopped. Please try again on a faster connection, or export the video at 720p so the file is smaller.",
+      "TOO_LARGE": "This video is larger than {megabytes} MB.",
+      "NETWORK": "The connection was interrupted during the upload, so the video was not saved. Please check your internet connection and upload it again.",
+      "CANCELLED": "Upload cancelled.",
+      "FAILED": "The upload failed. Please try again.",
+      "SERVER": "The upload failed. Please try again."
+    }
+  },
+  "step": {
+    "loadError": "We could not load your video requirements. Please refresh the page.",
+    "stillNeeded": "Still needed: your {kinds} video. This video is required to complete your profile and apply for jobs.",
+    "stillNeededMany": "Still needed: your {kinds} video. These videos are required to complete your profile and apply for jobs.",
+    "subtitle": "Employers watch these to get to know you.",
+    "subtitleInterview": "Employers watch these to get to know you. Your interview is scored by AI in the background, so you can keep using the website while it is checked.",
+    "title": "Upload your videos",
+    "complete": "Complete"
+  }
+}

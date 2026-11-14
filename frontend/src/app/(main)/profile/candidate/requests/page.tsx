@@ -10,9 +10,11 @@ import {
 import { toast } from "sonner";
 import RequestCard from "@/components/cards/RequestCard";
 import AcceptedRequestCard from "@/components/cards/AcceptedRequestCard";
+import { useTranslations } from "next-intl";
 
 // Main Component
 const AcceptRequestInterface: React.FC = () => {
+  const t = useTranslations("candidates.requests");
   const [activeTab, setActiveTab] = useState<"Request" | "Accepted">("Request");
   const [page] = useState(1);
   const limit = 10;
@@ -43,9 +45,9 @@ const AcceptRequestInterface: React.FC = () => {
         body: { status: "accepted" },
       }).unwrap();
 
-      toast.success(result.message || "Friend request accepted successfully");
+      toast.success(result.message || t("accepted"));
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to accept friend request");
+      toast.error(error?.data?.message || t("acceptFailed"));
     }
   };
 
@@ -57,9 +59,9 @@ const AcceptRequestInterface: React.FC = () => {
         body: { status: "rejected" },
       }).unwrap();
 
-      toast.success(result.message || "Friend request rejected successfully");
+      toast.success(result.message || t("rejected"));
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to reject friend request");
+      toast.error(error?.data?.message || t("rejectFailed"));
     }
   };
 
@@ -74,7 +76,7 @@ const AcceptRequestInterface: React.FC = () => {
     <div className="flex-1 min-h-screen border rounded-2xl">
       {/* Header */}
       <div className="border-b border-gray-200 px-6 py-4">
-        <h1 className="text-xl font-semibold text-gray-900">Access Request</h1>
+        <h1 className="text-xl font-semibold text-gray-900">{t("title")}</h1>
       </div>
 
       {/* Tabs */}
@@ -91,7 +93,7 @@ const AcceptRequestInterface: React.FC = () => {
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                {tab} ({getTabCount(tab as "Request" | "Accepted")})
+                {tab === "Request" ? t("tabRequest") : t("tabAccepted")} ({getTabCount(tab as "Request" | "Accepted")})
               </button>
             ))}
           </div>
@@ -105,16 +107,16 @@ const AcceptRequestInterface: React.FC = () => {
             <>
               {isLoadingRequests ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">Loading requests...</p>
+                  <p className="text-gray-500">{t("loadingRequests")}</p>
                 </div>
               ) : requestsError ? (
                 <div className="p-8 text-center">
-                  <p className="text-red-500">Failed to load requests</p>
+                  <p className="text-red-500">{t("loadRequestsFailed")}</p>
                 </div>
               ) : !receivedRequestsData?.data ||
                 receivedRequestsData.data.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">No pending requests</p>
+                  <p className="text-gray-500">{t("noPending")}</p>
                 </div>
               ) : (
                 <div>
@@ -134,16 +136,16 @@ const AcceptRequestInterface: React.FC = () => {
             <>
               {isLoadingFriends ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">Loading friends...</p>
+                  <p className="text-gray-500">{t("loadingFriends")}</p>
                 </div>
               ) : friendsError ? (
                 <div className="p-8 text-center">
-                  <p className="text-red-500">Failed to load friends</p>
+                  <p className="text-red-500">{t("loadFriendsFailed")}</p>
                 </div>
               ) : !friendsListData?.data ||
                 friendsListData.data.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">No accepted requests</p>
+                  <p className="text-gray-500">{t("noAccepted")}</p>
                 </div>
               ) : (
                 <div>

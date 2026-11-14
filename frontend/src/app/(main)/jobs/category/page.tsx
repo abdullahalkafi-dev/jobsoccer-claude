@@ -11,8 +11,10 @@ import { useSearchParams } from "next/navigation";
 import { JobSearch } from "@/components/search/JobSearch";
 import { JobFilters } from "@/components/jobs/JobFilters";
 import { Suspense } from "react";
+import { useTranslations } from "next-intl";
 
 function JobBoardCategoryPageContent() {
+  const t = useTranslations("pages");
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
 
@@ -141,9 +143,10 @@ function JobBoardCategoryPageContent() {
     <div>
       <div className="bg-[#F7F6F2]">
         <h2 className="text-3xl md:text-4xl text-[#362F05] text-center pt-10 mb-24">
-          Find Your <span className="text-green-400">Ultimate Job</span>
-          <br />
-          Search Companion
+          {t.rich("category.title", {
+            highlight: (chunks) => <span className="text-green-400">{chunks}</span>,
+            br: () => <br />,
+          })}
         </h2>
         <JobSearch />
         <JobFilters />
@@ -151,7 +154,7 @@ function JobBoardCategoryPageContent() {
       {/* Jobs */}
       <div className="container mx-auto px-4 md:px-0">
         <h2 className="text-3xl md:text-4xl font-semibold my-10">
-          {category ? `${formattedCategory}` : "All Jobs"}
+          {category ? `${formattedCategory}` : t("category.allJobs")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4 mb-8">
           {jobPosts.map((job) => (
@@ -163,9 +166,14 @@ function JobBoardCategoryPageContent() {
   );
 }
 
+function CategoryLoading() {
+  const t = useTranslations("pages");
+  return <div>{t("category.loading")}</div>;
+}
+
 export default function JobBoardCategoryPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CategoryLoading />}>
       <JobBoardCategoryPageContent />
     </Suspense>
   );

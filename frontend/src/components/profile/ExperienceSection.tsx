@@ -22,6 +22,8 @@ import {
 import { ExperienceData } from "@/types/experience";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import AddExperienceModal from "@/components/modals/AddExperienceModal";
 import EditExperienceModal from "@/components/modals/EditExperienceModal";
 
@@ -34,6 +36,7 @@ export default function ExperienceSection({
   userId,
   readOnly = false,
 }: ExperienceSectionProps) {
+  const t = useTranslations("profile");
   const [deleteExperience] = useDeleteExperienceMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -64,11 +67,11 @@ export default function ExperienceSection({
     try {
       const result = await deleteExperience(experienceToDelete.id).unwrap();
       if (result.success) {
-        toast.success(result.message || "Experience deleted successfully!");
+        toast.success(result.message || t("experience.deleted"));
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.message || "Failed to delete experience. Please try again."
+        error?.data?.message || t("experience.deleteFailed")
       );
       console.error("Error deleting experience:", error);
     } finally {
@@ -87,7 +90,7 @@ export default function ExperienceSection({
       <Card className="mb-6">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-md md:text-xl">Experience</CardTitle>
+            <CardTitle className="text-md md:text-xl">{t("experience.title")}</CardTitle>
             {!readOnly && (
               <Button
                 variant="ghost"
@@ -95,7 +98,7 @@ export default function ExperienceSection({
                 onClick={() => setIsAddModalOpen(true)}
               >
                 <Plus className="h-4 w-4" />
-                Add
+                {t("common.add")}
               </Button>
             )}
           </div>
@@ -108,13 +111,13 @@ export default function ExperienceSection({
             </div>
           ) : experiencesError ? (
             <div className="text-center py-12">
-              <p className="text-red-600 mb-2">Failed to load experiences</p>
+              <p className="text-red-600 mb-2">{t("experience.loadError")}</p>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => window.location.reload()}
               >
-                Try Again
+                {t("common.tryAgain")}
               </Button>
             </div>
           ) : !experiencesData?.data || experiencesData.data.length === 0 ? (
@@ -154,20 +157,21 @@ export default function ExperienceSection({
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t("common.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete your experience at{" "}
-              <span className="font-semibold">{experienceToDelete?.name}</span>.
-              This action cannot be undone.
+              {t.rich("experience.deleteDesc", {
+                name: experienceToDelete?.name ?? "",
+                b: (chunks) => <span className="font-semibold">{chunks}</span>,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white"
             >
-              Delete
+              {t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -185,18 +189,19 @@ function EmptyExperienceState({
   onAddClick,
   readOnly = false,
 }: EmptyExperienceStateProps) {
+  const t = useTranslations("profile.experience");
   return (
     <div className="text-center py-5 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <Award className="h-8 w-8 text-gray-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-        No Experience Added Yet
+        {t("emptyTitle")}
       </h3>
       <p className="text-gray-600 mb-4 max-w-md mx-auto">
         {readOnly
-          ? "This user hasn't added any experience yet."
-          : "Showcase your professional journey by adding your work experience. This helps employers understand your background and expertise."}
+          ? t("emptyReadOnly")
+          : t("emptyOwner")}
       </p>
       {!readOnly && (
         <Button
@@ -204,7 +209,7 @@ function EmptyExperienceState({
           className="bg-black hover:bg-gray-800 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Your First Experience
+          {t("addFirst")}
         </Button>
       )}
     </div>
@@ -252,10 +257,14 @@ function ExperienceItem({
   onDeleteClick,
   readOnly = false,
 }: ExperienceItemProps) {
+  const t = useTranslations("profile");
+  const label = useOptionLabel();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const formatEmploymentType = (type: string) => {
-    return type.replace(/([A-Z])/g, " $1").trim();
+    return t.has(`employmentTypes.${type}`)
+      ? t(`employmentTypes.${type}`)
+      : type.replace(/([A-Z])/g, " $1").trim();
   };
 
   const handleDelete = async () => {
@@ -281,10 +290,12 @@ function ExperienceItem({
               {formatEmploymentType(experience.employmentType)}
             </p>
             <p className="text-sm text-gray-500">
-              {experience.startMonth} {experience.startYear} -{" "}
-              {experience.isCurrentlyWorking
-                ? "Present"
-                : `${experience.endMonth} ${experience.endYear}`}
+              {t("common.dateRange", {
+                start: `${label("month", experience.startMonth)} ${experience.startYear}`,
+                end: experience.isCurrentlyWorking
+                  ? t("common.present")
+                  : `${label("month", experience.endMonth)} ${experience.endYear}`,
+              })}
             </p>
             <div className="flex items-center mt-1">
               <MapPin className="h-4 w-4 text-gray-400 mr-1" />

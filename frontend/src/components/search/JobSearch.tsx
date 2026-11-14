@@ -2,7 +2,10 @@
 
 import type React from "react";
 import { useState } from "react";
-import { Search, MapPin } from "lucide-react";
+import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
+import { CountrySelect } from "./CountrySelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
@@ -18,6 +21,8 @@ import { candidateRoles } from "@/schemas/signupValidation";
 import { useGetPopularSearchQuery } from "@/redux/features/job/jobApi";
 
 export function JobSearch() {
+  const t = useTranslations("jobs.search");
+  const label = useOptionLabel();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -59,7 +64,7 @@ export function JobSearch() {
           <div className="relative w-full lg:w-64 border md:border-0 rounded-lg">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
-              placeholder="Search by job title"
+              placeholder={t("jobTitle")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -69,13 +74,13 @@ export function JobSearch() {
 
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full lg:w-64 border py-6 md:py-0  md:border-none shadow-none">
-              <SelectValue placeholder="Select job category" />
+              <SelectValue placeholder={t("jobCategory")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {candidateRoles.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role}
+                    {label("role", role)}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -83,24 +88,15 @@ export function JobSearch() {
           </Select>
 
           {/* Location */}
-          <div className="relative w-full lg:w-64 border md:border-0 rounded-lg">
-            <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              placeholder="Location"
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="pl-12 h-12 border-none shadow-none bg-transparent text-gray-700 placeholder:text-gray-400 focus-visible:ring-0"
-            />
-          </div>
+          <CountrySelect value={selectedLocation} onChange={setSelectedLocation} />
 
           {/* Search Button */}
           <Button
             onClick={handleSearch}
-            className="h-12 w-full md:w-52 bg-yellow-300 hover:scale-105 transition-transform duration-200 rounded-xl font-medium"
+            className="h-12 w-full md:w-52 whitespace-normal bg-yellow-300 hover:scale-105 transition-transform duration-200 rounded-xl font-medium"
           >
             <Search className="w-4 h-4 mr-1" />
-            Search
+            {t("search")}
           </Button>
         </div>
       </div>
@@ -108,7 +104,7 @@ export function JobSearch() {
       {/* Popular Searches */}
       {popularSearches.length > 0 && (
         <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-          <span className="text-gray-600 font-medium">Popular Searches:</span>
+          <span className="text-gray-600 font-medium">{t("popular")}</span>
           <div className="flex flex-wrap gap-2">
             {popularSearches.map((search, index) => (
               <button

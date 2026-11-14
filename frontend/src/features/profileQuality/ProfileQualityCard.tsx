@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QualityStars } from "./QualityStars";
@@ -37,6 +38,7 @@ function ProfileQualitySkeleton() {
 }
 
 export function ProfileQualityCard() {
+  const t = useTranslations("quality");
   const { data, isLoading } = useGetMyProfileQualityQuery();
   if (isLoading) return <ProfileQualitySkeleton />;
 
@@ -49,7 +51,7 @@ export function ProfileQualityCard() {
       <CardContent className="space-y-5 p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Profile Quality</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t("title")}</h3>
             <QualityStars quality={quality} size="lg" />
           </div>
           <p className="text-3xl font-bold text-gray-900">
@@ -62,9 +64,9 @@ export function ProfileQualityCard() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
               <tr>
-                <th className="px-3 py-2">Category</th>
-                <th className="px-3 py-2 text-right">Earned</th>
-                <th className="px-3 py-2 text-right">Maximum</th>
+                <th className="px-3 py-2">{t("card.category")}</th>
+                <th className="px-3 py-2 text-right">{t("card.earned")}</th>
+                <th className="px-3 py-2 text-right">{t("card.maximum")}</th>
               </tr>
             </thead>
             <tbody>
@@ -81,17 +83,17 @@ export function ProfileQualityCard() {
 
         {toPremium === 0 ? (
           <p className="rounded-md bg-green-50 p-3 text-sm text-green-800">
-            You are <strong>Premium Qualified</strong>: you can apply to premium opportunities.
+            {t.rich("card.premiumQualified", { b: (chunks) => <strong>{chunks}</strong> })}
           </p>
         ) : (
           <p className="text-sm text-gray-600">
-            <strong>{toPremium} more points</strong> unlock premium opportunities (5 stars).
+            {t.rich("card.morePoints", { points: toPremium, b: (chunks) => <strong>{chunks}</strong> })}
           </p>
         )}
 
         {quality.tips.length > 0 && (
           <div>
-            <h4 className="mb-2 text-sm font-semibold text-gray-900">How to improve</h4>
+            <h4 className="mb-2 text-sm font-semibold text-gray-900">{t("card.howToImprove")}</h4>
             <ul className="list-disc space-y-1 pl-5 text-sm text-gray-700">
               {quality.tips.map((tip) => (
                 <li key={tip}>{tip}</li>
@@ -101,7 +103,7 @@ export function ProfileQualityCard() {
         )}
 
         <p className="text-xs text-gray-500">
-          This score shows how complete and verified your profile is. It is not a measure of your professional ability, and a high score does not guarantee a job.
+          {t("card.disclaimer")}
         </p>
       </CardContent>
     </Card>

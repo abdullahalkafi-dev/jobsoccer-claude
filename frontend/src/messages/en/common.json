@@ -3,5 +3,54 @@
     "title": "Jobsoccer",
     "description": "Explore global soccer jobs for coaches, scouts, analysts & more. Your soccer career starts here!"
   },
-  "language": { "label": "Language" }
+  "language": {
+    "label": "Language"
+  },
+  "ui": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading…",
+    "close": "Close",
+    "search": "Search"
+  },
+  "loginRequired": {
+    "title": "Login Required",
+    "message": "Please log in to continue with this action.",
+    "login": "Login"
+  },
+  "logout": {
+    "closeAria": "Close modal",
+    "title": "Logout Confirmation",
+    "description": "Are you sure you want to logout? You'll need to sign in again to access your account.",
+    "confirm": "Yes, Logout"
+  },
+  "footer": {
+    "logoAria": "Jobsoccer logo",
+    "logoAlt": "JOBSOCCER.COM - Where soccer careers begin",
+    "home": "Home",
+    "about": "About Us",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "terms": "Terms of Use",
+    "privacy": "Privacy policy",
+    "newsletterTitle": "Subscribe To Our Newsletter",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe"
+  },
+  "agentRating": {
+    "loading": "Loading rating information...",
+    "loginToRate": "Please log in to rate this agent",
+    "noRatingShort": "No",
+    "ratingCount": "{count, plural, one {# rating} other {# ratings}}",
+    "noRatings": "No ratings yet",
+    "onlyCandidates": "Only candidates can rate agents",
+    "onlyAgents": "Only agents can be rated",
+    "cannotRateSelf": "You cannot rate yourself",
+    "alreadyRated": "You have already rated this agent",
+    "submitFailed": "Failed to submit rating",
+    "shareExperience": "Share your experience with this agent",
+    "rateStars": "Rate {count, plural, one {# star} other {# stars}}",
+    "youRated": "You rated this agent",
+    "success": "Rating submitted successfully!"
+  }
 }

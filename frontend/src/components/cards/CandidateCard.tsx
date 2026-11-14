@@ -24,8 +24,12 @@ import VideoPlayerModal from "../modals/VideoPlayerModal";
 import { useSendFriendRequestMutation } from "@/redux/features/user/userApi";
 import userPlaceholder from "@/assets/user-placeholder.png";
 import { QualityStars } from "@/features/profileQuality/QualityStars";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: number }) {
+  const t = useTranslations("cards.candidate");
+  const label = useOptionLabel();
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
   const quality = candidate.profileQuality ?? null;
@@ -67,26 +71,26 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
     const status = friendRequestStatus;
 
     if (!status) {
-      return { text: "Request Access", disabled: false, icon: Lock };
+      return { text: t("requestAccess"), disabled: false, icon: Lock };
     }
 
     if (status.status === "pending" && status.type === "sent") {
-      return { text: "Request Sent", disabled: true, icon: Lock };
+      return { text: t("requestSent"), disabled: true, icon: Lock };
     }
 
     if (status.status === "pending" && status.type === "received") {
-      return { text: "Accept Request", disabled: false, icon: Lock };
+      return { text: t("acceptRequest"), disabled: false, icon: Lock };
     }
 
     if (status.status === "accepted") {
-      return { text: "Friends", disabled: true, icon: Lock };
+      return { text: t("friends"), disabled: true, icon: Lock };
     }
 
     if (status.status === "rejected") {
-      return { text: "Request Again", disabled: false, icon: Lock };
+      return { text: t("requestAgain"), disabled: false, icon: Lock };
     }
 
-    return { text: "Request Access", disabled: false, icon: Lock };
+    return { text: t("requestAccess"), disabled: false, icon: Lock };
   };
 
   // Handle friend request
@@ -117,12 +121,12 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
       }
 
       await sendFriendRequest(candidate._id).unwrap();
-      toast.success("Friend request sent successfully");
+      toast.success(t("friendRequestSent"));
     } catch (error) {
       // Revert on error
       setLocalFriendRequestStatus(currentStatus);
       const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to send friend request");
+      toast.error(err?.data?.message || t("friendRequestFailed"));
     }
   };
 
@@ -146,24 +150,24 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
       if (isShortlisted) {
         await removeFromShortlistApi(candidate._id).unwrap();
         dispatch(removeFromShortlist(candidate._id));
-        toast.success("Removed from shortlist");
+        toast.success(t("removedFromShortlist"));
       } else {
         await shortlistCandidate(candidate._id).unwrap();
         dispatch(addToShortlist(candidate._id));
-        toast.success("Added to shortlist");
+        toast.success(t("addedToShortlist"));
       }
     } catch (error) {
       // Revert on error
       setLocalIsShortlisted(previousState);
       const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to update shortlist");
+      toast.error(err?.data?.message || t("shortlistFailed"));
     }
   };
 
   const videoCount = candidate?.profile?.videos?.length ?? 0;
   const isStaffRole =
     candidate.role === "On field staff" || candidate.role === "Office Staff";
-  const watchLabel = isStaffRole ? `Watch Interview` : `Watch Highlights`;
+  const watchLabel = isStaffRole ? t("watchInterview") : t("watchHighlights");
 
   return (
     <div className="h-full">
@@ -180,8 +184,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                         ? userPlaceholder
                         : `${process.env.NEXT_PUBLIC_BASE_URL}${candidate.profileImage}`
                     }
-                    alt={`${candidate?.firstName || ""}
-                  }`}
+                    alt={`${candidate?.firstName || ""} ${candidate?.lastName || ""}`.trim()}
                     width={48}
                     height={48}
                     className="w-full h-full object-cover"
@@ -209,7 +212,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 </h4>
               </Link>
               <p className="text-xs text-gray-500 capitalize">
-                {candidate.profile.position}
+                {label("position", candidate.profile.position)}
               </p>
             </div>
           </div>
@@ -222,24 +225,13 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 {candidate.profile?.placeOfBirth}
               </span>
             </div>
-            {(index == 2 || quality !== null) && (
+            {quality !== null && (
               <div className="flex w-fit flex-col gap-2">
-              {index == 2 && (
-                <div className="flex text-sm text-gray-600 gap-2">
-                  <div><span>Age:</span> 21</div>
-                  <span className="text-gray-300">|</span>
-                  <div><span>Height:</span> 6&apos;0</div>
-                  <span  className="text-gray-300">|</span>
-                  <div><span>Foot:</span> Right</div>
-                </div>
-              )}
               {quality !== null && (
                 <div
-                  className={`flex items-center gap-1.5 text-sm text-gray-600 ${
-                    index == 2 ? "border-t border-gray-300 pt-2" : ""
-                  }`}
+                  className="flex items-center gap-1.5 text-sm text-gray-600"
                 >
-                  <span className="text-sm text-gray-600">Profile Quality:</span>
+                  <span className="text-sm text-gray-600">{t("profileQuality")}</span>
                   <QualityStars quality={quality} />
                 </div>
               )}
@@ -250,8 +242,8 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
           {/* Nationality */}
           <div className="mb-3 flex flex-col">
             <span className="text-sm text-gray-600">
-              <span className="font-medium">Nationality:</span>{" "}
-              {candidate.profile?.nationality}
+              <span className="font-medium">{t("nationality")}</span>{" "}
+              {label("country", candidate.profile?.nationality)}
             </span>
 
 
@@ -262,7 +254,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
             className="flex mb-3 items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >
             <SquarePen className="w-4 h-4" />
-            View Profile
+            {t("viewProfile")}
           </Link>
           <button
             onClick={() => setIsVideoModalOpen(true)}
@@ -291,7 +283,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
               {isShortlisting || isRemoving ? (
                 <>
                   <span className="w-3 h-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                  {isShortlisted ? "Adding..." : "Removing..."}
+                  {isShortlisted ? t("adding") : t("removing")}
                 </>
               ) : (
                 <>
@@ -299,7 +291,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                     className={`w-3 h-3 mr-1 ${isShortlisted ? "fill-current" : ""
                       }`}
                   />
-                  {isShortlisted ? "Shortlisted" : "Shortlist"}
+                  {isShortlisted ? t("shortlisted") : t("shortlist")}
                 </>
               )}
             </Button>
@@ -317,7 +309,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
                 className: "w-3 h-3 mr-1",
               })}
               {isSendingRequest
-                ? "Sending..."
+                ? t("sending")
                 : getFriendRequestButtonProps().text}
             </Button>
 
@@ -345,7 +337,7 @@ function CandidateCard({ candidate, index }: { candidate: ICandidate; index?: nu
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to interact with candidates."
+        message={t("loginMessage")}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { LogOut, X, LucideIcon } from "lucide-react";
 import { useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 export interface ConfirmationModalProps {
   isOpen: boolean;
@@ -24,16 +25,17 @@ export default function LogoutModal({
   isOpen,
   onConfirm,
   onCancel,
-  title = "Logout Confirmation",
-  description = "Are you sure you want to logout? You'll need to sign in again to access your account.",
-  confirmText = "Yes, Logout",
-  cancelText = "Cancel",
+  title,
+  description,
+  confirmText,
+  cancelText,
   icon: Icon = LogOut,
   iconClassName,
   iconBgClassName,
   confirmButtonClassName,
   variant = "danger",
 }: ConfirmationModalProps) {
+  const t = useTranslations("common");
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -106,7 +108,7 @@ export default function LogoutModal({
         <button
           onClick={onCancel}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 rounded-lg p-1"
-          aria-label="Close modal"
+          aria-label={t("logout.closeAria")}
           type="button"
         >
           <X className="h-5 w-5" />
@@ -135,10 +137,10 @@ export default function LogoutModal({
             id="modal-title"
             className="text-2xl font-bold text-gray-900 mb-3"
           >
-            {title}
+            {title ?? t("logout.title")}
           </h2>
           <p id="modal-description" className="text-gray-600 leading-relaxed">
-            {description}
+            {description ?? t("logout.description")}
           </p>
         </div>
 
@@ -151,7 +153,7 @@ export default function LogoutModal({
             className="flex-1"
             type="button"
           >
-            {cancelText}
+            {cancelText ?? t("ui.cancel")}
           </Button>
           <Button
             onClick={onConfirm}
@@ -160,7 +162,7 @@ export default function LogoutModal({
             className={cn("flex-1", confirmButtonClassName)}
             type="button"
           >
-            {confirmText}
+            {confirmText ?? t("logout.confirm")}
           </Button>
         </div>
       </div>

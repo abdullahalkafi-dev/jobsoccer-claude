@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Edit, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface ProfileBannerProps {
   bannerUrl: string | null;
@@ -28,6 +29,7 @@ export default function ProfileBanner({
   onBannerUpdate,
   isUpdating = false,
 }: ProfileBannerProps) {
+  const t = useTranslations("profile.banner");
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
   const handleBannerImageChange = async (
@@ -38,14 +40,14 @@ export default function ProfileBanner({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+      toast.error(t("notImage"));
       return;
     }
 
     // Validate file size (max 5MB)
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
-      toast.error("Please select an image smaller than 5MB");
+      toast.error(t("tooLarge"));
       return;
     }
 
@@ -68,7 +70,7 @@ export default function ProfileBanner({
       {bannerUrl ? (
         <Image
           src={bannerUrl}
-          alt="Profile banner"
+          alt={t("alt")}
           fill
           className="object-cover"
           priority
@@ -91,7 +93,7 @@ export default function ProfileBanner({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p className="text-sm">No banner image</p>
+            <p className="text-sm">{t("none")}</p>
           </div>
         </div>
       )}
@@ -105,7 +107,7 @@ export default function ProfileBanner({
           className="hidden"
           ref={bannerInputRef}
           disabled={isUpdating}
-          aria-label="Upload banner image"
+          aria-label={t("upload")}
         />
         <Button
           onClick={() => bannerInputRef.current?.click()}
@@ -113,17 +115,17 @@ export default function ProfileBanner({
           size="sm"
           disabled={isUpdating}
           className="bg-white cursor-pointer hover:bg-gray-100 text-gray-700 shadow-md rounded-full px-3 py-2 flex items-center gap-2 transition-all duration-200 hover:shadow-lg"
-          aria-label={bannerUrl ? "Edit banner image" : "Add banner image"}
+          aria-label={bannerUrl ? t("editAria") : t("addAria")}
         >
           {isUpdating ? (
             <>
               <div
                 className="h-4 w-4 border-2 border-gray-700 border-t-transparent rounded-full animate-spin"
                 role="status"
-                aria-label="Updating banner"
+                aria-label={t("updatingAria")}
               />
               <span className="hidden sm:inline text-sm font-medium">
-                Updating...
+                {t("updating")}
               </span>
             </>
           ) : (
@@ -134,7 +136,7 @@ export default function ProfileBanner({
                 <Plus className="h-4 w-4" aria-hidden="true" />
               )}
               <span className="hidden sm:inline text-sm font-medium">
-                {bannerUrl ? "Edit" : "Add"}
+                {bannerUrl ? t("edit") : t("add")}
               </span>
             </>
           )}

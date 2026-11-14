@@ -8,8 +8,12 @@ import { useGetCandidatesQuery } from "@/redux/features/candidate/candidateApi";
 import { ICandidate } from "@/types/user";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { Users } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 function CandidateSearchPageContent() {
+  const t = useTranslations("candidates.search");
+  const label = useOptionLabel();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -53,15 +57,17 @@ function CandidateSearchPageContent() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 shrink-0" />
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-              Search Results
+              {t("results")}
             </h2>
           </div>
           {!isLoading && (
             <div className="text-sm text-gray-600">
-              <span className="font-semibold text-green-500">
-                {totalCandidates}
-              </span>{" "}
-              {totalCandidates === 1 ? "candidate" : "candidates"} found
+              {t.rich("found", {
+                count: totalCandidates,
+                green: (chunks) => (
+                  <span className="font-semibold text-green-500">{chunks}</span>
+                ),
+              })}
             </div>
           )}
         </div>
@@ -70,22 +76,31 @@ function CandidateSearchPageContent() {
         {(filters.searchTerm || filters.role || filters.country) && (
           <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-gray-700 mb-2 font-medium">
-              Active Search:
+              {t("activeSearch")}
             </p>
             <div className="flex flex-wrap gap-2">
               {filters.searchTerm && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Search: <strong>{filters.searchTerm}</strong>
+                  {t.rich("searchFilter", {
+                    value: filters.searchTerm,
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
               {filters.role && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Role: <strong>{filters.role}</strong>
+                  {t.rich("roleFilter", {
+                    value: label("role", filters.role),
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
               {filters.country && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Location: <strong>{filters.country}</strong>
+                  {t.rich("locationFilter", {
+                    value: label("country", filters.country),
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
             </div>
@@ -109,10 +124,10 @@ function CandidateSearchPageContent() {
               <div className="text-center">
                 <Users className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">
-                  No candidates found
+                  {t("noneTitle")}
                 </h3>
                 <p className="text-gray-500">
-                  Try adjusting your search criteria to find more candidates
+                  {t("noneHint")}
                 </p>
               </div>
             </div>
@@ -130,10 +145,10 @@ function CandidateSearchPageContent() {
               }}
               className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Previous
+              {t("previous")}
             </button>
             <span className="text-sm text-gray-600">
-              Page {page} of {totalPages}
+              {t("pageOf", { page, total: totalPages })}
             </span>
             <button
               disabled={page >= totalPages}
@@ -143,7 +158,7 @@ function CandidateSearchPageContent() {
               }}
               className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Next
+              {t("next")}
             </button>
           </div>
         )}
@@ -153,8 +168,9 @@ function CandidateSearchPageContent() {
 }
 
 export default function CandidateSearchPage() {
+  const t = useTranslations("candidates.search");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t("loading")}</div>}>
       <CandidateSearchPageContent />
     </Suspense>
   );

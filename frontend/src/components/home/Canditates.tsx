@@ -6,6 +6,7 @@ import CandidateCard from "../cards/CandidateCard";
 import { useGetCandidateFeaturedQuery } from "@/redux/features/candidate/candidateApi";
 import { ICandidate } from "@/types/user";
 import { Skeleton } from "../ui/skeleton";
+import { useTranslations } from "next-intl";
 
 interface FeaturedCandidatesData {
   Onfieldstaff?: ICandidate[];
@@ -15,6 +16,7 @@ interface FeaturedCandidatesData {
 }
 
 export function Candidates() {
+  const t = useTranslations("home");
   const {
     data: candidatesData,
     isLoading,
@@ -39,23 +41,22 @@ export function Candidates() {
       {/* Header */}
       <div className="py-8 mb-10 text-center bg-primary">
         <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900 mb-2">
-          Find Your Dream Team
+          {t("candidates.title")}
         </h2>
         <p className="text-center text-gray-900">
-          Stop searching - Start Finding ! Jobsoccer connects you with verified
-          soccer talent worldwide.
+          {t("candidates.subtitle")}
         </p>
       </div>
       <div className="container mx-auto px-4">
         {/* Candidates Container */}
         <div className="bg-[#F7F6F2] rounded-2xl p-4 md:p-8">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900">Candidates</h3>
+            <h3 className="text-2xl font-bold text-gray-900">{t("candidates.heading")}</h3>
             <Button
               asChild
               className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
             >
-              <Link href="/candidates">See All</Link>
+              <Link href="/candidates">{t("candidates.seeAll")}</Link>
             </Button>
           </div>
 
@@ -70,11 +71,11 @@ export function Candidates() {
               ))
             ) : isError ? (
               <div className="col-span-full text-center py-8 text-gray-500">
-                Failed to load candidates. Please try again later.
+                {t("candidates.loadError")}
               </div>
             ) : homepageCandidates.length === 0 ? (
               <div className="col-span-full text-center py-8 text-gray-500">
-                No candidates available at the moment.
+                {t("candidates.empty")}
               </div>
             ) : (
               homepageCandidates.slice(0,3).map((candidate: ICandidate,index:number) => (

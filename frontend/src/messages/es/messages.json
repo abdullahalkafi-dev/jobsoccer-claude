@@ -1,1 +1,75 @@
-{}
+{
+  "errors": {
+    "youBlocked": "Has bloqueado a este usuario",
+    "blockedByUser": "Este usuario te ha bloqueado",
+    "missingIds": "Se requieren el ID del chat y el ID del destinatario",
+    "unknown": "Error desconocido",
+    "SOCKET_NOT_CONNECTED": "Sin conexión con el chat. Espera a que se establezca la conexión.",
+    "SOCKET_DISCONNECTED": "Se perdió la conexión del chat. Espera a que se restablezca.",
+    "NO_MESSAGE": "El servidor no devolvió ningún mensaje",
+    "SEND_FILE_FAILED": "No se pudo enviar el mensaje con el archivo"
+  },
+  "toast": {
+    "blockedCannotSend": "No se puede enviar el mensaje. Esta conversación está bloqueada.",
+    "notConnected": "Sin conexión. Espera a que se establezca la conexión...",
+    "sendFailed": "No se pudo enviar el mensaje: {error}",
+    "deleteFailed": "No se pudo eliminar la conversación. Inténtalo de nuevo.",
+    "blocked": "Usuario bloqueado correctamente",
+    "blockFailed": "No se pudo bloquear al usuario. Inténtalo de nuevo.",
+    "unblocked": "Usuario desbloqueado correctamente",
+    "unblockFailed": "No se pudo desbloquear al usuario. Inténtalo de nuevo.",
+    "notAgent": "El usuario seleccionado no es un agente",
+    "alreadyHiring": "Ya tienes una contratación activa con este agente",
+    "hireSent": "¡Solicitud de contratación enviada correctamente!",
+    "hireFailed": "No se pudo enviar la solicitud de contratación. Inténtalo de nuevo."
+  },
+  "searchPlaceholder": "Buscar mensajes...",
+  "title": "Mensajes",
+  "status": {
+    "connected": "Conectado",
+    "connecting": "Conectando...",
+    "notLoggedIn": "Sesión no iniciada"
+  },
+  "noConversations": "Aún no hay conversaciones",
+  "blockedTag": "(Bloqueado)",
+  "noMessagesYet": "Aún no hay mensajes",
+  "preview": {
+    "text": "Mensaje",
+    "image": "Imagen",
+    "video": "Vídeo",
+    "file": "Archivo"
+  },
+  "viewProfile": "Ver perfil",
+  "hire": {
+    "hiring": "Contratando...",
+    "pending": "Solicitud pendiente",
+    "hired": "Contratado",
+    "hire": "Contratar"
+  },
+  "menu": {
+    "block": "Bloquear usuario",
+    "unblock": "Desbloquear usuario",
+    "delete": "Eliminar chat"
+  },
+  "blocked": {
+    "title": "Esta conversación está bloqueada",
+    "youBlockedFooter": "Has bloqueado a este usuario. Desbloquéalo para enviar mensajes.",
+    "cannotSend": "No puedes enviar mensajes a este usuario."
+  },
+  "startConversation": "Aún no hay mensajes. ¡Empieza la conversación!",
+  "imageAlt": "Imagen",
+  "downloadFile": "Descargar archivo",
+  "writePlaceholder": "Escribe tus mensajes...",
+  "previewAlt": "Vista previa",
+  "sendTitle": {
+    "waiting": "Esperando la conexión...",
+    "empty": "Escribe un mensaje o selecciona un archivo"
+  },
+  "send": "Enviar",
+  "selectConversation": "Selecciona una conversación para empezar a enviar mensajes",
+  "startChat": {
+    "loading": "Cargando...",
+    "message": "Mensaje",
+    "loginRequired": "Inicia sesión para enviar mensajes."
+  }
+}

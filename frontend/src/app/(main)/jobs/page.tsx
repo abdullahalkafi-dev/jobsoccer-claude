@@ -11,8 +11,10 @@ import {
 import { TJob } from "@/types/job";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 function JobPageContent() {
+  const t = useTranslations("jobs.list");
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -71,9 +73,11 @@ function JobPageContent() {
     <main>
       <div className="bg-[#F7F6F2]">
         <h2 className="text-3xl md:text-4xl text-[#362F05] text-center pt-10 mb-24">
-          Find Your <span className="text-green-400">Ultimate Job</span>
+          {t.rich("heroLine1", {
+            green: (chunks) => <span className="text-green-400">{chunks}</span>,
+          })}
           <br />
-          Search Companion
+          {t("heroLine2")}
         </h2>
         <JobSearch />
         <JobFilters
@@ -91,7 +95,7 @@ function JobPageContent() {
         <div>
           <h2 className="text-2xl md:4xl font-bold text-gray-900  my-10">
             <span className="bg-yellow-300 font-semibold px-6 py-3 rounded-md">
-              New Jobs
+              {t("newJobs")}
             </span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-8">
@@ -107,7 +111,7 @@ function JobPageContent() {
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
-                No new jobs available
+                {t("noNewJobs")}
               </p>
             )}
           </div>
@@ -115,7 +119,7 @@ function JobPageContent() {
 
         {/* All Jobs */}
         <div>
-          <h2 className="text-2xl md:text-4xl font-semibold my-10">All Jobs</h2>
+          <h2 className="text-2xl md:text-4xl font-semibold my-10">{t("allJobs")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-8">
             {allJobsLoading ? (
               <>
@@ -129,7 +133,7 @@ function JobPageContent() {
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
-                No jobs available
+                {t("noJobs")}
               </p>
             )}
           </div>
@@ -140,8 +144,9 @@ function JobPageContent() {
 }
 
 export default function JobPage() {
+  const t = useTranslations("jobs.list");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t("loading")}</div>}>
       <JobPageContent />
     </Suspense>
   );

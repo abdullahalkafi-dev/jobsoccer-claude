@@ -7,8 +7,10 @@ import { IEmployer } from "@/types/user";
 import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
 import { EmployerCardSkeleton } from "../skeleton";
 import { EmployerCard } from "../cards/EmployerCard";
+import { useTranslations } from "next-intl";
 
 const FindYourDreamTeam = () => {
+  const t = useTranslations("employers.dreamTeam");
   const { data: employersData, isLoading } = useGetEmployersQuery(null);
 
   return (
@@ -16,7 +18,7 @@ const FindYourDreamTeam = () => {
       <div className="py-8 lg:py-16">
         <div className="text-center mb-12">
           <h2 className="text-xl md:text-4xl font-bold text-[#362F05]">
-            Find Your Next Opportunity
+            {t("title")}
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 xl:gap-6 items-start">
@@ -24,7 +26,7 @@ const FindYourDreamTeam = () => {
           <div className="lg:col-span-3 h-full">
             <Image
               src={employersImg}
-              alt="Employers"
+              alt={t("imageAlt")}
               className="w-full h-full object-cover rounded-2xl"
             />
           </div>
@@ -33,7 +35,7 @@ const FindYourDreamTeam = () => {
           <div className="bg-[#F7F6F2] rounded-3xl p-4 md:p-6 w-full lg:col-span-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Employers
+                {t("employers")}
               </h2>
             </div>
 
@@ -51,7 +53,7 @@ const FindYourDreamTeam = () => {
 
             <div className="flex justify-end">
               <Button className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3">
-                <Link href="/employers">See All</Link>
+                <Link href="/employers">{t("seeAll")}</Link>
               </Button>
             </div>
           </div>

@@ -3,5 +3,54 @@
     "title": "Jobsoccer",
     "description": "Découvrez des emplois dans le football du monde entier pour entraîneurs, recruteurs, analystes et plus encore. Votre carrière dans le football commence ici !"
   },
-  "language": { "label": "Langue" }
+  "language": {
+    "label": "Langue"
+  },
+  "ui": {
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "loading": "Chargement…",
+    "close": "Fermer",
+    "search": "Rechercher"
+  },
+  "loginRequired": {
+    "title": "Connexion requise",
+    "message": "Veuillez vous connecter pour poursuivre cette action.",
+    "login": "Se connecter"
+  },
+  "logout": {
+    "closeAria": "Fermer la fenêtre",
+    "title": "Confirmation de déconnexion",
+    "description": "Voulez-vous vraiment vous déconnecter ? Vous devrez vous reconnecter pour accéder à votre compte.",
+    "confirm": "Oui, me déconnecter"
+  },
+  "footer": {
+    "logoAria": "Logo Jobsoccer",
+    "logoAlt": "JOBSOCCER.COM - Là où commencent les carrières dans le football",
+    "home": "Accueil",
+    "about": "À propos",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "newsletterTitle": "Abonnez-vous à notre newsletter",
+    "emailPlaceholder": "Saisissez votre e-mail",
+    "subscribe": "S'abonner"
+  },
+  "agentRating": {
+    "loading": "Chargement des évaluations...",
+    "loginToRate": "Connectez-vous pour évaluer cet agent",
+    "noRatingShort": "Aucune",
+    "ratingCount": "{count, plural, one {# évaluation} other {# évaluations}}",
+    "noRatings": "Aucune évaluation pour le moment",
+    "onlyCandidates": "Seuls les candidats peuvent évaluer les agents",
+    "onlyAgents": "Seuls les agents peuvent être évalués",
+    "cannotRateSelf": "Vous ne pouvez pas vous évaluer vous-même",
+    "alreadyRated": "Vous avez déjà évalué cet agent",
+    "submitFailed": "Échec de l'envoi de l'évaluation",
+    "shareExperience": "Partagez votre expérience avec cet agent",
+    "rateStars": "Donner {count, plural, one {# étoile} other {# étoiles}}",
+    "youRated": "Vous avez évalué cet agent",
+    "success": "Évaluation envoyée avec succès !"
+  }
 }

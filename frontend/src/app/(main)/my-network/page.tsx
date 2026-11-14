@@ -18,8 +18,10 @@ import {
   CandidateCardSkeletonGrid,
   EmployerCardSkeletonGrid,
 } from "@/components/skeleton";
+import { useTranslations } from "next-intl";
 
 function MyNetworkPage() {
+  const t = useTranslations("employers.network");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const page = 1;
@@ -67,7 +69,7 @@ function MyNetworkPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center py-12">
           <p className="text-red-500 text-lg">
-            Failed to load friends. Please try again.
+            {t("loadFailed")}
           </p>
         </div>
       </div>
@@ -79,7 +81,7 @@ function MyNetworkPage() {
       {/* Header with Search and Filter */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-          My Network
+          {t("title")}
           {friendsData?.meta && (
             <span className="text-lg text-gray-500 ml-2">
               ({friendsData.meta.total})
@@ -94,7 +96,7 @@ function MyNetworkPage() {
             </div>
             <Input
               type="text"
-              placeholder="Search friends..."
+              placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -102,14 +104,14 @@ function MyNetworkPage() {
           </div>
           {/* Filter Select */}
           <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-            <SelectTrigger className="w-32 h-12 rounded-xl border-gray-300">
+            <SelectTrigger className="min-w-32 w-auto h-12 rounded-xl border-gray-300">
               <Settings2 className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Filter" />
+              <SelectValue placeholder={t("filter")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="player">Players</SelectItem>
-              <SelectItem value="club">Clubs</SelectItem>
+              <SelectItem value="all">{t("all")}</SelectItem>
+              <SelectItem value="player">{t("players")}</SelectItem>
+              <SelectItem value="club">{t("clubs")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -120,7 +122,7 @@ function MyNetworkPage() {
         <section className="mb-8">
           {employers.length > 0 && !isLoading && (
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Clubs & Organizations ({employers.length})
+              {t("clubsOrgs", { count: employers.length })}
             </h3>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -140,7 +142,7 @@ function MyNetworkPage() {
         <section className="mb-8">
           {candidates.length > 0 && !isLoading && (
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Players & Staff ({candidates.length})
+              {t("playersStaff", { count: candidates.length })}
             </h3>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -160,8 +162,8 @@ function MyNetworkPage() {
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
             {searchTerm || selectedFilter !== "all"
-              ? "No friends found matching your criteria."
-              : "You haven't added any friends yet."}
+              ? t("noMatch")
+              : t("noFriends")}
           </p>
         </div>
       )}

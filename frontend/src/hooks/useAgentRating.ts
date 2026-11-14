@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/redux/hooks";
 import {
   useRateAgentMutation,
@@ -18,6 +19,7 @@ export const useAgentRating = ({
   agentRole,
   agentUserType,
 }: UseAgentRatingProps) => {
+  const t = useTranslations("employers.rating");
   const user = useAppSelector((state) => state.auth.user);
   const [rateAgent, { isLoading: isRating }] = useRateAgentMutation();
 
@@ -45,7 +47,7 @@ export const useAgentRating = ({
     if (user?.userType !== "candidate") {
       return {
         allowed: false,
-        reason: "Only candidates can rate agents",
+        reason: t("onlyCandidates"),
       };
     }
 
@@ -54,7 +56,7 @@ export const useAgentRating = ({
     if (agentUserType !== "employer" || !isAgent) {
       return {
         allowed: false,
-        reason: "Only agents can be rated",
+        reason: t("onlyAgents"),
       };
     }
 
@@ -62,7 +64,7 @@ export const useAgentRating = ({
     if (user?._id === agentUserId) {
       return {
         allowed: false,
-        reason: "You cannot rate yourself",
+        reason: t("notYourself"),
       };
     }
 
@@ -70,7 +72,7 @@ export const useAgentRating = ({
     if (checkRatingData?.data?.hasRated) {
       return {
         allowed: false,
-        reason: "You have already rated this agent",
+        reason: t("alreadyRated"),
       };
     }
 
@@ -78,13 +80,13 @@ export const useAgentRating = ({
       allowed: true,
       reason: "",
     };
-  }, [user, agentUserId, agentUserType, agentRole, checkRatingData]);
+  }, [user, agentUserId, agentUserType, agentRole, checkRatingData, t]);
 
   // Submit rating
   const submitRating = useCallback(
     async (rating: number) => {
       if (!user?._id) {
-        throw new Error("You must be logged in to rate an agent");
+        throw new Error(t("mustLogin"));
       }
 
       const validationResult = canRate();
@@ -93,7 +95,7 @@ export const useAgentRating = ({
       }
 
       if (rating < 1 || rating > 5) {
-        throw new Error("Rating must be between 1 and 5");
+        throw new Error(t("range"));
       }
 
       try {
@@ -107,12 +109,13 @@ export const useAgentRating = ({
 
         return result;
       } catch (error: any) {
-        throw new Error(error?.data?.message || "Failed to submit rating");
+        throw new Error(error?.data?.message || t("submitFailed"));
       }
     },
     [
       user?._id,
       canRate,
+      t,
       rateAgent,
       agentUserId,
       refetchAverage,

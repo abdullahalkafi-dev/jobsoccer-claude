@@ -1,16 +1,19 @@
+import { useTranslations } from "next-intl";
+
 export function StatsBanner() {
+  const t = useTranslations("home");
   const stats = [
     {
       value: "250M+",
-      label: "Soccer Players Worldwide",
+      label: t("stats.players"),
     },
     {
       value: "300,000+",
-      label: "Clubs Globally",
+      label: t("stats.clubs"),
     },
     {
-      value: "$60 Billion",
-      label: "Global Soccer Industry",
+      value: t("stats.industryValue"),
+      label: t("stats.industry"),
     },
   ];
 
@@ -19,7 +22,7 @@ export function StatsBanner() {
       {/* Yellow Banner Header */}
       <div className="py-8 text-center bg-primary mb-16">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
-          The Soccer World is Massive. We Connect It.
+          {t("stats.title")}
         </h2>
       </div>
       <div className="bg-[#252525] py-8 lg:py-16">

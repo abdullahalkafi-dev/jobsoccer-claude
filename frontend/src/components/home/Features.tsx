@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import brainIcon from "@/assets/home/ai_brain.svg";
 import videoIcon from "@/assets/home/video.svg";
 import global from "@/assets/home/global.svg";
@@ -9,132 +10,25 @@ import footbal from "@/assets/home/footbal.svg";
 import job from "@/assets/home/job.svg";
 
 export function Features() {
-  // const features = [
-  //   {
-  //     icon: footbal,
-  //     title: "Specialized in Soccer Staffing",
-  //     lists: [
-  //       "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, every connection is designed with the beautiful game in mind.",
-  //     ],
-  //   },
-  //   {
-  //     icon: brainIcon,
-  //     title: "AI-Powered Talent Matching",
-  //     lists: [
-  //       "Our smart algorithm analyzes profiles, skills and requirements to connect the right candidates with the right employers faster and more accurately than any manual search.",
-  //     ],
-  //   },
-  //   {
-  //     icon: videoIcon,
-  //     title: "AI Video Interview Evaluation",
-  //     lists: [
-  //       "Go beyond the CV. Candidates upload their pre-video interviews that showcase their personality, communication and real-world skills, giving employers a true picture before the first meeting.",
-  //     ],
-  //   },
-  //   {
-  //     icon: security,
-  //     title: "AI Profile Quality Score",
-  //     lists: [
-  //       "Our AI evaluates every profile for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
-  //     ],
-  //   },
-  //   {
-  //     icon: job,
-  //     title: "AI Powered Job Suggestions",
-  //     lists: [
-  //       "No more endless scrolling. JOBSOCCER delivers personalized job recommendations directly to players and staff based on their profile, experience and preferences.",
-  //     ],
-  //   },
-  //   {
-  //     icon: chart,
-  //     title: "AI Data-Driven Market Insights",
-  //     lists: [
-  //       "Stay ahead of the game. Our AI tracks rising talent trends, in-demand roles and regional opportunities so clubs and candidates always know where the market is heading.",
-  //     ],
-  //   },
-  //   {
-  //     icon: global,
-  //     title: "Global Access & Visibility",
-  //     lists: [
-  //       "Your next opportunity shouldn't depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league and every level of the game.",
-  //     ],
-  //   },
-  //   {
-  //     icon: profile,
-  //     title: "Fair, Transparent and Structured Process",
-  //     lists: [
-  //       "A clear, structured application system that reduces bias, promo.",
-  //     ],
-  //   },
-  // ];
-
+  const t = useTranslations("home");
+  
 
   const features = [
-    {
-      icon: footbal,
-      title: "Specialized in Soccer Staffing",
-      lists: [
-        "Unlike generic job boards, JOBSOCCER is built 100% for the soccer ecosystem. Every feature, every tool, and every connection is designed with the beautiful game in mind.",
-      ],
-    },
-    {
-      icon: brainIcon,
-      title: "AI-Powered Talent Matching",
-      lists: [
-        "Our smart algorithm analyzes profiles, skills, and requirements to connect the right candidates with the right employers, faster and more accurately.",
-      ],
-    },
-    {
-      icon: videoIcon,
-      title: "AI-Powered Video Interviews",
-      lists: [
-        "Go beyond the CV. Every candidate for a position answers the same soccer questions on video, explaining their methodology and approach. Our AI summarizes and scores each answer before the first meeting. Scores support, never replace, the employer’s judgment.",
-      ],
-    },
-    {
-      icon: security,
-      title: "Profile Quality Score",
-      lists: [
-        "Every profile is scored for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see.",
-      ],
-    },
-    {
-      icon: job,
-      title: "AI-Powered Job Suggestions",
-      lists: [
-        "No more endless scrolling. JOBSOCCER delivers personalized job recommendations to players and staff based on their profile, experience, and preferences.",
-      ],
-    },
-    {
-      icon: chart,
-      title: "AI Market Insights",
-      lists: [
-        "Stay ahead of the game. Our AI tracks talent trends, in-demand roles, and regional opportunities, so clubs and candidates always know where the market is heading.",
-      ],
-    },
-    {
-      icon: global,
-      title: "Global Access & Visibility",
-      lists: [
-        "Your next opportunity shouldn’t depend on who you know. JOBSOCCER gives equal visibility to candidates from every country, every league, and every level of the game.",
-      ],
-    },
-    {
-      icon: profile,
-      title: "Fair, Transparent, and Structured Process",
-      lists: [
-        "A clear, structured application process that reduces bias and gives every candidate an equal chance.",
-      ],
-    },
+    { icon: footbal, title: t("features.staffing.title"), text: t("features.staffing.text") },
+    { icon: brainIcon, title: t("features.matching.title"), text: t("features.matching.text") },
+    { icon: videoIcon, title: t("features.video.title"), text: t("features.video.text") },
+    { icon: security, title: t("features.quality.title"), text: t("features.quality.text") },
+    { icon: job, title: t("features.suggestions.title"), text: t("features.suggestions.text") },
+    { icon: chart, title: t("features.insights.title"), text: t("features.insights.text") },
+    { icon: global, title: t("features.global.title"), text: t("features.global.text") },
+    { icon: profile, title: t("features.fair.title"), text: t("features.fair.text") },
   ];
-
-
 
   return (
     <section className="bg-[#F7F6F2]">
       <div className="py-8 text-center bg-primary">
         <h2 className="text-2xl md:text-4xl font-bold text-center text-gray-900">
-          Why is Jobsoccer unique?
+          {t("features.title")}
         </h2>
       </div>
       <div className="container mx-auto px-4 py-8 lg:py-16">
@@ -146,7 +40,7 @@ export function Features() {
                   <div className="flex items-start gap-4">
                     <Image
                       src={feature.icon}
-                      alt={feature.title + " icon"}
+                      alt={feature.title}
                       width={40}
                       height={40}
                     />
@@ -155,11 +49,7 @@ export function Features() {
                         {feature.title}
                       </h3>
                       <p className="text-gray-600 text-sm leading-relaxed">
-                        {feature.lists.map((item, idx) => (
-                          <span key={idx} className="block mb-1">
-                            {item}
-                          </span>
-                        ))}
+                        <span className="block mb-1">{feature.text}</span>
                       </p>
                     </div>
                   </div>

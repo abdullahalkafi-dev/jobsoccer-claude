@@ -7,6 +7,7 @@ import { TJob } from "@/types/job";
 import { CardSkeleton } from "../skeleton/CardSkeleton";
 import { HomeJobCard } from "../cards/HomeJobCard";
 import { StaticImageData } from "next/image";
+import { useTranslations } from "next-intl";
 
 export type TNewJobPost = {
   id: string;
@@ -20,6 +21,7 @@ export type TNewJobPost = {
 };
 
 export function NewJobs() {
+  const t = useTranslations("home");
   const { data: featuredData, isLoading: isFeaturedLoading } = useGetHomeFeaturedJobsQuery(undefined);
   const { data: fallbackData, isLoading: isFallbackLoading } = useGetNewFourJobsQuery(undefined, {
     skip: !isFeaturedLoading && (featuredData?.data?.length ?? 0) > 0,
@@ -32,7 +34,7 @@ export function NewJobs() {
     <div className="bg-[#F7F6F2] rounded-3xl p-5 md:p-8 border border-gray-100 shadow-xs">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
-          New Jobs
+          {t("newJobs.title")}
         </h2>
       </div>
 
@@ -51,14 +53,14 @@ export function NewJobs() {
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500 py-8">
-            No new jobs available
+            {t("newJobs.empty")}
           </p>
         )}
       </div>
 
       <div className="flex justify-end">
         <Button asChild className="bg-yellow-300 hover:bg-yellow-400 text-gray-900 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3 rounded-xl shadow-xs">
-          <Link href="/jobs">See All</Link>
+          <Link href="/jobs">{t("newJobs.seeAll")}</Link>
         </Button>
       </div>
     </div>

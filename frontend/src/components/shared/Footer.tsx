@@ -5,8 +5,10 @@ import Image from "next/image";
 import logo from "@/assets/logo_footer.png";
 import { Mail } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 export function Footer() {
+  const t = useTranslations("common");
   return (
     <footer className="bg-yellow-300 py-12 text-black">
       <div className="container mx-auto px-4">
@@ -16,11 +18,11 @@ export function Footer() {
             <Link
               href="/"
               className="flex items-center justify-center md:justify-start"
-              aria-label="Job Soccer Logo"
+              aria-label={t("footer.logoAria")}
             >
               <Image
                 src={logo}
-                alt="JOBSOCCER.COM - Where soccer careers begin"
+                alt={t("footer.logoAlt")}
                 className="w-40"
               />
             </Link>
@@ -33,7 +35,7 @@ export function Footer() {
                   href="/"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  Home
+                  {t("footer.home")}
                 </Link>
               </li>
 
@@ -42,7 +44,7 @@ export function Footer() {
                   href="/about"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  About Us
+                  {t("footer.about")}
                 </Link>
               </li>
               <li>
@@ -50,7 +52,7 @@ export function Footer() {
                   href="/faq"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  FAQ
+                  {t("footer.faq")}
                 </Link>
               </li>
               <li>
@@ -58,7 +60,7 @@ export function Footer() {
                   href="/contact"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  Contact
+                  {t("footer.contact")}
                 </Link>
               </li>
             </ul>
@@ -72,7 +74,7 @@ export function Footer() {
                   href="/terms"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  Terms of Use
+                  {t("footer.terms")}
                 </Link>
               </li>
               <li>
@@ -80,7 +82,7 @@ export function Footer() {
                   href="/privacy"
                   className="text-gray-800 hover:text-black font-medium text-sm transition-colors"
                 >
-                  Privacy policy
+                  {t("footer.privacy")}
                 </Link>
               </li>
               <li>
@@ -98,19 +100,20 @@ export function Footer() {
           {/* Subscribe */}
           <div className="w-full md:w-auto">
             <h3 className="lg:text-md font-semibold mb-4 text-center md:text-left text-gray-900">
-              Subscribe To Our Newsletter
+              {t("footer.newsletterTitle")}
             </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-6">
               <Input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("footer.emailPlaceholder")}
+                aria-label={t("footer.emailPlaceholder")}
                 className="sm:flex-1 text-sm bg-white text-black placeholder:text-gray-500 p-5 border-gray-300"
               />
               <Button
                 size="lg"
                 className="bg-black hover:bg-gray-800 hover:scale-105 text-white font-medium px-4 py-3 rounded-lg transition-all"
               >
-                Subscribe
+                {t("footer.subscribe")}
               </Button>
             </div>
           </div>
@@ -127,6 +130,7 @@ export function Footer() {
             </Link>
             <Link
               target="_blank"
+              aria-label="Instagram"
               href="https://www.instagram.com/jobsoccer_fc?igsh=MTRvc2Jla24yaWEz&utm_source=qr"
               className="flex items-center justify-center h-6 w-6 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600 hover:scale-110 transition-transform"
             >

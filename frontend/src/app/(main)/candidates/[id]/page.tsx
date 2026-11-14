@@ -1,7 +1,8 @@
 "use client";
 
-import { roleLabel } from "@/constants/selectOptions";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,6 +36,8 @@ import ResumeDownloadButton from "@/components/profile/ResumeDownloadButton";
 import { QualityStars } from "@/features/profileQuality/QualityStars";
 
 export default function UserProfilePage() {
+  const t = useTranslations("candidates.detail");
+  const label = useOptionLabel();
   const params = useParams();
   const userId = params?.id as string;
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -87,7 +90,7 @@ export default function UserProfilePage() {
   // Handle follow/unfollow
   const handleFollowToggle = async () => {
     if (!currentUser) {
-      toast.error("Please log in to follow candidates");
+      toast.error(t("loginToFollow"));
       return;
     }
 
@@ -104,11 +107,11 @@ export default function UserProfilePage() {
       if (isFollowing) {
         // Unfollow
         await unfollowCandidate(userId).unwrap();
-        toast.success("Unfollowed successfully");
+        toast.success(t("unfollowed"));
       } else {
         // Follow
         await followCandidate(userId).unwrap();
-        toast.success("Followed successfully");
+        toast.success(t("followed"));
       }
     } catch (error) {
       // Revert on error
@@ -117,7 +120,7 @@ export default function UserProfilePage() {
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
-        `Failed to ${isFollowing ? "unfollow" : "follow"} candidate`
+        (isFollowing ? t("unfollowFailed") : t("followFailed"))
       );
     }
   };
@@ -141,10 +144,10 @@ export default function UserProfilePage() {
   const handleRequestAccess = async () => {
     try {
       await sendFriendRequest(userId).unwrap();
-      toast.success("Friend request sent successfully");
+      toast.success(t("friendRequestSent"));
     } catch (error) {
       const err = error as { data?: { message?: string } };
-      toast.error(err?.data?.message || "Failed to send friend request");
+      toast.error(err?.data?.message || t("friendRequestFailed"));
     }
   };
 
@@ -152,7 +155,7 @@ export default function UserProfilePage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
   const displayName = user
     ? `${user.firstName} ${user.lastName}`.trim()
-    : "User";
+    : t("user");
 
   const displayAvatar = user?.profileImage
     ? `${BASE_URL}${user.profileImage}`
@@ -162,7 +165,7 @@ export default function UserProfilePage() {
     ? `${BASE_URL}${user.bannerImage}`
     : null;
 
-  const displayRole = roleLabel(user?.role);
+  const displayRole = label("role", user?.role);
 
   // Get verification status
   const verificationStatus = user?.adminVerificationStatus;
@@ -180,11 +183,10 @@ export default function UserProfilePage() {
           <CardContent className="p-6 text-center">
             <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              User Not Found
+              {t("notFoundTitle")}
             </h3>
             <p className="text-gray-600">
-              The user profile you&apos;re looking for doesn&apos;t exist or has
-              been removed.
+              {t("notFoundText")}
             </p>
           </CardContent>
         </Card>
@@ -199,7 +201,7 @@ export default function UserProfilePage() {
         {displayBanner && (
           <Image
             src={displayBanner}
-            alt="Banner"
+            alt={t("bannerAlt")}
             fill
             className="object-cover"
           />
@@ -264,7 +266,7 @@ export default function UserProfilePage() {
               {!hasAccess && verificationStatus?.status === "approved" && (
                 <Badge className="bg-blue-50 text-blue-700 border-blue-200 px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
                   <BadgeCheck className="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
-                  Verified
+                  {t("verified")}
                 </Badge>
               )}
           </div>
@@ -286,18 +288,18 @@ export default function UserProfilePage() {
               }`}
             >
               {isFollowMutating ? (
-                <>{isFollowing ? "Unfollowing..." : "Following..."}</>
+                <>{isFollowing ? t("unfollowing") : t("following")}</>
               ) : (
                 <>
                   {isFollowing ? (
                     <>
                       <UserMinus className="h-4 w-4" />
-                      Unfollow
+                      {t("unfollow")}
                     </>
                   ) : (
                     <>
                       <UserPlus className="h-4 w-4" />
-                      Follow
+                      {t("follow")}
                     </>
                   )}
                 </>
@@ -316,7 +318,7 @@ export default function UserProfilePage() {
             <div className="bg-white rounded-lg border shadow border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                  Profile Information
+                  {t("profileInformation")}
                 </h2>
               </div>
 
@@ -325,10 +327,10 @@ export default function UserProfilePage() {
                 {user?.profile?.position && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Position
+                      {t("position")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.position}
+                      {label("position", user.profile.position)}
                     </p>
                   </div>
                 )}
@@ -336,20 +338,20 @@ export default function UserProfilePage() {
                 {user?.profile?.nationality && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Nationality
+                      {t("nationality")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.nationality}
+                      {label("country", user.profile.nationality)}
                     </p>
                   </div>
                 )}
                 {user?.profile?.gender && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Gender
+                      {t("gender")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.gender}
+                      {label("gender", user.profile.gender)}
                     </p>
                   </div>
                 )}
@@ -357,10 +359,10 @@ export default function UserProfilePage() {
                 {user?.profile?.height && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Height
+                      {t("height")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.height.size} {user.profile.height.unit}
+                      {user.profile.height.size} {label("unit", user.profile.height.unit)}
                     </p>
                   </div>
                 )}
@@ -368,10 +370,10 @@ export default function UserProfilePage() {
                 {user?.profile?.weight && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Weight
+                      {t("weight")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.weight.size} {user.profile.weight.unit}
+                      {user.profile.weight.size} {label("unit", user.profile.weight.unit)}
                     </p>
                   </div>
                 )}
@@ -379,7 +381,7 @@ export default function UserProfilePage() {
                 {user?.profile?.currentClub && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Current Club
+                      {t("currentClub")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.currentClub}
@@ -390,7 +392,7 @@ export default function UserProfilePage() {
                 {user?.profile?.availability && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Available from
+                      {t("availableFrom")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.availability}
@@ -401,10 +403,10 @@ export default function UserProfilePage() {
                 {user?.profile?.foot && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Foot
+                      {t("foot")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.foot}
+                      {label("foot", user.profile.foot)}
                     </p>
                   </div>
                 )}
@@ -412,7 +414,7 @@ export default function UserProfilePage() {
                 {user?.profile?.league && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      League
+                      {t("league")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.league}
@@ -423,10 +425,10 @@ export default function UserProfilePage() {
                 {user?.profile?.country && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Country
+                      {t("country")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
-                      {user.profile.country}
+                      {label("country", user.profile.country)}
                     </p>
                   </div>
                 )}
@@ -434,7 +436,7 @@ export default function UserProfilePage() {
                 {user?.profile?.agent && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Agent
+                      {t("agent")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.agent}
@@ -445,7 +447,7 @@ export default function UserProfilePage() {
                 {user?.profile?.socialMedia && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Social Media
+                      {t("socialMedia")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.socialMedia}
@@ -456,7 +458,7 @@ export default function UserProfilePage() {
                 {user?.profile?.schoolName && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      School Name
+                      {t("schoolName")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.schoolName}
@@ -467,7 +469,7 @@ export default function UserProfilePage() {
                 {user?.profile?.collegeOrUniversity && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      College/University
+                      {t("collegeUniversity")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.collegeOrUniversity}
@@ -478,7 +480,7 @@ export default function UserProfilePage() {
                 {user?.profile?.diploma && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Diploma
+                      {t("diploma")}
                     </label>
                     <p className="text-gray-900 font-medium text-sm sm:text-base">
                       {user.profile.diploma}
@@ -490,7 +492,7 @@ export default function UserProfilePage() {
                 {user?.profileQuality && (
                   <div>
                     <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                      Profile Quality
+                      {t("profileQuality")}
                     </label>
                     <QualityStars quality={user.profileQuality} />
                   </div>
@@ -499,7 +501,7 @@ export default function UserProfilePage() {
                 {/* Followers Count */}
                 <div>
                   <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
-                    Followers
+                    {t("followers")}
                   </label>
                   <p className="text-gray-900 font-medium text-sm sm:text-base">
                     {followerCount}
@@ -541,7 +543,7 @@ export default function UserProfilePage() {
                 <div className="max-w-md mx-auto">
                   <Lock className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4 sm:mb-6" />
                   <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
-                    Profile Information
+                    {t("profileInformation")}
                   </h3>
                   <div className="space-y-4">
                     <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>

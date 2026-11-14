@@ -1,1 +1,156 @@
-{}
+{
+  "hero": {
+    "line1a": "Your next",
+    "line1b": "job",
+    "line2": "starts here!",
+    "signUp": "Sign Up",
+    "underlineAlt": "Hand-drawn underline",
+    "imageAlt": "Hero Background"
+  },
+  "intro": "is the recruitment platform built specifically for soccer. Using AI-powered matching, video analysis, and performance data, we help employers hire faster and more efficiently, while giving candidates worldwide the visibility and fair chance they deserve.",
+  "connect": {
+    "title1": "A whole world of soccer.",
+    "title2": "One place to connect.",
+    "card1Label": "01 / CANDIDATES",
+    "card1Title": "Get seen by the right clubs.",
+    "card1Text": "Build a profile that showcases your experience, licenses, and coaching philosophy. Find roles in coaching, analysis, performance, and operations.",
+    "card2Label": "02 / EMPLOYERS",
+    "card2Title": "Build your staff with confidence.",
+    "card2Text": "Post your openings and discover the talent that fits your needs, whether you're a club, academy, college, or agency.",
+    "card3Label": "03 / SOCCER COMMUNITY",
+    "card3Title": "Stay connected to the game.",
+    "card3Text": "Follow open roles, discover the people behind the game, and be part of a growing professional soccer network."
+  },
+  "discover": {
+    "title": "What You Will Discover Here",
+    "text": "Jobsoccer is the first platform built exclusively for the soccer world. Whether you're a player looking for your next club, a coach seeking new opportunities, or an organization searching for the right talent everything you need is in one place. No more relying on personal contacts or word of mouth. Just a smarter, fairer way to connect soccer professionals worldwide."
+  },
+  "diagram": {
+    "logoAlt": "Jobsoccer logo",
+    "onFieldStaff": "On The Field Staff",
+    "player": "Player",
+    "club": "Club",
+    "officeStaff": "Office Staff",
+    "college": "College & University",
+    "agent": "Agent"
+  },
+  "features": {
+    "title": "Why is Jobsoccer unique?",
+    "staffing": {
+      "title": "Specialized in Soccer Staffing",
+      "text": "Unlike generic job boards, Jobsoccer is built 100% for the soccer ecosystem. Every feature, every tool, and every connection is designed with the beautiful game in mind."
+    },
+    "matching": {
+      "title": "AI-Powered Talent Matching",
+      "text": "Our smart algorithm analyzes profiles, skills, and requirements to connect the right candidates with the right employers, faster and more accurately."
+    },
+    "video": {
+      "title": "AI-Powered Video Interviews",
+      "text": "Go beyond the CV. Every candidate for a position answers the same soccer questions on video, explaining their methodology and approach. Our AI summarizes and scores each answer before the first meeting. Scores support, never replace, the employer’s judgment."
+    },
+    "quality": {
+      "title": "Profile Quality Score",
+      "text": "Every profile is scored for completeness and strength, helping candidates present their best selves and giving employers confidence in what they see."
+    },
+    "suggestions": {
+      "title": "AI-Powered Job Suggestions",
+      "text": "No more endless scrolling. Jobsoccer delivers personalized job recommendations to players and staff based on their profile, experience, and preferences."
+    },
+    "insights": {
+      "title": "AI Market Insights",
+      "text": "Stay ahead of the game. Our AI tracks talent trends, in-demand roles, and regional opportunities, so clubs and candidates always know where the market is heading."
+    },
+    "global": {
+      "title": "Global Access & Visibility",
+      "text": "Your next opportunity shouldn’t depend on who you know. Jobsoccer gives equal visibility to candidates from every country, every league, and every level of the game."
+    },
+    "fair": {
+      "title": "Fair, Transparent, and Structured Process",
+      "text": "A clear, structured application process that reduces bias and gives every candidate an equal chance."
+    }
+  },
+  "candidates": {
+    "title": "Find Your Dream Team",
+    "subtitle": "Stop searching - Start Finding ! Jobsoccer connects you with verified soccer talent worldwide.",
+    "heading": "Candidates",
+    "seeAll": "See All",
+    "loadError": "Failed to load candidates. Please try again later.",
+    "empty": "No candidates available at the moment."
+  },
+  "how": {
+    "title": "How It Works",
+    "subtitle": "Getting Started is Simple",
+    "intro": "Whether you're looking for your next opportunity or your next signing you're three steps away.",
+    "forCandidates": "For Candidates",
+    "forEmployers": "For Employers",
+    "step": "Step {number}",
+    "candidate": {
+      "step1": {
+        "title": "Create Your Profile",
+        "text": "Sign up and build your dynamic professional profile. Add your experience, skills, certifications and upload your video showcase. Let your profile do the talking."
+      },
+      "step2": {
+        "title": "Get Discovered or Apply",
+        "text": "Browse hundreds of job listings across every level of the game. Apply directly or let our AI match you with the right opportunities based on your profile."
+      },
+      "step3": {
+        "title": "Connect and Get Hired",
+        "text": "Message clubs, agents and employers directly. Watch interview requests come to you. Your next soccer career move starts here."
+      }
+    },
+    "employer": {
+      "step1": {
+        "title": "Create Your Organization Profile",
+        "text": "Set up your club, academy, agency or university profile. Tell the soccer world who you are and what you're looking for."
+      },
+      "step2": {
+        "title": "Post Jobs or Search Talent",
+        "text": "Post your openings on our job board or browse our global database of verified candidates — players, coaches, analysts, office staff and more."
+      },
+      "step3": {
+        "title": "Shortlist, Watch & Hire",
+        "text": "Review video interviews, shortlist your favorites, request access to full profiles and connect directly with the talent that fits your vision."
+      }
+    },
+    "ready": "Ready to get started?",
+    "signUpCandidate": "Sign Up as a Candidate",
+    "signUpEmployer": "Sign Up as an Employer"
+  },
+  "globalProfile": {
+    "access": {
+      "title": "Global Access",
+      "text": "Connect with clubs and agents around the world"
+    },
+    "visibility": {
+      "title": "Visibility",
+      "text": "Showcase your talent. Get scouted. Go global!"
+    },
+    "opportunities": {
+      "title": "Opportunities",
+      "text": "Discover job offers and trials worldwide"
+    },
+    "title": "Create your profile and get seen globally!",
+    "subtitle": "Build your professional presence and connect with opportunities worldwide",
+    "imageAlt": "Global opportunities worldwide",
+    "signIn": "Sign In"
+  },
+  "jobCategories": {
+    "title": "Find Your Next Soccer Talent",
+    "seeAll": "See All",
+    "loadError": "Unable to load job categories. Please try again later.",
+    "empty": "No job categories available at the moment.",
+    "available": "{count, plural, one {# job} other {# jobs}} available"
+  },
+  "newJobs": {
+    "title": "New Jobs",
+    "empty": "No new jobs available",
+    "seeAll": "See All"
+  },
+  "stats": {
+    "title": "The Soccer World is Massive. We Connect It.",
+    "players": "Soccer Players Worldwide",
+    "clubs": "Clubs Globally",
+    "industryValue": "$60 Billion",
+    "industry": "Global Soccer Industry"
+  }
+}

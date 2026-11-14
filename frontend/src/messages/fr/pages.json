@@ -1,1 +1,79 @@
-{}
+{
+  "about": {
+    "metaTitle": "À propos | Jobsoccer",
+    "title": "À propos",
+    "intro": "Jobsoccer est la plateforme de recrutement conçue spécialement pour le football.",
+    "p1": "Grâce à la mise en relation par IA, à l'analyse vidéo et aux données de performance, nous aidons les employeurs à recruter plus vite et plus efficacement, tout en offrant aux candidats du monde entier la visibilité et la chance équitable qu'ils méritent.",
+    "p2": "Les clubs, académies, établissements scolaires, universités et agents publient des offres et recherchent des candidats. Les joueurs, entraîneurs et membres du personnel administratif créent un profil, enregistrent un entretien vidéo et se font repérer.",
+    "p3": "Tous les candidats à un même poste répondent aux mêmes questions, afin que chacun soit évalué sur un pied d'égalité. L'évaluation de l'IA vient en appui du jugement de l'employeur, sans jamais le remplacer."
+  },
+  "faq": {
+    "metaTitle": "FAQ | Jobsoccer",
+    "title": "Foire aux questions",
+    "items": {
+      "quality": {
+        "q": "Qu'est-ce que le score de qualité du profil ?",
+        "a": "Un score sur 100 qui indique à quel point votre profil est complet, vérifié et à jour. Vous voyez le chiffre ; les employeurs voient des étoiles et un niveau. Il ne mesure pas vos compétences professionnelles."
+      },
+      "video": {
+        "q": "Qu'est-ce que l'entretien vidéo ?",
+        "a": "Vous répondez aux mêmes questions que tous les autres candidats à votre poste, dans une seule vidéo de 6 min 30 maximum. Les réponses sont transcrites, résumées et notées par l'IA pour aider les employeurs à les examiner. Les notes viennent en appui du jugement de l'employeur, sans jamais le remplacer."
+      },
+      "methodology": {
+        "q": "La vidéo de méthodologie est-elle obligatoire ?",
+        "a": "Non, elle est facultative pour le personnel de terrain et le personnel administratif. L'ajouter vous donne des points supplémentaires de qualité du profil et vous aide à vous démarquer."
+      },
+      "requirements": {
+        "q": "Quelles sont les exigences pour la vidéo ?",
+        "a": "MP4 ou MOV, 720p minimum, 600 Mo maximum, enregistré avec une caméra fixe dans un endroit calme. Vous pouvez enregistrer vos réponses séparément et les assembler en une seule vidéo avant de la mettre en ligne."
+      },
+      "replace": {
+        "q": "Puis-je remplacer mes vidéos ?",
+        "a": "Vos vidéos d'entretien et de méthodologie sont verrouillées pendant 3 mois après leur envoi. Passé ce délai, vous pouvez mettre en ligne une version mise à jour."
+      },
+      "contact": {
+        "q": "Qui peut voir mes coordonnées ?",
+        "a": "Les employeurs ne voient vos coordonnées qu'après que vous avez accepté leur demande d'accès."
+      },
+      "verified": {
+        "q": "Comment faire vérifier mon profil ?",
+        "a": "Utilisez « Ajouter un badge de vérification » sur votre profil pour demander la vérification de votre identité, et mettez en ligne un document justifiant vos diplômes, votre formation ou votre parcours professionnel. Les éléments vérifiés ajoutent des points à votre score."
+      }
+    },
+    "more": "D'autres questions ? Écrivez-nous à <email>email</email>."
+  },
+  "contact": {
+    "metaTitle": "Contact | Jobsoccer",
+    "title": "Contact",
+    "intro": "Une question, un commentaire ou besoin d'aide avec votre profil ? Nous serons ravis de vous aider.",
+    "writeUs": "Écrivez-nous à <email>email</email>.",
+    "accessibility": "Les candidats qui ont besoin d'un aménagement pour des raisons d'accessibilité lors de l'enregistrement de leur vidéo peuvent également nous contacter à la même adresse."
+  },
+  "privacy": {
+    "metaTitle": "Politique de confidentialité | Jobsoccer",
+    "title": "Politique de confidentialité",
+    "intro": "Notre politique de confidentialité est en cours de finalisation et sera publiée ici.",
+    "question": "Si vous avez une question sur vos données d'ici là, écrivez à <email>email</email>."
+  },
+  "terms": {
+    "metaTitle": "Conditions d'utilisation | Jobsoccer",
+    "title": "Conditions d'utilisation",
+    "intro": "Nos conditions d'utilisation sont en cours de finalisation et seront publiées ici.",
+    "question": "Si vous avez une question d'ici là, écrivez à <email>email</email>."
+  },
+  "error": {
+    "title": "Une erreur est survenue !",
+    "description": "Oups, il semble qu'une erreur se soit produite lors du chargement de la page.",
+    "tryAgain": "Réessayer",
+    "orGoHome": "Ou vous pouvez <link>retourner à la page d'accueil</link>"
+  },
+  "notFound": {
+    "description": "Oups, il semble que la page que vous recherchez n'existe pas.",
+    "goHome": "Aller à la page d'accueil"
+  },
+  "category": {
+    "title": "Votre compagnon idéal<br></br>pour <highlight>trouver un emploi</highlight>",
+    "allJobs": "Toutes les offres",
+    "loading": "Chargement..."
+  }
+}

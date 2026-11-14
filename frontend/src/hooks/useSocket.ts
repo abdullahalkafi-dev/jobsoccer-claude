@@ -96,12 +96,12 @@ export function useSocket(): UseSocketReturn {
     ): Promise<ChatMessage> => {
       return new Promise<ChatMessage>((resolve, reject) => {
         if (!socketRef.current) {
-          reject(new Error("Socket not connected"));
+          reject(new Error("SOCKET_NOT_CONNECTED"));
           return;
         }
 
         if (!socketRef.current.connected) {
-          reject(new Error("Socket disconnected"));
+          reject(new Error("SOCKET_DISCONNECTED"));
           return;
         }
 
@@ -132,7 +132,7 @@ export function useSocket(): UseSocketReturn {
             } else if (response.message) {
               resolve(response.message as ChatMessage);
             } else {
-              reject(new Error("No message returned from server"));
+              reject(new Error("NO_MESSAGE"));
             }
           }
         );
@@ -145,7 +145,7 @@ export function useSocket(): UseSocketReturn {
   const markAsRead = useCallback((chatId: string) => {
     return new Promise<void>((resolve, reject) => {
       if (!socketRef.current) {
-        reject(new Error("Socket not connected"));
+        reject(new Error("SOCKET_NOT_CONNECTED"));
         return;
       }
 
@@ -180,7 +180,7 @@ export function useSocket(): UseSocketReturn {
   const blockUser = useCallback((chatId: string): Promise<Chat> => {
     return new Promise<Chat>((resolve, reject) => {
       if (!socketRef.current) {
-        reject(new Error("Socket not connected"));
+        reject(new Error("SOCKET_NOT_CONNECTED"));
         return;
       }
 
@@ -202,7 +202,7 @@ export function useSocket(): UseSocketReturn {
   const unblockUser = useCallback((chatId: string): Promise<Chat> => {
     return new Promise<Chat>((resolve, reject) => {
       if (!socketRef.current) {
-        reject(new Error("Socket not connected"));
+        reject(new Error("SOCKET_NOT_CONNECTED"));
         return;
       }
 

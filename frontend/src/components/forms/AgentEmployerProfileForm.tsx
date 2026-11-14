@@ -2,6 +2,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { agentEmployerProfileSchema } from "@/schemas/profileValidation";
+import { getAgentEmployerProfileSchema } from "@/schemas/profileValidation";
 import { TAgentEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 
@@ -35,13 +38,18 @@ export function AgentEmployerProfileForm({
 }: IAgentEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
+  const schema = useMemo(() => getAgentEmployerProfileSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<TAgentEmployerProfile>({
-    resolver: zodResolver(agentEmployerProfileSchema) as any,
+    resolver: zodResolver(schema) as any,
     defaultValues: initialData,
   });
 
@@ -66,11 +74,11 @@ export function AgentEmployerProfileForm({
       onNext={handleSubmit(onSubmit)}
       onPrev={onPrev}
       showPrev={false}
-      nextLabel="Complete"
+      nextLabel={t("button.complete")}
       isLoading={isLoading}
     >
       <form className="space-y-8">
-        <FormSection title="Agent Information">
+        <FormSection title={t("section.agentInformation")}>
           <div className="space-y-6">
             {/* Logo Upload */}
             <div className="flex flex-col items-center space-y-4">
@@ -78,13 +86,13 @@ export function AgentEmployerProfileForm({
                 {logoPreview ? (
                   <Image
                     src={logoPreview}
-                    alt="Logo preview"
+                    alt={t("alt.logoPreview")}
                     width={128}
                     height={128}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-400 text-sm">Upload Logo</span>
+                  <span className="text-gray-400 text-sm">{t("logo.upload")}</span>
                 )}
               </div>
               <label className="cursor-pointer">
@@ -95,7 +103,7 @@ export function AgentEmployerProfileForm({
                   className="hidden"
                 />
                 <span className="text-sm hover:underline">
-                  Upload your Logo (Max 10mb)
+                  {t("logo.uploadHint")}
                 </span>
               </label>
               {errors.logo && (
@@ -106,23 +114,23 @@ export function AgentEmployerProfileForm({
             {/* Company Name and Phone Number */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
-                label="Company name"
+                label={t("label.companyName")}
                 error={errors.companyName?.message}
               >
                 <Input
                   {...register("companyName")}
-                  placeholder="Name of company"
+                  placeholder={t("placeholder.nameOfCompany")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
               <FormField
-                label="Phone number"
+                label={t("label.phoneNumber")}
                 error={errors.phoneNumber?.message}
               >
                 <Input
                   {...register("phoneNumber")}
-                  placeholder="000-000-0000"
+                  placeholder={t("placeholder.0000000000")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
@@ -130,7 +138,7 @@ export function AgentEmployerProfileForm({
 
             {/* Country and Nationality */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField label="Country" error={errors.country?.message}>
+              <FormField label={t("label.country")} error={errors.country?.message}>
                 <Select
                   onValueChange={(value) =>
                     setValue("country", value, { shouldValidate: true })
@@ -138,12 +146,12 @@ export function AgentEmployerProfileForm({
                   defaultValue={initialData?.country}
                 >
                   <SelectTrigger className="bg-gray-50 border-0 w-full">
-                    <SelectValue placeholder="Select country" />
+                    <SelectValue placeholder={t("placeholder.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent>
                     {countryList.map((country) => (
                       <SelectItem key={country} value={country}>
-                        {country}
+                        {label("country", country)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -151,12 +159,12 @@ export function AgentEmployerProfileForm({
               </FormField>
 
               <FormField
-                label="Nationality"
+                label={t("label.nationality")}
                 error={errors.nationality?.message}
               >
                 <Input
                   {...register("nationality")}
-                  placeholder="Enter nationality"
+                  placeholder={t("placeholder.enterNationality")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
@@ -165,32 +173,32 @@ export function AgentEmployerProfileForm({
             {/* Social Media and Website */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
-                label="Social media (optional)"
+                label={t("label.socialMediaOptional")}
                 error={errors.socialMedia?.message}
               >
                 <Input
                   {...register("socialMedia")}
-                  placeholder="https://www.example.com"
+                  placeholder={t("placeholder.httpsWwwExampleCom")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
-              <FormField label="Website" error={errors.website?.message}>
+              <FormField label={t("label.website")} error={errors.website?.message}>
                 <Input
                   {...register("website")}
-                  placeholder="Website URL"
+                  placeholder={t("placeholder.websiteUrl")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
               {/* FIFA License Number */}
               <FormField
-                label="FIFA license number"
+                label={t("label.fifaLicenseNumber")}
                 error={errors.fifaLicenseNumber?.message}
               >
                 <Input
                   {...register("fifaLicenseNumber")}
-                  placeholder="Enter FIFA license number"
+                  placeholder={t("placeholder.enterFifaLicenseNumber")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>

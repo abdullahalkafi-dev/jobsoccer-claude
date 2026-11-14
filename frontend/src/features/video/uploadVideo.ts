@@ -1,4 +1,4 @@
-import type { TVideoKind } from "./types";
+import { UploadError, type TUploadErrorInfo, type TVideoKind } from "./types";
 
 /** Longest one single-request upload may take on the server (backend UPLOAD_REQUEST_TIMEOUT_MS). */
 export const UPLOAD_LIMIT_MINUTES = 45;
@@ -7,22 +7,24 @@ const API = () => `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/videos`;
 const bearer = (token: string) => (token.startsWith("Bearer ") ? token : `Bearer ${token}`);
 
 /** An answer from the server (status 0 = no answer: the connection failed). */
-class UploadHttpError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
+class UploadHttpError extends UploadError {
+  constructor(public status: number, info: TUploadErrorInfo) {
+    super(info);
   }
 }
 
-const messageFrom = (text: string, fallback: string): string => {
+/** The server's own message (already in the visitor's language) or, without one, the generic failure code. */
+const infoFrom = (text: string): TUploadErrorInfo => {
   try {
-    return JSON.parse(text)?.message ?? fallback;
+    const message = JSON.parse(text)?.message;
+    if (typeof message === "string" && message) return { code: "SERVER", message };
   } catch {
-    return fallback;
+    // not JSON
   }
+  return { code: "FAILED" };
 };
 
-const CONNECTION_LOST =
-  "The connection was interrupted during the upload, so the video was not saved. Please check your internet connection and upload it again.";
+const CONNECTION_LOST: TUploadErrorInfo = { code: "NETWORK" };
 
 /**
  * Upload ONE video in a single request with a real progress bar. (fetch cannot report upload
@@ -51,18 +53,14 @@ export const uploadVideo = (input: {
     };
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) return resolve();
-      if (xhr.status === 413) return reject(new Error("This video is larger than 600 MB."));
+      if (xhr.status === 413) return reject(new UploadError({ code: "TOO_LARGE", params: { megabytes: 600 } }));
       if (xhr.status === 408) {
-        return reject(
-          new Error(
-            `The upload took longer than ${UPLOAD_LIMIT_MINUTES} minutes and was stopped. Please try again on a faster connection, or export the video at 720p so the file is smaller.`
-          )
-        );
+        return reject(new UploadError({ code: "TIMEOUT", params: { minutes: UPLOAD_LIMIT_MINUTES } }));
       }
-      reject(new Error(messageFrom(xhr.responseText, "The upload failed. Please try again.")));
+      reject(new UploadError(infoFrom(xhr.responseText)));
     };
-    xhr.onerror = () => reject(new Error(CONNECTION_LOST));
-    xhr.onabort = () => reject(new Error("Upload cancelled."));
+    xhr.onerror = () => reject(new UploadError(CONNECTION_LOST));
+    xhr.onabort = () => reject(new UploadError({ code: "CANCELLED" }));
     signal?.addEventListener("abort", () => xhr.abort());
     xhr.send(form);
   });
@@ -81,7 +79,7 @@ const requestJson = async <T>(method: string, url: string, token: string, body?:
     throw new UploadHttpError(0, CONNECTION_LOST);
   }
   const text = await response.text();
-  if (!response.ok) throw new UploadHttpError(response.status, messageFrom(text, "The upload failed. Please try again."));
+  if (!response.ok) throw new UploadHttpError(response.status, infoFrom(text));
   return (JSON.parse(text)?.data ?? {}) as T;
 };
 
@@ -102,7 +100,7 @@ const sendPiece = (input: { url: string; token: string; piece: Blob; onProgress:
           return reject(new UploadHttpError(0, CONNECTION_LOST));
         }
       }
-      reject(new UploadHttpError(xhr.status, messageFrom(xhr.responseText, "The upload failed. Please try again.")));
+      reject(new UploadHttpError(xhr.status, infoFrom(xhr.responseText)));
     };
     xhr.onerror = () => reject(new UploadHttpError(0, CONNECTION_LOST));
     xhr.ontimeout = () => reject(new UploadHttpError(0, CONNECTION_LOST));
@@ -157,7 +155,7 @@ export const uploadVideoResumable = async (
     });
   } catch (error) {
     // A server without resumable uploads: use the single request instead
-    if (error instanceof UploadHttpError && error.status === 404 && /Cannot POST|not found/i.test(error.message) && !/upload was not found/i.test(error.message)) {
+    if (error instanceof UploadHttpError && error.status === 404) {
       return uploadVideo({ token, kind, file, replaceVideoId, onProgress: input.onProgress });
     }
     throw error;
@@ -187,7 +185,7 @@ export const uploadVideoResumable = async (
       if (isFinal(status)) throw error;
       if (status !== 409) {
         failures += 1;
-        if (failures > MAX_FAILURES) throw new Error(CONNECTION_LOST);
+        if (failures > MAX_FAILURES) throw new UploadError(CONNECTION_LOST);
         const seconds = Math.min(30, 2 ** failures);
         input.onRetry(seconds);
         await waitBeforeRetry(seconds);

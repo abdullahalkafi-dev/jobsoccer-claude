@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StepIndicator } from "@/components/form/FormIndicator";
 import { Spinner } from "@/components/ui/spinner";
+import { useTranslations } from "next-intl";
 
 interface IFormLayoutProps {
   title?: string;
@@ -29,13 +30,13 @@ interface IFormLayoutProps {
 }
 
 export function FormLayout({
-  title = "A few steps to complete your profile.",
-  subtitle = "A brief guide to help you complete and finalize your profile efficiently.",
+  title,
+  subtitle,
   children,
   onNext,
   onPrev,
-  nextLabel = "Next",
-  prevLabel = "Previous",
+  nextLabel,
+  prevLabel,
   showNext = true,
   showPrev = false,
   isNextDisabled = false,
@@ -44,13 +45,14 @@ export function FormLayout({
   steps,
   className = "",
 }: IFormLayoutProps) {
+  const t = useTranslations("forms");
   return (
     <div className={`min-h-screen bg-gray-50 pt-16 p-4 ${className}`}>
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">{title}</h1>
-          <p className="text-gray-600 text-sm">{subtitle}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">{title ?? t("layout.title")}</h1>
+          <p className="text-gray-600 text-sm">{subtitle ?? t("layout.subtitle")}</p>
         </div>
 
         {/* Step Indicator */}
@@ -76,7 +78,7 @@ export function FormLayout({
                 disabled={isPrevDisabled}
                 className="px-6"
               >
-                {prevLabel}
+                {prevLabel ?? t("layout.previous")}
               </Button>
             )}
           </div>
@@ -86,9 +88,9 @@ export function FormLayout({
                 type="button"
                 onClick={onNext}
                 disabled={isNextDisabled || isLoading}
-                className="w-[100px] bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-2 rounded-md font-medium"
+                className="min-w-[100px] bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-md font-medium"
               >
-                {isLoading ? <Spinner className="h-4 w-4" /> : nextLabel}
+                {isLoading ? <Spinner className="h-4 w-4" /> : (nextLabel ?? t("layout.next"))}
               </Button>
             )}
           </div>

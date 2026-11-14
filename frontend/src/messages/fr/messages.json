@@ -1,1 +1,75 @@
-{}
+{
+  "errors": {
+    "youBlocked": "Vous avez bloqué cet utilisateur",
+    "blockedByUser": "Cet utilisateur vous a bloqué",
+    "missingIds": "L'identifiant du chat et celui du destinataire sont requis",
+    "unknown": "Erreur inconnue",
+    "SOCKET_NOT_CONNECTED": "Non connecté au chat. Veuillez patienter jusqu'à la connexion.",
+    "SOCKET_DISCONNECTED": "La connexion au chat a été perdue. Veuillez patienter pendant la reconnexion.",
+    "NO_MESSAGE": "Le serveur n'a renvoyé aucun message",
+    "SEND_FILE_FAILED": "Impossible d'envoyer le message avec le fichier"
+  },
+  "toast": {
+    "blockedCannotSend": "Impossible d'envoyer le message. Cette conversation est bloquée.",
+    "notConnected": "Non connecté. Veuillez patienter jusqu'à la connexion...",
+    "sendFailed": "Impossible d'envoyer le message : {error}",
+    "deleteFailed": "Impossible de supprimer la conversation. Veuillez réessayer.",
+    "blocked": "Utilisateur bloqué avec succès",
+    "blockFailed": "Impossible de bloquer l'utilisateur. Veuillez réessayer.",
+    "unblocked": "Utilisateur débloqué avec succès",
+    "unblockFailed": "Impossible de débloquer l'utilisateur. Veuillez réessayer.",
+    "notAgent": "L'utilisateur sélectionné n'est pas un agent",
+    "alreadyHiring": "Vous avez déjà un recrutement en cours avec cet agent",
+    "hireSent": "Demande de recrutement envoyée avec succès !",
+    "hireFailed": "Impossible d'envoyer la demande de recrutement. Veuillez réessayer."
+  },
+  "searchPlaceholder": "Rechercher des messages...",
+  "title": "Messages",
+  "status": {
+    "connected": "Connecté",
+    "connecting": "Connexion...",
+    "notLoggedIn": "Non connecté à un compte"
+  },
+  "noConversations": "Aucune conversation pour le moment",
+  "blockedTag": "(Bloqué)",
+  "noMessagesYet": "Aucun message pour le moment",
+  "preview": {
+    "text": "Message",
+    "image": "Image",
+    "video": "Vidéo",
+    "file": "Fichier"
+  },
+  "viewProfile": "Voir le profil",
+  "hire": {
+    "hiring": "Recrutement...",
+    "pending": "Demande en attente",
+    "hired": "Recruté",
+    "hire": "Recruter"
+  },
+  "menu": {
+    "block": "Bloquer l'utilisateur",
+    "unblock": "Débloquer l'utilisateur",
+    "delete": "Supprimer la discussion"
+  },
+  "blocked": {
+    "title": "Cette conversation est bloquée",
+    "youBlockedFooter": "Vous avez bloqué cet utilisateur. Débloquez-le pour envoyer des messages.",
+    "cannotSend": "Vous ne pouvez pas envoyer de messages à cet utilisateur."
+  },
+  "startConversation": "Aucun message pour le moment. Lancez la conversation !",
+  "imageAlt": "Image",
+  "downloadFile": "Télécharger le fichier",
+  "writePlaceholder": "Écrivez vos messages...",
+  "previewAlt": "Aperçu",
+  "sendTitle": {
+    "waiting": "En attente de la connexion...",
+    "empty": "Saisissez un message ou sélectionnez un fichier"
+  },
+  "send": "Envoyer",
+  "selectConversation": "Sélectionnez une conversation pour commencer à échanger",
+  "startChat": {
+    "loading": "Chargement...",
+    "message": "Message",
+    "loginRequired": "Veuillez vous connecter pour envoyer des messages."
+  }
+}
