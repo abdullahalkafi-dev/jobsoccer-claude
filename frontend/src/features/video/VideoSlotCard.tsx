@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Lock, RefreshCw, Upload } from "lucide-react";
+import { useFormats } from "@/i18n/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,10 +13,8 @@ import { GuideQuestions } from "@/components/questions/GuideQuestions";
 import { SetupPhotos } from "./SetupPhotos";
 import { checkVideoFile, formatClock } from "./checkVideoFile";
 import { useOptionalLiveConnection } from "@/components/providers/NotificationProvider";
+import { useUploadText } from "./useUploadText";
 import {
-  formatProgressBytes,
-  formatSpeed,
-  formatTimeLeft,
   setUploadError,
   setUploadStage,
   startVideoUpload,
@@ -25,18 +25,14 @@ import type { TStoredVideo, TVideoPlan, TVideoSlot } from "./types";
 
 /** "Connection lost. Trying again in 8 s…" with a live countdown. */
 function RetryNotice({ retryAt, done }: { retryAt: number; done: string }) {
+  const t = useTranslations("video");
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
   const seconds = Math.max(0, Math.ceil((retryAt - now) / 1000));
-  return (
-    <p className="text-xs text-amber-700">
-      Connection lost after {done}. {seconds > 0 ? `Trying again in ${seconds} s…` : "Trying again…"} Nothing is lost: the upload
-      continues from where it stopped.
-    </p>
-  );
+  return <p className="text-xs text-amber-700">{seconds > 0 ? t("upload.retryCountdown", { done, seconds }) : t("upload.retryNow", { done })}</p>;
 }
 
 const mediaUrl = (path: string): string => (path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_BASE_URL}/${path}`);
@@ -53,6 +49,9 @@ export function VideoSlotCard({
   videos: TStoredVideo[];
   consentOk: boolean;
 }) {
+  const t = useTranslations("video");
+  const f = useFormats();
+  const text = useUploadText();
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,7 +90,7 @@ export function VideoSlotCard({
       maxMegabytes: plan.limits.maxMegabytes,
       minShortSide: plan.limits.minShortSide,
     });
-    if (!check.ok) return setUploadError(slot.kind, check.message);
+    if (!check.ok) return setUploadError(slot.kind, check.error);
 
     const saved = await startVideoUpload({ token, kind: slot.kind, file, replaceVideoId: targetRef.current.replaceVideoId });
     if (saved) {
@@ -107,8 +106,8 @@ export function VideoSlotCard({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="text-lg font-semibold text-gray-900">{slot.title}</h3>
           <div className="flex items-center gap-2">
-            <Badge variant={slot.required ? "default" : "secondary"}>{slot.required ? "Required" : "Optional"}</Badge>
-            <span className="text-xs text-gray-500">up to {formatClock(slot.maxSeconds)}{slot.count > 1 ? " each" : ""}</span>
+            <Badge variant={slot.required ? "default" : "secondary"}>{slot.required ? t("slot.required") : t("slot.optional")}</Badge>
+            <span className="text-xs text-gray-500">{slot.count > 1 ? t("slot.upToEach", { max: formatClock(slot.maxSeconds) }) : t("slot.upTo", { max: formatClock(slot.maxSeconds) })}</span>
           </div>
         </div>
 
@@ -118,7 +117,7 @@ export function VideoSlotCard({
         {slot.kind === "Interview" && plan.position && <GuideQuestions position={plan.position} collapsible defaultOpen={!hasVideo} />}
 
         <details className="rounded-lg bg-gray-50 p-3 text-sm" open={!hasVideo}>
-          <summary className="cursor-pointer font-medium text-gray-900">Recording guide</summary>
+          <summary className="cursor-pointer font-medium text-gray-900">{t("slot.recordingGuide")}</summary>
           <div className="mt-3 space-y-4">
             {slot.sections.map((section) => (
               <div key={section.heading}>
@@ -137,7 +136,7 @@ export function VideoSlotCard({
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <p className="mt-2 text-xs text-gray-500">Recommended file name: {plan.fileNameHint}</p>
+              <p className="mt-2 text-xs text-gray-500">{t("slot.fileName", { name: plan.fileNameHint })}</p>
             </div>
             {slot.showSetupPhotos && <SetupPhotos />}
           </div>
@@ -163,15 +162,15 @@ export function VideoSlotCard({
                   </video>
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-600">
                     <span>
-                      {formatClock(video.durationSeconds)} · {video.captionsUrl ? "English captions ready" : "captions are being created"}
+                      {video.captionsUrl ? t("slot.captionsReady", { length: formatClock(video.durationSeconds) }) : t("slot.captionsCreating", { length: formatClock(video.durationSeconds) })}
                     </span>
                     {video.isLocked ? (
                       <span className="flex items-center gap-1 text-amber-700">
-                        <Lock className="h-3 w-3" /> Locked until {new Date(video.lockedUntil!).toLocaleDateString()}
+                        <Lock className="h-3 w-3" /> {t("slot.lockedUntil", { date: f.date(video.lockedUntil!) })}
                       </span>
                     ) : (
                       <Button type="button" size="sm" variant="outline" disabled={uploading || !consentOk} onClick={() => pick(slot.count > 1 ? video._id : undefined)}>
-                        <RefreshCw className="mr-1 h-3 w-3" /> Replace
+                        <RefreshCw className="mr-1 h-3 w-3" /> {t("slot.replace")}
                       </Button>
                     )}
                   </div>
@@ -184,15 +183,15 @@ export function VideoSlotCard({
                   className="flex w-full flex-col items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-8 text-sm text-gray-600 transition hover:border-yellow-500 hover:bg-yellow-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Upload className="h-6 w-6" />
-                  <span className="font-medium">{slot.count > 1 ? `Choose highlight video ${index + 1}` : "Choose your video"}</span>
-                  <span className="text-xs">MP4 or MOV, up to {plan.limits.maxMegabytes} MB</span>
+                  <span className="font-medium">{slot.count > 1 ? t("slot.chooseHighlight", { n: index + 1 }) : t("slot.chooseVideo")}</span>
+                  <span className="text-xs">{t("slot.fileHint", { max: plan.limits.maxMegabytes })}</span>
                 </button>
               )}
             </div>
           ))}
         </div>
 
-        {!consentOk && <p className="text-sm text-amber-700">Please tick the confirmations above before uploading.</p>}
+        {!consentOk && <p className="text-sm text-amber-700">{t("slot.tickConsent")}</p>}
 
         {upload && (
           <div role="progressbar" aria-valuenow={upload.percent} aria-valuemin={0} aria-valuemax={100} className="space-y-1">
@@ -203,29 +202,32 @@ export function VideoSlotCard({
               />
             </div>
             {upload.stage === "uploading" && upload.retryAt ? (
-              <RetryNotice retryAt={upload.retryAt} done={formatProgressBytes(upload.loadedBytes, upload.totalBytes)} />
+              <RetryNotice retryAt={upload.retryAt} done={text.bytes(upload.loadedBytes, upload.totalBytes)} />
             ) : upload.stage === "uploading" ? (
               <p className="text-xs text-gray-600">
-                Uploading… {upload.percent}% · {formatProgressBytes(upload.loadedBytes, upload.totalBytes)}
-                {upload.bytesPerSecond > 0 && <> · {formatSpeed(upload.bytesPerSecond)}</>} · {formatTimeLeft(upload.secondsLeft)}
+                {t(upload.bytesPerSecond > 0 ? "upload.progressSpeed" : "upload.progress", {
+                  percent: upload.percent,
+                  done: text.bytes(upload.loadedBytes, upload.totalBytes),
+                  speed: upload.bytesPerSecond > 0 ? text.speed(upload.bytesPerSecond) : "",
+                  left: text.timeLeft(upload.secondsLeft),
+                })}
               </p>
             ) : (
               <p className="text-xs text-gray-600">
-                {upload.stage === "checking" ? "Upload complete. Checking your video (length, quality, sound)…" : "Saving your video…"}
+                {upload.stage === "checking" ? t("upload.checking") : t("upload.saving")}
               </p>
             )}
             {upload.resumedFromBytes !== null && upload.stage === "uploading" && (
               <p className="text-xs text-green-700">
-                Continuing your earlier upload of this file from {formatProgressBytes(upload.resumedFromBytes, upload.totalBytes).split(" of ")[0]} MB.
+                {t("upload.resumed", { done: text.megabytes(upload.resumedFromBytes) })}
               </p>
             )}
             <p className="text-xs text-gray-500">
-              You can keep using the website while it uploads. If the connection drops, the upload continues by itself. If you
-              close this tab, choose the same file again to continue where it stopped.
+              {t("upload.hint")}
             </p>
           </div>
         )}
-        {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">{text.error(error)}</p>}
       </CardContent>
     </Card>
   );

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Check, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface SuccessMessageProps {
   userName?: string;
@@ -9,9 +10,10 @@ interface SuccessMessageProps {
 }
 
 export default function SuccessMessage({
-  userName = "User",
+  userName,
   onNext,
 }: SuccessMessageProps) {
+  const t = useTranslations("auth");
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-2 md:px-5 lg:px-8 ">
       <div className="max-w-xl w-full text-center">
@@ -29,14 +31,12 @@ export default function SuccessMessage({
 
         {/* Welcome Message */}
         <div className="mb-8">
-          <h1 className="text-2xl text-gray-600 mb-2">Hi, {userName}</h1>
+          <h1 className="text-2xl text-gray-600 mb-2">{t("success.hi", { name: userName || t("success.defaultName") })}</h1>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Welcome to Jobsoccer
+            {t("success.welcome")}
           </h2>
           <p className="text-gray-600 text-sm leading-relaxed">
-            Your information has been successfully saved. We&apos;re currently
-            upgrading our Soccer job platform. Please bear with us as we work
-            to ensure it delivers precise opportunities for our users.
+            {t("success.body")}
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function SuccessMessage({
           onClick={onNext}
           className="bg-primary cursor-pointer hover:bg-amber-300 text-black font-medium px-8 py-3 rounded-md transition-colors duration-200 flex items-center gap-2 mx-auto"
         >
-          Next
+          {t("success.next")}
           <ArrowRight className="w-4 h-4" />
         </Button>
       </div>

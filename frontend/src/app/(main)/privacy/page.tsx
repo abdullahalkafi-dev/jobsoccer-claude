@@ -1,16 +1,23 @@
+import { getTranslations } from "next-intl/server";
 import { StaticPage, SUPPORT_EMAIL } from "@/components/shared/StaticPage";
 
-export const metadata = { title: "Privacy Policy | JOBSOCCER" };
+export async function generateMetadata() {
+  const t = await getTranslations("pages");
+  return { title: t("privacy.metaTitle") };
+}
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const t = await getTranslations("pages");
   return (
-    <StaticPage title="Privacy Policy" intro="Our Privacy Policy is being finalised and will be published here.">
+    <StaticPage title={t("privacy.title")} intro={t("privacy.intro")}>
       <p>
-        If you have a question about your data in the meantime, write to{" "}
-        <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
-          {SUPPORT_EMAIL}
-        </a>
-        .
+        {t.rich("privacy.question", {
+          email: () => (
+            <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
+            </a>
+          ),
+        })}
       </p>
     </StaticPage>
   );

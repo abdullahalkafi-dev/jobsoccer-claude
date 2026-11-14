@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
@@ -14,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { highSchoolPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
+import { getHighSchoolPlayerProfessionalInfoSchema } from "@/schemas/profileValidation";
 import { THighSchoolPlayerProfessionalInfo } from "@/types/profile";
 import {
   countryList,
@@ -43,13 +46,18 @@ export function HighSchoolPlayerProfessionalInfoForm({
   initialData,
   steps,
 }: IHighSchoolPlayerProfessionalInfoFormProps) {
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
+  const schema = useMemo(() => getHighSchoolPlayerProfessionalInfoSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
     setValue: rawSetValue,
     formState: { errors, isValid },
   } = useForm<THighSchoolPlayerProfessionalInfo>({
-    resolver: zodResolver(highSchoolPlayerProfessionalInfoSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       ...initialData,
       height: {
@@ -81,11 +89,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
       isNextDisabled={!isValid}
     >
       <form className="space-y-8">
-        <FormSection title="Professional Information">
+        <FormSection title={t("section.professionalInformation")}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Gender */}
-            <FormField label="Gender" error={errors.gender?.message}>
+            <FormField label={t("label.gender")} error={errors.gender?.message}>
               <Select
+                defaultValue={initialData?.gender as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "gender" as const,
@@ -98,12 +107,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select gender" />
+                  <SelectValue placeholder={t("placeholder.selectGender")} />
                 </SelectTrigger>
                 <SelectContent>
                   {genderOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("gender", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -112,24 +121,24 @@ export function HighSchoolPlayerProfessionalInfoForm({
 
             {/* Availability */}
             <FormField
-              label="Available from (optional)"
+              label={t("label.availableFromOptional")}
               error={errors.availability?.message}
             >
               <Input
                 {...register("availability")}
-                placeholder="Ex. Immediately, or January 2027"
+                placeholder={t("placeholder.exImmediatelyOrJanuary2027")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Height */}
-            <FormField label="Height" error={errors.height?.size?.message}>
+            <FormField label={t("label.height")} error={errors.height?.size?.message}>
               <div className="flex space-x-2">
                 <Input
                   type="number"
                   step="any"
                   {...register("height.size" as const, { valueAsNumber: true })}
-                  placeholder="Ex. 5.7"
+                  placeholder={t("placeholder.ex57")}
                   className="bg-gray-50 border-0"
                 />
                 <Select
@@ -146,12 +155,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                   }
                 >
                   <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue placeholder="Select unit" />
+                    <SelectValue placeholder={t("placeholder.selectUnit")} />
                   </SelectTrigger>
                   <SelectContent>
                     {heightUnitOptions.map((item) => (
                       <SelectItem key={item} value={item}>
-                        {item}
+                        {label("unit", item)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -160,13 +169,13 @@ export function HighSchoolPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Weight */}
-            <FormField label="Weight" error={errors.weight?.size?.message}>
+            <FormField label={t("label.weight")} error={errors.weight?.size?.message}>
               <div className="flex space-x-2">
                 <Input
                   type="number"
                   step="any"
                   {...register("weight.size" as const, { valueAsNumber: true })}
-                  placeholder="Ex. 75"
+                  placeholder={t("placeholder.ex75")}
                   className="bg-gray-50 border-0"
                 />
                 <Select
@@ -183,12 +192,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                   }
                 >
                   <SelectTrigger className="w-20 bg-gray-50 border-0">
-                    <SelectValue placeholder="Select unit" />
+                    <SelectValue placeholder={t("placeholder.selectUnit")} />
                   </SelectTrigger>
                   <SelectContent>
                     {weightUnitOptions.map((item) => (
                       <SelectItem key={item} value={item}>
-                        {item}
+                        {label("unit", item)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -197,17 +206,18 @@ export function HighSchoolPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Current Club */}
-            <FormField label="Current club" error={errors.currentClub?.message}>
+            <FormField label={t("label.currentClub")} error={errors.currentClub?.message}>
               <Input
                 {...register("currentClub")}
-                placeholder="Ex. Real Madrid"
+                placeholder={t("placeholder.exRealMadrid")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Foot */}
-            <FormField label="Foot" error={errors.foot?.message}>
+            <FormField label={t("label.foot")} error={errors.foot?.message}>
               <Select
+                defaultValue={initialData?.foot as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "foot",
@@ -217,12 +227,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select foot" />
+                  <SelectValue placeholder={t("placeholder.selectFoot")} />
                 </SelectTrigger>
                 <SelectContent>
                   {footOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("foot", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -230,8 +240,9 @@ export function HighSchoolPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Country */}
-            <FormField label="Country" error={errors.country?.message}>
+            <FormField label={t("label.country")} error={errors.country?.message}>
               <Select
+                defaultValue={initialData?.country as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "country",
@@ -241,12 +252,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t("placeholder.selectCountry")} />
                 </SelectTrigger>
                 <SelectContent>
                   {countryList.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("country", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -254,8 +265,9 @@ export function HighSchoolPlayerProfessionalInfoForm({
             </FormField>
 
             {/* Position */}
-            <FormField label="Position" error={errors.position?.message}>
+            <FormField label={t("label.position")} error={errors.position?.message}>
               <Select
+                defaultValue={initialData?.position as string | undefined}
                 onValueChange={(value) =>
                   setValue(
                     "position",
@@ -265,12 +277,12 @@ export function HighSchoolPlayerProfessionalInfoForm({
                 }
               >
                 <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder="Select position" />
+                  <SelectValue placeholder={t("placeholder.selectPosition")} />
                 </SelectTrigger>
                 <SelectContent>
                   {playerPositionOptions.map((item) => (
                     <SelectItem key={item} value={item}>
-                      {item}
+                      {label("position", item)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -278,84 +290,84 @@ export function HighSchoolPlayerProfessionalInfoForm({
             </FormField>
 
             {/* League */}
-            <FormField label="League" error={errors.league?.message}>
+            <FormField label={t("label.league")} error={errors.league?.message}>
               <Input
                 {...register("league")}
-                placeholder="Ex. Premier League"
+                placeholder={t("placeholder.exPremierLeague")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Agent */}
             <FormField
-              label="Agent (if applicable)"
+              label={t("label.agentIfApplicable")}
               error={errors.agent?.message}
             >
               <Input
                 {...register("agent")}
-                placeholder="Ex. Suman Barman"
+                placeholder={t("placeholder.exSumanBarman")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Category */}
             <FormField
-              label="Category (if applicable)"
+              label={t("label.categoryIfApplicable")}
               error={errors.category?.message}
             >
               <Input
                 {...register("category")}
-                placeholder="Ex. Forward"
+                placeholder={t("placeholder.exForward")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* school name */}
-            <FormField label="School Name" error={errors.schoolName?.message}>
+            <FormField label={t("label.schoolName")} error={errors.schoolName?.message}>
               <Input
                 {...register("schoolName")}
-                placeholder="Write your school name"
+                placeholder={t("placeholder.writeYourSchoolName")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
-            <FormField label="Diploma" error={errors.diploma?.message}>
+            <FormField label={t("label.diploma")} error={errors.diploma?.message}>
               <Input
                 {...register("diploma")}
-                placeholder="Write your diploma"
+                placeholder={t("placeholder.writeYourDiploma")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             <FormField
-              label="SAT/ACT (if applicable)"
-              error={errors.schoolName?.message}
+              label={t("label.satActIfApplicable")}
+              error={errors.satOrAct?.message}
             >
               <Input
                 {...register("satOrAct")}
-                placeholder="Write your diploma name"
+                placeholder={t("placeholder.satActScore")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             <FormField
-              label="GPA (if applicable)"
-              error={errors.schoolName?.message}
+              label={t("label.gpaIfApplicable")}
+              error={errors.gpa?.message}
             >
               <Input
                 {...register("gpa")}
-                placeholder="Write your gpa"
+                placeholder={t("placeholder.writeYourGpa")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Social Media */}
             <FormField
-              label="Social Media (optional)"
+              label={t("label.socialMediaOptional")}
               error={errors.socialMedia?.message}
             >
               <Input
                 {...register("socialMedia")}
-                placeholder="https://www.example.com"
+                placeholder={t("placeholder.httpsWwwExampleCom")}
                 className="bg-gray-50 border-0"
               />
             </FormField>

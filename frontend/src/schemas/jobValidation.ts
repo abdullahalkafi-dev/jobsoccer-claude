@@ -1,39 +1,41 @@
 import { z } from "zod";
+import { englishValidation, type Translator } from "./translator";
 
-export const createJobSchema = z
-  .object({
-    jobTitle: z.string().min(3, "Job title is required"),
-    location: z.string().min(1, "Location is required"),
-    country: z.string().min(1, "Country is required"),
-    deadline: z.string().min(1, "Deadline is required"),
-    jobOverview: z.string().min(20, "Job overview minimum 20 characters long"),
-    jobCategory: z.string().min(1, "Job category is required"),
-    position: z.string().min(1, "Position is required"),
-    contractType: z.string().min(1, "Contract type is required"),
-    minSalary: z.string().min(1, "Minimum salary is required"),
-    maxSalary: z.string().min(1, "Maximum salary is required"),
-    experience: z.enum(
-      ["Entry Level", "Intermediate", "Mid-Level", "Mid-Senior", "Senior"],
-      { message: "Please select a valid experience level" }
-    ),
-    requirements: z.string().min(20, "Requirements minimum 20 characters long"),
-    responsibilities: z.string().min(20, "Responsibilities minimum 20 characters long"),
-    requiredSkills: z.string().min(20, "Required skills minimum 20 characters long"),
-    additionalRequirements: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      const minSal = parseFloat(data.minSalary);
-      const maxSal = parseFloat(data.maxSalary);
-      return !isNaN(minSal) && !isNaN(maxSal) && maxSal > minSal;
-    },
-    {
-      message: "Maximum salary must be greater than minimum salary",
-      path: ["maxSalary"],
-    }
-  );
+export const getCreateJobSchema = (t: Translator) =>
+  z
+    .object({
+      jobTitle: z.string(t("invalid")).min(3, t("jobTitle")),
+      location: z.string(t("invalid")).min(1, t("location")),
+      country: z.string(t("invalid")).min(1, t("country")),
+      deadline: z.string(t("invalid")).min(1, t("deadline")),
+      jobOverview: z.string(t("invalid")).min(20, t("jobOverviewMin", { min: 20 })),
+      jobCategory: z.string(t("invalid")).min(1, t("jobCategory")),
+      position: z.string(t("invalid")).min(1, t("position")),
+      contractType: z.string(t("invalid")).min(1, t("contractType")),
+      minSalary: z.string(t("invalid")).min(1, t("minSalary")),
+      maxSalary: z.string(t("invalid")).min(1, t("maxSalary")),
+      experience: z.enum(
+        ["Entry Level", "Intermediate", "Mid-Level", "Mid-Senior", "Senior"],
+        { error: t("selectExperience") }
+      ),
+      requirements: z.string(t("invalid")).min(20, t("requirementsMin", { min: 20 })),
+      responsibilities: z.string(t("invalid")).min(20, t("responsibilitiesMin", { min: 20 })),
+      requiredSkills: z.string(t("invalid")).min(20, t("requiredSkillsMin", { min: 20 })),
+      additionalRequirements: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        const minSal = parseFloat(data.minSalary);
+        const maxSal = parseFloat(data.maxSalary);
+        return !isNaN(minSal) && !isNaN(maxSal) && maxSal > minSal;
+      },
+      {
+        message: t("maxSalaryGreater"),
+        path: ["maxSalary"],
+      }
+    );
 
-export type CreateJobFormData = z.infer<typeof createJobSchema>;
+export type CreateJobFormData = z.infer<ReturnType<typeof getCreateJobSchema>>;
 
 // Type for API payload (with transformed salary object)
 export interface CreateJobPayload {
@@ -56,3 +58,6 @@ export interface CreateJobPayload {
   additionalRequirements?: string;
   status: "active" | "closed" | "draft" | "expired";
 }
+
+// English versions for code outside React (types, older imports). Components use the getXxxSchema(t) factories.
+export const createJobSchema = getCreateJobSchema(englishValidation);

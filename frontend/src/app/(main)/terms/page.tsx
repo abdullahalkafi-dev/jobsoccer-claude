@@ -1,16 +1,23 @@
+import { getTranslations } from "next-intl/server";
 import { StaticPage, SUPPORT_EMAIL } from "@/components/shared/StaticPage";
 
-export const metadata = { title: "Terms of Use | JOBSOCCER" };
+export async function generateMetadata() {
+  const t = await getTranslations("pages");
+  return { title: t("terms.metaTitle") };
+}
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await getTranslations("pages");
   return (
-    <StaticPage title="Terms of Use" intro="Our Terms of Use are being finalised and will be published here.">
+    <StaticPage title={t("terms.title")} intro={t("terms.intro")}>
       <p>
-        If you have a question in the meantime, write to{" "}
-        <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
-          {SUPPORT_EMAIL}
-        </a>
-        .
+        {t.rich("terms.question", {
+          email: () => (
+            <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
+            </a>
+          ),
+        })}
       </p>
     </StaticPage>
   );

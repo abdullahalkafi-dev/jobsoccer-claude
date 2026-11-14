@@ -8,8 +8,12 @@ import { useGetEmployersQuery } from "@/redux/features/employer/employerApi";
 import { IEmployer } from "@/types/user";
 import { CardSkeleton } from "@/components/skeleton/CardSkeleton";
 import { Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 function EmployerSearchPageContent() {
+  const t = useTranslations("employers.search");
+  const label = useOptionLabel();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -47,15 +51,17 @@ function EmployerSearchPageContent() {
           <div className="flex items-center gap-2 sm:gap-3">
             <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#5D4E37] shrink-0" />
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-              Search Results
+              {t("results")}
             </h2>
           </div>
           {!isLoading && (
             <div className="text-sm text-gray-600">
-              <span className="font-semibold text-green-500">
-                {totalEmployers}
-              </span>{" "}
-              {totalEmployers === 1 ? "employer" : "employers"} found
+              {t.rich("found", {
+                count: totalEmployers,
+                green: (chunks) => (
+                  <span className="font-semibold text-green-500">{chunks}</span>
+                ),
+              })}
             </div>
           )}
         </div>
@@ -64,22 +70,31 @@ function EmployerSearchPageContent() {
         {(filters.searchTerm || filters.role || filters.country) && (
           <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-gray-700 mb-2 font-medium">
-              Active Search:
+              {t("activeSearch")}
             </p>
             <div className="flex flex-wrap gap-2">
               {filters.searchTerm && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Search: <strong>{filters.searchTerm}</strong>
+                  {t.rich("searchFilter", {
+                    value: filters.searchTerm,
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
               {filters.role && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Role: <strong>{filters.role}</strong>
+                  {t.rich("roleFilter", {
+                    value: label("role", filters.role),
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
               {filters.country && (
                 <span className="px-3 py-1 bg-white border border-green-300 text-green-700 rounded-full text-sm">
-                  Location: <strong>{filters.country}</strong>
+                  {t.rich("locationFilter", {
+                    value: label("country", filters.country),
+                    strong: (chunks) => <strong>{chunks}</strong>,
+                  })}
                 </span>
               )}
             </div>
@@ -103,10 +118,10 @@ function EmployerSearchPageContent() {
               <div className="text-center">
                 <Building2 className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">
-                  No employers found
+                  {t("noneTitle")}
                 </h3>
                 <p className="text-gray-500">
-                  Try adjusting your search criteria to find more employers
+                  {t("noneHint")}
                 </p>
               </div>
             </div>
@@ -117,8 +132,7 @@ function EmployerSearchPageContent() {
         {employers.length > 0 && (
           <div className="text-center py-8">
             <p className="text-sm text-gray-500">
-              Showing all {totalEmployers}{" "}
-              {totalEmployers === 1 ? "result" : "results"}
+              {t("showingAll", { count: totalEmployers })}
             </p>
           </div>
         )}
@@ -128,8 +142,9 @@ function EmployerSearchPageContent() {
 }
 
 export default function EmployerSearchPage() {
+  const t = useTranslations("employers.search");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t("loading")}</div>}>
       <EmployerSearchPageContent />
     </Suspense>
   );

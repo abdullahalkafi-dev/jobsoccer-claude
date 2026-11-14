@@ -315,7 +315,7 @@ export const messageApi = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to send message with file");
+      throw new Error(errorData.message || "SEND_FILE_FAILED");
     }
 
     return response.json();

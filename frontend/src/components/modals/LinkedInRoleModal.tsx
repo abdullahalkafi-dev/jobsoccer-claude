@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CandidateRole, EmployerRole } from "@/types/profile";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 const candidateRoles = Object.values(CandidateRole).filter(
   (value) => typeof value === "string"
@@ -32,6 +34,8 @@ export function LinkedInRoleModal({
   onOpenChange,
   onContinue,
 }: LinkedInRoleModalProps) {
+  const t = useTranslations("auth");
+  const label = useOptionLabel();
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [userType, setUserType] = useState<string>("");
 
@@ -51,16 +55,16 @@ export function LinkedInRoleModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Select Your Role</DialogTitle>
+          <DialogTitle>{t("linkedin.modalTitle")}</DialogTitle>
           <DialogDescription>
-            Please select your role to continue with LinkedIn sign up.
+            {t("linkedin.modalDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* Candidates Section */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Candidates</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t("role.candidates")}</h3>
             <RadioGroup
               value={selectedRole}
               onValueChange={(role) => handleRoleSelect(role, "candidate")}
@@ -79,7 +83,7 @@ export function LinkedInRoleModal({
                     htmlFor={`modal-candidate-${role}`}
                     className="text-gray-700 cursor-pointer font-normal"
                   >
-                    {role}
+                    {label("role", role)}
                   </Label>
                 </div>
               ))}
@@ -88,7 +92,7 @@ export function LinkedInRoleModal({
 
           {/* Employers Section */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">Employers</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">{t("role.employers")}</h3>
             <RadioGroup
               value={selectedRole}
               onValueChange={(role) => handleRoleSelect(role, "employer")}
@@ -107,7 +111,7 @@ export function LinkedInRoleModal({
                     htmlFor={`modal-employer-${role}`}
                     className="text-gray-700 cursor-pointer font-normal"
                   >
-                    {role}
+                    {label("role", role)}
                   </Label>
                 </div>
               ))}
@@ -121,7 +125,7 @@ export function LinkedInRoleModal({
             onClick={() => onOpenChange(false)}
             type="button"
           >
-            Cancel
+            {t("linkedin.cancel")}
           </Button>
           <Button
             onClick={handleContinue}
@@ -129,7 +133,7 @@ export function LinkedInRoleModal({
             type="button"
             className="bg-primary text-[#252525] hover:bg-amber-300"
           >
-            Continue with LinkedIn
+            {t("linkedin.continue")}
           </Button>
         </DialogFooter>
       </DialogContent>

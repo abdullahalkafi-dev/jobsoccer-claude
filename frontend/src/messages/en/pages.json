@@ -1,1 +1,79 @@
-{}
+{
+  "about": {
+    "metaTitle": "About Us | Jobsoccer",
+    "title": "About Us",
+    "intro": "Jobsoccer is the recruitment platform built specifically for soccer.",
+    "p1": "Using AI-powered matching, video analysis and performance data, we help employers hire faster and more efficiently, while giving candidates worldwide the visibility and fair chance they deserve.",
+    "p2": "Clubs, academies, schools, universities and agents post jobs and search candidates. Players, coaches and office staff build a profile, record a video interview and get discovered.",
+    "p3": "Every candidate for the same position answers the same questions, so everyone is evaluated on equal terms. The AI assessment supports, and never replaces, the employer's own judgment."
+  },
+  "faq": {
+    "metaTitle": "FAQ | Jobsoccer",
+    "title": "Frequently Asked Questions",
+    "items": {
+      "quality": {
+        "q": "What is the Profile Quality Score?",
+        "a": "A score out of 100 that shows how complete, verified and up to date your profile is. You see the number; employers see stars and a level. It does not measure your professional ability."
+      },
+      "video": {
+        "q": "What is the video interview?",
+        "a": "You answer the same set of questions as every other candidate for your position, in one video of up to 6:30 minutes. The answers are transcribed, summarised and scored by AI to help employers review them. Scores support, and never replace, the employer's judgment."
+      },
+      "methodology": {
+        "q": "Is the methodology video required?",
+        "a": "No, it is optional for on-field and office staff. Adding it gives you extra Profile Quality points and helps you stand out."
+      },
+      "requirements": {
+        "q": "What are the video requirements?",
+        "a": "MP4 or MOV, at least 720p, up to 600 MB, recorded with a fixed camera in a quiet place. You may record your answers separately and combine them into one video before uploading."
+      },
+      "replace": {
+        "q": "Can I replace my videos?",
+        "a": "Your interview and methodology videos are locked for 3 months after you submit them. After that you can upload an updated version."
+      },
+      "contact": {
+        "q": "Who can see my contact details?",
+        "a": "Employers see your contact details only after you accept their access request."
+      },
+      "verified": {
+        "q": "How do I get verified?",
+        "a": "Use \"Add Verification Badge\" on your profile to request identity verification, and upload a document for your licences, education or work history. Verified items add points to your score."
+      }
+    },
+    "more": "More questions? Write to <email>email</email>."
+  },
+  "contact": {
+    "metaTitle": "Contact | Jobsoccer",
+    "title": "Contact",
+    "intro": "Questions, feedback or need help with your profile? We are happy to help.",
+    "writeUs": "Write to us at <email>email</email>.",
+    "accessibility": "Candidates who need an adjustment for accessibility reasons when recording their video can also contact us at the same address."
+  },
+  "privacy": {
+    "metaTitle": "Privacy Policy | Jobsoccer",
+    "title": "Privacy Policy",
+    "intro": "Our Privacy Policy is being finalised and will be published here.",
+    "question": "If you have a question about your data in the meantime, write to <email>email</email>."
+  },
+  "terms": {
+    "metaTitle": "Terms of Use | Jobsoccer",
+    "title": "Terms of Use",
+    "intro": "Our Terms of Use are being finalised and will be published here.",
+    "question": "If you have a question in the meantime, write to <email>email</email>."
+  },
+  "error": {
+    "title": "Something went wrong!",
+    "description": "Oops, it looks like something went wrong while trying to load the page.",
+    "tryAgain": "Try Again",
+    "orGoHome": "Or you can <link>go back to the homepage</link>"
+  },
+  "notFound": {
+    "description": "Oops, it looks like the page you're looking for doesn't exist.",
+    "goHome": "Go to Homepage"
+  },
+  "category": {
+    "title": "Find Your <highlight>Ultimate Job</highlight><br></br>Search Companion",
+    "allJobs": "All Jobs",
+    "loading": "Loading..."
+  }
+}

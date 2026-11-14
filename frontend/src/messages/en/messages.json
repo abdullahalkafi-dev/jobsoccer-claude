@@ -1,1 +1,75 @@
-{}
+{
+  "errors": {
+    "youBlocked": "You blocked this user",
+    "blockedByUser": "You have been blocked by this user",
+    "missingIds": "Chat ID and Receiver ID are required",
+    "unknown": "Unknown error",
+    "SOCKET_NOT_CONNECTED": "Not connected to chat. Please wait for the connection.",
+    "SOCKET_DISCONNECTED": "The chat connection was lost. Please wait for it to reconnect.",
+    "NO_MESSAGE": "No message returned from server",
+    "SEND_FILE_FAILED": "Failed to send message with file"
+  },
+  "toast": {
+    "blockedCannotSend": "Cannot send message. This conversation is blocked.",
+    "notConnected": "Not connected. Please wait for connection...",
+    "sendFailed": "Failed to send message: {error}",
+    "deleteFailed": "Failed to delete conversation. Please try again.",
+    "blocked": "User blocked successfully",
+    "blockFailed": "Failed to block user. Please try again.",
+    "unblocked": "User unblocked successfully",
+    "unblockFailed": "Failed to unblock user. Please try again.",
+    "notAgent": "Selected user is not an agent",
+    "alreadyHiring": "You already have an active hiring with this agent",
+    "hireSent": "Hiring request sent successfully!",
+    "hireFailed": "Failed to send hiring request. Please try again."
+  },
+  "searchPlaceholder": "Search messages...",
+  "title": "Messages",
+  "status": {
+    "connected": "Connected",
+    "connecting": "Connecting...",
+    "notLoggedIn": "Not logged in"
+  },
+  "noConversations": "No conversations yet",
+  "blockedTag": "(Blocked)",
+  "noMessagesYet": "No messages yet",
+  "preview": {
+    "text": "Message",
+    "image": "Image",
+    "video": "Video",
+    "file": "File"
+  },
+  "viewProfile": "View Profile",
+  "hire": {
+    "hiring": "Hiring...",
+    "pending": "Request Pending",
+    "hired": "Hired",
+    "hire": "Hire"
+  },
+  "menu": {
+    "block": "Block User",
+    "unblock": "Unblock User",
+    "delete": "Delete Chat"
+  },
+  "blocked": {
+    "title": "This conversation is blocked",
+    "youBlockedFooter": "You blocked this user. Unblock to send messages.",
+    "cannotSend": "You cannot send messages to this user."
+  },
+  "startConversation": "No messages yet. Start the conversation!",
+  "imageAlt": "Image",
+  "downloadFile": "Download File",
+  "writePlaceholder": "Write your messages...",
+  "previewAlt": "Preview",
+  "sendTitle": {
+    "waiting": "Waiting for connection...",
+    "empty": "Type a message or select a file"
+  },
+  "send": "Send",
+  "selectConversation": "Select a conversation to start messaging",
+  "startChat": {
+    "loading": "Loading...",
+    "message": "Message",
+    "loginRequired": "Please log in to send messages."
+  }
+}

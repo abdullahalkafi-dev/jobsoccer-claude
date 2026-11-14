@@ -6,6 +6,7 @@ import CandidateCard from "@/components/cards/CandidateCard";
 import { CardSkeletonGrid } from "@/components/skeleton/CardSkeleton";
 import { Users, Bookmark } from "lucide-react";
 import { ICandidate } from "@/types/user";
+import { useTranslations } from "next-intl";
 
 interface ShortlistData {
   _id: string;
@@ -31,6 +32,7 @@ interface ShortlistResponse {
 }
 
 export default function ShortlistPage() {
+  const t = useTranslations("employers.shortlist");
   const { data: shortlistData, isLoading } =
     useGetShortlistedCandidatesQuery(null);
 
@@ -47,7 +49,7 @@ export default function ShortlistPage() {
         <div className="flex items-center gap-2 mb-6">
           <Bookmark className="w-6 h-6 text-yellow-500" />
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-            My Shortlist
+            {t("title")}
           </h1>
         </div>
         <CardSkeletonGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" />
@@ -62,17 +64,16 @@ export default function ShortlistPage() {
         <div className="flex items-center gap-2 mb-6">
           <Bookmark className="w-6 h-6 text-yellow-500" />
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-            My Shortlist
+            {t("title")}
           </h1>
         </div>
         <div className="flex flex-col items-center justify-center py-16 bg-gray-50 rounded-lg">
           <Users className="w-16 h-16 text-gray-300 mb-4" />
           <h2 className="text-xl font-semibold text-gray-700 mb-2">
-            No Candidates Shortlisted
+            {t("emptyTitle")}
           </h2>
           <p className="text-gray-500 text-center max-w-md">
-            You haven&lsquo;t shortlisted any candidates yet. Browse candidates and
-            click the shortlist button to save them here.
+            {t("emptyText")}
           </p>
         </div>
       </div>
@@ -86,13 +87,12 @@ export default function ShortlistPage() {
         <div className="flex items-center gap-2">
           <Bookmark className="w-6 h-6 text-yellow-500" />
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-            My Shortlist
+            {t("title")}
           </h1>
         </div>
         <div className="bg-yellow-100 px-4 py-2 rounded-full">
           <span className="text-sm font-semibold text-gray-700">
-            {totalShortlisted}{" "}
-            {totalShortlisted === 1 ? "Candidate" : "Candidates"}
+            {t("count", { count: totalShortlisted })}
           </span>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function ShortlistPage() {
       {/* Pagination info */}
       {typedData?.meta && typedData.meta.totalPage > 1 && (
         <div className="mt-8 text-center text-sm text-gray-500">
-          Page {typedData.meta.page} of {typedData.meta.totalPage}
+          {t("pageOf", { page: typedData.meta.page, total: typedData.meta.totalPage })}
         </div>
       )}
     </div>

@@ -2,6 +2,8 @@
 "use client";
 
 import React from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLayout } from "@/components/form/FormLayout";
@@ -9,7 +11,7 @@ import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { ImageUpload } from "@/components/form/fields/ImageUpload";
 import { Input } from "@/components/ui/input";
-import { personalInfoSchema } from "@/schemas/profileValidation";
+import { getPersonalInfoSchema } from "@/schemas/profileValidation";
 import { TPersonalInfo } from "@/types/profile";
 
 interface IPersonalInfoFormProps {
@@ -28,6 +30,10 @@ export function PersonalInfoForm({
   initialData,
   steps,
 }: IPersonalInfoFormProps) {
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => getPersonalInfoSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
@@ -35,7 +41,7 @@ export function PersonalInfoForm({
     watch,
     formState: { errors, isValid },
   } = useForm<TPersonalInfo>({
-    resolver: zodResolver(personalInfoSchema) as any,
+    resolver: zodResolver(schema) as any,
     defaultValues: initialData,
     mode: "onChange",
   });
@@ -57,20 +63,20 @@ export function PersonalInfoForm({
       isNextDisabled={!isValid}
     >
       <form className="space-y-8">
-        <FormSection title="Personal Information">
+        <FormSection title={t("section.personalInformation")}>
           <div className="flex justify-start mb-6">
             <FormField error={errors.image?.message}>
               {/* Profile Picture, Date of Birth, Place of Birth, Nationality, Phone Number (Optional) */}
               <ImageUpload
                 value={imageValue}
                 onChange={(file) => setValue("image", file as File)}
-                placeholder="Upload your image"
+                placeholder={t("placeholder.uploadYourImage")}
               />
             </FormField>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
-              label="Date of birth"
+              label={t("label.dateOfBirth")}
               error={errors.dateOfBirth?.message}
             >
               <Input
@@ -81,31 +87,31 @@ export function PersonalInfoForm({
             </FormField>
 
             <FormField
-              label="Place Of Birth"
+              label={t("label.placeOfBirth")}
               error={errors.placeOfBirth?.message}
             >
               <Input
                 {...register("placeOfBirth")}
-                placeholder="Enter your place of birth"
+                placeholder={t("placeholder.enterYourPlaceOfBirth")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
-            <FormField label="Nationality" error={errors.nationality?.message}>
+            <FormField label={t("label.nationality")} error={errors.nationality?.message}>
               <Input
                 {...register("nationality")}
-                placeholder="Enter your nationality"
+                placeholder={t("placeholder.enterYourNationality")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             <FormField
-              label="Phone number (optional)"
+              label={t("label.phoneNumberOptional")}
               error={errors.phoneNumber?.message}
             >
               <Input
                 {...register("phoneNumber")}
-                placeholder="Enter your phone number"
+                placeholder={t("placeholder.enterYourPhoneNumber")}
                 className="bg-gray-50 border-0"
               />
             </FormField>

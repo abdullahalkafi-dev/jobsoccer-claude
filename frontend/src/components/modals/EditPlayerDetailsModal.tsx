@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
   contractExpires: z.string(),
@@ -49,6 +50,7 @@ export default function EditPlayerDetailsModal({
   onClose,
   initialData,
 }: PlayerDetailsModalProps) {
+  const t = useTranslations("modals");
   const form = useForm<PlayerDetailsFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
@@ -63,7 +65,7 @@ export default function EditPlayerDetailsModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Update Player Details</DialogTitle>
+          <DialogTitle>{t("playerDetails.title")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -76,7 +78,7 @@ export default function EditPlayerDetailsModal({
                 name="contractExpires"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Contract Expires</FormLabel>
+                    <FormLabel>{t("playerDetails.contractExpires")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -89,7 +91,7 @@ export default function EditPlayerDetailsModal({
                 name="marketValue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Market Value</FormLabel>
+                    <FormLabel>{t("playerDetails.marketValue")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -104,7 +106,7 @@ export default function EditPlayerDetailsModal({
                 name="onLoanFrom"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>On loan From</FormLabel>
+                    <FormLabel>{t("playerDetails.onLoanFrom")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -117,7 +119,7 @@ export default function EditPlayerDetailsModal({
                 name="currentClub"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current Club</FormLabel>
+                    <FormLabel>{t("playerDetails.currentClub")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -133,7 +135,7 @@ export default function EditPlayerDetailsModal({
                 name="shortlist"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Shortlist</FormLabel>
+                    <FormLabel>{t("playerDetails.shortlist")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -146,7 +148,7 @@ export default function EditPlayerDetailsModal({
                 name="agent"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Agent</FormLabel>
+                    <FormLabel>{t("playerDetails.agent")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -162,7 +164,7 @@ export default function EditPlayerDetailsModal({
                 name="height"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Height</FormLabel>
+                    <FormLabel>{t("playerDetails.height")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -175,7 +177,7 @@ export default function EditPlayerDetailsModal({
                 name="age"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Age</FormLabel>
+                    <FormLabel>{t("playerDetails.age")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -190,7 +192,7 @@ export default function EditPlayerDetailsModal({
                 name="position"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Position</FormLabel>
+                    <FormLabel>{t("playerDetails.position")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -203,7 +205,7 @@ export default function EditPlayerDetailsModal({
                 name="weight"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Weight</FormLabel>
+                    <FormLabel>{t("playerDetails.weight")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -219,7 +221,7 @@ export default function EditPlayerDetailsModal({
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>{t("playerDetails.gender")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -232,7 +234,7 @@ export default function EditPlayerDetailsModal({
                 name="languages"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Languages</FormLabel>
+                    <FormLabel>{t("playerDetails.languages")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -246,7 +248,7 @@ export default function EditPlayerDetailsModal({
               name="nationalTeamCareer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>National Team Career</FormLabel>
+                  <FormLabel>{t("playerDetails.nationalTeamCareer")}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -256,13 +258,13 @@ export default function EditPlayerDetailsModal({
             />
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
               >
-                Save
+                {t("common.save")}
               </Button>
             </div>
           </form>

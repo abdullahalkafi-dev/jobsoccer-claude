@@ -7,21 +7,23 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import { useTranslations } from "next-intl";
 
 type NavigationItem = {
   id: string;
-  label: string;
+  labelKey: string;
 };
 
 const navigationItems: NavigationItem[] = [
-  { id: "/", label: "My Profile" },
-  { id: "billing", label: "Billing" },
-  { id: "jobs", label: "Jobs" },
-  { id: "shortlist", label: "Shortlist" },
-  { id: "hiring", label: "Hiring" },
+  { id: "/", labelKey: "myProfile" },
+  { id: "billing", labelKey: "billing" },
+  { id: "jobs", labelKey: "jobs" },
+  { id: "shortlist", labelKey: "shortlist" },
+  { id: "hiring", labelKey: "hiring" },
 ];
 
 export default function EmployerSidebar() {
+  const t = useTranslations("profile.sidebar");
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
@@ -60,7 +62,7 @@ export default function EmployerSidebar() {
         >
           <Menu className="h-6 w-6" />
         </Button>
-        <span className="ml-3 text-lg font-semibold">Profile Menu</span>
+        <span className="ml-3 text-lg font-semibold">{t("menu")}</span>
       </div>
 
       {/* Sidebar Overlay for Mobile */}
@@ -76,7 +78,7 @@ export default function EmployerSidebar() {
             <button
               className="absolute top-2 right-4 text-gray-500 hover:text-gray-900"
               onClick={() => setSidebarOpen(false)}
-              aria-label="Close sidebar"
+              aria-label={t("close")}
             >
               <X className="h-6 w-6" />
             </button>
@@ -106,6 +108,7 @@ function SidebarContent({
   activeSection: string;
   navigationItems: NavigationItem[];
 }) {
+  const t = useTranslations("profile.sidebar");
   return (
     <div className="flex flex-col h-full">
       {/* Navigation */}
@@ -131,7 +134,7 @@ function SidebarContent({
                         : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     )}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </Button>
                 </Link>
               </li>
@@ -146,7 +149,7 @@ function SidebarContent({
           className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
         >
           <LogOut className="mr-3 h-5 w-5" />
-          Logout
+          {t("logout")}
         </button>
       </div>
     </div>

@@ -1,1 +1,24 @@
-{}
+{
+  "userAvatar": "Avatar de l'utilisateur",
+  "adminDashboard": "Tableau de bord administrateur",
+  "myProfile": "Mon profil",
+  "logOut": "Se déconnecter",
+  "links": {
+    "home": "Accueil",
+    "candidates": "Candidats",
+    "employers": "Employeurs",
+    "jobBoard": "Offres d'emploi",
+    "myNetwork": "Mon réseau",
+    "upgrade": "Passer à Premium",
+    "message": "Messages",
+    "notification": "Notifications"
+  },
+  "homeAria": "Accueil Jobsoccer",
+  "logoAlt": "Logo Jobsoccer",
+  "openMenu": "Ouvrir le menu de navigation",
+  "mainNav": "Navigation principale",
+  "mobileNav": "Navigation mobile",
+  "signIn": "Se connecter",
+  "logIn": "Se connecter",
+  "menu": "Menu"
+}

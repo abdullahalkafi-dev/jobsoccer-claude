@@ -10,6 +10,7 @@ import { ICandidate } from "@/types/user";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CardSkeletonGrid } from "@/components/skeleton/CardSkeleton";
 import { CandidateRole } from "@/types/profile";
+import { useTranslations } from "next-intl";
 
 // Types for better type safety
 interface CandidateSectionConfig {
@@ -39,6 +40,7 @@ const LoadingSection = () => (
 );
 
 function CandidatesPage() {
+  const t = useTranslations("candidates.page");
   const { data: featuredCandidatesData, isLoading } =
     useGetCandidateFeaturedQuery(null);
 
@@ -46,37 +48,37 @@ function CandidatesPage() {
   const candidateSections: CandidateSectionConfig[] = useMemo(
     () => [
       {
-        title: "On-Field Staff",
+        title: t("onFieldStaff"),
         dataKey: "Onfieldstaff",
         searchRole: CandidateRole.ON_FIELD_STAFF,
       },
       {
-        title: "Office Staff",
+        title: t("officeStaff"),
         dataKey: "OfficeStaff",
         searchRole: CandidateRole.OFFICE_STAFF,
       },
       {
-        title: "High School Players",
+        title: t("highSchoolPlayers"),
         dataKey: "HighSchoolPlayer",
         searchRole: CandidateRole.HIGH_SCHOOL,
       },
       {
-        title: "College/University Players",
+        title: t("collegePlayers"),
         dataKey: "College/UniversityPlayer",
         searchRole: CandidateRole.COLLEGE_UNIVERSITY,
       },
       {
-        title: "Professional Players",
+        title: t("professionalPlayers"),
         dataKey: "ProfessionalPlayer",
         searchRole: CandidateRole.PROFESSIONAL_PLAYER,
       },
       {
-        title: "Amateur Players",
+        title: t("amateurPlayers"),
         dataKey: "AmateurPlayer",
         searchRole: CandidateRole.AMATEUR_PLAYER,
       },
     ],
-    [],
+    [t],
   );
 
   const featuredData = featuredCandidatesData?.data as
@@ -130,7 +132,7 @@ function CandidatesPage() {
         {!isLoading && !featuredData && (
           <div className="text-center py-16">
             <p className="text-gray-500 text-lg">
-              No candidates available at the moment.
+              {t("empty")}
             </p>
           </div>
         )}

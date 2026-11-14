@@ -1,1 +1,47 @@
-{}
+{
+  "title": "Calidad del perfil",
+  "tooltip": "Calidad del perfil: {label}",
+  "starsAria": "{stars} de 5 estrellas",
+  "levels": {
+    "incomplete": "Incompleto",
+    "developing": "En desarrollo",
+    "complete": "Completo",
+    "advanced": "Avanzado",
+    "premium": "Premium calificado"
+  },
+  "card": {
+    "category": "Categoría",
+    "earned": "Obtenidos",
+    "maximum": "Máximo",
+    "premiumQualified": "Eres <b>Premium calificado</b>: puedes postularte a oportunidades premium.",
+    "morePoints": "<b>{points, plural, one {# punto más} other {# puntos más}}</b> para desbloquear las oportunidades premium (5 estrellas).",
+    "howToImprove": "Cómo mejorar",
+    "disclaimer": "Esta puntuación indica lo completo y verificado que está tu perfil. No mide tu capacidad profesional y una puntuación alta no garantiza un empleo."
+  },
+  "premium": {
+    "badge": "Premium",
+    "badgeTitle": "Oportunidad premium: los candidatos necesitan una calidad del perfil de 5 estrellas para postularse",
+    "canApply": "Esta es una oportunidad premium. Tu perfil Premium calificado puede postularse.",
+    "title": "Oportunidad premium",
+    "needMore": "Las oportunidades premium están abiertas a candidatos con una calidad del perfil de 5 estrellas (Premium calificado). Te faltan <b>{points, plural, one {# punto} other {# puntos}}</b>. <link>Descubre cómo mejorar tu perfil</link>",
+    "guest": "Todos pueden ver este empleo. Para postularte, necesitas un perfil de candidato con una calidad del perfil de 5 estrellas (Premium calificado)."
+  },
+  "assessment": {
+    "title": "Evaluación de la entrevista",
+    "pending": {
+      "queued": "Tu evaluación de la entrevista está en espera de comenzar.",
+      "transcribing": "Estamos escuchando el vídeo de tu entrevista.",
+      "evaluating": "Se están evaluando tus respuestas.",
+      "failed": "No se pudo completar la evaluación. Nuestro equipo ha sido notificado."
+    },
+    "notAnswered": "{count, plural, one {# pregunta no fue respondida} other {# preguntas no fueron respondidas}} en la entrevista, por lo que no se asigna un nivel general.",
+    "underReview": "Nuestro equipo está revisando esta evaluación.",
+    "strongest": "Áreas más fuertes",
+    "weaknesses": "Principales debilidades",
+    "summary": "Resumen"
+  },
+  "guide": {
+    "title": "{name} – Cuestionario de entrevista ({count} preguntas)",
+    "intro": "En tu entrevista en vídeo, responde a estas preguntas en el orden indicado. Puedes saltarte una pregunta: aparecerá como \"Sin responder\" y obtendrá 0 puntos."
+  }
+}

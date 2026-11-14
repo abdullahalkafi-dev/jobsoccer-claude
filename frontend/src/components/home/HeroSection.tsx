@@ -6,8 +6,10 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
 import bg from "@/assets/hero-banner.webp";
+import { useTranslations } from "next-intl";
 
 export function HeroSection() {
+  const t = useTranslations("home");
   const { user, token } = useAppSelector((state) => state.auth);
   const isAuthenticated = !!user && !!token;
 
@@ -20,17 +22,17 @@ export function HeroSection() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
                 <span className="relative inline-block">
-                  Your next
+                  {t("hero.line1a")}
                   <Image
                     src={line}
-                    alt="Hand-drawn underline"
+                    alt={t("hero.underlineAlt")}
                     className="absolute -bottom-2 left-0 w-full h-auto"
                   />
                 </span>{" "}
-                job
+                {t("hero.line1b")}
               </h1>
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
-                starts here!
+                {t("hero.line2")}
               </h1>
             </div>
 
@@ -38,9 +40,9 @@ export function HeroSection() {
               <div className="flex flex-row gap-2 justify-center lg:justify-start">
                 <Button
                   asChild
-                  className=" md:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                  className=" md:min-w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
                 >
-                  <Link href="/signup">Sign Up</Link>
+                  <Link href="/signup">{t("hero.signUp")}</Link>
                 </Button>
               </div>
             )}
@@ -58,7 +60,7 @@ export function HeroSection() {
             <div className="relative z-10">
               <Image
                 src={bg}
-                alt="Hero Background"
+                alt={t("hero.imageAlt")}
                 className="h-full object-cover"
                 priority
               />

@@ -2,6 +2,8 @@ import React from "react";
 import { User } from "lucide-react";
 import { RequestCardProps } from "@/types/cards";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 // Request Card Component
 const RequestCard: React.FC<RequestCardProps> = ({
@@ -10,8 +12,10 @@ const RequestCard: React.FC<RequestCardProps> = ({
   onCancel,
   isLoading = false,
 }) => {
+  const t = useTranslations("cards.request");
+  const label = useOptionLabel();
   const senderName = `${request.senderId.firstName} ${request.senderId.lastName}`;
-  const senderRole = request.senderRole;
+  const senderRole = label("role", request.senderRole);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center justify-between p-4 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors">
@@ -43,14 +47,14 @@ const RequestCard: React.FC<RequestCardProps> = ({
           disabled={isLoading}
           className="px-2 sm:px-4 py-1 sm:py-2 text-xs md:text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Decline
+          {t("decline")}
         </button>
         <button
           onClick={() => onAccept(request._id)}
           disabled={isLoading}
           className="px-2 sm:px-4 py-1 sm:py-2 text-xs md:text-sm text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Accept
+          {t("accept")}
         </button>
       </div>
     </div>

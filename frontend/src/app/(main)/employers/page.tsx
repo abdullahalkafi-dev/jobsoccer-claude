@@ -10,6 +10,8 @@ import { useGetEmployerFeaturedQuery } from "@/redux/features/employer/employerA
 import { EmployerCardSkeletonGrid } from "@/components/skeleton";
 import Link from "next/link";
 import { EmployerRole } from "@/types/profile";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 // Employer category configuration
 const EMPLOYER_CATEGORIES = [
@@ -57,7 +59,9 @@ const EmployerSection = ({
   employers,
   isLoading,
   category,
-}: EmployerSectionProps) => (
+}: EmployerSectionProps) => {
+  const t = useTranslations("employers.page");
+  return (
   <section className="my-8">
     <div className="flex items-center justify-between py-4">
       <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
@@ -65,7 +69,7 @@ const EmployerSection = ({
         <Link
           href={`/employers/search?role=${encodeURIComponent(category)}`}
         >
-          See All
+          {t("seeAll")}
         </Link>
       </Button>
     </div>
@@ -79,9 +83,11 @@ const EmployerSection = ({
       )}
     </div>
   </section>
-);
+  );
+};
 
 function EmployersPage() {
+  const label = useOptionLabel();
   const { data: featuredEmployersData, isLoading } =
     useGetEmployerFeaturedQuery(null);
 
@@ -101,7 +107,7 @@ function EmployersPage() {
         {EMPLOYER_CATEGORIES.map((category) => (
           <EmployerSection
             key={category.key}
-            title={category.label}
+            title={label("role", category.category)}
             employers={featuredEmployersData?.data?.[category.key]}
             isLoading={isLoading}
             category={category.category}

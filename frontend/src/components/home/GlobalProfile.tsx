@@ -4,28 +4,21 @@ import earth from "@/assets/home/earth.png";
 import { useAppSelector } from "@/redux/hooks";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Feature {
   title: string;
   description: string;
 }
 
-const features: Feature[] = [
-  {
-    title: "Global Access",
-    description: "Connect with clubs and agents around the world",
-  },
-  {
-    title: "Visibility",
-    description: "Showcase your talent. Get scouted. Go global!",
-  },
-  {
-    title: "Opportunities",
-    description: "Discover job offers and trials worldwide",
-  },
-];
+const FEATURE_KEYS = ["access", "visibility", "opportunities"] as const;
 
 export function GlobalProfile() {
+  const t = useTranslations("home");
+  const features: Feature[] = FEATURE_KEYS.map((key) => ({
+    title: t(`globalProfile.${key}.title`),
+    description: t(`globalProfile.${key}.text`),
+  }));
   const { user, token } = useAppSelector((state) => state.auth);
   const isAuthenticated = !!user && !!token;
   return (
@@ -34,11 +27,10 @@ export function GlobalProfile() {
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
-            Create your profile and get seen globally!
+            {t("globalProfile.title")}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Build your professional presence and connect with opportunities
-            worldwide
+            {t("globalProfile.subtitle")}
           </p>
         </div>
 
@@ -48,7 +40,7 @@ export function GlobalProfile() {
           <div className="order-2 md:order-1">
             <Image
               src={earth}
-              alt="Global opportunities worldwide"
+              alt={t("globalProfile.imageAlt")}
               className="object-contain w-full"
               priority
               unoptimized
@@ -81,9 +73,9 @@ export function GlobalProfile() {
               <div className="flex flex-row md:justify-start lg:justify-center items-center gap-2 md:gap-4 ">
                 <Button
                   asChild
-                  className="lg:w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
+                  className="lg:min-w-[200px] bg-yellow-300 hover:scale-105 transition-transform duration-200"
                 >
-                  <Link href="/signin">Sign In</Link>
+                  <Link href="/signin">{t("globalProfile.signIn")}</Link>
                 </Button>
               </div>
             )}

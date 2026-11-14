@@ -33,6 +33,9 @@ import {
 } from "@/schemas/jobValidation";
 import { useCreateJobMutation } from "@/redux/features/job/jobApi";
 import { toast } from "sonner";
+import { useLocale, useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
+import { sortByLabel } from "@/i18n/sort";
 import {
   countryList,
   fieldStaffPositionOptions,
@@ -81,7 +84,12 @@ export default function CreateJobPostModal({
   onClose,
   onSuccess,
 }: CreateJobPostModalProps) {
+  const t = useTranslations("jobs.create");
+  const label = useOptionLabel();
+  const locale = useLocale();
   const [createJob, { isLoading }] = useCreateJobMutation();
+  const contractLabel = (value: string) =>
+    value === "FullTime" ? t("fullTime") : value === "PartTime" ? t("partTime") : value === "Contract" ? t("contract") : value;
 
   const form = useForm<CreateJobFormData>({
     resolver: zodResolver(createJobSchema),
@@ -130,7 +138,7 @@ export default function CreateJobPostModal({
 
       await createJob(payload).unwrap();
 
-      toast.success("Job posted successfully!");
+      toast.success(t("success"));
       form.reset();
       onClose();
 
@@ -140,7 +148,7 @@ export default function CreateJobPostModal({
       }
     } catch (error) {
       const apiError = error as { data?: { message?: string } };
-      toast.error(apiError?.data?.message || "Failed to create job post");
+      toast.error(apiError?.data?.message || t("failed"));
       console.error("Failed to create job:", error);
     }
   };
@@ -163,7 +171,7 @@ export default function CreateJobPostModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold">
-              Create a Job Post
+              {t("title")}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -174,7 +182,7 @@ export default function CreateJobPostModal({
               {/* Left Column - Job Details */}
               <div className="space-y-6">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Job details
+                  {t("jobDetails")}
                 </h3>
 
                 {/* Job Title */}
@@ -184,11 +192,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Job title
+                        {t("jobTitle")}
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ex: Mid field player"
+                          placeholder={t("jobTitlePlaceholder")}
                           {...field}
                           className="mt-1"
                         />
@@ -205,11 +213,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Location
+                        {t("location")}
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ex: London, UK"
+                          placeholder={t("locationPlaceholder")}
                           {...field}
                           className="mt-1"
                         />
@@ -226,7 +234,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Country
+                        {t("country")}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -234,13 +242,13 @@ export default function CreateJobPostModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select country" />
+                            <SelectValue placeholder={t("selectCountry")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="max-h-[300px]">
-                          {countryList.map((country) => (
+                          {sortByLabel([...countryList], (c) => label("country", c), locale).map((country) => (
                             <SelectItem key={country} value={country}>
-                              {country}
+                              {label("country", country)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -257,7 +265,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Deadline
+                        {t("deadline")}
                       </FormLabel>
                       <FormControl>
                         <Input type="date" {...field} className="mt-1" />
@@ -274,7 +282,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Job Category
+                        {t("jobCategory")}
                       </FormLabel>
                       <Select
                         onValueChange={(value) => {
@@ -286,7 +294,7 @@ export default function CreateJobPostModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select category" />
+                            <SelectValue placeholder={t("selectCategory")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -295,7 +303,7 @@ export default function CreateJobPostModal({
                               key={category.value}
                               value={category.value}
                             >
-                              {category.label}
+                              {label("role", category.value)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -312,7 +320,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Position
+                        {t("position")}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -320,13 +328,13 @@ export default function CreateJobPostModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select position" />
+                            <SelectValue placeholder={t("selectPosition")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {positionOptionsFor(form.watch("jobCategory")).map((position) => (
                             <SelectItem key={position} value={position}>
-                              {position}
+                              {label("position", position)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -343,7 +351,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Contract Type
+                        {t("contractType")}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -351,13 +359,13 @@ export default function CreateJobPostModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select contract type" />
+                            <SelectValue placeholder={t("selectContract")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {contractTypes.map((type) => (
                             <SelectItem key={type.value} value={type.value}>
-                              {type.label}
+                              {contractLabel(type.value)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -374,7 +382,7 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Experience Level
+                        {t("experienceLevel")}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -382,13 +390,13 @@ export default function CreateJobPostModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select experience level" />
+                            <SelectValue placeholder={t("selectExperience")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {experienceLevels.map((level) => (
                             <SelectItem key={level.value} value={level.value}>
-                              {level.label}
+                              {label("experience", level.value)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -401,7 +409,7 @@ export default function CreateJobPostModal({
                 {/* Salary Range */}
                 <div>
                   <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                    Salary
+                    {t("salary")}
                   </FormLabel>
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
@@ -412,7 +420,7 @@ export default function CreateJobPostModal({
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Min salary"
+                              placeholder={t("minSalary")}
                               {...field}
                               className="mt-1"
                             />
@@ -429,7 +437,7 @@ export default function CreateJobPostModal({
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Max salary"
+                              placeholder={t("maxSalary")}
                               {...field}
                               className="mt-1"
                             />
@@ -445,7 +453,7 @@ export default function CreateJobPostModal({
               {/* Right Column - Job Descriptions */}
               <div className="space-y-6">
                 <h3 className="text-lg font-medium text-gray-900">
-                  Job descriptions
+                  {t("jobDescriptions")}
                 </h3>
 
                 {/* Job Overview */}
@@ -455,11 +463,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Job Overview
+                        {t("jobOverview")}
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Write something about your job..."
+                          placeholder={t("writePlaceholder")}
                           className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
@@ -476,11 +484,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Responsibilities
+                        {t("responsibilities")}
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Write something about your job..."
+                          placeholder={t("writePlaceholder")}
                           className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
@@ -497,11 +505,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Requirements
+                        {t("requirements")}
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Ex: Strong physical fitness, tactical understanding..."
+                          placeholder={t("requirementsPlaceholder")}
                           className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
@@ -518,11 +526,11 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Required Skills
+                        {t("requiredSkills")}
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Ex: Dribbling, Passing, Shooting, Tactical Awareness..."
+                          placeholder={t("skillsPlaceholder")}
                           className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
@@ -539,12 +547,12 @@ export default function CreateJobPostModal({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Additional Requirements{" "}
-                        <span className="text-gray-400">(Optional)</span>
+                        {t("additionalRequirements")}{" "}
+                        <span className="text-gray-400">{t("optional")}</span>
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Ex: Willingness to travel for matches..."
+                          placeholder={t("additionalPlaceholder")}
                           className="mt-1 min-h-20 resize-none"
                           {...field}
                         />
@@ -564,14 +572,14 @@ export default function CreateJobPostModal({
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? "Creating..." : "Create Job Post"}
+                {isLoading ? t("creating") : t("create")}
               </Button>
             </div>
           </form>

@@ -7,10 +7,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 import { ArrowLeft, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
 
 function ProfileViewsPage() {
+  const t = useTranslations("employers.views");
+  const f = useFormats();
+  const label = useOptionLabel();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -45,16 +50,14 @@ function ProfileViewsPage() {
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          Back
+          {t("back")}
         </button>
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          Profile Views
+          {t("title")}
         </h1>
         {stats && (
           <p className="text-gray-600 mt-2">
-            {stats.totalViews} {stats.totalViews === 1 ? "view" : "views"} from{" "}
-            {stats.uniqueViewers}{" "}
-            {stats.uniqueViewers === 1 ? "person" : "people"}
+            {t("stats", { views: stats.totalViews, people: stats.uniqueViewers })}
           </p>
         )}
       </div>
@@ -64,7 +67,7 @@ function ProfileViewsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Eye className="w-5 h-5" />
-            Who viewed your profile
+            {t("whoViewed")}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -76,10 +79,10 @@ function ProfileViewsPage() {
             <div className="text-center py-12">
               <Eye className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                No profile views yet
+                {t("noneTitle")}
               </h3>
               <p className="text-gray-600">
-                When people view your profile, they&apos;ll appear here.
+                {t("noneText")}
               </p>
             </div>
           ) : (
@@ -121,18 +124,16 @@ function ProfileViewsPage() {
                       <h4 className="font-semibold text-gray-900 truncate">
                         {view.viewerId.firstName} {view.viewerId.lastName}
                       </h4>
-                      <p className="text-sm text-gray-600">{view.viewerRole}</p>
+                      <p className="text-sm text-gray-600">{label("role", view.viewerRole)}</p>
                       <p className="text-xs text-gray-500 mt-1 capitalize">
-                        {view.viewerType}
+                        {label("userType", view.viewerType)}
                       </p>
                     </div>
 
                     {/* Timestamp */}
                     <div className="shrink-0 text-right">
                       <p className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(view.createdAt), {
-                          addSuffix: true,
-                        })}
+                        {f.ago(view.createdAt)}
                       </p>
                     </div>
                   </div>
@@ -147,17 +148,17 @@ function ProfileViewsPage() {
                     onClick={handlePreviousPage}
                     disabled={page === 1 || isFetching}
                   >
-                    Previous
+                    {t("previous")}
                   </Button>
                   <span className="text-sm text-gray-600">
-                    Page {page} of {meta.totalPage}
+                    {t("pageOf", { page, total: meta.totalPage })}
                   </span>
                   <Button
                     variant="outline"
                     onClick={handleNextPage}
                     disabled={page === meta.totalPage || isFetching}
                   >
-                    Next
+                    {t("next")}
                   </Button>
                 </div>
               )}

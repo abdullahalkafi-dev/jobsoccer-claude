@@ -21,6 +21,8 @@ import * as z from "zod";
 import { useUpdateProfileMutation } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import {
@@ -88,6 +90,8 @@ export default function EditProfileModal({
   initialData,
   userRole = "",
 }: PersonalInformationModalProps) {
+  const t = useTranslations("modals");
+  const label = useOptionLabel();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
   const {
@@ -216,21 +220,21 @@ export default function EditProfileModal({
       formData.append("data", JSON.stringify(profileData));
 
       await updateProfile(formData).unwrap();
-      toast.success("Profile updated successfully");
+      toast.success(t("profile.updated"));
       onClose();
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update profile";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("profile.updateFailed"));
     }
   };
 
   // Determine which fields to show based on role
   const isProfessionalPlayer = userRole === "Professional Player";
   const isAmateurPlayer = userRole === "Amateur Player";
-  const isHighSchool = userRole === " High School Player";
+  const isHighSchool = userRole === "High School Player";
   const isCollegeUniversity = userRole === "College/University Player";
   const isOnFieldStaff = userRole === "On field staff";
   const isOfficeStaff = userRole === "Office Staff";
@@ -246,15 +250,15 @@ export default function EditProfileModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] p-0 flex flex-col">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle>Edit Profile Information</DialogTitle>
+          <DialogTitle>{t("profile.title")}</DialogTitle>
         </DialogHeader>
         <div className="overflow-y-auto flex-1 px-6 py-4">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <FormSection title="Personal Information">
+            <FormSection title={t("profile.personalInformation")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Date of Birth */}
                 <FormField
-                  label="Date of Birth"
+                  label={t("profile.dateOfBirth")}
                   error={errors.dateOfBirth?.message}
                 >
                   <Input
@@ -266,46 +270,46 @@ export default function EditProfileModal({
 
                 {/* Place of Birth */}
                 <FormField
-                  label="Place of Birth"
+                  label={t("profile.placeOfBirth")}
                   error={errors.placeOfBirth?.message}
                 >
                   <Input
                     {...register("placeOfBirth")}
-                    placeholder="Ex. London, UK"
+                    placeholder={t("profile.placeOfBirthPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Nationality */}
                 <FormField
-                  label="Nationality"
+                  label={t("profile.nationality")}
                   error={errors.nationality?.message}
                 >
                   <Input
                     {...register("nationality")}
-                    placeholder="Ex. British"
+                    placeholder={t("profile.nationalityPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Phone Number */}
                 <FormField
-                  label="Phone Number"
+                  label={t("profile.phoneNumber")}
                   error={errors.phoneNumber?.message}
                 >
                   <Input
                     {...register("phoneNumber")}
-                    placeholder="Ex. +1234567890"
+                    placeholder={t("profile.phonePh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
               </div>
             </FormSection>
 
-            <FormSection title="Professional Information">
+            <FormSection title={t("profile.professionalInformation")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Gender */}
-                <FormField label="Gender" error={errors.gender?.message}>
+                <FormField label={t("profile.gender")} error={errors.gender?.message}>
                   <Select
                     defaultValue={initialData?.gender}
                     onValueChange={(value) =>
@@ -313,12 +317,12 @@ export default function EditProfileModal({
                     }
                   >
                     <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue placeholder={t("profile.selectGender")} />
                     </SelectTrigger>
                     <SelectContent>
                       {genderOptions.map((item) => (
                         <SelectItem key={item} value={item}>
-                          {item}
+                          {label("gender", item)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -326,7 +330,7 @@ export default function EditProfileModal({
                 </FormField>
 
                 {/* Position - Different options based on role */}
-                <FormField label="Position" error={errors.position?.message}>
+                <FormField label={t("profile.position")} error={errors.position?.message}>
                   {isPlayer ? (
                     <Select
                       defaultValue={initialData?.position}
@@ -335,12 +339,12 @@ export default function EditProfileModal({
                       }
                     >
                       <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder="Select position" />
+                        <SelectValue placeholder={t("profile.selectPosition")} />
                       </SelectTrigger>
                       <SelectContent>
                         {playerPositionOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {item}
+                            {label("position", item)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -353,12 +357,12 @@ export default function EditProfileModal({
                       }
                     >
                       <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder="Select position" />
+                        <SelectValue placeholder={t("profile.selectPosition")} />
                       </SelectTrigger>
                       <SelectContent>
                         {fieldStaffPositionOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {item}
+                            {label("position", item)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -371,12 +375,12 @@ export default function EditProfileModal({
                       }
                     >
                       <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder="Select position" />
+                        <SelectValue placeholder={t("profile.selectPosition")} />
                       </SelectTrigger>
                       <SelectContent>
                         {officeStaffPositionOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {item}
+                            {label("position", item)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -384,7 +388,7 @@ export default function EditProfileModal({
                   ) : (
                     <Input
                       {...register("position")}
-                      placeholder="Your position"
+                      placeholder={t("profile.positionPh")}
                       className="bg-gray-50 border-0"
                     />
                   )}
@@ -392,13 +396,13 @@ export default function EditProfileModal({
 
                 {/* Height - Only for players */}
                 {isPlayer && (
-                  <FormField label="Height" error={errors.heightSize?.message}>
+                  <FormField label={t("profile.height")} error={errors.heightSize?.message}>
                     <div className="flex space-x-2">
                       <Input
                         type="number"
                         step="any"
                         {...register("heightSize", { valueAsNumber: true })}
-                        placeholder="Ex. 5.7"
+                        placeholder={t("profile.heightPh")}
                         className="bg-gray-50 border-0"
                       />
                       <Select
@@ -409,13 +413,13 @@ export default function EditProfileModal({
                           })
                         }
                       >
-                        <SelectTrigger className="w-20 bg-gray-50 border-0">
-                          <SelectValue placeholder="Select unit" />
+                        <SelectTrigger className="min-w-20 w-auto bg-gray-50 border-0">
+                          <SelectValue placeholder={t("profile.selectUnit")} />
                         </SelectTrigger>
                         <SelectContent>
                           {heightUnitOptions.map((item) => (
                             <SelectItem key={item} value={item}>
-                              {item}
+                              {label("unit", item)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -426,13 +430,13 @@ export default function EditProfileModal({
 
                 {/* Weight - Only for players */}
                 {isPlayer && (
-                  <FormField label="Weight" error={errors.weightSize?.message}>
+                  <FormField label={t("profile.weight")} error={errors.weightSize?.message}>
                     <div className="flex space-x-2">
                       <Input
                         type="number"
                         step="any"
                         {...register("weightSize", { valueAsNumber: true })}
-                        placeholder="Ex. 75"
+                        placeholder={t("profile.weightPh")}
                         className="bg-gray-50 border-0"
                       />
                       <Select
@@ -443,13 +447,13 @@ export default function EditProfileModal({
                           })
                         }
                       >
-                        <SelectTrigger className="w-20 bg-gray-50 border-0">
-                          <SelectValue placeholder="Select unit" />
+                        <SelectTrigger className="min-w-20 w-auto bg-gray-50 border-0">
+                          <SelectValue placeholder={t("profile.selectUnit")} />
                         </SelectTrigger>
                         <SelectContent>
                           {weightUnitOptions.map((item) => (
                             <SelectItem key={item} value={item}>
-                              {item}
+                              {label("unit", item)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -460,33 +464,31 @@ export default function EditProfileModal({
 
                 {/* Current Club */}
                 <FormField
-                  label={isStaff ? "Current Employer" : "Current Club"}
+                  label={isStaff ? t("profile.currentEmployer") : t("profile.currentClub")}
                   error={errors.currentClub?.message}
                 >
                   <Input
                     {...register("currentClub")}
-                    placeholder={
-                      isStaff ? "Ex. Real Madrid" : "Ex. Real Madrid"
-                    }
+                    placeholder={t("profile.currentClubPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Availability */}
                 <FormField
-                  label="Available from (optional)"
+                  label={t("profile.availableFrom")}
                   error={errors.availability?.message}
                 >
                   <Input
                     {...register("availability")}
-                    placeholder="Ex. Immediately, or January 2027"
+                    placeholder={t("profile.availableFromPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Foot - Only for players */}
                 {isPlayer && (
-                  <FormField label="Foot" error={errors.foot?.message}>
+                  <FormField label={t("profile.foot")} error={errors.foot?.message}>
                     <Select
                       defaultValue={initialData?.foot}
                       onValueChange={(value) =>
@@ -494,12 +496,12 @@ export default function EditProfileModal({
                       }
                     >
                       <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder="Select foot" />
+                        <SelectValue placeholder={t("profile.selectFoot")} />
                       </SelectTrigger>
                       <SelectContent>
                         {footOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {item}
+                            {label("foot", item)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -509,17 +511,17 @@ export default function EditProfileModal({
 
                 {/* League - Only for players and field staff */}
                 {(isPlayer || isOnFieldStaff) && (
-                  <FormField label="League" error={errors.league?.message}>
+                  <FormField label={t("profile.league")} error={errors.league?.message}>
                     <Input
                       {...register("league")}
-                      placeholder="Ex. Premier League"
+                      placeholder={t("profile.leaguePh")}
                       className="bg-gray-50 border-0"
                     />
                   </FormField>
                 )}
 
                 {/* Country */}
-                <FormField label="Country" error={errors.country?.message}>
+                <FormField label={t("profile.country")} error={errors.country?.message}>
                   <Select
                     defaultValue={initialData?.country}
                     onValueChange={(value) =>
@@ -527,12 +529,12 @@ export default function EditProfileModal({
                     }
                   >
                     <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select country" />
+                      <SelectValue placeholder={t("profile.selectCountry")} />
                     </SelectTrigger>
                     <SelectContent>
                       {countryList.map((item) => (
                         <SelectItem key={item} value={item}>
-                          {item}
+                          {label("country", item)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -541,19 +543,19 @@ export default function EditProfileModal({
 
                 {/* Agent */}
                 <FormField
-                  label="Agent (if applicable)"
+                  label={t("profile.agent")}
                   error={errors.agent?.message}
                 >
                   <Input
                     {...register("agent")}
-                    placeholder="Ex. Jorge Mendes"
+                    placeholder={t("profile.agentPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Social Media */}
                 <FormField
-                  label="Social Media (optional)"
+                  label={t("profile.socialMedia")}
                   error={errors.socialMedia?.message}
                 >
                   <Input
@@ -567,18 +569,18 @@ export default function EditProfileModal({
                 {isProfessionalPlayer && (
                   <>
                     <FormField
-                      label="Contract Expires"
+                      label={t("profile.contractExpires")}
                       error={errors.contractExpires?.message}
                     >
                       <Input
                         {...register("contractExpires")}
-                        placeholder="Ex. June 2025"
+                        placeholder={t("profile.contractExpiresPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
                     <FormField
-                      label="Division"
+                      label={t("profile.division")}
                       error={errors.division?.message}
                     >
                       <Select
@@ -588,12 +590,12 @@ export default function EditProfileModal({
                         }
                       >
                         <SelectTrigger className="bg-gray-50 border-0 w-full">
-                          <SelectValue placeholder="Select division" />
+                          <SelectValue placeholder={t("profile.selectDivision")} />
                         </SelectTrigger>
                         <SelectContent>
                           {divisionLevelOptions.map((item) => (
                             <SelectItem key={item} value={item}>
-                              {item}
+                              {label("division", item)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -601,7 +603,7 @@ export default function EditProfileModal({
                     </FormField>
 
                     <FormField
-                      label="National Team Category"
+                      label={t("profile.nationalTeamCategory")}
                       error={errors.nationalTeamCategory?.message}
                     >
                       <Select
@@ -613,12 +615,12 @@ export default function EditProfileModal({
                         }
                       >
                         <SelectTrigger className="bg-gray-50 border-0 w-full">
-                          <SelectValue placeholder="Select category" />
+                          <SelectValue placeholder={t("profile.selectCategory")} />
                         </SelectTrigger>
                         <SelectContent>
                           {professionalPlayerNationalTeamCategoryOptions.map((item) => (
                             <SelectItem key={item} value={item}>
-                              {item}
+                              {label("category", item)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -626,23 +628,23 @@ export default function EditProfileModal({
                     </FormField>
 
                     <FormField
-                      label="National Team Games"
+                      label={t("profile.nationalTeamGames")}
                       error={errors.nationalTeamGames?.message}
                     >
                       <Input
                         {...register("nationalTeamGames")}
-                        placeholder="Ex. 10"
+                        placeholder={t("profile.nationalTeamGamesPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
                     <FormField
-                      label="Teams Joined"
+                      label={t("profile.teamsJoined")}
                       error={errors.teamsJoined?.message}
                     >
                       <Input
                         {...register("teamsJoined")}
-                        placeholder="Ex. 5"
+                        placeholder={t("profile.teamsJoinedPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
@@ -652,7 +654,7 @@ export default function EditProfileModal({
                 {/* Amateur Player specific fields */}
                 {isAmateurPlayer && (
                   <FormField
-                    label="National Team Category"
+                    label={t("profile.nationalTeamCategory")}
                     error={errors.nationalTeamCategory?.message}
                   >
                     <Select
@@ -664,12 +666,12 @@ export default function EditProfileModal({
                       }
                     >
                       <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t("profile.selectCategory")} />
                       </SelectTrigger>
                       <SelectContent>
                         {amaturePlayerNationalTeamCategoryOptions.map((item) => (
                           <SelectItem key={item} value={item}>
-                            {item}
+                            {label("category", item)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -681,63 +683,63 @@ export default function EditProfileModal({
                 {(isHighSchool || isCollegeUniversity) && (
                   <>
                     <FormField
-                      label="School Name"
+                      label={t("profile.schoolName")}
                       error={errors.schoolName?.message}
                     >
                       <Input
                         {...register("schoolName")}
-                        placeholder="Ex. Lincoln High School"
+                        placeholder={t("profile.schoolNamePh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
                     {isCollegeUniversity && (
                       <FormField
-                        label="College/University"
+                        label={t("profile.collegeUniversity")}
                         error={errors.collegeOrUniversity?.message}
                       >
                         <Input
                           {...register("collegeOrUniversity")}
-                          placeholder="Ex. Stanford University"
+                          placeholder={t("profile.collegeUniversityPh")}
                           className="bg-gray-50 border-0"
                         />
                       </FormField>
                     )}
 
-                    <FormField label="Diploma" error={errors.diploma?.message}>
+                    <FormField label={t("profile.diploma")} error={errors.diploma?.message}>
                       <Input
                         {...register("diploma")}
-                        placeholder="Ex. High School Diploma"
+                        placeholder={t("profile.diplomaPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
-                    <FormField label="GPA" error={errors.gpa?.message}>
+                    <FormField label={t("profile.gpa")} error={errors.gpa?.message}>
                       <Input
                         {...register("gpa")}
-                        placeholder="Ex. 3.8"
+                        placeholder={t("profile.gpaPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
                     <FormField
-                      label="SAT/ACT Score"
+                      label={t("profile.satOrAct")}
                       error={errors.satOrAct?.message}
                     >
                       <Input
                         {...register("satOrAct")}
-                        placeholder="Ex. 1450"
+                        placeholder={t("profile.satOrActPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
 
                     <FormField
-                      label="Category"
+                      label={t("profile.category")}
                       error={errors.category?.message}
                     >
                       <Input
                         {...register("category")}
-                        placeholder="Ex. Varsity"
+                        placeholder={t("profile.categoryPh")}
                         className="bg-gray-50 border-0"
                       />
                     </FormField>
@@ -747,12 +749,12 @@ export default function EditProfileModal({
                 {/* Office Staff specific fields */}
                 {isOfficeStaff && (
                   <FormField
-                    label="Languages"
+                    label={t("profile.languages")}
                     error={errors.languages?.message}
                   >
                     <Input
                       {...register("languages")}
-                      placeholder="Ex. English, Spanish, French"
+                      placeholder={t("profile.languagesPh")}
                       className="bg-gray-50 border-0"
                     />
                   </FormField>
@@ -760,10 +762,10 @@ export default function EditProfileModal({
 
                 {/* Field Staff category */}
                 {isOnFieldStaff && (
-                  <FormField label="Category" error={errors.category?.message}>
+                  <FormField label={t("profile.category")} error={errors.category?.message}>
                     <Input
                       {...register("category")}
-                      placeholder="Ex. Head Coach"
+                      placeholder={t("profile.categoryStaffPh")}
                       className="bg-gray-50 border-0"
                     />
                   </FormField>
@@ -781,14 +783,14 @@ export default function EditProfileModal({
             onClick={onClose}
             disabled={isLoading}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
             className="bg-black hover:bg-gray-800 text-white"
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save Changes"}
+            {isLoading ? t("common.saving") : t("profile.saveChanges")}
           </Button>
         </div>
       </DialogContent>

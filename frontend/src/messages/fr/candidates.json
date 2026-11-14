@@ -1,1 +1,111 @@
-{}
+{
+  "page": {
+    "onFieldStaff": "Personnel de terrain",
+    "officeStaff": "Personnel administratif",
+    "highSchoolPlayers": "Joueurs de lycée",
+    "collegePlayers": "Joueurs universitaires",
+    "professionalPlayers": "Joueurs professionnels",
+    "amateurPlayers": "Joueurs amateurs",
+    "empty": "Aucun candidat disponible pour le moment."
+  },
+  "search": {
+    "results": "Résultats de recherche",
+    "found": "{count, plural, one {<green>#</green> candidat trouvé} other {<green>#</green> candidats trouvés}}",
+    "activeSearch": "Recherche active :",
+    "searchFilter": "Recherche : <strong>{value}</strong>",
+    "roleFilter": "Rôle : <strong>{value}</strong>",
+    "locationFilter": "Localisation : <strong>{value}</strong>",
+    "noneTitle": "Aucun candidat trouvé",
+    "noneHint": "Essayez de modifier vos critères de recherche pour trouver plus de candidats",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {page} sur {total}",
+    "loading": "Chargement..."
+  },
+  "section": {
+    "seeAll": "Voir tout"
+  },
+  "preRecorded": {
+    "title": "Qu'est-ce qu'un entretien vidéo préenregistré ?",
+    "intro": "Au lieu d'attendre qu'un club programme un appel, vous enregistrez une courte vidéo en répondant à des questions professionnelles clés, à votre rythme et quand vous le souhaitez. Les clubs et les académies regardent votre vidéo avant même de vous contacter. Ainsi, lorsqu'ils vous écrivent, ils savent déjà qui vous êtes. Pas de candidatures spontanées. Pas d'attente. Uniquement des opportunités directes de clubs déjà intéressés par votre profil.",
+    "bullet": "Soyez présélectionné, remarqué et recruté plus vite que jamais"
+  },
+  "dreamTeam": {
+    "op1": "Créez votre profil professionnel et faites-vous repérer par des clubs, des agents et des recruteurs du monde entier",
+    "op2": "Téléversez vos vidéos de meilleurs moments et laissez votre jeu parler pour vous",
+    "op3": "Postulez à des offres de tous niveaux, professionnels et amateurs, dans le monde entier",
+    "op4": "Joueurs : entrez en contact avec des clubs, des agents et des entraîneurs pour ouvrir des portes à tous les niveaux du football",
+    "op5": "Staff : que vous soyez entraîneur, préparateur physique, analyste ou recruteur, créez votre profil professionnel et enregistrez votre entretien vidéo préenregistré pour que les clubs et les académies vous trouvent selon votre expertise et votre expérience",
+    "title": "Votre carrière dans le football commence ici !",
+    "subtitle": "Pour les joueurs, entraîneurs, analystes et membres du staff, votre prochaine opportunité dans le football commence ici",
+    "jobPostings": "Offres d'emploi",
+    "noJobs": "Aucune nouvelle offre disponible",
+    "seeAll": "Voir tout"
+  },
+  "detail": {
+    "loginToFollow": "Veuillez vous connecter pour suivre des candidats",
+    "unfollowed": "Vous ne suivez plus ce candidat",
+    "followed": "Vous suivez maintenant ce candidat",
+    "unfollowFailed": "Échec du désabonnement du candidat",
+    "followFailed": "Échec de l'abonnement au candidat",
+    "friendRequestSent": "Demande envoyée avec succès",
+    "friendRequestFailed": "Échec de l'envoi de la demande",
+    "user": "Utilisateur",
+    "notFoundTitle": "Utilisateur introuvable",
+    "notFoundText": "Le profil que vous recherchez n'existe pas ou a été supprimé.",
+    "bannerAlt": "Bannière",
+    "verified": "Vérifié",
+    "unfollowing": "Désabonnement...",
+    "following": "Abonnement...",
+    "unfollow": "Ne plus suivre",
+    "follow": "Suivre",
+    "profileInformation": "Informations du profil",
+    "position": "Poste",
+    "nationality": "Nationalité",
+    "gender": "Genre",
+    "height": "Taille",
+    "weight": "Poids",
+    "currentClub": "Club actuel",
+    "availableFrom": "Disponible à partir de",
+    "foot": "Pied",
+    "league": "Championnat",
+    "country": "Pays",
+    "agent": "Agent",
+    "socialMedia": "Réseaux sociaux",
+    "schoolName": "Nom de l'établissement",
+    "collegeUniversity": "Université",
+    "diploma": "Diplôme",
+    "profileQuality": "Qualité du profil",
+    "followers": "Abonnés"
+  },
+  "accessModal": {
+    "title": "Demande d'accès",
+    "description": "Pour voir plus de détails sur cet utilisateur, vous devez d'abord entrer en contact avec lui",
+    "cancel": "Annuler",
+    "sending": "Envoi...",
+    "requestAccess": "Demander l'accès"
+  },
+  "videoModal": {
+    "candidate": "Candidat",
+    "videosOf": "Vidéos de {name}",
+    "videoN": "Vidéo {number}",
+    "previous": "Vidéo précédente",
+    "next": "Vidéo suivante",
+    "now": "En cours"
+  },
+  "requests": {
+    "accepted": "Demande acceptée avec succès",
+    "acceptFailed": "Échec de l'acceptation de la demande",
+    "rejected": "Demande refusée avec succès",
+    "rejectFailed": "Échec du refus de la demande",
+    "title": "Demandes d'accès",
+    "tabRequest": "En attente",
+    "tabAccepted": "Acceptées",
+    "loadingRequests": "Chargement des demandes...",
+    "loadRequestsFailed": "Échec du chargement des demandes",
+    "noPending": "Aucune demande en attente",
+    "loadingFriends": "Chargement des contacts...",
+    "loadFriendsFailed": "Échec du chargement des contacts",
+    "noAccepted": "Aucune demande acceptée"
+  }
+}

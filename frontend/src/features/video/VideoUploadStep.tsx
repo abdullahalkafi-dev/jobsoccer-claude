@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 import { FormLayout } from "@/components/form/FormLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConsentChecklist } from "./ConsentChecklist";
@@ -8,14 +10,14 @@ import { useGetVideoStatusQuery } from "./videoApi";
 
 type TStep = { id: number; label: string; completed?: boolean; active?: boolean };
 
-const INTERVIEW_SUBTITLE ="Employers watch these to get to know you. Your interview is scored by AI in the background, so you can keep using the website while it is checked.";
-
 const Body = () => {
+  const t = useTranslations("video");
+  const f = useFormats();
   const { data: status, isLoading, isError } = useGetVideoStatusQuery();
 
   // Roughly the height of the video cards, so the page below does not jump when they arrive
   if (isLoading) return <Skeleton className="h-[36rem] w-full" />;
-  if (isError || !status) return <p className="text-sm text-red-600">We could not load your video requirements. Please refresh the page.</p>;
+  if (isError || !status) return <p className="text-sm text-red-600">{t("step.loadError")}</p>;
 
   const consentOk =
     (!status.plan.consent.ai.required || !!status.consent.aiAt) && (!status.plan.consent.players.required || !!status.consent.playersAt);
@@ -24,7 +26,7 @@ const Body = () => {
     <div className="space-y-6">
       {!status.isComplete && (
         <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900">
-          Still needed: your {status.missing.join(" and ").toLowerCase()} video. {status.missing.length > 1 ? "These videos are" : "This video is"} required to complete your profile and apply for jobs.
+          {t(status.missing.length > 1 ? "step.stillNeededMany" : "step.stillNeeded", { kinds: f.list(status.missing.map((kind) => t(`kind.${kind}`))) })}
         </p>
       )}
       <ConsentChecklist status={status} />
@@ -44,21 +46,20 @@ const Body = () => {
 
 /** Registration step: the candidate uploads the required videos one by one, then finishes. */
 export function VideoUploadStep({ steps, onFinish, onBack }: { steps?: TStep[]; onFinish: () => void; onBack?: () => void }) {
+  const t = useTranslations("video");
   const { data: status } = useGetVideoStatusQuery();
   const hasInterview = status?.plan.slots.some((slot) => slot.kind === "Interview");
-  const subtitle = hasInterview
-    ? INTERVIEW_SUBTITLE
-    : "Employers watch these to get to know you.";
+  const subtitle = hasInterview ? t("step.subtitleInterview") : t("step.subtitle");
 
   return (
     <FormLayout
       steps={steps}
-      title="Upload your videos"
+      title={t("step.title")}
       subtitle={subtitle}
       onNext={onFinish}
       onPrev={onBack}
       showPrev={!!onBack}
-      nextLabel="Complete"
+      nextLabel={t("step.complete")}
       isNextDisabled={!status?.isComplete}
     >
       <Body />

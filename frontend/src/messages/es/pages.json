@@ -1,1 +1,79 @@
-{}
+{
+  "about": {
+    "metaTitle": "Sobre nosotros | Jobsoccer",
+    "title": "Sobre nosotros",
+    "intro": "Jobsoccer es la plataforma de reclutamiento creada específicamente para el fútbol.",
+    "p1": "Gracias a la selección con IA, el análisis de vídeo y los datos de rendimiento, ayudamos a los empleadores a contratar con más rapidez y eficacia, y damos a los candidatos de todo el mundo la visibilidad y la oportunidad justa que merecen.",
+    "p2": "Clubes, academias, colegios, universidades y agentes publican ofertas y buscan candidatos. Jugadores, entrenadores y personal de oficina crean un perfil, graban una entrevista en vídeo y se dan a conocer.",
+    "p3": "Todos los candidatos a un mismo puesto responden a las mismas preguntas, de modo que todos son evaluados en igualdad de condiciones. La evaluación de la IA apoya, pero nunca sustituye, el criterio del propio empleador."
+  },
+  "faq": {
+    "metaTitle": "Preguntas frecuentes | Jobsoccer",
+    "title": "Preguntas frecuentes",
+    "items": {
+      "quality": {
+        "q": "¿Qué es la puntuación de calidad del perfil?",
+        "a": "Una puntuación sobre 100 que indica lo completo, verificado y actualizado que está tu perfil. Tú ves el número; los empleadores ven estrellas y un nivel. No mide tu capacidad profesional."
+      },
+      "video": {
+        "q": "¿Qué es la entrevista en vídeo?",
+        "a": "Respondes al mismo conjunto de preguntas que el resto de candidatos a tu puesto, en un único vídeo de hasta 6:30 minutos. La IA transcribe, resume y puntúa las respuestas para ayudar a los empleadores a revisarlas. Las puntuaciones apoyan, pero nunca sustituyen, el criterio del empleador."
+      },
+      "methodology": {
+        "q": "¿Es obligatorio el vídeo de metodología?",
+        "a": "No, es opcional para el personal de campo y de oficina. Añadirlo te da puntos extra de calidad del perfil y te ayuda a destacar."
+      },
+      "requirements": {
+        "q": "¿Cuáles son los requisitos del vídeo?",
+        "a": "MP4 o MOV, al menos 720p, hasta 600 MB, grabado con una cámara fija en un lugar tranquilo. Puedes grabar las respuestas por separado y unirlas en un solo vídeo antes de subirlo."
+      },
+      "replace": {
+        "q": "¿Puedo reemplazar mis vídeos?",
+        "a": "Tus vídeos de entrevista y de metodología quedan bloqueados durante 3 meses después de enviarlos. Pasado ese tiempo, puedes subir una versión actualizada."
+      },
+      "contact": {
+        "q": "¿Quién puede ver mis datos de contacto?",
+        "a": "Los empleadores solo ven tus datos de contacto después de que aceptes su solicitud de acceso."
+      },
+      "verified": {
+        "q": "¿Cómo me verifico?",
+        "a": "Usa «Añadir insignia de verificación» en tu perfil para solicitar la verificación de identidad y sube un documento que acredite tus licencias, tu formación o tu trayectoria laboral. Los elementos verificados suman puntos a tu puntuación."
+      }
+    },
+    "more": "¿Tienes más preguntas? Escríbenos a <email>email</email>."
+  },
+  "contact": {
+    "metaTitle": "Contacto | Jobsoccer",
+    "title": "Contacto",
+    "intro": "¿Tienes preguntas, comentarios o necesitas ayuda con tu perfil? Estaremos encantados de ayudarte.",
+    "writeUs": "Escríbenos a <email>email</email>.",
+    "accessibility": "Los candidatos que necesiten un ajuste por motivos de accesibilidad al grabar su vídeo también pueden contactarnos en la misma dirección."
+  },
+  "privacy": {
+    "metaTitle": "Política de privacidad | Jobsoccer",
+    "title": "Política de privacidad",
+    "intro": "Estamos ultimando nuestra política de privacidad y se publicará aquí.",
+    "question": "Si mientras tanto tienes alguna pregunta sobre tus datos, escribe a <email>email</email>."
+  },
+  "terms": {
+    "metaTitle": "Términos de uso | Jobsoccer",
+    "title": "Términos de uso",
+    "intro": "Estamos ultimando nuestros términos de uso y se publicarán aquí.",
+    "question": "Si mientras tanto tienes alguna pregunta, escribe a <email>email</email>."
+  },
+  "error": {
+    "title": "¡Algo salió mal!",
+    "description": "Vaya, parece que algo salió mal al cargar la página.",
+    "tryAgain": "Intentar de nuevo",
+    "orGoHome": "O puedes <link>volver a la página de inicio</link>"
+  },
+  "notFound": {
+    "description": "Vaya, parece que la página que buscas no existe.",
+    "goHome": "Ir a la página de inicio"
+  },
+  "category": {
+    "title": "Tu compañero definitivo<br></br>para <highlight>buscar empleo</highlight>",
+    "allJobs": "Todos los empleos",
+    "loading": "Cargando..."
+  }
+}

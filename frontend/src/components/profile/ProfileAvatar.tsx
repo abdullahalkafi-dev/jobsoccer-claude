@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { Edit } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface ProfileAvatarProps {
   avatarUrl: string | null;
@@ -29,6 +30,7 @@ export default function ProfileAvatar({
   onAvatarUpdate,
   isUpdating = false,
 }: ProfileAvatarProps) {
+  const t = useTranslations("profile.avatar");
   const profileInputRef = useRef<HTMLInputElement>(null);
 
   const handleProfileImageChange = async (
@@ -39,14 +41,14 @@ export default function ProfileAvatar({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+      toast.error(t("notImage"));
       return;
     }
 
     // Validate file size (max 5MB)
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_FILE_SIZE) {
-      toast.error("Please select an image smaller than 5MB");
+      toast.error(t("tooLarge"));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function ProfileAvatar({
           {avatarUrl ? (
             <Image
               src={avatarUrl}
-              alt={`${displayName}'s profile picture`}
+              alt={t("alt", { name: displayName })}
               fill
               className="object-cover"
               priority
@@ -94,19 +96,19 @@ export default function ProfileAvatar({
           className="hidden"
           ref={profileInputRef}
           disabled={isUpdating}
-          aria-label="Upload profile picture"
+          aria-label={t("upload")}
         />
         <button
           onClick={() => profileInputRef.current?.click()}
           disabled={isUpdating}
           className="absolute cursor-pointer bottom-0 right-0 w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow flex items-center justify-center border-2 border-white disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Edit profile picture"
+          aria-label={t("edit")}
         >
           {isUpdating ? (
             <div
               className="h-3 w-3 lg:h-4 lg:w-4 border-2 border-gray-700 border-t-transparent rounded-full animate-spin"
               role="status"
-              aria-label="Updating profile picture"
+              aria-label={t("updating")}
             />
           ) : (
             <Edit

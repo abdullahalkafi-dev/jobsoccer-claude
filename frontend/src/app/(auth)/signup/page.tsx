@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signUpSchema, type SignUpFormData } from "@/schemas/signupValidation";
+import { getSignUpSchema, type SignUpFormData } from "@/schemas/signupValidation";
 import { useRouter } from "next/navigation";
 import RoleSelect from "@/components/input/SelectRole";
 import { useSignupMutation } from "@/redux/features/auth/authApi";
@@ -28,6 +29,9 @@ import { getLinkedInAuthUrl } from "@/lib/linkedinAuth";
 import { LinkedInRoleModal } from "@/components/modals/LinkedInRoleModal";
 
 export default function SignUpPage() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
+  const signUpSchema = useMemo(() => getSignUpSchema(tv), [tv]);
   const [userRype, setUserRype] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string>("");
@@ -60,8 +64,8 @@ export default function SignUpPage() {
       const userData = await signup(payload).unwrap();
 
       if (userData.success) {
-        toast.success("Account created successfully!", {
-          description: "Welcome to our platform",
+        toast.success(t("signup.created"), {
+          description: t("signup.createdDescription"),
         });
 
         form.reset();
@@ -75,12 +79,12 @@ export default function SignUpPage() {
       const errorMessage =
         error?.data?.message ||
         error?.data?.errorSources?.[0]?.message ||
-        "Something went wrong! Please try again later.";
+        t("signup.failed");
       setError(errorMessage);
       toast.error(
-        error?.data?.errorSources[0]?.message || "Something went wrong!",
+        error?.data?.errorSources?.[0]?.message || error?.data?.message || t("signup.failedTitle"),
         {
-          description: "Please try again later.",
+          description: t("signup.tryAgainLater"),
         }
       );
     }
@@ -112,15 +116,14 @@ export default function SignUpPage() {
           className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-md bg-black hover:bg-gray-800 text-white hover:text-white shadow-md hover:shadow-lg transition-all duration-300 z-10 group font-medium"
         >
           <IoMdArrowBack className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" />
-          <span className="text-sm">Home</span>
+          <span className="text-sm">{t("home")}</span>
         </Link>
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
-            Join the Team: Sign Up to Access Our Soccer Career Portal
+            {t("signup.heroTitle")}
           </h2>
           <p className="text-[#837E5B] mt-1">
-            Join us to access personalized AI solutions built for productivity
-            and simplicity.
+            {t("signup.heroSubtitle")}
           </p>
         </div>
       </div>
@@ -130,7 +133,7 @@ export default function SignUpPage() {
         <div className="w-full max-w-md bg-white border-2 rounded-lg p-8">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              Create a free account
+              {t("signup.title")}
             </h2>
           </div>
 
@@ -139,7 +142,7 @@ export default function SignUpPage() {
               {/* Error Message */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
-                  <p className="font-medium">Error</p>
+                  <p className="font-medium">{t("error")}</p>
                   <p className="mt-1">{error}</p>
                 </div>
               )}
@@ -152,12 +155,12 @@ export default function SignUpPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        First Name
+                        {t("fields.firstName")}
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="First name"
+                            placeholder={t("fields.firstNamePlaceholder")}
                             className="pr-10 bg-gray-100 border-gray-200"
                             {...field}
                           />
@@ -174,12 +177,12 @@ export default function SignUpPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
-                        Last Name
+                        {t("fields.lastName")}
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="Last name"
+                            placeholder={t("fields.lastNamePlaceholder")}
                             className="pr-10 bg-gray-100 border-gray-200"
                             {...field}
                           />
@@ -199,11 +202,11 @@ export default function SignUpPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Email
+                      {t("fields.email")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter your email"
+                        placeholder={t("fields.emailPlaceholder")}
                         className="bg-gray-100 border-gray-200"
                         {...field}
                       />
@@ -220,7 +223,7 @@ export default function SignUpPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Role
+                      {t("fields.role")}
                     </FormLabel>
                     <FormControl>
                       <RoleSelect
@@ -241,19 +244,20 @@ export default function SignUpPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Password
+                      {t("fields.password")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
+                          placeholder={t("fields.passwordPlaceholder")}
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? t("fields.hidePassword") : t("fields.showPassword")}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2"
                         >
                           {showPassword ? (
@@ -275,7 +279,7 @@ export default function SignUpPage() {
                 disabled={isLoading}
                 className="w-full cursor-pointer bg-primary text-[#252525] hover:bg-amber-300 py-3 rounded-md"
               >
-                {isLoading ? <Spinner className="h-4 w-4" /> : "Sign up"}
+                {isLoading ? <Spinner className="h-4 w-4" /> : t("signup.submit")}
               </Button>
             </form>
           </Form>
@@ -286,14 +290,14 @@ export default function SignUpPage() {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or</span>
+              <span className="px-2 bg-white text-gray-500">{t("or")}</span>
             </div>
           </div>
 
           {/* LinkedIn Signup Button */}
           <LinkedInButton
             onClick={handleLinkedInSignup}
-            label="Sign up with LinkedIn"
+            label={t("signup.linkedin")}
           />
 
           {/* LinkedIn Role Selection Modal */}
@@ -305,13 +309,16 @@ export default function SignUpPage() {
 
           {/* Sign in link */}
           <div className="text-center text-sm text-gray-600 mt-4">
-            Already have an account?{" "}
-            <Link
-              href="/signin"
-              className="underline text-primary-fill-primary"
-            >
-              Sign in
-            </Link>
+            {t.rich("signup.haveAccount", {
+              link: (chunks) => (
+                <Link
+                  href="/signin"
+                  className="underline text-primary-fill-primary"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
           </div>
         </div>
       </div>

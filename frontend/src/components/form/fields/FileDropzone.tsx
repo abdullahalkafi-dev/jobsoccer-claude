@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import { Upload, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface FileDropzoneProps {
   onFilesChange: (files: File[]) => void;
@@ -33,9 +34,10 @@ export function FileDropzone({
   accept = "video/*",
   multiple = false,
   maxFiles = 1,
-  placeholder = "Drag & drop your files here, or",
+  placeholder,
   className = "",
 }: FileDropzoneProps) {
+  const t = useTranslations("forms");
   const [isDragOver, setIsDragOver] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
@@ -65,7 +67,7 @@ export function FileDropzone({
         if (isValid) {
           validFiles.push(file);
         } else {
-          toast.error(`${file.name} is longer than 180 seconds.`);
+          toast.error(t("dropzone.tooLong", { name: file.name, seconds: 180 }));
         }
       }
 
@@ -76,7 +78,7 @@ export function FileDropzone({
       setFiles(newFiles);
       onFilesChange(newFiles);
     },
-    [files, multiple, maxFiles, onFilesChange]
+    [files, multiple, maxFiles, onFilesChange, t]
   );
 
   // ✅ Handle file selection (check video duration)
@@ -92,7 +94,7 @@ export function FileDropzone({
         if (isValid) {
           validFiles.push(file);
         } else {
-          toast.error(`${file.name} is longer than 180 seconds.`);
+          toast.error(t("dropzone.tooLong", { name: file.name, seconds: 180 }));
         }
       }
 
@@ -105,7 +107,7 @@ export function FileDropzone({
 
       e.target.value = ""; // Reset input to allow same file again
     },
-    [files, multiple, maxFiles, onFilesChange]
+    [files, multiple, maxFiles, onFilesChange, t]
   );
 
   const removeFile = (index: number) => {
@@ -128,7 +130,7 @@ export function FileDropzone({
       >
         <Upload className="w-10 h-10 text-gray-400 mx-auto mb-4" />
         <div className="flex items-center justify-center">
-          <p className="text-gray-600">{placeholder}</p>
+          <p className="text-gray-600">{placeholder ?? t("dropzone.drag")}</p>
           <input
             type="file"
             accept={accept}
@@ -145,7 +147,7 @@ export function FileDropzone({
               className="cursor-pointer text-blue-600 hover:text-blue-700 underline pl-1"
               onClick={() => document.getElementById("file-upload")?.click()}
             >
-              Browse
+              {t("dropzone.browse")}
             </Button>
           </label>
         </div>
@@ -172,7 +174,7 @@ export function FileDropzone({
                 onClick={() => removeFile(index)}
                 className="text-red-500 hover:text-red-700 cursor-pointer"
               >
-                Remove
+                {t("dropzone.remove")}
               </Button>
             </div>
           ))}

@@ -32,8 +32,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { months, years } from "@/constants/profile";
 import { useUpdateExperienceMutation } from "@/redux/features/experience/experienceApi";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import {
-  experienceFormSchema,
+  getExperienceFormSchema,
   ExperienceFormData,
 } from "@/schemas/experienceValidation";
 import { ExperienceData } from "@/types/experience";
@@ -49,10 +51,13 @@ export default function EditExperienceModal({
   onClose,
   experienceData,
 }: EditExperienceModalProps) {
+  const t = useTranslations("modals");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
   const [updateExperience, { isLoading }] = useUpdateExperienceMutation();
 
   const form = useForm<ExperienceFormData>({
-    resolver: zodResolver(experienceFormSchema),
+    resolver: zodResolver(getExperienceFormSchema(tv)),
     defaultValues: {
       title: "",
       employmentType: "",
@@ -89,7 +94,7 @@ export default function EditExperienceModal({
 
   const onSubmit = async (data: ExperienceFormData) => {
     if (!experienceData?._id && !experienceData?.id) {
-      toast.error("Experience ID is missing");
+      toast.error(t("experience.idMissing"));
       return;
     }
 
@@ -114,13 +119,13 @@ export default function EditExperienceModal({
       }).unwrap();
 
       if (result.success) {
-        toast.success(result.message || "Experience updated successfully!");
+        toast.success(result.message || t("experience.updated"));
         form.reset();
         onClose();
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.message || "Failed to update experience. Please try again."
+        error?.data?.message || t("experience.updateFailed")
       );
       console.error("Error updating experience:", error);
     }
@@ -137,7 +142,7 @@ export default function EditExperienceModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold">
-              Edit Experience
+              {t("experience.editTitle")}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -151,11 +156,11 @@ export default function EditExperienceModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Title
+                    {t("experience.title")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Defence Player"
+                      placeholder={t("experience.titlePh")}
                       {...field}
                       className="mt-1"
                     />
@@ -172,18 +177,18 @@ export default function EditExperienceModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Employment Type
+                    {t("experience.employmentType")}
                   </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Please select" />
+                        <SelectValue placeholder={t("common.pleaseSelect")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="FullTime">Full Time</SelectItem>
-                      <SelectItem value="PartTime">Part Time</SelectItem>
-                      <SelectItem value="Contract">Contract</SelectItem>
+                      <SelectItem value="FullTime">{t("experience.fullTime")}</SelectItem>
+                      <SelectItem value="PartTime">{t("experience.partTime")}</SelectItem>
+                      <SelectItem value="Contract">{t("experience.contract")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -198,11 +203,11 @@ export default function EditExperienceModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Club
+                    {t("experience.club")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Real Madrid"
+                      placeholder={t("experience.clubPh")}
                       {...field}
                       className="mt-1"
                     />
@@ -219,11 +224,11 @@ export default function EditExperienceModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Job location
+                    {t("experience.jobLocation")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: London"
+                      placeholder={t("experience.jobLocationPh")}
                       {...field}
                       className="mt-1"
                     />
@@ -247,7 +252,7 @@ export default function EditExperienceModal({
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-sm font-normal text-gray-700">
-                      I&apos;m currently working in this role
+                      {t("experience.currentlyWorking")}
                     </FormLabel>
                   </div>
                 </FormItem>
@@ -257,7 +262,7 @@ export default function EditExperienceModal({
             {/* Start Date */}
             <div>
               <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                Start date
+                {t("common.startDate")}
               </FormLabel>
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -271,13 +276,13 @@ export default function EditExperienceModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Month" />
+                            <SelectValue placeholder={t("common.month")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {months.map((month) => (
                             <SelectItem key={month} value={month}>
-                              {month}
+                              {label("month", month)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -297,7 +302,7 @@ export default function EditExperienceModal({
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
-                            <SelectValue placeholder="Year" />
+                            <SelectValue placeholder={t("common.year")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -319,7 +324,7 @@ export default function EditExperienceModal({
             {!isCurrentlyWorking && (
               <div>
                 <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                  End date
+                  {t("common.endDate")}
                 </FormLabel>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
@@ -333,13 +338,13 @@ export default function EditExperienceModal({
                         >
                           <FormControl className="w-full">
                             <SelectTrigger>
-                              <SelectValue placeholder="Month" />
+                              <SelectValue placeholder={t("common.month")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {months.map((month) => (
                               <SelectItem key={month} value={month}>
-                                {month}
+                                {label("month", month)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -359,7 +364,7 @@ export default function EditExperienceModal({
                         >
                           <FormControl className="w-full">
                             <SelectTrigger>
-                              <SelectValue placeholder="Year" />
+                              <SelectValue placeholder={t("common.year")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -385,11 +390,11 @@ export default function EditExperienceModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Description
+                    {t("experience.description")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="List your major duties and successes, highlighting specific projects"
+                      placeholder={t("experience.descriptionEditPh")}
                       className="mt-1 min-h-[100px] resize-none"
                       {...field}
                     />
@@ -407,14 +412,14 @@ export default function EditExperienceModal({
                 onClick={handleClose}
                 disabled={isLoading}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="bg-black hover:bg-gray-800 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? "Updating..." : "Update"}
+                {isLoading ? t("common.updating") : t("common.update")}
               </Button>
             </div>
           </form>

@@ -4,6 +4,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { X, Clock, Bell, CheckCircle, Loader2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import {
   useGetNotificationsQuery,
@@ -28,6 +30,8 @@ const NotificationModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const t = useTranslations("notifications");
+  const f = useFormats();
   const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -122,13 +126,9 @@ const NotificationModal = ({
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400)
-      return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800)
-      return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    return date.toLocaleDateString();
+    if (diffInSeconds < 60) return t("justNow");
+    if (diffInSeconds < 604800) return f.ago(date);
+    return f.date(date);
   };
 
   return (
@@ -136,7 +136,7 @@ const NotificationModal = ({
       <DialogContent className="max-w-md p-0 gap-0">
         <DialogHeader className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <DialogTitle>Notifications</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
           </div>
 
           {/* Tabs */}
@@ -147,7 +147,7 @@ const NotificationModal = ({
               onClick={() => setActiveTab("all")}
               className="flex-1"
             >
-              All
+              {t("tabs.all")}
             </Button>
             <Button
               variant={activeTab === "unread" ? "default" : "ghost"}
@@ -155,7 +155,7 @@ const NotificationModal = ({
               onClick={() => setActiveTab("unread")}
               className="flex-1"
             >
-              Unread {unreadCount > 0 && `(${unreadCount})`}
+              {unreadCount > 0 ? t("tabs.unreadCount", { count: unreadCount }) : t("tabs.unread")}
             </Button>
           </div>
         </DialogHeader>
@@ -169,7 +169,7 @@ const NotificationModal = ({
               onClick={handleMarkAllAsRead}
               className="p-0 h-auto"
             >
-              Mark all as read
+              {t("markAllRead")}
             </Button>
           </div>
         )}
@@ -185,8 +185,8 @@ const NotificationModal = ({
               <CheckCircle className="w-12 h-12 text-gray-300 mx-auto mb-2" />
               <p className="text-sm text-gray-500">
                 {activeTab === "unread"
-                  ? "No unread notifications"
-                  : "No notifications"}
+                  ? t("noUnread")
+                  : t("noneShort")}
               </p>
             </div>
           ) : (
@@ -228,6 +228,7 @@ const NotificationModal = ({
                         handleDelete(notification._id);
                       }}
                       className="h-6 w-6 p-0 hover:bg-gray-200 shrink-0 ml-2"
+                      aria-label={t("delete")}
                     >
                       <X className="w-4 h-4 text-gray-400" />
                     </Button>
@@ -256,10 +257,10 @@ const NotificationModal = ({
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
-              Previous
+              {t("previous")}
             </Button>
             <span className="text-sm text-gray-600">
-              Page {page} of {totalPages}
+              {t("pageOf", { page, total: totalPages })}
             </span>
             <Button
               variant="outline"
@@ -267,7 +268,7 @@ const NotificationModal = ({
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
             >
-              Next
+              {t("next")}
             </Button>
           </div>
         )}

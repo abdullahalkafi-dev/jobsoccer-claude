@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -16,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  createPasswordSchema,
+  getCreatePasswordSchema,
   type CreatePasswordFormData,
 } from "@/schemas/passwordValidation";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,6 +25,9 @@ import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { Spinner } from "@/components/ui/spinner";
 
 function CreateNewPasswordPageContent() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
+  const createPasswordSchema = useMemo(() => getCreatePasswordSchema(tv), [tv]);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
@@ -49,7 +53,7 @@ function CreateNewPasswordPageContent() {
 
   const onSubmit = async (data: CreatePasswordFormData) => {
     if (!token) {
-      toast.error("Reset token is required");
+      toast.error(t("newPassword.tokenRequired"));
       return;
     }
 
@@ -62,23 +66,24 @@ function CreateNewPasswordPageContent() {
       const res = await resetPassword(payload).unwrap();
 
       if (res.success) {
-        toast.success("Password updated successfully!", {
-          description: "You can now log in with your new password.",
+        toast.success(t("newPassword.updated"), {
+          description: t("newPassword.updatedDescription"),
         });
         // Reset form after successful submission
         form.reset();
         router.push("/signin");
       }
     } catch (error) {
-      const err = error as { data?: { message?: string } };
-      const errorMessage = err?.data?.message || "Please try again later.";
+      const err = error as { data?: { message?: string; code?: string } };
+      const errorMessage = err?.data?.message || t("newPassword.tryAgainLater");
 
-      toast.error("Failed to update password!", {
+      toast.error(t("newPassword.failed"), {
         description: errorMessage,
       });
 
       // If token expired, redirect to forgot password page
       if (
+        err?.data?.code === "OTP_EXPIRED" ||
         errorMessage.includes("Token expired") ||
         errorMessage.includes("expired")
       ) {
@@ -95,11 +100,10 @@ function CreateNewPasswordPageContent() {
       <div className="hidden flex-1 md:flex items-center justify-center px-2 md:px-5 lg:px-8 bg-primary">
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight">
-            Create a New Password
+            {t("newPassword.heroTitle")}
           </h2>
           <p className="text-[#837E5B] mt-1">
-            Set a new password for your Soccer Job Profile to complete the
-            setup. Enter your new password below to continue.
+            {t("newPassword.heroSubtitle")}
           </p>
         </div>
       </div>
@@ -109,9 +113,9 @@ function CreateNewPasswordPageContent() {
         <div className="w-full max-w-md bg-white border-2 rounded-lg p-8">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-              Create new password
+              {t("newPassword.title")}
             </h2>
-            <p className="text-gray-600 text-sm">Set up a new password</p>
+            <p className="text-gray-600 text-sm">{t("newPassword.subtitle")}</p>
           </div>
 
           <Form {...form}>
@@ -123,19 +127,20 @@ function CreateNewPasswordPageContent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      New Password
+                      {t("newPassword.newPassword")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showNewPassword ? "text" : "password"}
-                          placeholder="Enter your Password"
+                          placeholder={t("fields.passwordPlaceholder")}
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
                         <button
                           type="button"
                           onClick={() => setShowNewPassword(!showNewPassword)}
+                          aria-label={showNewPassword ? t("fields.hidePassword") : t("fields.showPassword")}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2"
                         >
                           {showNewPassword ? (
@@ -158,13 +163,13 @@ function CreateNewPasswordPageContent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Confirm New Password
+                      {t("newPassword.confirmPassword")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Enter your Password"
+                          placeholder={t("fields.passwordPlaceholder")}
                           className="pr-10 bg-gray-100 border-gray-200"
                           {...field}
                         />
@@ -173,6 +178,7 @@ function CreateNewPasswordPageContent() {
                           onClick={() =>
                             setShowConfirmPassword(!showConfirmPassword)
                           }
+                          aria-label={showConfirmPassword ? t("fields.hidePassword") : t("fields.showPassword")}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2"
                         >
                           {showConfirmPassword ? (
@@ -194,7 +200,7 @@ function CreateNewPasswordPageContent() {
                 disabled={isLoading || !token}
                 className="w-full cursor-pointer bg-primary text-[#252525] hover:bg-amber-300 py-3 rounded-md"
               >
-                {isLoading ? <Spinner /> : "Create Password"}
+                {isLoading ? <Spinner /> : t("newPassword.submit")}
               </Button>
             </form>
           </Form>
@@ -205,8 +211,9 @@ function CreateNewPasswordPageContent() {
 }
 
 export default function CreateNewPasswordPage() {
+  const t = useTranslations("auth");
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t("loading")}</div>}>
       <CreateNewPasswordPageContent />
     </Suspense>
   );

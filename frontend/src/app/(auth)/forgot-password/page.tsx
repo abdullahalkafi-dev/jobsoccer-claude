@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,13 +20,17 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
+const getForgotPasswordSchema = (t: (key: string) => string) =>
+  z.object({
+    email: z.string(t("invalid")).email(t("emailInvalid")),
+  });
 
-type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordFormData = z.infer<ReturnType<typeof getForgotPasswordSchema>>;
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth");
+  const tv = useTranslations("validation");
+  const forgotPasswordSchema = useMemo(() => getForgotPasswordSchema(tv), [tv]);
   const [error, setError] = useState<string>("");
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const router = useRouter();
@@ -44,8 +49,8 @@ export default function ForgotPasswordPage() {
       const res = await forgotPassword({ email: data.email }).unwrap();
 
       if (res.success) {
-        toast.success("Verification code sent!", {
-          description: "Please check your email for the verification code.",
+        toast.success(t("forgot.sent"), {
+          description: t("forgot.sentDescription"),
         });
         // Navigate to email verification page with email and reason parameters
         router.push(
@@ -61,7 +66,7 @@ export default function ForgotPasswordPage() {
       const errorMessage =
         err?.data?.message ||
         err?.data?.errorSources?.[0]?.message ||
-        "Failed to send code. Please try again later.";
+        t("forgot.failed");
       setError(errorMessage);
     }
   };
@@ -72,11 +77,10 @@ export default function ForgotPasswordPage() {
       <div className="hidden md:flex flex-1 items-center justify-center px-2 md:px-5 lg:px-8 bg-primary">
         <div className="max-w-2xl">
           <h2 className="text-4xl font-bold text-[#010A18] leading-tight mb-4">
-            Reset Your Password for the Soccer Career Hub
+            {t("forgot.heroTitle")}
           </h2>
           <p className="text-[#837E5B] mt-1">
-            Don&#39;t worry! We&#39;re here to help you get back into your
-            account.
+            {t("forgot.heroSubtitle")}
           </p>
         </div>
       </div>
@@ -86,10 +90,10 @@ export default function ForgotPasswordPage() {
         <div className="w-full max-w-md bg-white rounded-lg p-8 shadow-sm">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Forgot password
+              {t("forgot.title")}
             </h2>
             <p className="text-gray-600">
-              Enter your registered email to reset your password.
+              {t("forgot.subtitle")}
             </p>
           </div>
 
@@ -98,7 +102,7 @@ export default function ForgotPasswordPage() {
               {/* Error Message */}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm">
-                  <p className="font-medium">Error</p>
+                  <p className="font-medium">{t("error")}</p>
                   <p className="mt-1">{error}</p>
                 </div>
               )}
@@ -110,12 +114,12 @@ export default function ForgotPasswordPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      Email Address
+                      {t("fields.emailAddress")}
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={t("fields.emailPlaceholder")}
                         className="w-full bg-gray-50 border-gray-200"
                         disabled={isLoading}
                         {...field}
@@ -132,7 +136,7 @@ export default function ForgotPasswordPage() {
                 disabled={isLoading}
                 className="w-full bg-primary hover:bg-amber-300 text-black font-medium py-3 rounded-md cursor-pointer"
               >
-                {isLoading ? <Spinner /> : "Send Code"}
+                {isLoading ? <Spinner /> : t("forgot.submit")}
               </Button>
             </form>
           </Form>

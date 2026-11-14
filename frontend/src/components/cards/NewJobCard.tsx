@@ -3,8 +3,10 @@ import { TNewJobPost } from "../home/NewJobs";
 import Image from "next/image";
 import employerLogo from "@/assets/employers/compony logo.png";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function NewJobCard({ job }: { job: TNewJobPost }) {
+  const t = useTranslations("cards.job");
   return (
     <Link href={`jobs/${job.id}`}>
       <div className="bg-linear-to-br from-white to-[#FDF9E3] rounded-xl p-4 shadow-sm border border-gray-100">
@@ -14,7 +16,7 @@ export function NewJobCard({ job }: { job: TNewJobPost }) {
           >
             <Image
               src={employerLogo}
-              alt="Logo"
+              alt={t("logoAlt")}
               className="object-contain rounded-xl"
             />
           </div>
@@ -36,7 +38,7 @@ export function NewJobCard({ job }: { job: TNewJobPost }) {
               <div key={index} className="relative">
                 <Image
                   src={image || "/placeholder.svg"}
-                  alt={`Applicant ${index + 1}`}
+                  alt={t("applicantAlt", { number: index + 1 })}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
               </div>
@@ -51,7 +53,7 @@ export function NewJobCard({ job }: { job: TNewJobPost }) {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm">
-              {job.applicantCount} Applicant
+              {t("applicants", { count: job.applicantCount })}
             </span>
             <div className="flex items-center gap-1 text-gray-400 text-xs">
               <Clock className="w-3 h-3" />
@@ -60,7 +62,7 @@ export function NewJobCard({ job }: { job: TNewJobPost }) {
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-gray-900">{job.salary}</div>
-            <div className="text-gray-500 text-sm">/mo</div>
+            <div className="text-gray-500 text-sm">{t("perMonth")}</div>
           </div>
         </div>
       </div>

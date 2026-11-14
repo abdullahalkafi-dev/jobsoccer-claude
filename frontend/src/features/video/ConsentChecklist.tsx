@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useSaveVideoConsentMutation } from "./videoApi";
@@ -11,6 +12,7 @@ import type { TVideoStatus } from "./types";
  * Ticking a box saves it right away, so the server already has it when the upload starts.
  */
 export function ConsentChecklist({ status }: { status: TVideoStatus }) {
+  const t = useTranslations("video");
   const [saveConsent, { isLoading }] = useSaveVideoConsentMutation();
   const { consent } = status.plan;
   const given = status.consent;
@@ -24,7 +26,7 @@ export function ConsentChecklist({ status }: { status: TVideoStatus }) {
 
   return (
     <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
-      <h3 className="text-sm font-semibold text-gray-900">Before you upload</h3>
+      <h3 className="text-sm font-semibold text-gray-900">{t("consent.title")}</h3>
       {items.map((item) => (
         <div key={item.key} className="flex items-start gap-3">
           <Checkbox

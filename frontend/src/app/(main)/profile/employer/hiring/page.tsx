@@ -15,10 +15,15 @@ import {
 } from "@/redux/features/agentHiring/agentHiringApi";
 import { AgentHiring, HiredByUser } from "@/types/agentHiring";
 import { Loader2, CheckCircle, XCircle, Clock } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
 
 export default function AgentHiringPage() {
+  const t = useTranslations("employers.hiring");
+  const f = useFormats();
+  const label = useOptionLabel();
   const [activeTab, setActiveTab] = useState<"requests" | "approved">(
     "requests"
   );
@@ -67,7 +72,7 @@ export default function AgentHiringPage() {
         hiringId,
         data: { status: "accepted" },
       }).unwrap();
-      toast.success("Hiring request accepted successfully!");
+      toast.success(t("acceptedToast"));
       refetchRequests();
       refetchApproved();
     } catch (error) {
@@ -75,13 +80,13 @@ export default function AgentHiringPage() {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error as any).data?.message
-          : "Unknown error";
-      toast.error(errorMessage || "Failed to accept hiring request");
+          : t("unknownError");
+      toast.error(errorMessage || t("acceptFailed"));
     }
   };
 
   const handleReject = async (hiringId: string) => {
-    if (!confirm("Are you sure you want to reject this hiring request?")) {
+    if (!confirm(t("rejectConfirm"))) {
       return;
     }
 
@@ -90,20 +95,20 @@ export default function AgentHiringPage() {
         hiringId,
         data: { status: "rejected" },
       }).unwrap();
-      toast.success("Hiring request rejected");
+      toast.success(t("rejectedToast"));
       refetchRequests();
     } catch (error) {
       console.error("Failed to reject hiring:", error);
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error as any).data?.message
-          : "Unknown error";
-      toast.error(errorMessage || "Failed to reject hiring request");
+          : t("unknownError");
+      toast.error(errorMessage || t("rejectFailed"));
     }
   };
 
   const handleComplete = async (hiringId: string) => {
-    if (!confirm("Mark this hiring as completed?")) {
+    if (!confirm(t("completeConfirm"))) {
       return;
     }
 
@@ -112,15 +117,15 @@ export default function AgentHiringPage() {
         hiringId,
         data: { status: "completed" },
       }).unwrap();
-      toast.success("Hiring marked as completed");
+      toast.success(t("completedToast"));
       refetchApproved();
     } catch (error) {
       console.error("Failed to complete hiring:", error);
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error as any).data?.message
-          : "Unknown error";
-      toast.error(errorMessage || "Failed to complete hiring");
+          : t("unknownError");
+      toast.error(errorMessage || t("completeFailed"));
     }
   };
 
@@ -158,13 +163,12 @@ export default function AgentHiringPage() {
               <div>
                 <h3 className="font-semibold text-lg">{userName}</h3>
                 <p className="text-sm text-gray-600 capitalize">
-                  {hiredByUser.userType}
+                  {label("userType", hiredByUser.userType)}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {type === "request" ? "Requested" : "Hired"}{" "}
-                  {formatDistanceToNow(new Date(hiring.hiredAt), {
-                    addSuffix: true,
-                  })}
+                  {type === "request"
+                    ? t("requestedAgo", { time: f.ago(hiring.hiredAt) })
+                    : t("hiredAgo", { time: f.ago(hiring.hiredAt) })}
                 </p>
               </div>
             </div>
@@ -174,7 +178,7 @@ export default function AgentHiringPage() {
                 <>
                   <Badge variant="outline" className="text-yellow-600">
                     <Clock className="h-3 w-3 mr-1" />
-                    Pending
+                    {t("pending")}
                   </Badge>
                   <div className="flex space-x-2">
                     <Button
@@ -184,7 +188,7 @@ export default function AgentHiringPage() {
                       onClick={() => handleAccept(hiring._id)}
                     >
                       <CheckCircle className="h-4 w-4 mr-1" />
-                      Accept
+                      {t("accept")}
                     </Button>
                     <Button
                       size="sm"
@@ -192,7 +196,7 @@ export default function AgentHiringPage() {
                       onClick={() => handleReject(hiring._id)}
                     >
                       <XCircle className="h-4 w-4 mr-1" />
-                      Reject
+                      {t("reject")}
                     </Button>
                   </div>
                 </>
@@ -200,14 +204,14 @@ export default function AgentHiringPage() {
                 <>
                   <Badge variant="default" className="bg-green-600">
                     <CheckCircle className="h-3 w-3 mr-1" />
-                    Accepted
+                    {t("acceptedBadge")}
                   </Badge>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleComplete(hiring._id)}
                   >
-                    Mark as Completed
+                    {t("markCompleted")}
                   </Button>
                 </>
               )}
@@ -220,7 +224,7 @@ export default function AgentHiringPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-5xl">
-      <h1 className="text-3xl font-bold mb-6">Hiring Management</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
 
       <Tabs
         value={activeTab}
@@ -230,7 +234,7 @@ export default function AgentHiringPage() {
       >
         <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="requests">
-            Hiring Requests
+            {t("tabRequests")}
             {requestsData?.data && requestsData.data.length > 0 && (
               <Badge variant="secondary" className="ml-2">
                 {requestsData.data.length}
@@ -238,7 +242,7 @@ export default function AgentHiringPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="approved">
-            Approved
+            {t("tabApproved")}
             {approvedData?.data && approvedData.data.length > 0 && (
               <Badge variant="secondary" className="ml-2">
                 {approvedData.data.length}
@@ -250,7 +254,7 @@ export default function AgentHiringPage() {
         <TabsContent value="requests">
           <Card>
             <CardHeader>
-              <CardTitle>Pending Hiring Requests</CardTitle>
+              <CardTitle>{t("pendingTitle")}</CardTitle>
             </CardHeader>
             <CardContent>
               {requestsLoading ? (
@@ -266,7 +270,7 @@ export default function AgentHiringPage() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <Clock className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                  <p>No pending hiring requests</p>
+                  <p>{t("noPending")}</p>
                 </div>
               )}
             </CardContent>
@@ -276,7 +280,7 @@ export default function AgentHiringPage() {
         <TabsContent value="approved">
           <Card>
             <CardHeader>
-              <CardTitle>Approved Hirings</CardTitle>
+              <CardTitle>{t("approvedTitle")}</CardTitle>
             </CardHeader>
             <CardContent>
               {approvedLoading ? (
@@ -292,7 +296,7 @@ export default function AgentHiringPage() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <CheckCircle className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                  <p>No approved hirings yet</p>
+                  <p>{t("noApproved")}</p>
                 </div>
               )}
             </CardContent>

@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { LayoutGrid, UserPlus } from "lucide-react";
 import { useGetMyProfileViewsQuery } from "@/redux/features/profileViews/profileViewsApi";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 function AnalyticsSection() {
+  const t = useTranslations("profile.analytics");
   const { data: profileViewsData, isLoading } = useGetMyProfileViewsQuery({
     page: 1,
     limit: 10,
@@ -19,7 +21,7 @@ function AnalyticsSection() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-md md:text-xl">Analytics</CardTitle>
+            <CardTitle className="text-md md:text-xl">{t("title")}</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="p-6">
@@ -32,13 +34,11 @@ function AnalyticsSection() {
                 <LayoutGrid className="h-6 w-6" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900">Profile View</p>
+                <p className="font-semibold text-gray-900">{t("profileView")}</p>
                 <p className="text-sm text-gray-600">
                   {isLoading
-                    ? "Loading..."
-                    : `${totalViews} ${
-                        totalViews === 1 ? "person has" : "people have"
-                      } viewed your profile`}
+                    ? t("loading")
+                    : t("viewedCount", { count: totalViews })}
                 </p>
               </div>
             </div>
@@ -53,10 +53,10 @@ function AnalyticsSection() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Access Request
+                    {t("accessRequest")}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    See which employers asked to view your profile
+                    {t("accessRequestDesc")}
                   </p>
                 </div>
               </div>

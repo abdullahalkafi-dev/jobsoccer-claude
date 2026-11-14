@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { getLinkedInProfile, verifyOAuthState } from "@/lib/linkedinAuth";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 
@@ -17,6 +18,7 @@ export default function LinkedInCallbackPage() {
 }
 
 function LinkedInCallback() {
+  const t = useTranslations("auth");
   const [error, setError] = useState<string>("");
 
   const [login] = useLoginMutation();
@@ -96,8 +98,8 @@ function LinkedInCallback() {
         const res = await login(payload).unwrap();
 
         if (res?.data?.accessToken) {
-          toast.success("Welcome back!", {
-            description: "You have successfully signed in with LinkedIn.",
+          toast.success(t("signin.welcomeBack"), {
+            description: t("linkedin.signedIn"),
           });
 
           // Navigate based on user profile status
@@ -112,29 +114,28 @@ function LinkedInCallback() {
       } catch (error: unknown) {
         console.error("LinkedIn callback error:", error);
         const err = error as {
-          data?: { message?: string };
+          data?: { message?: string; code?: string };
           message?: string;
         };
-        const errorMessage =
-          err?.data?.message ||
-          err?.message ||
-          "LinkedIn authentication failed. Please try again.";
+        // Only the backend's message arrives translated; our own thrown English errors are replaced by a translated text.
+        const errorMessage = err?.data?.message || t("linkedin.failed");
 
         // Check if account doesn't exist and this is a login attempt
         if (
-          errorMessage === "Account does not exist. Please sign up first." &&
+          (err?.data?.code === "ACCOUNT_NOT_FOUND" ||
+            errorMessage === "Account does not exist. Please sign up first.") &&
           !isSignup
         ) {
           router.push("/signup");
 
-          toast.error("First create account with LinkedIn", {
-            description: "Redirecting to signup...",
+          toast.error(t("linkedin.createFirst"), {
+            description: t("linkedin.redirectingSignup"),
           });
           return;
         }
 
         setError(errorMessage);
-        toast.error("Authentication failed", {
+        toast.error(t("linkedin.authFailed"), {
           description: errorMessage,
         });
 
@@ -146,7 +147,7 @@ function LinkedInCallback() {
     };
 
     handleLinkedInCallback();
-  }, [searchParams, router, login]);
+  }, [searchParams, router, login, t]);
 
   if (error) {
     return (
@@ -154,14 +155,14 @@ function LinkedInCallback() {
         <div className="max-w-md w-full bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              Authentication Error
+              {t("linkedin.errorTitle")}
             </h2>
             <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md text-sm mb-4">
-              <p className="font-medium">Error</p>
+              <p className="font-medium">{t("error")}</p>
               <p className="mt-1">{error}</p>
             </div>
             <p className="text-sm text-gray-600">
-              Redirecting you to sign in...
+              {t("linkedin.redirectingSignin")}
             </p>
           </div>
         </div>
@@ -174,10 +175,10 @@ function LinkedInCallback() {
       <div className="text-center">
         <Spinner className="h-12 w-12 mx-auto mb-4" />
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Authenticating with LinkedIn...
+          {t("linkedin.authenticating")}
         </h2>
         <p className="text-sm text-gray-600">
-          Please wait while we complete your sign in.
+          {t("linkedin.wait")}
         </p>
       </div>
     </div>

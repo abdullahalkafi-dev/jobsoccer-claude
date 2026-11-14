@@ -1,1 +1,156 @@
-{}
+{
+  "hero": {
+    "line1a": "Tu próximo",
+    "line1b": "empleo",
+    "line2": "¡empieza aquí!",
+    "signUp": "Regístrate",
+    "underlineAlt": "Subrayado dibujado a mano",
+    "imageAlt": "Imagen de portada"
+  },
+  "intro": "es la plataforma de reclutamiento creada específicamente para el fútbol. Gracias a la selección con IA, el análisis de vídeo y los datos de rendimiento, ayudamos a los empleadores a contratar con más rapidez y eficacia, y damos a los candidatos de todo el mundo la visibilidad y la oportunidad justa que merecen.",
+  "connect": {
+    "title1": "Todo un mundo de fútbol.",
+    "title2": "Un solo lugar para conectar.",
+    "card1Label": "01 / CANDIDATOS",
+    "card1Title": "Que te vean los clubes adecuados.",
+    "card1Text": "Crea un perfil que muestre tu experiencia, tus licencias y tu filosofía de entrenamiento. Encuentra puestos en entrenamiento, análisis, rendimiento y operaciones.",
+    "card2Label": "02 / EMPLEADORES",
+    "card2Title": "Forma tu equipo con confianza.",
+    "card2Text": "Publica tus ofertas y descubre el talento que se ajusta a tus necesidades, seas un club, una academia, una universidad o una agencia.",
+    "card3Label": "03 / COMUNIDAD DEL FÚTBOL",
+    "card3Title": "Mantente conectado al juego.",
+    "card3Text": "Sigue las ofertas abiertas, descubre a las personas que hay detrás del juego y forma parte de una red profesional de fútbol en crecimiento."
+  },
+  "discover": {
+    "title": "Lo que descubrirás aquí",
+    "text": "Jobsoccer es la primera plataforma creada exclusivamente para el mundo del fútbol. Tanto si eres un jugador que busca su próximo club, un entrenador en busca de nuevas oportunidades o una organización que busca al talento adecuado, todo lo que necesitas está en un solo lugar. Se acabó depender de los contactos personales o del boca a boca. Una forma más inteligente y justa de conectar a los profesionales del fútbol de todo el mundo."
+  },
+  "diagram": {
+    "logoAlt": "Logotipo de Jobsoccer",
+    "onFieldStaff": "Personal de campo",
+    "player": "Jugador",
+    "club": "Club",
+    "officeStaff": "Personal de oficina",
+    "college": "Colegio y universidad",
+    "agent": "Agente"
+  },
+  "features": {
+    "title": "¿Por qué Jobsoccer es único?",
+    "staffing": {
+      "title": "Especializados en personal para el fútbol",
+      "text": "A diferencia de las bolsas de empleo genéricas, Jobsoccer está creado al 100 % para el ecosistema del fútbol. Cada función, cada herramienta y cada conexión están pensadas para el juego más hermoso."
+    },
+    "matching": {
+      "title": "Selección de talento con IA",
+      "text": "Nuestro algoritmo inteligente analiza perfiles, habilidades y requisitos para conectar a los candidatos adecuados con los empleadores adecuados, de forma más rápida y precisa."
+    },
+    "video": {
+      "title": "Entrevistas en vídeo con IA",
+      "text": "Ve más allá del currículum. Todos los candidatos a un puesto responden en vídeo las mismas preguntas de fútbol y explican su metodología y su enfoque. Nuestra IA resume y puntúa cada respuesta antes de la primera reunión. Las puntuaciones apoyan, pero nunca sustituyen, el criterio del empleador."
+    },
+    "quality": {
+      "title": "Puntuación de calidad del perfil",
+      "text": "Cada perfil recibe una puntuación según su grado de compleción y solidez, lo que ayuda a los candidatos a mostrar su mejor versión y da confianza a los empleadores en lo que ven."
+    },
+    "suggestions": {
+      "title": "Sugerencias de empleo con IA",
+      "text": "Se acabó desplazarse sin fin. Jobsoccer ofrece a jugadores y personal recomendaciones de empleo personalizadas según su perfil, experiencia y preferencias."
+    },
+    "insights": {
+      "title": "Información de mercado con IA",
+      "text": "Mantente un paso por delante. Nuestra IA sigue las tendencias del talento, los puestos más demandados y las oportunidades regionales, para que clubes y candidatos sepan siempre hacia dónde va el mercado."
+    },
+    "global": {
+      "title": "Acceso y visibilidad global",
+      "text": "Tu próxima oportunidad no debería depender de a quién conoces. Jobsoccer da la misma visibilidad a candidatos de todos los países, de todas las ligas y de todos los niveles del juego."
+    },
+    "fair": {
+      "title": "Un proceso justo, transparente y estructurado",
+      "text": "Un proceso de postulación claro y estructurado que reduce los sesgos y da a todos los candidatos las mismas oportunidades."
+    }
+  },
+  "candidates": {
+    "title": "Encuentra a tu equipo ideal",
+    "subtitle": "Deja de buscar: ¡empieza a encontrar! Jobsoccer te conecta con talento futbolístico verificado de todo el mundo.",
+    "heading": "Candidatos",
+    "seeAll": "Ver todos",
+    "loadError": "No se pudieron cargar los candidatos. Inténtalo de nuevo más tarde.",
+    "empty": "No hay candidatos disponibles por el momento."
+  },
+  "how": {
+    "title": "Cómo funciona",
+    "subtitle": "Empezar es sencillo",
+    "intro": "Tanto si buscas tu próxima oportunidad como tu próximo fichaje, estás a tres pasos.",
+    "forCandidates": "Para candidatos",
+    "forEmployers": "Para empleadores",
+    "step": "Paso {number}",
+    "candidate": {
+      "step1": {
+        "title": "Crea tu perfil",
+        "text": "Regístrate y crea tu perfil profesional dinámico. Añade tu experiencia, tus habilidades y tus certificaciones, y sube tu vídeo de presentación. Deja que tu perfil hable por ti."
+      },
+      "step2": {
+        "title": "Que te descubran o postúlate",
+        "text": "Explora cientos de ofertas de empleo de todos los niveles del juego. Postúlate directamente o deja que nuestra IA te proponga las oportunidades adecuadas según tu perfil."
+      },
+      "step3": {
+        "title": "Conecta y consigue el puesto",
+        "text": "Escribe directamente a clubes, agentes y empleadores. Recibe solicitudes de entrevista. Tu próximo paso en el fútbol empieza aquí."
+      }
+    },
+    "employer": {
+      "step1": {
+        "title": "Crea el perfil de tu organización",
+        "text": "Configura el perfil de tu club, academia, agencia o universidad. Cuéntale al mundo del fútbol quién eres y qué buscas."
+      },
+      "step2": {
+        "title": "Publica ofertas o busca talento",
+        "text": "Publica tus ofertas en nuestra bolsa de empleo o explora nuestra base de datos global de candidatos verificados: jugadores, entrenadores, analistas, personal de oficina y más."
+      },
+      "step3": {
+        "title": "Preselecciona, mira y contrata",
+        "text": "Revisa las entrevistas en vídeo, preselecciona a tus favoritos, solicita acceso a los perfiles completos y contacta directamente con el talento que encaja con tu visión."
+      }
+    },
+    "ready": "¿Listo para empezar?",
+    "signUpCandidate": "Regístrate como candidato",
+    "signUpEmployer": "Regístrate como empleador"
+  },
+  "globalProfile": {
+    "access": {
+      "title": "Acceso global",
+      "text": "Conecta con clubes y agentes de todo el mundo"
+    },
+    "visibility": {
+      "title": "Visibilidad",
+      "text": "Muestra tu talento. Que te descubran. ¡Da el salto global!"
+    },
+    "opportunities": {
+      "title": "Oportunidades",
+      "text": "Descubre ofertas de empleo y pruebas en todo el mundo"
+    },
+    "title": "¡Crea tu perfil y que te vean en todo el mundo!",
+    "subtitle": "Construye tu presencia profesional y conecta con oportunidades de todo el mundo",
+    "imageAlt": "Oportunidades globales en todo el mundo",
+    "signIn": "Iniciar sesión"
+  },
+  "jobCategories": {
+    "title": "Encuentra a tu próximo talento del fútbol",
+    "seeAll": "Ver todo",
+    "loadError": "No se pudieron cargar las categorías de empleo. Inténtalo de nuevo más tarde.",
+    "empty": "No hay categorías de empleo disponibles por el momento.",
+    "available": "{count, plural, one {# empleo disponible} other {# empleos disponibles}}"
+  },
+  "newJobs": {
+    "title": "Nuevos empleos",
+    "empty": "No hay empleos nuevos disponibles",
+    "seeAll": "Ver todos"
+  },
+  "stats": {
+    "title": "El mundo del fútbol es inmenso. Nosotros lo conectamos.",
+    "players": "Jugadores de fútbol en todo el mundo",
+    "clubs": "Clubes en todo el mundo",
+    "industryValue": "60 000 millones de US$",
+    "industry": "Industria mundial del fútbol"
+  }
+}

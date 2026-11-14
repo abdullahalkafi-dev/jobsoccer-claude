@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { useGetInterviewQuestionsQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
 
 interface GuideQuestionsProps {
@@ -16,16 +17,17 @@ interface GuideQuestionsProps {
  * answer exactly what the AI assesses. Shows nothing when the position has no guide.
  */
 export function GuideQuestions({ position, collapsible = false, defaultOpen = true }: GuideQuestionsProps) {
+  const t = useTranslations("quality");
   const { data: guide } = useGetInterviewQuestionsQuery(position ?? "", { skip: !position });
   if (!guide) return null;
 
-  const title = `${guide.displayName} – Interview Questionnaire (${guide.questionCount} Questions)`;
+  const title = t("guide.title", { name: guide.displayName, count: guide.questionCount });
 
   let offset = 0;
   const body = (
     <>
       <p className="text-sm text-gray-600 mb-4">
-        In your video interview, answer these questions in the order shown. You may skip a question: it is shown as &quot;Not Answered&quot; and gets 0 points.
+        {t("guide.intro")}
       </p>
       <div className="space-y-4">
         {guide.sections.map((section) => {

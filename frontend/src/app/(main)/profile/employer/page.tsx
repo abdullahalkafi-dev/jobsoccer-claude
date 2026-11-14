@@ -12,6 +12,9 @@ import {
   Mail,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
+import { useFormats } from "@/i18n/format";
 import {
   useUpdateProfileImageMutation,
   useUpdateBannerImageMutation,
@@ -25,6 +28,9 @@ import EditEmployerPersonalInformationModal from "@/components/modals/EditEmploy
 import { detectSocialPlatform, formatUrl } from "@/utils/socialMedia";
 
 export default function EmployerProfilePage() {
+  const t = useTranslations("profile");
+  const label = useOptionLabel();
+  const f = useFormats();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
 
@@ -45,13 +51,13 @@ export default function EmployerProfilePage() {
       formData.append("image", file);
 
       await updateProfileImage(formData).unwrap();
-      toast.success("Profile image updated successfully");
+      toast.success(t("page.profileImageUpdated"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update profile image";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.profileImageFailed"));
       throw error;
     }
   };
@@ -63,13 +69,13 @@ export default function EmployerProfilePage() {
       formData.append("banner", file);
 
       await updateBannerImage(formData).unwrap();
-      toast.success("Banner image updated successfully");
+      toast.success(t("page.bannerUpdated"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update banner image";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.bannerFailed"));
       throw error;
     }
   };
@@ -78,13 +84,13 @@ export default function EmployerProfilePage() {
   const handleRequestVerification = async () => {
     try {
       await requestAdminVerification().unwrap();
-      toast.success("Verification request submitted successfully");
+      toast.success(t("page.verificationSubmitted"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to submit verification request";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.verificationFailed"));
     }
   };
 
@@ -111,7 +117,7 @@ export default function EmployerProfilePage() {
           variant="outline"
           className="rounded-full bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
         >
-          <Clock size={20} height={20} /> Verification Pending
+          <Clock size={20} height={20} /> {t("page.verificationPending")}
         </Button>
       );
     }
@@ -125,7 +131,7 @@ export default function EmployerProfilePage() {
           disabled={isRequestingVerification}
         >
           <XCircle size={20} height={20} />{" "}
-          {isRequestingVerification ? "Requesting..." : "Request Again"}
+          {isRequestingVerification ? t("page.requesting") : t("page.requestAgain")}
         </Button>
       );
     }
@@ -139,7 +145,7 @@ export default function EmployerProfilePage() {
         disabled={isRequestingVerification}
       >
         <Award size={20} height={20} />{" "}
-        {isRequestingVerification ? "Requesting..." : "Add Verification Badge"}
+        {isRequestingVerification ? t("page.requesting") : t("page.addVerificationBadge")}
       </Button>
     );
   };
@@ -148,7 +154,7 @@ export default function EmployerProfilePage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
   const displayName = currentUser
     ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
-    : "User";
+    : t("page.fallbackUser");
 
   const displayAvatar = currentUser?.profileImage
     ? `${BASE_URL}${currentUser.profileImage}`
@@ -158,7 +164,7 @@ export default function EmployerProfilePage() {
     ? `${BASE_URL}${currentUser.bannerImage}`
     : null;
 
-  const displayRole = currentUser?.role;
+  const displayRole = label("role", currentUser?.role);
 
   // Show the skeleton only until the signed-in user is known (no artificial wait)
   if (!currentUser) {
@@ -167,12 +173,8 @@ export default function EmployerProfilePage() {
 
   // Format founded date
   const formatFoundedDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    if (!dateString) return t("page.notAvailable");
+    return f.dateLong(dateString);
   };
 
   return (
@@ -230,7 +232,7 @@ export default function EmployerProfilePage() {
         {currentUser?.profile?.clubDescription && (
           <div className="mb-6">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
-              Overview
+              {t("page.overview")}
             </h2>
             <p className="text-gray-700 leading-relaxed">
               {currentUser.profile.clubDescription}
@@ -242,7 +244,7 @@ export default function EmployerProfilePage() {
         <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
-              Professional Information
+              {t("page.professionalInformation")}
             </h2>
             <Button
               variant="ghost"
@@ -251,7 +253,7 @@ export default function EmployerProfilePage() {
               onClick={() => setIsEditProfileModalOpen(true)}
             >
               <Edit className="w-4 h-4 mr-1" />
-              Edit
+              {t("page.edit")}
             </Button>
           </div>
 
@@ -260,7 +262,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.clubName && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Club Name
+                  {t("fields.clubName")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.clubName}
@@ -272,7 +274,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.fifaLicenseNumber && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  License number
+                  {t("fields.licenseNumber")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.fifaLicenseNumber}
@@ -284,10 +286,10 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.country && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Country
+                  {t("fields.country")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.country}
+                  {label("country", currentUser.profile.country)}
                 </p>
               </div>
             )}
@@ -295,10 +297,10 @@ export default function EmployerProfilePage() {
             {/* Phone Number */}
             <div>
               <label className="text-sm text-gray-500 mb-1 block">
-                Phone number
+                {t("fields.phoneNumber")}
               </label>
               <p className="text-gray-900 font-medium">
-                {currentUser?.profile?.phoneNumber || "N/A"}
+                {currentUser?.profile?.phoneNumber || t("page.notAvailable")}
               </p>
             </div>
 
@@ -330,7 +332,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.address && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Address
+                  {t("fields.address")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.address}
@@ -342,7 +344,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.location && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Location
+                  {t("fields.location")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.location}
@@ -354,7 +356,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.founded && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Founded
+                  {t("fields.founded")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {formatFoundedDate(currentUser.profile.founded)}
@@ -366,10 +368,10 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.level && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Level
+                  {t("fields.level")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.level}
+                  {label("division", currentUser.profile.level)}
                 </p>
               </div>
             )}
@@ -378,7 +380,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.nationality && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Nationality
+                  {t("fields.nationality")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.nationality}
@@ -390,7 +392,7 @@ export default function EmployerProfilePage() {
             {currentUser?.profile?.clubContact && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Club Contact
+                  {t("fields.clubContact")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.clubContact}

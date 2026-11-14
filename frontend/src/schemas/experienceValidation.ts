@@ -1,16 +1,21 @@
 import * as z from "zod";
+import { englishValidation, type Translator } from "./translator";
 
-export const experienceFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  employmentType: z.string().min(1, "Employment type is required"),
-  club: z.string().min(1, "Club is required"),
-  location: z.string().min(1, "Job location is required"),
-  isCurrentlyWorking: z.boolean(),
-  startMonth: z.string().min(1, "Start month is required"),
-  startYear: z.string().min(1, "Start year is required"),
-  endMonth: z.string().optional(),
-  endYear: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-});
+export const getExperienceFormSchema = (t: Translator) =>
+  z.object({
+    title: z.string(t("invalid")).min(1, t("title")),
+    employmentType: z.string(t("invalid")).min(1, t("employmentType")),
+    club: z.string(t("invalid")).min(1, t("club")),
+    location: z.string(t("invalid")).min(1, t("jobLocation")),
+    isCurrentlyWorking: z.boolean(t("invalid")),
+    startMonth: z.string(t("invalid")).min(1, t("startMonth")),
+    startYear: z.string(t("invalid")).min(1, t("startYear")),
+    endMonth: z.string().optional(),
+    endYear: z.string().optional(),
+    description: z.string(t("invalid")).min(1, t("description")),
+  });
 
-export type ExperienceFormData = z.infer<typeof experienceFormSchema>;
+export type ExperienceFormData = z.infer<ReturnType<typeof getExperienceFormSchema>>;
+
+// English versions for code outside React (types, older imports). Components use the getXxxSchema(t) factories.
+export const experienceFormSchema = getExperienceFormSchema(englishValidation);

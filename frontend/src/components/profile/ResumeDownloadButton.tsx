@@ -1,6 +1,7 @@
 "use client";
 
 import { Download } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useGetUserResumeQuery } from "@/redux/features/resume/resumeApi";
 
@@ -21,6 +22,7 @@ export default function ResumeDownloadButton({
   userId,
   enabled,
 }: ResumeDownloadButtonProps) {
+  const t = useTranslations("profile.resume");
   const { data } = useGetUserResumeQuery(userId, { skip: !enabled || !userId });
 
   const resumes: ResumeItem[] = data?.data ?? [];
@@ -37,7 +39,7 @@ export default function ResumeDownloadButton({
         rel="noopener noreferrer"
       >
         <Download className="h-4 w-4" />
-        Resume
+        {t("button")}
       </a>
     </Button>
   );

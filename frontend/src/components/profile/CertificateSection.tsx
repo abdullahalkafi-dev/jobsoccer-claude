@@ -22,6 +22,8 @@ import {
 import { CertificateData } from "@/types/certificate";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import AddLicensesOrCertificationsModal from "@/components/modals/AddLicensesOrCertificationsModal";
 import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOrCertificationsModal";
 
@@ -34,6 +36,7 @@ export default function CertificateSection({
   userId,
   readOnly = false,
 }: CertificateSectionProps) {
+  const t = useTranslations("profile");
   const [deleteCertificate] = useDeleteCertificateMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -64,12 +67,11 @@ export default function CertificateSection({
     try {
       const result = await deleteCertificate(certificateToDelete.id).unwrap();
       if (result.success) {
-        toast.success(result.message || "Certificate deleted successfully!");
+        toast.success(result.message || t("certificates.deleted"));
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.message ||
-          "Failed to delete certificate. Please try again."
+        error?.data?.message || t("certificates.deleteFailed")
       );
       console.error("Error deleting certificate:", error);
     } finally {
@@ -89,7 +91,7 @@ export default function CertificateSection({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-md md:text-xl">
-              Licenses and Certifications
+              {t("certificates.title")}
             </CardTitle>
             {!readOnly && (
               <Button
@@ -98,7 +100,7 @@ export default function CertificateSection({
                 onClick={() => setIsAddModalOpen(true)}
               >
                 <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Add</span>
+                <span className="hidden sm:inline ml-1">{t("common.add")}</span>
               </Button>
             )}
           </div>
@@ -111,13 +113,13 @@ export default function CertificateSection({
             </div>
           ) : certificatesError ? (
             <div className="text-center py-12">
-              <p className="text-red-600 mb-2">Failed to load certificates</p>
+              <p className="text-red-600 mb-2">{t("certificates.loadError")}</p>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => window.location.reload()}
               >
-                Try Again
+                {t("common.tryAgain")}
               </Button>
             </div>
           ) : !certificatesData?.data || certificatesData.data.length === 0 ? (
@@ -157,20 +159,21 @@ export default function CertificateSection({
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t("common.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete your certificate{" "}
-              <span className="font-semibold">{certificateToDelete?.name}</span>
-              . This action cannot be undone.
+              {t.rich("certificates.deleteDesc", {
+                name: certificateToDelete?.name ?? "",
+                b: (chunks) => <span className="font-semibold">{chunks}</span>,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white"
             >
-              Delete
+              {t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -188,18 +191,19 @@ function EmptyCertificateState({
   onAddClick,
   readOnly = false,
 }: EmptyCertificateStateProps) {
+  const t = useTranslations("profile.certificates");
   return (
     <div className="text-center py-5 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <Award className="h-8 w-8 text-gray-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-        No Certificates Added Yet
+        {t("emptyTitle")}
       </h3>
       <p className="text-gray-600 mb-4 max-w-md mx-auto">
         {readOnly
-          ? "This user hasn't added any certificates yet."
-          : "Showcase your professional certifications and licenses. This helps employers understand your qualifications and expertise."}
+          ? t("emptyReadOnly")
+          : t("emptyOwner")}
       </p>
       {!readOnly && (
         <Button
@@ -207,7 +211,7 @@ function EmptyCertificateState({
           className="bg-black hover:bg-gray-800 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Your First Certificate
+          {t("addFirst")}
         </Button>
       )}
     </div>
@@ -255,6 +259,8 @@ function CertificateItem({
   onDeleteClick,
   readOnly = false,
 }: CertificateItemProps) {
+  const t = useTranslations("profile");
+  const label = useOptionLabel();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -300,9 +306,12 @@ function CertificateItem({
       ? getMonthName(certificate.endMonth)
       : null;
 
-    return `${startMonth} ${certificate.startYear} - ${
-      endMonth ? `${endMonth} ${certificate.endYear}` : "Present"
-    }`;
+    return t("common.dateRange", {
+      start: `${label("month", String(startMonth))} ${certificate.startYear}`,
+      end: endMonth
+        ? `${label("month", String(endMonth))} ${certificate.endYear}`
+        : t("common.present"),
+    });
   };
 
   return (
@@ -328,7 +337,7 @@ function CertificateItem({
 
             {certificate.credentialId && (
               <p className="text-xs lg:text-sm text-gray-600 mt-1">
-                <span className="font-medium">Credential ID:</span>{" "}
+                <span className="font-medium">{t("certificates.credentialId")}</span>{" "}
                 {certificate.credentialId}
               </p>
             )}
@@ -340,7 +349,7 @@ function CertificateItem({
                 rel="noopener noreferrer"
                 className="text-xs lg:text-sm text-blue-600 hover:underline mt-1 inline-block"
               >
-                Show credential
+                {t("certificates.showCredential")}
               </a>
             )}
           </div>

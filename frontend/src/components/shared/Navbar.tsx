@@ -40,9 +40,11 @@ import { baseApi } from "@/redux/api/baseApi";
 import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import LanguageSwitcher from "../language/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 // ==================== Types ====================
 interface NavLink {
+  id: string;
   name: string;
   href: string;
   icon: LucideIcon;
@@ -66,6 +68,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
   size = "md",
 }) => {
   const router = useRouter();
+  const t = useTranslations("nav");
   const avatarSize = size === "sm" ? "w-11 h-11" : "w-13 h-13";
 
   const handleProfileClick = () => {
@@ -89,7 +92,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
             >
               <Image
                 src={profileImageUrl}
-                alt="User Avatar"
+                alt={t("userAvatar")}
                 width={56}
                 height={56}
                 className="w-full h-full object-cover"
@@ -116,7 +119,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
               className="flex items-center gap-2 w-full"
             >
               <User className="h-4 w-4" />
-              Admin Dashboard
+              {t("adminDashboard")}
             </a>
           </DropdownMenuItem>
         ) : (
@@ -125,7 +128,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
             className="cursor-pointer"
           >
             <User className="h-4 w-4" />
-            My Profile
+            {t("myProfile")}
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
@@ -134,7 +137,7 @@ const UserProfileMenu: React.FC<UserProfileMenuProps> = ({
           className="cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
         >
           <LogOut className="h-4 w-4" />
-          Log out
+          {t("logOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -229,22 +232,24 @@ const prefetchFor = (href: string): false | undefined =>
 const getNavLinks = (
   isLoggedIn: boolean,
   onNotificationClick: () => void,
+  t: (key: string) => string,
 ): NavLink[] => {
   const commonLinks: NavLink[] = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Candidates", href: "/candidates", icon: Users },
-    { name: "Employers", href: "/employers", icon: Building2 },
-    { name: "Job Board", href: "/jobs", icon: Briefcase },
+    { id: "home", name: t("links.home"), href: "/", icon: Home },
+    { id: "candidates", name: t("links.candidates"), href: "/candidates", icon: Users },
+    { id: "employers", name: t("links.employers"), href: "/employers", icon: Building2 },
+    { id: "jobs", name: t("links.jobBoard"), href: "/jobs", icon: Briefcase },
   ];
 
   if (isLoggedIn) {
     return [
       ...commonLinks,
-      { name: "My Network", href: "/my-network", icon: UserSquare },
-      { name: "Upgrade", href: "/upgrade", icon: Crown },
-      { name: "Message", href: "/messages", icon: MessageCircle },
+      { id: "network", name: t("links.myNetwork"), href: "/my-network", icon: UserSquare },
+      { id: "upgrade", name: t("links.upgrade"), href: "/upgrade", icon: Crown },
+      { id: "messages", name: t("links.message"), href: "/messages", icon: MessageCircle },
       {
-        name: "Notification",
+        id: "notification",
+        name: t("links.notification"),
         href: "#",
         icon: Bell,
         onClick: onNotificationClick,
@@ -253,7 +258,7 @@ const getNavLinks = (
   }
 
   // Signed-out visitors only see pages they can open (no Messages link that leads to Sign in)
-  return [...commonLinks, { name: "Upgrade", href: "/upgrade", icon: Crown }];
+  return [...commonLinks, { id: "upgrade", name: t("links.upgrade"), href: "/upgrade", icon: Crown }];
 };
 
 const getProfileImageUrl = (profileImage?: string): string | undefined => {
@@ -263,6 +268,7 @@ const getProfileImageUrl = (profileImage?: string): string | undefined => {
 
 // ==================== Main Component ====================
 export function Navbar() {
+  const t = useTranslations("nav");
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -319,8 +325,8 @@ export function Navbar() {
   const userType = isAdmin ? "admin" : currentUser?.userType;
 
   const navLinks = useMemo(
-    () => getNavLinks(isLoggedIn, () => setIsNotificationOpen(true)),
-    [isLoggedIn],
+    () => getNavLinks(isLoggedIn, () => setIsNotificationOpen(true), t),
+    [isLoggedIn, t],
   );
 
   const profileImageUrl = useMemo(
@@ -365,11 +371,11 @@ export function Navbar() {
           <Link
             href="/"
             className="flex items-center bg-white rounded-full hover:shadow-md transition-shadow"
-            aria-label="Job Soccer Home"
+            aria-label={t("homeAria")}
           >
             <Image
               src={logo}
-              alt="Job Soccer Logo"
+              alt={t("logoAlt")}
               className="w-16 h-auto"
               priority
             />
@@ -379,7 +385,7 @@ export function Navbar() {
           <button
             className="lg:hidden hover:text-green-500 transition-colors p-2 rounded-md hover:bg-white/50"
             onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open navigation menu"
+            aria-label={t("openMenu")}
           >
             <Menu className="h-6 w-6" />
           </button>
@@ -387,14 +393,14 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav
             className="hidden lg:flex items-center justify-center gap-4 lg:gap-8 w-full"
-            aria-label="Main navigation"
+            aria-label={t("mainNav")}
           >
             {navLinks.map((link) => (
               <NavLinkItem
-                key={link.name}
+                key={link.id}
                 link={link}
                 isActive={isActiveLink(link.href)}
-                badge={link.name === "Notification" ? unreadCount : undefined}
+                badge={link.id === "notification" ? unreadCount : undefined}
               />
             ))}
           </nav>
@@ -404,7 +410,7 @@ export function Navbar() {
             <LanguageSwitcher />
             {!mounted || !loginRestored ? (
               // Same size as the button, so nothing moves when the real control appears
-              <div className="h-9 w-[84px]" aria-hidden="true" />
+              <div className="h-9 min-w-[84px]" aria-hidden="true" />
             ) : hasToken && isLoadingUser && !currentUser ? (
               // Pulse loader when loading state is active and we don't have redux cached data
               <div className="w-11 h-11 rounded-full bg-gray-200 animate-pulse" />
@@ -419,7 +425,7 @@ export function Navbar() {
             ) : (
               <Link href="/signin">
                 <Button className="bg-black hover:bg-gray-800 hover:scale-105 transition-transform duration-200 text-white font-semibold cursor-pointer">
-                  Sign In
+                  {t("signIn")}
                 </Button>
               </Link>
             )}
@@ -433,7 +439,7 @@ export function Navbar() {
           <SheetHeader className="border-b">
             <SheetTitle className="text-left">
               {!mounted || !loginRestored ? (
-                <span className="text-xl font-bold text-gray-900">Menu</span>
+                <span className="text-xl font-bold text-gray-900">{t("menu")}</span>
               ) : hasToken && isLoadingUser && !currentUser ? (
                 <div className="w-13 h-13 rounded-full bg-gray-200 animate-pulse" />
               ) : isLoggedIn ? (
@@ -445,23 +451,23 @@ export function Navbar() {
                   size="md"
                 />
               ) : (
-                <span className="text-xl font-bold text-gray-900">Menu</span>
+                <span className="text-xl font-bold text-gray-900">{t("menu")}</span>
               )}
             </SheetTitle>
           </SheetHeader>
 
           <nav
             className="flex flex-col space-y-4 px-4"
-            aria-label="Mobile navigation"
+            aria-label={t("mobileNav")}
           >
             {navLinks.map((link) => (
               <NavLinkItem
-                key={link.name}
+                key={link.id}
                 link={link}
                 isActive={isActiveLink(link.href)}
                 onMobileClick={closeMobileMenu}
                 isMobile
-                badge={link.name === "Notification" ? unreadCount : undefined}
+                badge={link.id === "notification" ? unreadCount : undefined}
               />
             ))}
             <LanguageSwitcher className="self-start" />
@@ -474,7 +480,7 @@ export function Navbar() {
                 className="flex items-center gap-3 py-2 text-gray-700 hover:text-green-500 transition-colors"
               >
                 <LogIn className="h-5 w-5" />
-                <span className="font-medium">Log in</span>
+                <span className="font-medium">{t("logIn")}</span>
               </Link>
             )}
           </nav>

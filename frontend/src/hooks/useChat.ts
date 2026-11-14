@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useSocket } from "./useSocket";
 
 interface Message {
@@ -46,6 +47,13 @@ export function useChat(
     startTyping,
     stopTyping,
   } = useSocket();
+
+  const t = useTranslations("messages");
+  const tRef = useRef(t);
+  tRef.current = t;
+  /** Codes thrown by useSocket become texts in the visitor's language; text from the server is shown as received. */
+  const errorText = (message: string) =>
+    ["SOCKET_NOT_CONNECTED", "SOCKET_DISCONNECTED", "NO_MESSAGE", "SEND_FILE_FAILED"].includes(message) ? tRef.current(`errors.${message}`) : message;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -179,7 +187,7 @@ export function useChat(
     }) => {
       if (data.success && data.chat._id === chatIdRef.current) {
         setIsBlocked(true);
-        setError("You blocked this user");
+        setError(tRef.current("errors.youBlocked"));
       }
     };
 
@@ -189,7 +197,7 @@ export function useChat(
     }) => {
       if (data.chatId === chatIdRef.current) {
         setIsBlocked(true);
-        setError("You have been blocked by this user");
+        setError(tRef.current("errors.blockedByUser"));
       }
     };
 
@@ -214,7 +222,7 @@ export function useChat(
     };
 
     const handleError = (error: { message: string }) => {
-      setError(error.message);
+      setError(errorText(error.message));
     };
 
     socket.on("new_message", handleNewMessage);
@@ -262,7 +270,7 @@ export function useChat(
       userId?: string
     ) => {
       if (!chatId || !receiverId) {
-        throw new Error("Chat ID and Receiver ID are required");
+        throw new Error(tRef.current("errors.missingIds"));
       }
 
       // Create optimistic message for instant UI update
@@ -322,7 +330,7 @@ export function useChat(
         pendingMessagesRef.current.delete(optimisticId);
 
         const error = err as Error;
-        setError(error.message);
+        setError(errorText(error.message));
         throw err;
       }
     },

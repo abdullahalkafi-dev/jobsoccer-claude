@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -7,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface LoginRequiredModalProps {
   isOpen: boolean;
@@ -19,15 +22,16 @@ export function LoginRequiredModal({
   isOpen,
   onClose,
   onLogin,
-  message = "Please log in to continue with this action.",
+  message,
 }: LoginRequiredModalProps) {
+  const t = useTranslations("common");
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Login Required</DialogTitle>
+          <DialogTitle>{t("loginRequired.title")}</DialogTitle>
           <DialogDescription className="text-base pt-2">
-            {message}
+            {message ?? t("loginRequired.message")}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
@@ -37,10 +41,10 @@ export function LoginRequiredModal({
             onClick={onClose}
             className="hover:scale-105"
           >
-            Cancel
+            {t("ui.cancel")}
           </Button>
           <Button type="button" onClick={onLogin} className="hover:scale-105">
-            Login
+            {t("loginRequired.login")}
           </Button>
         </DialogFooter>
       </DialogContent>

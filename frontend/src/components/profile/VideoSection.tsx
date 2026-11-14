@@ -3,6 +3,7 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Play } from "lucide-react";
 import { useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 interface Video {
   _id: string;
@@ -25,6 +26,7 @@ export default function VideoSection({
   videos = [],
   readOnly = false,
 }: VideoSectionProps) {
+  const t = useTranslations("profile.videos");
   const getVideoUrl = useCallback((video: Video): string => {
     if (!video?.url) return "";
 
@@ -43,12 +45,12 @@ export default function VideoSection({
               <Play className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No videos yet
+              {t("emptyTitle")}
             </h3>
             <p className="text-gray-600">
               {readOnly
-                ? "This user hasn't uploaded any videos yet."
-                : "Videos will appear here once uploaded"}
+                ? t("emptyReadOnly")
+                : t("emptyOwner")}
             </p>
           </div>
         ) : (
@@ -59,7 +61,7 @@ export default function VideoSection({
               return (
                 <div key={video._id} className="relative group flex flex-col justify-between">
                   <CardTitle className="my-2">
-                    {video?.kind ? video.kind + " Video" : "Video"}
+                    {video?.kind ? t("kindVideo", { kind: video.kind }) : t("video")}
                   </CardTitle>
                   <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
                     {/* Video Player */}
@@ -78,12 +80,12 @@ export default function VideoSection({
                           error: e,
                         });
                       }}
-                      aria-label={video.title || "Video"}
+                      aria-label={video.title || t("video")}
                     >
                       {video.captionsUrl && (
                         <track kind="subtitles" src={getVideoUrl({ ...video, url: video.captionsUrl })} srcLang="en" label="English" default />
                       )}
-                      Your browser does not support the video tag.
+                      {t("noSupport")}
                     </video>
                   </div>
                 </div>

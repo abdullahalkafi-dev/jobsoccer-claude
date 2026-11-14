@@ -30,6 +30,8 @@ import {
   useLazyCheckActiveHiringQuery,
 } from "@/redux/features/agentHiring/agentHiringApi";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 
 // Interfaces
 interface User {
@@ -54,12 +56,19 @@ interface Conversation {
   id: string;
   user: User;
   lastMessage: string;
+  /** Type of the last message (text, image, video, file): shown as a label when it has no text. */
+  lastType?: string;
   lastTimestamp: Date;
   isBlocked?: boolean;
   blockedBy?: string;
 }
 
 export default function MessagesPage() {
+  const t = useTranslations("messages");
+  const f = useFormats();
+  /** Codes from the chat hooks become texts in the visitor's language; text from the server is shown as received. */
+  const errorText = (message: string) =>
+    ["SOCKET_NOT_CONNECTED", "SOCKET_DISCONNECTED", "NO_MESSAGE", "SEND_FILE_FAILED"].includes(message) ? t(`errors.${message}`) : message;
   const [searchQuery, setSearchQuery] = useState("");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<
@@ -154,10 +163,8 @@ export default function MessagesPage() {
                   userType: otherUser.userType,
                   role: otherUser.role,
                 },
-                lastMessage:
-                  latestMsg?.content ||
-                  latestMsg?.messageType ||
-                  "No messages yet",
+                lastMessage: latestMsg?.content || "",
+                lastType: latestMsg?.messageType,
                 lastTimestamp: latestMsg
                   ? new Date(latestMsg.createdAt)
                   : new Date(chat.createdAt),
@@ -237,10 +244,8 @@ export default function MessagesPage() {
                   userType: otherUser.userType,
                   role: otherUser.role,
                 },
-                lastMessage:
-                  latestMsg?.content ||
-                  latestMsg?.messageType ||
-                  "No messages yet",
+                lastMessage: latestMsg?.content || "",
+                lastType: latestMsg?.messageType,
                 lastTimestamp: latestMsg
                   ? new Date(latestMsg.createdAt)
                   : new Date(chat.createdAt),
@@ -271,7 +276,8 @@ export default function MessagesPage() {
           if (index < 0) return prev;
           const updated = {
             ...prev[index],
-            lastMessage: message.content || message.messageType || prev[index].lastMessage,
+            lastMessage: message.content || "",
+            lastType: message.messageType,
             lastTimestamp: new Date(message.createdAt),
           };
           return [updated, ...prev.slice(0, index), ...prev.slice(index + 1)];
@@ -378,7 +384,7 @@ export default function MessagesPage() {
   // Handle sending message
   const handleSendMessage = async () => {
     if (isBlocked) {
-      toast.error("Cannot send message. This conversation is blocked.");
+      toast.error(t("toast.blockedCannotSend"));
       return;
     }
 
@@ -391,7 +397,7 @@ export default function MessagesPage() {
     }
 
     if (!connected) {
-      toast.warning("Not connected. Please wait for connection...");
+      toast.warning(t("toast.notConnected"));
       return;
     }
 
@@ -445,9 +451,9 @@ export default function MessagesPage() {
     } catch (error) {
       console.error("Failed to send message:", error);
       toast.error(
-        `Failed to send message: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
+        t("toast.sendFailed", {
+          error: error instanceof Error ? errorText(error.message) : t("errors.unknown"),
+        })
       );
     } finally {
       setUploadingFile(false);
@@ -492,7 +498,7 @@ export default function MessagesPage() {
         setSelectedConversation(null);
       } catch (error) {
         console.error("Failed to delete conversation:", error);
-        toast.error("Failed to delete conversation. Please try again.");
+        toast.error(t("toast.deleteFailed"));
       }
     }
   };
@@ -510,10 +516,10 @@ export default function MessagesPage() {
             : conv
         )
       );
-      toast.success("User blocked successfully");
+      toast.success(t("toast.blocked"));
     } catch (error) {
       console.error("Failed to block user:", error);
-      toast.error("Failed to block user. Please try again.");
+      toast.error(t("toast.blockFailed"));
     }
   };
 
@@ -530,10 +536,10 @@ export default function MessagesPage() {
             : conv
         )
       );
-      toast.success("User unblocked successfully");
+      toast.success(t("toast.unblocked"));
     } catch (error) {
       console.error("Failed to unblock user:", error);
-      toast.error("Failed to unblock user. Please try again.");
+      toast.error(t("toast.unblockFailed"));
     }
   };
 
@@ -556,13 +562,13 @@ export default function MessagesPage() {
   // Handle Hire Agent
   const handleHireAgent = async () => {
     if (!selectedUser || selectedUser.role !== "Agent") {
-      toast.error("Selected user is not an agent");
+      toast.error(t("toast.notAgent"));
       return;
     }
 
     // Check if already has active hiring
     if (activeHiringData?.data?.hasActiveHiring) {
-      toast.warning("You already have an active hiring with this agent");
+      toast.warning(t("toast.alreadyHiring"));
       return;
     }
 
@@ -573,7 +579,7 @@ export default function MessagesPage() {
       }).unwrap();
 
       if (response.success) {
-        toast.success("Hiring request sent successfully!");
+        toast.success(t("toast.hireSent"));
         // Refresh active hiring status
         checkActiveHiring(selectedUser.id);
       }
@@ -582,16 +588,12 @@ export default function MessagesPage() {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error as any).data?.message
-          : "Unknown error";
-      toast.error(
-        errorMessage || "Failed to send hiring request. Please try again."
-      );
+          : null;
+      toast.error(errorMessage || t("toast.hireFailed"));
     } finally {
       setHiringAgent(false);
     }
   };
-
-  console.log("Rendered MessagesPage", messages);
 
   return (
     <div className="container mx-auto flex h-[calc(100vh-4rem-80px)] max-h-[calc(100vh-4rem-80px)] bg-white border border-gray-200 rounded-lg overflow-hidden my-4">
@@ -603,23 +605,23 @@ export default function MessagesPage() {
       >
         <div className="p-4">
           <Input
-            placeholder="Search messages..."
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={handleSearch}
             className="w-full"
           />
         </div>
         <div className="p-4 flex items-center justify-between">
-          <h3 className="text-xl">Messages</h3>
+          <h3 className="text-xl">{t("title")}</h3>
           {connected ? (
             <span className="text-xs text-green-600 flex items-center gap-1">
               <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
-              Connected
+              {t("status.connected")}
             </span>
           ) : (
             <span className="text-xs text-green-600 flex items-center gap-1">
               <span className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span>
-              {token ? "Connecting..." : "Not logged in"}
+              {token ? t("status.connecting") : t("status.notLoggedIn")}
             </span>
           )}
         </div>
@@ -630,7 +632,7 @@ export default function MessagesPage() {
             </div>
           ) : filteredConversations.length === 0 ? (
             <div className="p-4 text-center text-gray-500">
-              No conversations yet
+              {t("noConversations")}
             </div>
           ) : (
             filteredConversations.map((conv) => {
@@ -662,19 +664,17 @@ export default function MessagesPage() {
                         {conv.user.name}
                         {conv.isBlocked && (
                           <span className="text-xs text-red-600 font-normal">
-                            (Blocked)
+                            {t("blockedTag")}
                           </span>
                         )}
                       </h3>
                       <span className="text-xs text-gray-500">
-                        {conv.lastTimestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {f.time(conv.lastTimestamp)}
                       </span>
                     </div>
                     <p className="text-xs text-gray-600 truncate">
-                      {conv.lastMessage}
+                      {conv.lastMessage ||
+                        (conv.lastType ? t(`preview.${conv.lastType}`) : t("noMessagesYet"))}
                     </p>
                   </div>
                 </div>
@@ -721,7 +721,7 @@ export default function MessagesPage() {
                     href={`/${selectedUser.userType}s/${selectedUser.id}`}
                     className="flex items-center"
                   >
-                    View Profile
+                    {t("viewProfile")}
                   </Link>
                 </Button>
                 {selectedUser.role === "Agent" &&
@@ -737,16 +737,16 @@ export default function MessagesPage() {
                       {hiringAgent ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Hiring...
+                          {t("hire.hiring")}
                         </>
                       ) : activeHiringData?.data?.hasActiveHiring ? (
                         activeHiringData.data.hiring?.status === "pending" ? (
-                          "Request Pending"
+                          t("hire.pending")
                         ) : (
-                          "Hired"
+                          t("hire.hired")
                         )
                       ) : (
-                        "Hire"
+                        t("hire.hire")
                       )}
                     </Button>
                   )}
@@ -763,7 +763,7 @@ export default function MessagesPage() {
                         className="flex items-center p-2 hover:bg-gray-100 w-full text-left"
                       >
                         <AlertCircle className="h-4 w-4 mr-2" />
-                        Unblock User
+                        {t("menu.unblock")}
                       </button>
                     ) : (
                       <button
@@ -771,7 +771,7 @@ export default function MessagesPage() {
                         className="flex items-center p-2 hover:bg-gray-100 w-full text-left"
                       >
                         <AlertCircle className="h-4 w-4 mr-2" />
-                        Block User
+                        {t("menu.block")}
                       </button>
                     )}
                     <button
@@ -779,7 +779,7 @@ export default function MessagesPage() {
                       className="flex items-center p-2 hover:bg-gray-100 text-red-600 w-full text-left"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Chat
+                      {t("menu.delete")}
                     </button>
                   </PopoverContent>
                 </Popover>
@@ -796,11 +796,11 @@ export default function MessagesPage() {
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center text-gray-500">
                     <AlertCircle className="h-12 w-12 mx-auto mb-2" />
-                    <p>This conversation is blocked</p>
+                    <p>{t("blocked.title")}</p>
                     <p className="text-sm mt-1">
                       {selectedChat?.blockedBy === currentUserId
-                        ? "You blocked this user"
-                        : "You have been blocked by this user"}
+                        ? t("errors.youBlocked")
+                        : t("errors.blockedByUser")}
                     </p>
                   </div>
                 </div>
@@ -813,7 +813,7 @@ export default function MessagesPage() {
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-gray-500">
-                  No messages yet. Start the conversation!
+                  {t("startConversation")}
                 </div>
               ) : (
                 <>
@@ -841,7 +841,7 @@ export default function MessagesPage() {
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={`${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`}
-                                alt="Image"
+                                alt={t("imageAlt")}
                                 className="w-48 h-48 object-cover rounded"
                                 crossOrigin="anonymous"
                                 onError={(e) => {
@@ -850,12 +850,6 @@ export default function MessagesPage() {
                                     `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`
                                   );
                                   e.currentTarget.style.display = "none";
-                                }}
-                                onLoad={() => {
-                                  console.log(
-                                    "Image loaded successfully:",
-                                    `${process.env.NEXT_PUBLIC_BASE_URL}${msg.fileUrl}`
-                                  );
                                 }}
                               />
                             </div>
@@ -885,14 +879,11 @@ export default function MessagesPage() {
                             }`}
                           >
                             <Paperclip className="h-4 w-4" />
-                            {msg.content || "Download File"}
+                            {msg.content || t("downloadFile")}
                           </a>
                         )}
                         <span className="text-xs block mt-1 opacity-75">
-                          {msg.timestamp.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {f.time(msg.timestamp)}
                         </span>
                       </div>
                     </div>
@@ -924,13 +915,13 @@ export default function MessagesPage() {
               {isBlocked ? (
                 <div className="text-center text-gray-500 py-4">
                   {selectedChat?.blockedBy === currentUserId
-                    ? "You blocked this user. Unblock to send messages."
-                    : "You cannot send messages to this user."}
+                    ? t("blocked.youBlockedFooter")
+                    : t("blocked.cannotSend")}
                 </div>
               ) : (
                 <div className="flex items-center rounded-lg border bg-gray-50 p-2">
                   <Input
-                    placeholder="Write your messages..."
+                    placeholder={t("writePlaceholder")}
                     value={newMessage}
                     onChange={handleInputChange}
                     className="flex-1 bg-transparent border focus:ring-0 h-12"
@@ -964,7 +955,7 @@ export default function MessagesPage() {
                         <div className="h-10 w-10 relative mr-2">
                           <Image
                             src={URL.createObjectURL(selectedFile)}
-                            alt="Preview"
+                            alt={t("previewAlt")}
                             fill
                             className="object-cover rounded"
                           />
@@ -995,16 +986,16 @@ export default function MessagesPage() {
                     }
                     title={
                       !connected
-                        ? "Waiting for connection..."
+                        ? t("sendTitle.waiting")
                         : !newMessage.trim() && !selectedFile
-                        ? "Type a message or select a file"
+                        ? t("sendTitle.empty")
                         : ""
                     }
                   >
                     {uploadingFile ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      "Send"
+                      t("send")
                     )}
                   </Button>
                 </div>
@@ -1013,7 +1004,7 @@ export default function MessagesPage() {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a conversation to start messaging
+            {t("selectConversation")}
           </div>
         )}
       </div>

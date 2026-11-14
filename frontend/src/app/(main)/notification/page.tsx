@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { X, Clock, Briefcase, CheckCircle, Loader2 } from "lucide-react";
 import { RootState } from "@/redux/store";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import {
   useGetNotificationsQuery,
@@ -15,6 +17,8 @@ import {
 import { INotification } from "@/types/notification";
 
 const NotificationModal = () => {
+  const t = useTranslations("notifications");
+  const f = useFormats();
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
   const [page, setPage] = useState(1);
@@ -97,13 +101,9 @@ const NotificationModal = () => {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400)
-      return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800)
-      return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    return date.toLocaleDateString();
+    if (diffInSeconds < 60) return t("justNow");
+    if (diffInSeconds < 604800) return f.ago(date);
+    return f.date(date);
   };
 
   if (!isOpen) return null;
@@ -115,13 +115,14 @@ const NotificationModal = () => {
         <div className="bg-linear-to-r from-blue-600 to-purple-600 px-6 py-4 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold">Notifications</h2>
+              <h2 className="text-xl font-bold">{t("title")}</h2>
               <p className="text-blue-100 text-sm">
-                {unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}
+                {t("unreadCount", { count: unreadCount })}
               </p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
+              aria-label={t("close")}
               className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
@@ -138,7 +139,7 @@ const NotificationModal = () => {
                   : "text-white hover:bg-white hover:bg-opacity-20"
               }`}
             >
-              All ({notifications.length})
+              {t("tabs.allCount", { count: notifications.length })}
             </button>
             <button
               onClick={() => setActiveTab("unread")}
@@ -148,7 +149,7 @@ const NotificationModal = () => {
                   : "text-white hover:bg-white hover:bg-opacity-20"
               }`}
             >
-              Unread ({unreadCount})
+              {t("tabs.unreadCount", { count: unreadCount })}
             </button>
           </div>
         </div>
@@ -160,7 +161,7 @@ const NotificationModal = () => {
               onClick={handleMarkAllAsRead}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
             >
-              Mark all as read
+              {t("markAllRead")}
             </button>
           </div>
         )}
@@ -177,12 +178,12 @@ const NotificationModal = () => {
                 <CheckCircle className="w-8 h-8 text-gray-400" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                All caught up!
+                {t("allCaughtUp")}
               </h3>
               <p className="text-gray-500 text-sm">
                 {activeTab === "unread"
-                  ? "No unread notifications"
-                  : "You have no notifications"}
+                  ? t("noUnread")
+                  : t("none")}
               </p>
             </div>
           ) : (
@@ -226,6 +227,7 @@ const NotificationModal = () => {
                       {/* More Options */}
                       <button
                         className="p-1 hover:bg-gray-200 rounded-full transition-colors shrink-0 ml-2"
+                        aria-label={t("delete")}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(notification._id);
@@ -250,17 +252,17 @@ const NotificationModal = () => {
                 onClick={() => setPage(page - 1)}
                 className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
               >
-                Previous
+                {t("previous")}
               </button>
               <span className="text-sm text-gray-600">
-                Page {page} of {totalPages}
+                {t("pageOf", { page, total: totalPages })}
               </span>
               <button
                 disabled={page === totalPages}
                 onClick={() => setPage(page + 1)}
                 className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
               >
-                Next
+                {t("next")}
               </button>
             </div>
           </div>

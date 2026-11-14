@@ -1,1 +1,21 @@
-{}
+{
+  "title": "Notificaciones",
+  "unreadCount": "{count, plural, one {# notificación sin leer} other {# notificaciones sin leer}}",
+  "close": "Cerrar",
+  "delete": "Eliminar notificación",
+  "tabs": {
+    "all": "Todas",
+    "allCount": "Todas ({count})",
+    "unread": "Sin leer",
+    "unreadCount": "Sin leer ({count})"
+  },
+  "markAllRead": "Marcar todas como leídas",
+  "allCaughtUp": "¡Estás al día!",
+  "noUnread": "No hay notificaciones sin leer",
+  "none": "No tienes notificaciones",
+  "noneShort": "No hay notificaciones",
+  "previous": "Anterior",
+  "next": "Siguiente",
+  "pageOf": "Página {page} de {total}",
+  "justNow": "Justo ahora"
+}

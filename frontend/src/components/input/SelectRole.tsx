@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown } from "lucide-react";
 import { CandidateRole, EmployerRole } from "@/types/profile";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 const candidateRoles = Object.values(CandidateRole).filter(
   (value) => typeof value === "string"
@@ -25,6 +27,8 @@ export default function RoleSelect({
   onValueChange,
   setUserRype,
 }: RoleSelectProps) {
+  const t = useTranslations("auth");
+  const label = useOptionLabel();
   const [open, setOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(value || "");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -83,7 +87,7 @@ export default function RoleSelect({
         className="w-full justify-between text-left font-normal bg-gray-100 border-gray-200"
         onClick={() => setOpen(!open)}
       >
-        {selectedRole || "Select role"}
+        {selectedRole ? label("role", selectedRole) : t("role.select")}
         <ChevronDown
           className={`h-4 w-4 opacity-50 transition-transform ${
             open ? "rotate-180" : ""
@@ -96,7 +100,7 @@ export default function RoleSelect({
           <div className="p-4 space-y-6">
             {/* Candidates Section */}
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Candidates</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">{t("role.candidates")}</h3>
               <RadioGroup
                 value={selectedRole}
                 onValueChange={handleCandidateRoleSelect}
@@ -115,7 +119,7 @@ export default function RoleSelect({
                       htmlFor={`candidate-${role}`}
                       className="text-gray-700 cursor-pointer font-normal"
                     >
-                      {role}
+                      {label("role", role)}
                     </Label>
                   </div>
                 ))}
@@ -124,7 +128,7 @@ export default function RoleSelect({
 
             {/* Employers Section */}
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">Employers</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">{t("role.employers")}</h3>
               <RadioGroup
                 value={selectedRole}
                 onValueChange={handleEmployerRoleSelect}
@@ -143,7 +147,7 @@ export default function RoleSelect({
                       htmlFor={`employer-${role}`}
                       className="text-gray-700 cursor-pointer font-normal"
                     >
-                      {role}
+                      {label("role", role)}
                     </Label>
                   </div>
                 ))}

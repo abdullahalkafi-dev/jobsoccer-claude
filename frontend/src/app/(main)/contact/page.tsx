@@ -1,21 +1,22 @@
+import { getTranslations } from "next-intl/server";
 import { StaticPage, SUPPORT_EMAIL } from "@/components/shared/StaticPage";
 
-export const metadata = { title: "Contact | JOBSOCCER" };
+export async function generateMetadata() {
+  const t = await getTranslations("pages");
+  return { title: t("contact.metaTitle") };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const t = await getTranslations("pages");
+  const email = () => (
+    <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
+      {SUPPORT_EMAIL}
+    </a>
+  );
   return (
-    <StaticPage title="Contact" intro="Questions, feedback or need help with your profile? We are happy to help.">
-      <p>
-        Write to us at{" "}
-        <a className="font-semibold underline" href={`mailto:${SUPPORT_EMAIL}`}>
-          {SUPPORT_EMAIL}
-        </a>
-        .
-      </p>
-      <p>
-        Candidates who need an adjustment for accessibility reasons when recording their video can also contact us at
-        the same address.
-      </p>
+    <StaticPage title={t("contact.title")} intro={t("contact.intro")}>
+      <p>{t.rich("contact.writeUs", { email })}</p>
+      <p>{t("contact.accessibility")}</p>
     </StaticPage>
   );
 }

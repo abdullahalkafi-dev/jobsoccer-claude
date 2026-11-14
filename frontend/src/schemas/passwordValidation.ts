@@ -1,14 +1,18 @@
 import { z } from "zod";
+import { englishValidation, type Translator } from "./translator";
 
-export const createPasswordSchema = z
-  .object({
-    newPassword: z.string().min(6, "Password must be at least 6 characters"),
-    // .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+export const getCreatePasswordSchema = (t: Translator) =>
+  z
+    .object({
+      newPassword: z.string(t("invalid")).min(6, t("passwordMin", { min: 6 })),
+      confirmPassword: z.string(t("invalid")).min(1, t("confirmPassword")),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t("passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
 
-export type CreatePasswordFormData = z.infer<typeof createPasswordSchema>;
+export type CreatePasswordFormData = z.infer<ReturnType<typeof getCreatePasswordSchema>>;
+
+// English versions for code outside React (types, older imports). Components use the getXxxSchema(t) factories.
+export const createPasswordSchema = getCreatePasswordSchema(englishValidation);

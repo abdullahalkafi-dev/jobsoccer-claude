@@ -23,6 +23,9 @@ import { JobCard } from "@/components/cards/JobCard";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
 import { toast } from "sonner";
 import { use } from "react";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,6 +33,9 @@ interface PageProps {
 
 const JobDetailsPage = ({ params }: PageProps) => {
   const { id } = use(params);
+  const t = useTranslations("jobs.detail");
+  const label = useOptionLabel();
+  const f = useFormats();
   const dispatch = useAppDispatch();
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
@@ -87,7 +93,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
   if (!jobData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">Job not found</p>
+        <p className="text-gray-500">{t("notFound")}</p>
       </div>
     );
   }
@@ -125,14 +131,14 @@ const JobDetailsPage = ({ params }: PageProps) => {
         : await saveJob(id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!"
+          willBeSaved ? t("saved") : t("unsaved")
         );
       }
     } catch (error) {
       // Revert on error
       setLocalIsSaved(previousState);
       const err = error as { data?: { message?: string } };
-      toast.error(err.data?.message || "Failed to save job. Please try again.");
+      toast.error(err.data?.message || t("saveFailed"));
       console.error("Failed to save job:", error);
     }
   };
@@ -142,32 +148,28 @@ const JobDetailsPage = ({ params }: PageProps) => {
       const result = await applyJob({ jobId: id, resumeUrl }).unwrap();
       dispatch(addAppliedJob(result.data));
       setLocalIsApplied(true);
-      toast.success("Application submitted successfully!");
+      toast.success(t("applySuccess"));
     } catch (error) {
       const err = error as { data?: { message?: string } };
       const errorMessage =
-        err.data?.message || "Failed to apply. Please try again.";
+        err.data?.message || t("applyFailed");
       toast.error(errorMessage);
       console.error("Failed to apply:", error);
     }
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return f.dateLong(dateString);
   };
 
   const formatSalary = () => {
     if (jobData.salary.min && jobData.salary.max) {
-      return `$${(jobData.salary.min / 1000).toFixed(0)}K - $${(
-        jobData.salary.max / 1000
-      ).toFixed(0)}K/month`;
+      return t("salaryRange", {
+        min: f.moneyCompact(jobData.salary.min),
+        max: f.moneyCompact(jobData.salary.max),
+      });
     }
-    return "Negotiable";
+    return t("negotiable");
   };
 
   return (
@@ -176,7 +178,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
         <div className="flex flex-col-reverse lg:flex-row justify-between gap-4 items-start">
           {/* left column - Related Jobs */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
-            <h2 className="text-xl font-semibold mb-4">Recommended Jobs</h2>
+            <h2 className="text-xl font-semibold mb-4">{t("recommendedJobs")}</h2>
             {relatedJobsLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <Skeleton key={i} className="h-64 rounded-lg" />
@@ -187,7 +189,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
               ))
             ) : (
               <p className="text-gray-500">
-                No recommended jobs found
+                {t("noRecommended")}
               </p>
             )}
           </div>
@@ -213,13 +215,13 @@ const JobDetailsPage = ({ params }: PageProps) => {
                         <span>{jobData.location}</span>
                       </div>
                       <span>•</span>
-                      <span>{jobData.contractType}</span>
+                      <span>{label("jobType", jobData.contractType)}</span>
                     </div>
                   </div>
 
                   <div className="text-sm">
                     <p>
-                      <span className="text-gray-600">Deadline:</span>
+                      <span className="text-gray-600">{t("deadline")}</span>
                       <span className="text-gray-900 font-medium">
                         {formatDate(jobData.deadline)}
                       </span></p>
@@ -232,7 +234,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     {/* Job Overview */}
                     <div>
                       <h2 className="text-lg font-semibold text-black mb-3">
-                        Job Overview
+                        {t("jobOverview")}
                       </h2>
                       <p className="text-gray-700 leading-relaxed text-sm">
                         {jobData.jobOverview}
@@ -243,22 +245,22 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     <div className="lg:hidden">
                       <div className="bg-gray-50 rounded-lg p-5">
                         <h3 className="text-lg font-semibold text-black mb-4">
-                          Job Summary
+                          {t("jobSummary")}
                         </h3>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <div className="text-xs text-gray-500 mb-1">
-                              Position
+                              {t("position")}
                             </div>
                             <div className="text-sm font-medium text-black">
-                              {jobData.position}
+                              {label("position", jobData.position)}
                             </div>
                           </div>
 
                           <div>
                             <div className="text-xs text-gray-500 mb-1">
-                              Salary
+                              {t("salary")}
                             </div>
                             <div className="text-sm font-medium text-black">
                               {formatSalary()}
@@ -267,27 +269,27 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
                           <div>
                             <div className="text-xs text-gray-500 mb-1">
-                              Contract Type
+                              {t("contractType")}
                             </div>
                             <div className="text-sm font-medium text-black">
-                              {jobData.contractType}
+                              {label("jobType", jobData.contractType)}
                             </div>
                           </div>
 
                           <div>
                             <div className="text-xs text-gray-500 mb-1">
-                              Experience
+                              {t("experience")}
                             </div>
                             <div className="text-sm font-medium text-black">
-                              {jobData.experience}
+                              {label("experience", jobData.experience)}
                             </div>
                           </div>
                           <div>
                             <div className="text-xs text-gray-500 mb-1">
-                              Category
+                              {t("category")}
                             </div>
                             <div className="text-sm font-medium text-black">
-                              {jobData.jobCategory}
+                              {label("role", jobData.jobCategory)}
                             </div>
                           </div>
                         </div>
@@ -297,7 +299,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     {/* Responsibilities */}
                     <div>
                       <h2 className="text-lg font-semibold text-black mb-3">
-                        Responsibilities
+                        {t("responsibilities")}
                       </h2>
                       <p className="text-gray-700 leading-relaxed text-sm">
                         {jobData.responsibilities}
@@ -307,7 +309,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     {/* Required Skills & Qualifications */}
                     <div>
                       <h2 className="text-lg font-semibold text-black mb-3">
-                        Required Skills & Qualifications
+                        {t("requiredSkills")}
                       </h2>
                       <p className="text-gray-700 leading-relaxed text-sm">
                         {jobData.requiredSkills}
@@ -317,7 +319,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                     {/* Application Requirements */}
                     <div>
                       <h2 className="text-lg font-semibold text-black mb-3">
-                        Application Requirements
+                        {t("applicationRequirements")}
                       </h2>
                       <p className="text-gray-700 leading-relaxed text-sm">
                         {jobData.requirements}
@@ -325,7 +327,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
                       {jobData.additionalRequirements && (
                         <div className="mt-3">
                           <h3 className="text-sm font-semibold text-black mb-2">
-                            Additional Requirements
+                            {t("additionalRequirements")}
                           </h3>
                           <p className="text-gray-700 leading-relaxed text-sm">
                             {jobData.additionalRequirements}
@@ -346,11 +348,11 @@ const JobDetailsPage = ({ params }: PageProps) => {
                       >
                         {isSaving || isUnsaving
                           ? isSaved
-                            ? "Unsaving..."
-                            : "Saving..."
+                            ? t("unsaving")
+                            : t("saving")
                           : isSaved
-                            ? "Unsave Job"
-                            : "Save Job"}
+                            ? t("unsaveJob")
+                            : t("saveJob")}
                       </button>
                       {jobData.isPremium && <PremiumNotice access={jobData.premiumAccess} />}
                       <button
@@ -362,10 +364,10 @@ const JobDetailsPage = ({ params }: PageProps) => {
                           }`}
                       >
                         {isApplying
-                          ? "Applying..."
+                          ? t("applying")
                           : isApplied
-                            ? "Applied"
-                            : premiumBlocked ? "Premium only" : "Apply Now"}
+                            ? t("applied")
+                            : premiumBlocked ? t("premiumOnly") : t("applyNow")}
                       </button>
                     </div>
                   </div>
@@ -374,22 +376,22 @@ const JobDetailsPage = ({ params }: PageProps) => {
                   <div className="hidden lg:block lg:col-span-1">
                     <div className="bg-gray-50 rounded-lg p-5 sticky top-6">
                       <h3 className="text-lg font-semibold text-black mb-4">
-                        Job Summary
+                        {t("jobSummary")}
                       </h3>
 
                       <div className="space-y-4">
                         <div>
                           <div className="text-xs text-gray-500 mb-1">
-                            Position
+                            {t("position")}
                           </div>
                           <div className="text-sm font-medium text-black">
-                            {jobData.position}
+                            {label("position", jobData.position)}
                           </div>
                         </div>
 
                         <div>
                           <div className="text-xs text-gray-500 mb-1">
-                            Salary
+                            {t("salary")}
                           </div>
                           <div className="text-sm font-medium text-black">
                             {formatSalary()}
@@ -398,28 +400,28 @@ const JobDetailsPage = ({ params }: PageProps) => {
 
                         <div>
                           <div className="text-xs text-gray-500 mb-1">
-                            Contract Type
+                            {t("contractType")}
                           </div>
                           <div className="text-sm font-medium text-black">
-                            {jobData.contractType}
+                            {label("jobType", jobData.contractType)}
                           </div>
                         </div>
 
                         <div>
                           <div className="text-xs text-gray-500 mb-1">
-                            Experience
+                            {t("experience")}
                           </div>
                           <div className="text-sm font-medium text-black">
-                            {jobData.experience}
+                            {label("experience", jobData.experience)}
                           </div>
                         </div>
 
                         <div>
                           <div className="text-xs text-gray-500 mb-1">
-                            Category
+                            {t("category")}
                           </div>
                           <div className="text-sm font-medium text-black">
-                            {jobData.jobCategory}
+                            {label("role", jobData.jobCategory)}
                           </div>
                         </div>
 
@@ -438,11 +440,11 @@ const JobDetailsPage = ({ params }: PageProps) => {
                         >
                           {isSaving || isUnsaving
                             ? isSaved
-                              ? "Unsaving..."
-                              : "Saving..."
+                              ? t("unsaving")
+                              : t("saving")
                             : isSaved
-                              ? "Unsave Job"
-                              : "Save Job"}
+                              ? t("unsaveJob")
+                              : t("saveJob")}
                         </button>
                         <button
                           onClick={handleApplyClick}
@@ -453,10 +455,10 @@ const JobDetailsPage = ({ params }: PageProps) => {
                             }`}
                         >
                           {isApplying
-                            ? "Applying..."
+                            ? t("applying")
                             : isApplied
-                              ? "Applied"
-                              : premiumBlocked ? "Premium only" : "Apply Now"}
+                              ? t("applied")
+                              : premiumBlocked ? t("premiumOnly") : t("applyNow")}
                         </button>
                       </div>
                     </div>
@@ -479,7 +481,7 @@ const JobDetailsPage = ({ params }: PageProps) => {
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to apply for jobs or save them to your list."
+        message={t("loginMessage")}
       />
     </div>
   );

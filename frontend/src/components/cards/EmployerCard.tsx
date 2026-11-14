@@ -18,8 +18,10 @@ import {
   removeFromFollowing,
 } from "@/redux/features/follow/followSlice";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export function EmployerCard({ employer }: { employer: IEmployer }) {
+  const t = useTranslations("cards.employer");
   const dispatch = useAppDispatch();
   const { checkAuth, showLoginModal, handleLogin, handleCloseModal } =
     useAuthCheck();
@@ -66,7 +68,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         // Unfollow
         await unfollowEmployer(employer._id).unwrap();
         dispatch(removeFromFollowing(employer._id));
-        toast.success("Unfollowed successfully");
+        toast.success(t("unfollowed"));
         setLocalFollowerCount(
           isFollowing ? followerCount - 1 : followerCount + 1,
         );
@@ -74,7 +76,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         // Follow
         await followEmployer(employer._id).unwrap();
         dispatch(addToFollowing(employer._id));
-        toast.success("Followed successfully");
+        toast.success(t("followed"));
         setLocalFollowerCount(
           isFollowing ? followerCount - 1 : followerCount + 1,
         );
@@ -86,7 +88,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
       const err = error as { data?: { message?: string } };
       toast.error(
         err?.data?.message ||
-          `Failed to ${isFollowing ? "unfollow" : "follow"} employer`,
+          (isFollowing ? t("unfollowFailed") : t("followFailed")),
       );
     }
   };
@@ -114,7 +116,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
               <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-200 bg-white cursor-pointer hover:opacity-80 transition-opacity">
                 <Image
                   src={logoUrl}
-                  alt={`${employerName} Logo`}
+                  alt={t("logoAlt", { name: employerName })}
                   width={48}
                   height={48}
                   className="w-full h-full object-cover"
@@ -133,13 +135,13 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           <div className="flex-1 min-w-0">
             <Link href={`/employers/${employer._id}`} className="hover:underline">
               <h3 className="font-semibold text-gray-900 text-lg truncate cursor-pointer">
-                {employer?.profile?.clubName || "Unknown Club"}
+                {employer?.profile?.clubName || t("unknownClub")}
               </h3>
             </Link>
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">
-                {employer?.profile?.location || "N/A"}
+                {employer?.profile?.location || t("notAvailable")}
               </span>
             </div>
           </div>
@@ -148,7 +150,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         <div className="flex gap-2 items-center flex-wrap">
           <span className="rounded-full text-green-500 border border-green-500 px-2 py-1 text-xs flex items-center gap-1">
             <ShieldCheck className="w-4 h-4" />
-            Verified
+            {t("verified")}
           </span>
           <span className="rounded-full border border-black  px-2 py-1 text-xs">
             {employerName}
@@ -161,12 +163,12 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         <div className="flex flex-col gap-4 py-4">
           <div className="text-gray-600 text-sm">
             <Star className="w-4 h-4 inline-block text-yellow-500 mr-2" />
-            <span className="font-bold">Active Job Posts:</span>{" "}
+            <span className="font-bold">{t("activeJobPosts")}</span>{" "}
             {employer?.activeJobCount || 0}
           </div>
           <div className="text-gray-600 text-sm">
             <Users className="w-4 h-4 inline-block text-gray-500 mr-2" />
-            <span className="font-bold">Followers:</span> {followerCount}
+            <span className="font-bold">{t("followers")}</span> {followerCount}
           </div>
         </div>
       </div>
@@ -177,16 +179,16 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
           onClick={handleFollow}
           disabled={isLoading}
           variant="outline"
-          className={`w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3 ${
+          className={`w-1/2 hover:scale-105 transition-transform duration-200 font-semibold px-3 py-3 whitespace-normal h-auto min-h-9 ${
             isFollowing ? "bg-green-50 border-green-500 text-green-700" : ""
           }`}
         >
           {isLoading ? (
-            <>{isFollowing ? "Unfollowing..." : "Following..."}</>
+            <>{isFollowing ? t("unfollowing") : t("following")}</>
           ) : (
             <>
               <UserRoundPlus />
-              {isFollowing ? "Unfollow" : "Follow"}
+              {isFollowing ? t("unfollow") : t("follow")}
             </>
           )}
         </Button>
@@ -202,7 +204,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to interact with employers."
+        message={t("loginMessage")}
       />
     </div>
   );

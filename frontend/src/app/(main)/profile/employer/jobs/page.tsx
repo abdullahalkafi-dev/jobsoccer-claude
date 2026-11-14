@@ -13,8 +13,14 @@ import { useGetJobApplicationsQuery } from "@/redux/features/jobApplication/jobA
 import { TJob } from "@/types/job";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
 
 const JobsPage: React.FC = () => {
+  const t = useTranslations("jobs.employer");
+  const f = useFormats();
+  const label = useOptionLabel();
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
   const [selectedJob, setSelectedJob] = useState<TJob | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -107,23 +113,18 @@ const JobsPage: React.FC = () => {
 
   // Format date
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return f.date(dateString);
   };
 
   // Format salary
   const formatSalary = (min: number, max: number) => {
-    return `$${min.toLocaleString()} - $${max.toLocaleString()}`;
+    return `${f.money(min)} - ${f.money(max)}`;
   };
 
   if (isLoadingJobs) {
     return (
       <div className="min-h-screen w-full p-4 md:p-6 border rounded-2xl flex items-center justify-center">
-        <p className="text-gray-500">Loading jobs...</p>
+        <p className="text-gray-500">{t("loading")}</p>
       </div>
     );
   }
@@ -135,14 +136,14 @@ const JobsPage: React.FC = () => {
       <div>
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">Jobs</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
           <Button
             variant="outline"
             className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
             onClick={() => setIsCreateJobPostModalOpen(true)}
           >
             <Plus size={20} />
-            Job Post
+            {t("jobPost")}
           </Button>
         </div>
 
@@ -156,7 +157,7 @@ const JobsPage: React.FC = () => {
                 : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
-            Active
+            {t("active")}
           </button>
           <button
             onClick={() => handleTabChange("closed")}
@@ -166,7 +167,7 @@ const JobsPage: React.FC = () => {
                 : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
             }`}
           >
-            Closed
+            {t("closed")}
           </button>
         </div>
 
@@ -208,7 +209,7 @@ const JobsPage: React.FC = () => {
                               }}
                               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                             >
-                              Close
+                              {t("close")}
                             </button>
                           </div>
                         )}
@@ -223,21 +224,20 @@ const JobsPage: React.FC = () => {
                         {formatDate(job.createdAt)}
                       </p>
                       <p className="text-sm text-gray-600 mb-2">
-                        Salary: {formatSalary(job.salary.min, job.salary.max)}
+                        {t("salary", { value: formatSalary(job.salary.min, job.salary.max) })}
                       </p>
                       <p className="text-sm text-gray-600 leading-relaxed">
                         {job.location}, {job.country}
                       </p>
                       <p className="text-sm text-blue-600 font-medium mt-2">
-                        {job.applicationCount} Applicant
-                        {job.applicationCount !== 1 ? "s" : ""}
+                        {t("applicants", { count: job.applicationCount })}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
                 <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
-                  <p className="text-gray-500">No {activeTab} jobs found</p>
+                  <p className="text-gray-500">{activeTab === "active" ? t("noActive") : t("noClosed")}</p>
                 </div>
               )}
             </div>
@@ -250,23 +250,23 @@ const JobsPage: React.FC = () => {
                 {/* Applicants Header */}
                 <div className="border-b border-gray-200 p-6">
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Applicants
+                    {t("applicantsTitle")}
                   </h2>
                 </div>
 
                 {/* Table Header */}
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 text-sm font-medium text-gray-700 border-b border-gray-200">
-                  <div className="col-span-4">Name</div>
-                  <div className="col-span-2 text-center" title="How well the candidate fits this job (a sorting help, not a hiring decision)">Job Match</div>
-                  <div className="col-span-3 text-center">Resume</div>
-                  <div className="col-span-3 text-center">Connect</div>
+                  <div className="col-span-4">{t("name")}</div>
+                  <div className="col-span-2 text-center" title={t("jobMatchHint")}>{t("jobMatch")}</div>
+                  <div className="col-span-3 text-center">{t("resume")}</div>
+                  <div className="col-span-3 text-center">{t("connect")}</div>
                 </div>
 
                 {/* Applicants List */}
                 <div className="divide-y divide-gray-200 overflow-x-auto">
                   {isLoadingApplications ? (
                     <div className="px-6 py-12 text-center">
-                      <p className="text-gray-500">Loading applicants...</p>
+                      <p className="text-gray-500">{t("loadingApplicants")}</p>
                     </div>
                   ) : applications.length > 0 ? (
                     applications.map((applicant) => (
@@ -300,7 +300,7 @@ const JobsPage: React.FC = () => {
                               {applicant.applicantName}
                             </Link>
                             <span className="text-xs text-gray-500">
-                              {applicant.candidateRole}
+                              {label("role", applicant.candidateRole)}
                             </span>
                           </div>
                         </div>
@@ -308,9 +308,9 @@ const JobsPage: React.FC = () => {
                         {/* Job Match */}
                         <div className="col-span-2 flex flex-col justify-center items-center gap-1">
                           {applicant.matchStatus === "queued" || applicant.matchStatus === "processing" ? (
-                            <span className="text-xs text-gray-500">Matching…</span>
+                            <span className="text-xs text-gray-500">{t("matching")}</span>
                           ) : applicant.matchStatus === "failed" || applicant.matchScore === null ? (
-                            <span className="text-xs text-gray-400">Not available</span>
+                            <span className="text-xs text-gray-400">{t("notAvailable")}</span>
                           ) : (
                             <span
                               className={`text-sm font-medium ${getMatchColor(
@@ -330,7 +330,7 @@ const JobsPage: React.FC = () => {
                               }
                               className="text-xs text-blue-600 hover:underline"
                             >
-                              {expandedApplicantId === applicant._id ? "Hide" : "Why?"}
+                              {expandedApplicantId === applicant._id ? t("hide") : t("why")}
                             </button>
                           )}
                         </div>
@@ -345,11 +345,11 @@ const JobsPage: React.FC = () => {
                               className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm transition-colors"
                             >
                               <Download size={16} />
-                              Download
+                              {t("download")}
                             </a>
                           ) : (
                             <span className="text-sm text-gray-400">
-                              No resume
+                              {t("noResume")}
                             </span>
                           )}
                         </div>
@@ -358,7 +358,7 @@ const JobsPage: React.FC = () => {
                         <div className="col-span-3 flex justify-center items-center">
                           <button className="flex items-center gap-2 bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded-full text-sm transition-colors">
                             <MessageCircle size={16} />
-                            Message
+                            {t("message")}
                           </button>
                         </div>
 
@@ -368,7 +368,7 @@ const JobsPage: React.FC = () => {
                             <p>{applicant.matchReasons.summary}</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
-                                <p className="font-medium text-gray-900 mb-1">Meets</p>
+                                <p className="font-medium text-gray-900 mb-1">{t("meets")}</p>
                                 <ul className="list-disc list-inside space-y-1">
                                   {applicant.matchReasons.metRequirements.map((r) => (
                                     <li key={r}>{r}</li>
@@ -376,7 +376,7 @@ const JobsPage: React.FC = () => {
                                 </ul>
                               </div>
                               <div>
-                                <p className="font-medium text-gray-900 mb-1">Missing or not shown</p>
+                                <p className="font-medium text-gray-900 mb-1">{t("missing")}</p>
                                 <ul className="list-disc list-inside space-y-1">
                                   {applicant.matchReasons.missingRequirements.map((r) => (
                                     <li key={r}>{r}</li>
@@ -385,10 +385,11 @@ const JobsPage: React.FC = () => {
                               </div>
                             </div>
                             <p className="text-xs text-gray-500">
-                              Confidence: {applicant.matchReasons.confidence}. Based on the job post, profile
-                              {applicant.matchReasons.usedResume ? ", resume" : ""}
-                              {applicant.matchReasons.usedInterview ? " and interview assessment" : ""}. AI
-                              guidance only, not a hiring decision.
+                              {t("basedOn", {
+                                confidence: String(applicant.matchReasons.confidence),
+                                resume: String(!!applicant.matchReasons.usedResume),
+                                interview: String(!!applicant.matchReasons.usedInterview),
+                              })}
                             </p>
                           </div>
                         )}
@@ -396,7 +397,7 @@ const JobsPage: React.FC = () => {
                     ))
                   ) : (
                     <div className="px-6 py-12 text-center">
-                      <p className="text-gray-500">No applicants yet</p>
+                      <p className="text-gray-500">{t("noApplicants")}</p>
                     </div>
                   )}
                 </div>
@@ -405,7 +406,7 @@ const JobsPage: React.FC = () => {
               <div className="bg-white rounded-lg border border-gray-200 p-8">
                 <div className="text-center">
                   <p className="text-gray-500">
-                    Select a job to view applicants
+                    {t("selectJob")}
                   </p>
                 </div>
               </div>

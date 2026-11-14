@@ -22,6 +22,8 @@ import {
 import { EducationData } from "@/types/education";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import AddEducationModal from "@/components/modals/AddEducationModal";
 import EditEducationModal from "@/components/modals/EditEducationModal";
 
@@ -34,6 +36,7 @@ export default function EducationSection({
   userId,
   readOnly = false,
 }: EducationSectionProps) {
+  const t = useTranslations("profile");
   const [deleteEducation] = useDeleteEducationMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -64,11 +67,11 @@ export default function EducationSection({
     try {
       const result = await deleteEducation(educationToDelete.id).unwrap();
       if (result.success) {
-        toast.success(result.message || "Education deleted successfully!");
+        toast.success(result.message || t("education.deleted"));
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.message || "Failed to delete education. Please try again."
+        error?.data?.message || t("education.deleteFailed")
       );
       console.error("Error deleting education:", error);
     } finally {
@@ -87,7 +90,7 @@ export default function EducationSection({
       <Card className="mb-6">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-md md:text-xl">Education</CardTitle>
+            <CardTitle className="text-md md:text-xl">{t("education.title")}</CardTitle>
             {!readOnly && (
               <Button
                 variant="ghost"
@@ -95,7 +98,7 @@ export default function EducationSection({
                 onClick={() => setIsAddModalOpen(true)}
               >
                 <Plus className="h-4 w-4" />
-                Add
+                {t("common.add")}
               </Button>
             )}
           </div>
@@ -108,13 +111,13 @@ export default function EducationSection({
             </div>
           ) : educationsError ? (
             <div className="text-center py-12">
-              <p className="text-red-600 mb-2">Failed to load educations</p>
+              <p className="text-red-600 mb-2">{t("education.loadError")}</p>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => window.location.reload()}
               >
-                Try Again
+                {t("common.tryAgain")}
               </Button>
             </div>
           ) : !educationsData?.data || educationsData.data.length === 0 ? (
@@ -154,20 +157,21 @@ export default function EducationSection({
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t("common.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete your education at{" "}
-              <span className="font-semibold">{educationToDelete?.name}</span>.
-              This action cannot be undone.
+              {t.rich("education.deleteDesc", {
+                name: educationToDelete?.name ?? "",
+                b: (chunks) => <span className="font-semibold">{chunks}</span>,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white"
             >
-              Delete
+              {t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -185,18 +189,19 @@ function EmptyEducationState({
   onAddClick,
   readOnly = false,
 }: EmptyEducationStateProps) {
+  const t = useTranslations("profile.education");
   return (
     <div className="text-center py-5 px-4">
       <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <GraduationCap className="h-8 w-8 text-gray-400" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-        No Education Added Yet
+        {t("emptyTitle")}
       </h3>
       <p className="text-gray-600 mb-4 max-w-md mx-auto">
         {readOnly
-          ? "This user hasn't added any education yet."
-          : "Showcase your academic background by adding your education. This helps employers understand your qualifications and expertise."}
+          ? t("emptyReadOnly")
+          : t("emptyOwner")}
       </p>
       {!readOnly && (
         <Button
@@ -204,7 +209,7 @@ function EmptyEducationState({
           className="bg-black hover:bg-gray-800 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add Your First Education
+          {t("addFirst")}
         </Button>
       )}
     </div>
@@ -252,6 +257,8 @@ function EducationItem({
   onDeleteClick,
   readOnly = false,
 }: EducationItemProps) {
+  const t = useTranslations("profile");
+  const label = useOptionLabel();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -274,20 +281,23 @@ function EducationItem({
             <h3 className="font-semibold text-gray-900">
               {education.instituteName}
             </h3>
-            <p className="text-sm text-gray-600">Degree: {education.degree}</p>
+            <p className="text-sm text-gray-600">{t("education.degree", { value: education.degree })}</p>
             <p className="text-sm text-gray-600">
-              Field of study: {education.fieldOfStudy}
+              {t("education.fieldOfStudy", { value: education.fieldOfStudy })}
             </p>
             {education.grade && (
-              <p className="text-sm text-gray-600">Grade: {education.grade}</p>
+              <p className="text-sm text-gray-600">{t("education.grade", { value: education.grade })}</p>
             )}
             <p className="text-sm text-gray-500">
-              {education.startMonth} {education.startYear} -{" "}
-              {education.isCurrentlyStudying ||
-              !education.endMonth ||
-              !education.endYear
-                ? "Present"
-                : `${education.endMonth} ${education.endYear}`}
+              {t("common.dateRange", {
+                start: `${label("month", education.startMonth)} ${education.startYear}`,
+                end:
+                  education.isCurrentlyStudying ||
+                  !education.endMonth ||
+                  !education.endYear
+                    ? t("common.present")
+                    : `${label("month", education.endMonth)} ${education.endYear}`,
+              })}
             </p>
           </div>
           {!readOnly && (

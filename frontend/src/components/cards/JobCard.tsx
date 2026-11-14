@@ -11,7 +11,9 @@ import user2 from "@/assets/candidates/user2.png";
 import user3 from "@/assets/candidates/user3.png";
 import user4 from "@/assets/candidates/user4.png";
 import userPlaceholder from "@/assets/user-placeholder.png";
-import { formatTimeAgo } from "@/lib/utils";
+import { useFormats } from "@/i18n/format";
+import { useOptionLabel } from "@/i18n/options";
+import { useTranslations } from "next-intl";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { LoginRequiredModal } from "../modals/LoginRequiredModal";
 import {
@@ -31,6 +33,9 @@ type JobCardProps = {
 };
 
 export function JobCard({ job }: JobCardProps) {
+  const t = useTranslations("cards.job");
+  const label = useOptionLabel();
+  const f = useFormats();
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [localIsSaved, setLocalIsSaved] = useState<boolean | null>(null);
   const [localIsApplied, setLocalIsApplied] = useState<boolean | null>(null);
@@ -53,14 +58,12 @@ export function JobCard({ job }: JobCardProps) {
     creatorId: job.creator.creatorId?._id,
     company:
       `${job.creator.creatorId?.firstName || ""} ${job.creator.creatorId?.lastName || ""}`.trim() ||
-      "Not available",
+      t("notAvailable"),
     location: job.location,
     image: job.creator.creatorId?.profileImage,
     applicantCount: job.applicationCount,
-    salary: `$${(job.salary.min / 1000).toFixed(0)}K-${(
-      job.salary.max / 1000
-    ).toFixed(0)}K`,
-    postedTime: formatTimeAgo(job.createdAt),
+    salary: `${f.moneyCompact(job.salary.min)}-${f.moneyCompact(job.salary.max)}`,
+    postedTime: f.ago(job.createdAt),
     applicantImages: [user1, user2, user3, user4],
     position: job.position,
     contractType: job.contractType,
@@ -92,14 +95,14 @@ export function JobCard({ job }: JobCardProps) {
         : await saveJob(jobData.id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved ? "Job saved successfully!" : "Job unsaved successfully!",
+          willBeSaved ? t("saved") : t("unsaved"),
         );
       }
     } catch (error: any) {
       // Revert on error
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to save job. Please try again.",
+        error.data?.message || t("saveFailed"),
       );
       console.error("Failed to save job:", error);
     }
@@ -131,16 +134,14 @@ export function JobCard({ job }: JobCardProps) {
         : await saveJob(jobData.id).unwrap();
       if (result.success) {
         toast.success(
-          willBeSaved
-            ? "Job shortlisted successfully!"
-            : "Job removed from shortlist!",
+          willBeSaved ? t("shortlistedToast") : t("removedFromShortlist"),
         );
       }
     } catch (error: any) {
       // Revert on error
       setLocalIsSaved(previousState);
       toast.error(
-        error.data?.message || "Failed to update job. Please try again.",
+        error.data?.message || t("updateFailed"),
       );
       console.error("Failed to update job:", error);
     }
@@ -164,10 +165,10 @@ export function JobCard({ job }: JobCardProps) {
       const result = await applyJob({ jobId: jobData.id, resumeUrl }).unwrap();
       dispatch(addAppliedJob(result.data));
       setLocalIsApplied(true);
-      toast.success("Application submitted successfully!");
+      toast.success(t("applySuccess"));
     } catch (error: any) {
       const errorMessage =
-        error.data?.message || "Failed to apply. Please try again.";
+        error.data?.message || t("applyFailed");
       toast.error(errorMessage);
       console.error("Failed to apply:", error);
     }
@@ -234,14 +235,14 @@ export function JobCard({ job }: JobCardProps) {
       <Link
         href={`/jobs/${jobData.id}`}
         className="cursor-pointer"
-        title="View Job Details"
+        title={t("viewDetails")}
       >
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="inline-flex items-center rounded-full bg-yellow-300 px-3 py-1 text-xs font-medium">
-            {jobData.position}
+            {label("position", jobData.position)}
           </span>
           <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-            {jobData.contractType === "FullTime" ? "Full Time" : jobData.contractType === "PartTime" ? "Part Time" : jobData.contractType === "Contract" ? "Contract" : "Not specified"}
+            {jobData.contractType === "FullTime" ? t("fullTime") : jobData.contractType === "PartTime" ? t("partTime") : jobData.contractType === "Contract" ? t("contract") : t("notSpecified")}
           </span>
         </div>
         <div className="flex items-center gap-2 mb-4">
@@ -250,7 +251,7 @@ export function JobCard({ job }: JobCardProps) {
               <div key={index} className="relative">
                 <Image
                   src={image || "/placeholder.svg"}
-                  alt={`Applicant ${index + 1}`}
+                  alt={t("applicantAlt", { number: index + 1 })}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
               </div>
@@ -265,7 +266,7 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm">
-              {jobData.applicantCount} Applicant
+              {t("applicants", { count: jobData.applicantCount ?? 0 })}
             </span>
             <div className="flex items-center gap-1 text-gray-400 text-xs">
               <Clock className="w-3 h-3" />
@@ -276,7 +277,7 @@ export function JobCard({ job }: JobCardProps) {
             <div className="text-xl xl:text-2xl font-bold text-gray-900">
               {jobData.salary}
             </div>
-            <div className="text-gray-500 text-sm">/mo</div>
+            <div className="text-gray-500 text-sm">{t("perMonth")}</div>
           </div>
         </div>
       </Link>
@@ -293,14 +294,14 @@ export function JobCard({ job }: JobCardProps) {
           {isSavingLoading || isUnsavingLoading ? (
             <>
               <Spinner />
-              {isSavingLoading ? "Adding..." : "Removing..."}
+              {isSavingLoading ? t("adding") : t("removing")}
             </>
           ) : (
             <>
               <Bookmark
                 className={`w-6 h-6 ${isSaved ? "fill-current" : ""}`}
               />
-              {isSaved ? "Shortlisted" : "Shortlist"}
+              {isSaved ? t("shortlisted") : t("shortlist")}
             </>
           )}
         </Button>
@@ -313,10 +314,10 @@ export function JobCard({ job }: JobCardProps) {
           {isApplyingLoading ? (
             <>
               <Spinner />
-              Applying...
+              {t("applying")}
             </>
           ) : (
-            <>{isApplied ? "Applied" : "Apply"}</>
+            <>{isApplied ? t("applied") : t("apply")}</>
           )}
         </Button>
       </div>
@@ -333,7 +334,7 @@ export function JobCard({ job }: JobCardProps) {
         isOpen={showLoginModal}
         onClose={handleCloseModal}
         onLogin={handleLogin}
-        message="Please log in to continue."
+        message={t("loginMessage")}
       />
     </div>
   );

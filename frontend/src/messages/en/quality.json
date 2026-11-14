@@ -1,1 +1,47 @@
-{}
+{
+  "title": "Profile Quality",
+  "tooltip": "Profile Quality: {label}",
+  "starsAria": "{stars} out of 5 stars",
+  "levels": {
+    "incomplete": "Incomplete",
+    "developing": "Developing",
+    "complete": "Complete",
+    "advanced": "Advanced",
+    "premium": "Premium Qualified"
+  },
+  "card": {
+    "category": "Category",
+    "earned": "Earned",
+    "maximum": "Maximum",
+    "premiumQualified": "You are <b>Premium Qualified</b>: you can apply to premium opportunities.",
+    "morePoints": "<b>{points, plural, one {# more point} other {# more points}}</b> unlock premium opportunities (5 stars).",
+    "howToImprove": "How to improve",
+    "disclaimer": "This score shows how complete and verified your profile is. It is not a measure of your professional ability, and a high score does not guarantee a job."
+  },
+  "premium": {
+    "badge": "Premium",
+    "badgeTitle": "Premium opportunity: candidates need a 5-star Profile Quality to apply",
+    "canApply": "This is a premium opportunity. Your Premium Qualified profile can apply.",
+    "title": "Premium opportunity",
+    "needMore": "Premium opportunities are open to candidates with a 5-star (Premium Qualified) Profile Quality. You need <b>{points, plural, one {# more point} other {# more points}}</b>. <link>See how to improve your profile</link>",
+    "guest": "Everyone can view this job. To apply, you need a candidate profile with a 5-star (Premium Qualified) Profile Quality."
+  },
+  "assessment": {
+    "title": "Interview Assessment",
+    "pending": {
+      "queued": "Your interview assessment is waiting to start.",
+      "transcribing": "We are listening to your interview video.",
+      "evaluating": "Your answers are being assessed.",
+      "failed": "The assessment could not be completed. Our team has been notified."
+    },
+    "notAnswered": "{count, plural, one {# question was} other {# questions were}} not answered in the interview, so no overall level is given.",
+    "underReview": "This assessment is being checked by our team.",
+    "strongest": "Strongest areas",
+    "weaknesses": "Main weaknesses",
+    "summary": "Summary"
+  },
+  "guide": {
+    "title": "{name} – Interview Questionnaire ({count} Questions)",
+    "intro": "In your video interview, answer these questions in the order shown. You may skip a question: it is shown as \"Not Answered\" and gets 0 points."
+  }
+}

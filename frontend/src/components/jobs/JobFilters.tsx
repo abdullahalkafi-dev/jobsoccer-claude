@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 interface FilterOption {
   label: string;
@@ -82,6 +84,8 @@ export function JobFilters({
   premium: initialPremium,
   experience: initialExperience,
 }: JobFiltersProps) {
+  const t = useTranslations("jobs.filters");
+  const label = useOptionLabel();
   const [timeFilter, setTimeFilter] = useState(initialDateFilter || "");
   const [opportunityFilter, setOpportunityFilter] = useState(initialPremium || "");
   const [experienceFilter, setExperienceFilter] = useState(
@@ -123,23 +127,23 @@ export function JobFilters({
   };
 
   const timeOptions: FilterOption[] = [
-    { label: "Last Week", value: "Last Week" },
-    { label: "Last Month", value: "Last Month" },
-    { label: "Last 3 Months", value: "Last 3 Months" },
-    { label: "Last 6 Months", value: "Last 6 Months" },
+    { label: label("postedDate", "Last Week"), value: "Last Week" },
+    { label: label("postedDate", "Last Month"), value: "Last Month" },
+    { label: label("postedDate", "Last 3 Months"), value: "Last 3 Months" },
+    { label: label("postedDate", "Last 6 Months"), value: "Last 6 Months" },
   ];
 
   const opportunityOptions: FilterOption[] = [
-    { label: "Premium opportunities", value: "true" },
-    { label: "Standard jobs", value: "false" },
+    { label: t("premiumOpportunities"), value: "true" },
+    { label: t("standardJobs"), value: "false" },
   ];
 
   const experienceOptions: FilterOption[] = [
-    { label: "Entry Level", value: "Entry Level" },
-    { label: "Intermediate", value: "Intermediate" },
-    { label: "Mid-Level", value: "Mid-Level" },
-    { label: "Mid-Senior", value: "Mid-Senior" },
-    { label: "Senior", value: "Senior" },
+    { label: label("experience", "Entry Level"), value: "Entry Level" },
+    { label: label("experience", "Intermediate"), value: "Intermediate" },
+    { label: label("experience", "Mid-Level"), value: "Mid-Level" },
+    { label: label("experience", "Mid-Senior"), value: "Mid-Senior" },
+    { label: label("experience", "Senior"), value: "Senior" },
   ];
 
   const hasActiveFilters = timeFilter || opportunityFilter || experienceFilter;
@@ -148,7 +152,7 @@ export function JobFilters({
     <div className="container mx-auto px-4 md:px-0 py-8">
       <div className="flex flex-wrap items-center justify-center gap-3">
         <FilterDropdown
-          label="Posted Date"
+          label={t("postedDate")}
           options={timeOptions}
           value={timeFilter}
           onValueChange={handleTimeFilterChange}
@@ -156,7 +160,7 @@ export function JobFilters({
         />
 
         <FilterDropdown
-          label="Opportunity"
+          label={t("opportunity")}
           options={opportunityOptions}
           value={opportunityFilter}
           onValueChange={handleOpportunityChange}
@@ -164,7 +168,7 @@ export function JobFilters({
         />
 
         <FilterDropdown
-          label="Experience level"
+          label={t("experienceLevel")}
           options={experienceOptions}
           value={experienceFilter}
           onValueChange={handleExperienceChange}
@@ -177,7 +181,7 @@ export function JobFilters({
             className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium bg-red-500 hover:bg-red-600 text-white transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            Reset
+            {t("reset")}
           </button>
         )}
       </div>

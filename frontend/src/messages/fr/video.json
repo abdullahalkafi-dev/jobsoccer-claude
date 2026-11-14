@@ -1,1 +1,71 @@
-{}
+{
+  "kind": {
+    "Interview": "d'entretien",
+    "Methodology": "de méthodologie",
+    "Highlights": "de temps forts"
+  },
+  "consent": {
+    "title": "Avant de téléverser"
+  },
+  "setup": {
+    "ariaLabel": "Comment vous installer pour l'entretien vidéo",
+    "correctAlt": "Bonne installation : assis sur un canapé, cadré de la tête aux genoux",
+    "wrongAlt": "À éviter : assis derrière une table, cadré à partir de la taille",
+    "correctText": "<b>À faire :</b> asseyez-vous sur une chaise ou un canapé (ou tenez-vous debout), la caméra vous cadre de la tête aux genoux, mains visibles.",
+    "wrongText": "<b>À éviter :</b> derrière un bureau ou une table, coupé à la taille. Des notes ou des écrans pourraient être cachés."
+  },
+  "slot": {
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "upTo": "jusqu'à {max}",
+    "upToEach": "jusqu'à {max} chacune",
+    "recordingGuide": "Guide d'enregistrement",
+    "fileName": "Nom de fichier recommandé : {name}",
+    "captionsReady": "{length} · sous-titres anglais prêts",
+    "captionsCreating": "{length} · les sous-titres sont en cours de création",
+    "lockedUntil": "Verrouillée jusqu'au {date}",
+    "replace": "Remplacer",
+    "chooseHighlight": "Choisir la vidéo de temps forts {n}",
+    "chooseVideo": "Choisir votre vidéo",
+    "fileHint": "MP4 ou MOV, jusqu'à {max} Mo",
+    "tickConsent": "Veuillez cocher les confirmations ci-dessus avant de téléverser."
+  },
+  "upload": {
+    "bytes": "{done} sur {total} Mo",
+    "speedMb": "{value} Mo/s",
+    "speedKb": "{value} Ko/s",
+    "timeEstimating": "estimation du temps restant…",
+    "timeLessMinute": "moins d'une minute restante",
+    "timeMinutes": "environ {minutes} min restantes",
+    "timeHoursMinutes": "environ {hours} h {minutes} min restantes",
+    "progress": "Téléversement… {percent} % · {done} · {left}",
+    "progressSpeed": "Téléversement… {percent} % · {done} · {speed} · {left}",
+    "retryCountdown": "Connexion perdue après {done}. Nouvelle tentative dans {seconds} s… Rien n'est perdu : le téléversement reprend là où il s'est arrêté.",
+    "retryNow": "Connexion perdue après {done}. Nouvelle tentative… Rien n'est perdu : le téléversement reprend là où il s'est arrêté.",
+    "resumed": "Reprise de votre téléversement précédent de ce fichier à partir de {done} Mo.",
+    "checking": "Téléversement terminé. Vérification de votre vidéo (durée, qualité, son)…",
+    "saving": "Enregistrement de votre vidéo…",
+    "hint": "Vous pouvez continuer à utiliser le site pendant le téléversement. Si la connexion est interrompue, il reprend tout seul. Si vous fermez cet onglet, choisissez à nouveau le même fichier pour reprendre là où il s'est arrêté.",
+    "errors": {
+      "FILE_TYPE": "Veuillez choisir une vidéo MP4 ou MOV.",
+      "FILE_SIZE": "Cette vidéo pèse {size} Mo. Le maximum est de {max} Mo.",
+      "FILE_LONG": "Cette vidéo dure {length}. Le maximum est de {max}.",
+      "FILE_RESOLUTION": "Cette vidéo est en {width}x{height}. La qualité minimale est de 720p (1280x720).",
+      "TIMEOUT": "Le téléversement a duré plus de {minutes} minutes et a été interrompu. Veuillez réessayer avec une connexion plus rapide, ou exporter la vidéo en 720p pour réduire la taille du fichier.",
+      "TOO_LARGE": "Cette vidéo dépasse {megabytes} Mo.",
+      "NETWORK": "La connexion a été interrompue pendant le téléversement, la vidéo n'a donc pas été enregistrée. Vérifiez votre connexion internet et téléversez-la à nouveau.",
+      "CANCELLED": "Téléversement annulé.",
+      "FAILED": "Le téléversement a échoué. Veuillez réessayer.",
+      "SERVER": "Le téléversement a échoué. Veuillez réessayer."
+    }
+  },
+  "step": {
+    "loadError": "Nous n'avons pas pu charger les exigences de vos vidéos. Veuillez actualiser la page.",
+    "stillNeeded": "Il manque encore : votre vidéo {kinds}. Cette vidéo est obligatoire pour compléter votre profil et postuler aux offres d'emploi.",
+    "stillNeededMany": "Il manque encore : votre vidéo {kinds}. Ces vidéos sont obligatoires pour compléter votre profil et postuler aux offres d'emploi.",
+    "subtitle": "Les employeurs regardent ces vidéos pour mieux vous connaître.",
+    "subtitleInterview": "Les employeurs regardent ces vidéos pour mieux vous connaître. Votre entretien est noté par une IA en arrière-plan : vous pouvez continuer à utiliser le site pendant la vérification.",
+    "title": "Téléversez vos vidéos",
+    "complete": "Terminer"
+  }
+}

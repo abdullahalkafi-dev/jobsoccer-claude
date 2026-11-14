@@ -21,6 +21,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useUpdateProfileMutation } from "@/redux/features/user/userApi";
 import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
@@ -54,6 +56,8 @@ export default function EditEmployerPersonalInformationModal({
   onClose,
   initialData,
 }: EditEmployerPersonalInformationModalProps) {
+  const t = useTranslations("modals");
+  const label = useOptionLabel();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
   const {
@@ -121,14 +125,14 @@ export default function EditEmployerPersonalInformationModal({
       formData.append("data", JSON.stringify(profileData));
 
       await updateProfile(formData).unwrap();
-      toast.success("Profile updated successfully");
+      toast.success(t("employer.updated"));
       onClose();
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update profile";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("employer.updateFailed"));
     }
   };
 
@@ -136,23 +140,23 @@ export default function EditEmployerPersonalInformationModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] p-0 flex flex-col">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle>Edit Professional Information</DialogTitle>
+          <DialogTitle>{t("employer.title")}</DialogTitle>
         </DialogHeader>
         <div className="overflow-y-auto flex-1 px-6 py-4">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <FormSection title="Club Information">
+            <FormSection title={t("employer.clubInformation")}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Club Name */}
-                <FormField label="Club Name" error={errors.clubName?.message}>
+                <FormField label={t("employer.clubName")} error={errors.clubName?.message}>
                   <Input
                     {...register("clubName")}
-                    placeholder="Ex. Manchester United FC"
+                    placeholder={t("employer.clubNamePh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Country */}
-                <FormField label="Country" error={errors.country?.message}>
+                <FormField label={t("employer.country")} error={errors.country?.message}>
                   <Select
                     value={watch("country")}
                     onValueChange={(value) =>
@@ -160,12 +164,12 @@ export default function EditEmployerPersonalInformationModal({
                     }
                   >
                     <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select country" />
+                      <SelectValue placeholder={t("employer.selectCountry")} />
                     </SelectTrigger>
                     <SelectContent>
                       {countryList.map((item) => (
                         <SelectItem key={item} value={item}>
-                          {item}
+                          {label("country", item)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -174,46 +178,46 @@ export default function EditEmployerPersonalInformationModal({
 
                 {/* Phone Number */}
                 <FormField
-                  label="Phone Number"
+                  label={t("employer.phoneNumber")}
                   error={errors.phoneNumber?.message}
                 >
                   <Input
                     {...register("phoneNumber")}
-                    placeholder="Ex. +1234567890"
+                    placeholder={t("employer.phonePh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Website */}
-                <FormField label="Website" error={errors.website?.message}>
+                <FormField label={t("employer.website")} error={errors.website?.message}>
                   <SocialMediaInput
                     register={register("website")}
                     value={watch("website") || ""}
-                    placeholder="Ex. https://example.com"
+                    placeholder={t("employer.websitePh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Address */}
-                <FormField label="Address" error={errors.address?.message}>
+                <FormField label={t("employer.address")} error={errors.address?.message}>
                   <Input
                     {...register("address")}
-                    placeholder="Ex. 123 Stadium Road"
+                    placeholder={t("employer.addressPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Location */}
-                <FormField label="Location" error={errors.location?.message}>
+                <FormField label={t("employer.location")} error={errors.location?.message}>
                   <Input
                     {...register("location")}
-                    placeholder="Ex. London, England"
+                    placeholder={t("employer.locationPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Founded */}
-                <FormField label="Founded" error={errors.founded?.message}>
+                <FormField label={t("employer.founded")} error={errors.founded?.message}>
                   <Input
                     type="date"
                     {...register("founded")}
@@ -222,7 +226,7 @@ export default function EditEmployerPersonalInformationModal({
                 </FormField>
 
                 {/* Level */}
-                <FormField label="Level" error={errors.level?.message}>
+                <FormField label={t("employer.level")} error={errors.level?.message}>
                   <Select
                     value={watch("level")}
                     onValueChange={(value) =>
@@ -230,37 +234,37 @@ export default function EditEmployerPersonalInformationModal({
                     }
                   >
                     <SelectTrigger className="bg-gray-50 border-0 w-full">
-                      <SelectValue placeholder="Select level" />
+                      <SelectValue placeholder={t("employer.selectLevel")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Division 1">Division 1</SelectItem>
-                      <SelectItem value="Division 2">Division 2</SelectItem>
-                      <SelectItem value="Division 3">Division 3</SelectItem>
-                      <SelectItem value="Division 4">Division 4</SelectItem>
+                      <SelectItem value="Division 1">{label("division", "Division 1")}</SelectItem>
+                      <SelectItem value="Division 2">{label("division", "Division 2")}</SelectItem>
+                      <SelectItem value="Division 3">{label("division", "Division 3")}</SelectItem>
+                      <SelectItem value="Division 4">{label("division", "Division 4")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormField>
 
                 {/* Nationality */}
                 <FormField
-                  label="Nationality"
+                  label={t("employer.nationality")}
                   error={errors.nationality?.message}
                 >
                   <Input
                     {...register("nationality")}
-                    placeholder="Ex. English"
+                    placeholder={t("employer.nationalityPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
 
                 {/* Club Contact */}
                 <FormField
-                  label="Club Contact"
+                  label={t("employer.clubContact")}
                   error={errors.clubContact?.message}
                 >
                   <Input
                     {...register("clubContact")}
-                    placeholder="Ex. John Doe, Manager"
+                    placeholder={t("employer.clubContactPh")}
                     className="bg-gray-50 border-0"
                   />
                 </FormField>
@@ -269,12 +273,12 @@ export default function EditEmployerPersonalInformationModal({
               {/* Club Description - Full Width */}
               <div className="mt-4">
                 <FormField
-                  label="Club Description"
+                  label={t("employer.clubDescription")}
                   error={errors.clubDescription?.message}
                 >
                   <Textarea
                     {...register("clubDescription")}
-                    placeholder="Tell us about your club..."
+                    placeholder={t("employer.clubDescriptionPh")}
                     className="bg-gray-50 border-0 min-h-[120px]"
                     rows={5}
                   />
@@ -292,14 +296,14 @@ export default function EditEmployerPersonalInformationModal({
             onClick={onClose}
             disabled={isLoading}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
             className="bg-black hover:bg-gray-800 text-white"
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save Changes"}
+            {isLoading ? t("common.saving") : t("employer.saveChanges")}
           </Button>
         </div>
       </DialogContent>

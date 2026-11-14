@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import { Upload, Video, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface IndividualVideoUploadProps {
   label: string;
@@ -62,6 +63,7 @@ export function IndividualVideoUpload({
   onChange,
   error,
 }: IndividualVideoUploadProps) {
+  const t = useTranslations("forms");
   const [isDragOver, setIsDragOver] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -80,7 +82,7 @@ export function IndividualVideoUpload({
     async (file: File) => {
       // Check file type
       if (!file.type.startsWith("video/")) {
-        setValidationError("Please upload a video file");
+        setValidationError(t("video.notVideo"));
         return;
       }
 
@@ -94,7 +96,7 @@ export function IndividualVideoUpload({
 
       if (!valid) {
         setValidationError(
-          `Video is too long (${formatDuration(duration)}). Maximum allowed: ${formatDuration(maxDuration)}`
+          t("video.tooLong", { duration: formatDuration(duration), max: formatDuration(maxDuration) })
         );
         return;
       }
@@ -102,7 +104,7 @@ export function IndividualVideoUpload({
       // File is valid
       onChange(file);
     },
-    [maxDuration, onChange]
+    [maxDuration, onChange, t]
   );
 
   const handleDrop = useCallback(
@@ -145,11 +147,11 @@ export function IndividualVideoUpload({
           <h4 className="text-sm font-medium text-gray-900">{label}</h4>
           {required ? (
             <Badge variant="destructive" className="text-xs">
-              Required
+              {t("video.required")}
             </Badge>
           ) : (
             <Badge variant="secondary" className="text-xs">
-              Optional
+              {t("video.optional")}
             </Badge>
           )}
         </div>
@@ -180,7 +182,7 @@ export function IndividualVideoUpload({
           <Upload className={`w-8 h-8 mx-auto mb-3 ${displayError ? 'text-red-400' : 'text-gray-400'}`} />
           <div className="flex items-center justify-center gap-1">
             <p className="text-sm text-gray-600">
-              Drag & drop your video or
+              {t("video.drag")}
             </p>
             <input
               type="file"
@@ -203,12 +205,12 @@ export function IndividualVideoUpload({
                 }
                 disabled={isValidating}
               >
-                {isValidating ? "Validating..." : "Browse"}
+                {isValidating ? t("video.validating") : t("video.browse")}
               </Button>
             </label>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            Max duration: {formatDuration(maxDuration)}
+            {t("video.maxDuration", { duration: formatDuration(maxDuration) })}
           </p>
         </div>
       ) : (

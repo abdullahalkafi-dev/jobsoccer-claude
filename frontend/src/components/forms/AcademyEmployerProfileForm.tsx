@@ -2,6 +2,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,13 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { academyEmployerProfileSchema } from "@/schemas/profileValidation";
+import { getAcademyEmployerProfileSchema } from "@/schemas/profileValidation";
 import { TAcademyEmployerProfile } from "@/types/profile";
 import { countryList } from "@/constants/selectOptions";
 import { z } from "zod";
 
 type AcademyEmployerProfileFormData = z.input<
-  typeof academyEmployerProfileSchema
+  ReturnType<typeof getAcademyEmployerProfileSchema>
 >;
 
 interface IAcademyEmployerProfileFormProps {
@@ -41,13 +44,18 @@ export function AcademyEmployerProfileForm({
 }: IAcademyEmployerProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
+  const t = useTranslations("forms");
+  const tv = useTranslations("validation");
+  const label = useOptionLabel();
+  const schema = useMemo(() => getAcademyEmployerProfileSchema(tv), [tv]);
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<AcademyEmployerProfileFormData>({
-    resolver: zodResolver(academyEmployerProfileSchema) as any,
+    resolver: zodResolver(schema) as any,
     defaultValues: initialData,
   });
 
@@ -73,11 +81,11 @@ export function AcademyEmployerProfileForm({
       onNext={handleSubmit(onSubmit)}
       onPrev={onPrev}
       showPrev={false}
-      nextLabel="Complete"
+      nextLabel={t("button.complete")}
       isLoading={isLoading}
     >
       <form className="space-y-8">
-        <FormSection title="Club Information">
+        <FormSection title={t("section.clubInformation")}>
           <div className="space-y-6">
             {/* Logo Upload */}
             <div className="flex flex-col items-center space-y-4">
@@ -85,13 +93,13 @@ export function AcademyEmployerProfileForm({
                 {logoPreview ? (
                   <Image
                     src={logoPreview}
-                    alt="Logo preview"
+                    alt={t("alt.logoPreview")}
                     width={128}
                     height={128}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-400 text-sm">Upload Logo</span>
+                  <span className="text-gray-400 text-sm">{t("logo.upload")}</span>
                 )}
               </div>
               <label className="cursor-pointer">
@@ -102,7 +110,7 @@ export function AcademyEmployerProfileForm({
                   className="hidden"
                 />
                 <span className="text-sm hover:underline">
-                  Upload your Logo (Max 10mb)
+                  {t("logo.uploadHint")}
                 </span>
               </label>
               {errors.logo && (
@@ -112,32 +120,32 @@ export function AcademyEmployerProfileForm({
 
             {/* Position and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField label="Club name" error={errors.clubName?.message}>
+              <FormField label={t("label.clubName")} error={errors.clubName?.message}>
                 <Input
                   {...register("clubName")}
-                  placeholder="Name of club"
+                  placeholder={t("placeholder.nameOfClub")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
-              <FormField label="Position" error={errors.position?.message}>
+              <FormField label={t("label.position")} error={errors.position?.message}>
                 <Input
                   {...register("position")}
-                  placeholder="Write your position"
+                  placeholder={t("placeholder.writeYourPosition")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
-              <FormField label="Location" error={errors.location?.message}>
+              <FormField label={t("label.location")} error={errors.location?.message}>
                 <Input
                   {...register("location")}
-                  placeholder="Write your location"
+                  placeholder={t("placeholder.writeYourLocation")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
               {/* Country */}
-              <FormField label="Country" error={errors.country?.message}>
+              <FormField label={t("label.country")} error={errors.country?.message}>
                 <Select
                   onValueChange={(value) =>
                     setValue("country", value, { shouldValidate: true })
@@ -145,12 +153,12 @@ export function AcademyEmployerProfileForm({
                   defaultValue={initialData?.country}
                 >
                   <SelectTrigger className="bg-gray-50 border-0 w-full">
-                    <SelectValue placeholder="Select country" />
+                    <SelectValue placeholder={t("placeholder.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent>
                     {countryList.map((country) => (
                       <SelectItem key={country} value={country}>
-                        {country}
+                        {label("country", country)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -160,15 +168,15 @@ export function AcademyEmployerProfileForm({
 
             {/* Address and Level */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField label="Address" error={errors.address?.message}>
+              <FormField label={t("label.address")} error={errors.address?.message}>
                 <Input
                   {...register("address")}
-                  placeholder="Write your address"
+                  placeholder={t("placeholder.writeYourAddress")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
-              <FormField label="Level" error={errors.level?.message}>
+              <FormField label={t("label.level")} error={errors.level?.message}>
                 <Select
                   onValueChange={(value) =>
                     setValue(
@@ -186,7 +194,7 @@ export function AcademyEmployerProfileForm({
                   defaultValue={initialData?.level}
                 >
                   <SelectTrigger className="bg-gray-50 border-0 w-full">
-                    <SelectValue placeholder="Select division" />
+                    <SelectValue placeholder={t("placeholder.selectDivision")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Division 1">Division 1</SelectItem>
@@ -200,7 +208,7 @@ export function AcademyEmployerProfileForm({
 
             {/* Founded and Website */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField label="Founded" error={errors.founded?.message}>
+              <FormField label={t("label.founded")} error={errors.founded?.message}>
                 <Input
                   type="date"
                   {...register("founded")}
@@ -208,10 +216,10 @@ export function AcademyEmployerProfileForm({
                 />
               </FormField>
 
-              <FormField label="Website" error={errors.website?.message}>
+              <FormField label={t("label.website")} error={errors.website?.message}>
                 <Input
                   {...register("website")}
-                  placeholder="Write your website"
+                  placeholder={t("placeholder.writeYourWebsite")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
@@ -220,24 +228,24 @@ export function AcademyEmployerProfileForm({
             {/* Nationality and Phone Number */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
-                label="Nationality"
+                label={t("label.nationality")}
                 error={errors.nationality?.message}
               >
                 <Input
                   {...register("nationality")}
-                  placeholder="Ex. New York"
+                  placeholder={t("placeholder.exNewYork")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>
 
               <FormField
-                label="Phone number"
+                label={t("label.phoneNumber")}
                 error={errors.phoneNumber?.message}
               >
                 <div className="flex">
                   <Input
                     {...register("phoneNumber")}
-                    placeholder="000-000-0000"
+                    placeholder={t("placeholder.0000000000")}
                     className="flex-1 bg-gray-50 border-0 ml-2"
                   />
                 </div>
@@ -246,24 +254,24 @@ export function AcademyEmployerProfileForm({
 
             {/* Club Contact (name and position) */}
             <FormField
-              label="Club's contact (name and position)"
+              label={t("label.clubSContactNameAndPosition")}
               error={errors.clubContact?.message}
             >
               <Input
                 {...register("clubContact")}
-                placeholder="Ex. John Doe, Director of Soccer"
+                placeholder={t("placeholder.exJohnDoeDirectorOfSoccer")}
                 className="bg-gray-50 border-0"
               />
             </FormField>
 
             {/* Short paragraph describing the club */}
             <FormField
-              label="Short paragraph describing the club"
+              label={t("label.shortParagraphDescribingTheClub")}
               error={errors.clubDescription?.message}
             >
               <Textarea
                 {...register("clubDescription")}
-                placeholder="Write a short description about the club"
+                placeholder={t("placeholder.writeAShortDescriptionAboutTheClub")}
                 className="bg-gray-50 border-0 min-h-[100px]"
               />
             </FormField>

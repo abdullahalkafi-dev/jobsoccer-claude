@@ -1,1 +1,111 @@
-{}
+{
+  "page": {
+    "onFieldStaff": "On-Field Staff",
+    "officeStaff": "Office Staff",
+    "highSchoolPlayers": "High School Players",
+    "collegePlayers": "College/University Players",
+    "professionalPlayers": "Professional Players",
+    "amateurPlayers": "Amateur Players",
+    "empty": "No candidates available at the moment."
+  },
+  "search": {
+    "results": "Search Results",
+    "found": "{count, plural, one {<green>#</green> candidate found} other {<green>#</green> candidates found}}",
+    "activeSearch": "Active Search:",
+    "searchFilter": "Search: <strong>{value}</strong>",
+    "roleFilter": "Role: <strong>{value}</strong>",
+    "locationFilter": "Location: <strong>{value}</strong>",
+    "noneTitle": "No candidates found",
+    "noneHint": "Try adjusting your search criteria to find more candidates",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "loading": "Loading..."
+  },
+  "section": {
+    "seeAll": "See All"
+  },
+  "preRecorded": {
+    "title": "What is a Pre-Recorded Video Interview?",
+    "intro": "Instead of waiting for a club to schedule a call, you record a short video answering key professional questions at your own pace, in your own time. Clubs and academies watch your video before they even contact you. That means when they reach out, they already know who you are. No cold applications. No waiting. Just direct opportunities from clubs that are already interested in you.",
+    "bullet": "Get shortlisted, get noticed and get hired faster than ever before"
+  },
+  "dreamTeam": {
+    "op1": "Create your professional profile and get discovered by clubs, agents and scouts worldwide",
+    "op2": "Upload your highlight videos and let your game speak for itself",
+    "op3": "Apply to job listings across professional and amateur levels globally",
+    "op4": "Players — Connect with clubs, agents and coaches to open doors at every level of the game",
+    "op5": "Staff — Whether you are a coach, fitness trainer, analyst or scout, build your professional profile and record your pre-recorded video interview so clubs and academies can find you based on your expertise and experience",
+    "title": "Your Soccer Career Starts Here!",
+    "subtitle": "For players, coaches, analysts and staff your next opportunity in soccer starts here",
+    "jobPostings": "Job Postings",
+    "noJobs": "No new jobs available",
+    "seeAll": "See All"
+  },
+  "detail": {
+    "loginToFollow": "Please log in to follow candidates",
+    "unfollowed": "Unfollowed successfully",
+    "followed": "Followed successfully",
+    "unfollowFailed": "Failed to unfollow candidate",
+    "followFailed": "Failed to follow candidate",
+    "friendRequestSent": "Friend request sent successfully",
+    "friendRequestFailed": "Failed to send friend request",
+    "user": "User",
+    "notFoundTitle": "User Not Found",
+    "notFoundText": "The user profile you're looking for doesn't exist or has been removed.",
+    "bannerAlt": "Banner",
+    "verified": "Verified",
+    "unfollowing": "Unfollowing...",
+    "following": "Following...",
+    "unfollow": "Unfollow",
+    "follow": "Follow",
+    "profileInformation": "Profile Information",
+    "position": "Position",
+    "nationality": "Nationality",
+    "gender": "Gender",
+    "height": "Height",
+    "weight": "Weight",
+    "currentClub": "Current Club",
+    "availableFrom": "Available from",
+    "foot": "Foot",
+    "league": "League",
+    "country": "Country",
+    "agent": "Agent",
+    "socialMedia": "Social Media",
+    "schoolName": "School Name",
+    "collegeUniversity": "College/University",
+    "diploma": "Diploma",
+    "profileQuality": "Profile Quality",
+    "followers": "Followers"
+  },
+  "accessModal": {
+    "title": "Access Request",
+    "description": "To view more details about the user, you need to connect with them first",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "requestAccess": "Request Access"
+  },
+  "videoModal": {
+    "candidate": "Candidate",
+    "videosOf": "{name}'s Videos",
+    "videoN": "Video {number}",
+    "previous": "Previous video",
+    "next": "Next video",
+    "now": "Now"
+  },
+  "requests": {
+    "accepted": "Friend request accepted successfully",
+    "acceptFailed": "Failed to accept friend request",
+    "rejected": "Friend request rejected successfully",
+    "rejectFailed": "Failed to reject friend request",
+    "title": "Access Request",
+    "tabRequest": "Request",
+    "tabAccepted": "Accepted",
+    "loadingRequests": "Loading requests...",
+    "loadRequestsFailed": "Failed to load requests",
+    "noPending": "No pending requests",
+    "loadingFriends": "Loading friends...",
+    "loadFriendsFailed": "Failed to load friends",
+    "noAccepted": "No accepted requests"
+  }
+}

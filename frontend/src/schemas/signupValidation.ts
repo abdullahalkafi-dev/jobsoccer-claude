@@ -1,5 +1,6 @@
 import { CandidateRole, EmployerRole } from "@/types/profile";
 import { z } from "zod";
+import { englishValidation, type Translator } from "./translator";
 
 // Create arrays of the string values from the enums
 const candidateRoles = Object.values(CandidateRole).filter(
@@ -12,28 +13,24 @@ const employerRoles = Object.values(EmployerRole).filter(
 // Combine all valid roles as a union type for Zod
 const allRoles = [...candidateRoles, ...employerRoles] as [string, ...string[]];
 
-export const signUpSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .refine(
-      (value) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(value) || "";
-      },
-      {
-        message: "Please enter a valid email address",
-      }
-    ),
-  password: z.string().min(4, "Password must be at least 4 characters long"),
-  role: z
-    .enum(allRoles as [string, ...string[]], { error: "Please select a role" })
-    .describe("Please select a valid role"),
-});
+export const getSignUpSchema = (t: Translator) =>
+  z.object({
+    firstName: z.string(t("invalid")).min(1, t("firstName")),
+    lastName: z.string(t("invalid")).min(1, t("lastName")),
+    email: z
+      .string(t("invalid"))
+      .min(1, t("email"))
+      .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+        message: t("emailInvalid"),
+      }),
+    password: z.string(t("invalid")).min(1, t("password")).min(6, t("passwordMin", { min: 6 })),
+    role: z.enum(allRoles, { error: t("selectRole") }),
+  });
 
-export type SignUpFormData = z.infer<typeof signUpSchema>;
+export type SignUpFormData = z.infer<ReturnType<typeof getSignUpSchema>>;
 
 // Export role arrays for use in components
 export { candidateRoles, employerRoles, allRoles };
+
+// English versions for code outside React (types, older imports). Components use the getXxxSchema(t) factories.
+export const signUpSchema = getSignUpSchema(englishValidation);

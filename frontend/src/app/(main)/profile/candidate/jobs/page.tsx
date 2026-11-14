@@ -21,6 +21,8 @@ import {
   useDeleteJobApplicationMutation,
 } from "@/redux/features/jobApplication/jobApplicationApi";
 import { JobsListSkeletonGrid } from "@/components/skeleton";
+import { useTranslations } from "next-intl";
+import { useFormats } from "@/i18n/format";
 
 // Type definitions
 interface JobItemProps {
@@ -30,17 +32,19 @@ interface JobItemProps {
 }
 
 const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
+  const t = useTranslations("jobs.mine");
+  const f = useFormats();
   const job = item.jobId;
   const date =
     tab === "saved" ? item.createdAt : (item as TAppliedJob).appliedAt;
-  const salary = `$${job.salary.min.toLocaleString()} - $${job.salary.max.toLocaleString()}`;
+  const salary = `${f.money(job.salary.min)} - ${f.money(job.salary.max)}`;
   const status = tab;
 
   const getStatusBadge = () => {
     return (
       <div className="flex items-center gap-2">
         <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm font-medium">
-          {status === "saved" ? "Saved" : "Applied"}
+          {status === "saved" ? t("saved") : t("applied")}
         </span>
       </div>
     );
@@ -55,7 +59,7 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
               {job.jobTitle}
             </h3>
             <p className="text-sm text-gray-500 mb-2">
-              {new Date(date).toLocaleDateString()}
+              {f.date(date)}
             </p>
             <p className="text-sm text-gray-700 mb-1">{salary}</p>
             <p className="text-sm text-gray-600">{job.location}</p>
@@ -76,7 +80,7 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
                     className="cursor-pointer text-red-600"
                   >
                     <X className="mr-2 h-4 w-4" />
-                    Remove
+                    {t("remove")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -87,7 +91,7 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
               size="sm"
               className="bg-green-500 hover:bg-green-600 text-white hover:text-white"
             >
-              <Link href={`/jobs/${job._id}`}>View Details</Link>
+              <Link href={`/jobs/${job._id}`}>{t("viewDetails")}</Link>
             </Button>
           </div>
         </div>
@@ -96,6 +100,7 @@ const JobItem: React.FC<JobItemProps> = ({ item, tab, onRemove }) => {
   );
 };
 const JobsList: React.FC = () => {
+  const t = useTranslations("jobs.mine");
   const [activeTab, setActiveTab] = useState<"saved" | "applied">("saved");
 
   const { data: savedJobsData, isLoading: savedLoading } =
@@ -132,9 +137,9 @@ const JobsList: React.FC = () => {
     <div className="w-full p-2 md:p-4 border rounded-2xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
-          <Link href="/jobs">Find More Jobs</Link>
+          <Link href="/jobs">{t("findMore")}</Link>
         </Button>
       </div>
 
@@ -143,8 +148,8 @@ const JobsList: React.FC = () => {
         <div className="px-6">
           <div className="flex space-x-8">
             {[
-              { key: "saved", label: "Saved" },
-              { key: "applied", label: "Applied" },
+              { key: "saved", label: t("saved") },
+              { key: "applied", label: t("applied") },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -169,8 +174,8 @@ const JobsList: React.FC = () => {
         ) : filteredJobs.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">
-              {activeTab === "saved" && "No saved jobs found."}
-              {activeTab === "applied" && "No applied jobs found."}
+              {activeTab === "saved" && t("noSaved")}
+              {activeTab === "applied" && t("noApplied")}
             </p>
           </div>
         ) : (

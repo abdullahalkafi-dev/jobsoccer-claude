@@ -3,13 +3,17 @@ import { User } from "lucide-react";
 import Image from "next/image";
 import { AcceptedRequestCardProps } from "@/types/cards";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 // Accepted Request Card Component
 const AcceptedRequestCard: React.FC<AcceptedRequestCardProps> = ({
   request,
 }) => {
+  const t = useTranslations("cards.request");
+  const label = useOptionLabel();
   const friendName = request.firstName + " " + request.lastName;
-  const friendRole = request.role || "User";
+  const friendRole = request.role ? label("role", request.role) : t("user");
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center justify-between p-4 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors">
@@ -37,7 +41,7 @@ const AcceptedRequestCard: React.FC<AcceptedRequestCardProps> = ({
 
       <button className="px-2 sm:px-4 py-1 sm:py-2 text-xs md:text-sm max-w-[200px] text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors">
         <Link href={`/candidates/${request._id}`} className="inline-block mr-2">
-          <span>View Profile</span>
+          <span>{t("viewProfile")}</span>
         </Link>
       </button>
     </div>

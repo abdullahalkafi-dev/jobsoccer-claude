@@ -6,10 +6,14 @@ import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { useGetJobCountsByRoleQuery } from "@/redux/features/job/jobApi";
 import type { TJobCountByRole } from "@/types/job";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
 
 const SKELETON_COUNT = 6;
 
 export function JobCategories() {
+  const t = useTranslations("home");
+  const label = useOptionLabel();
   const {
     data: jobCountsData,
     isLoading,
@@ -23,13 +27,13 @@ export function JobCategories() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-8">
           <h2 className="text-2xl md:text-4xl font-bold text-[#362F05] leading-tight max-w-2xl">
-           Find Your Next Soccer Talent
+           {t("jobCategories.title")}
           </h2>
           <Button
             asChild
             className="bg-yellow-300  hover:scale-105 transition-transform duration-200 font-semibold px-6 py-3"
           >
-            <Link href="/jobs">See All</Link>
+            <Link href="/jobs">{t("jobCategories.seeAll")}</Link>
           </Button>
         </div>
 
@@ -44,11 +48,11 @@ export function JobCategories() {
             ))
           ) : isError ? (
             <div className="col-span-full text-center py-8 text-gray-500">
-              Unable to load job categories. Please try again later.
+              {t("jobCategories.loadError")}
             </div>
           ) : jobCategories.length === 0 ? (
             <div className="col-span-full text-center py-8 text-gray-500">
-              No job categories available at the moment.
+              {t("jobCategories.empty")}
             </div>
           ) : (
             jobCategories.map((category) => (
@@ -60,11 +64,10 @@ export function JobCategories() {
                 <div className="flex items-center justify-between gap-3 p-2 pl-6">
                   <div className="flex-1 items-center min-w-0">
                     <h3 className="font-semibold text-gray-900 group-hover:text-white truncate">
-                      {category.role}
+                      {label("role", category.role)}
                     </h3>
                     <p className="text-sm text-gray-500 group-hover:text-gray-200">
-                      {category.jobCount}{" "}
-                      {category.jobCount === 1 ? "job" : "jobs"} available
+                      {t("jobCategories.available", { count: category.jobCount })}
                     </p>
                   </div>
                   <ChevronRight

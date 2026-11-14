@@ -1,6 +1,5 @@
 "use client";
 
-import { roleLabel } from "@/constants/selectOptions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,6 +13,9 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useOptionLabel } from "@/i18n/options";
+import { useFormats } from "@/i18n/format";
 import {
   useUpdateProfileImageMutation,
   useUpdateBannerImageMutation,
@@ -38,6 +40,9 @@ import InterviewAssessmentCard from "@/components/ai/InterviewAssessmentCard";
 import { useGetMyAssessmentQuery } from "@/redux/features/aiEvaluation/aiEvaluationApi";
 
 export default function MyProfilePage() {
+  const t = useTranslations("profile");
+  const label = useOptionLabel();
+  const f = useFormats();
   // Live updates: videos, assessment progress and the score refresh by themselves
   useLiveCandidateEvents();
   const { connected: liveConnected } = useNotificationContext();
@@ -78,13 +83,13 @@ export default function MyProfilePage() {
       formData.append("image", file);
 
       await updateProfileImage(formData).unwrap();
-      toast.success("Profile image updated successfully");
+      toast.success(t("page.profileImageUpdated"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update profile image";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.profileImageFailed"));
       throw error; // Re-throw to let component handle cleanup
     }
   };
@@ -96,13 +101,13 @@ export default function MyProfilePage() {
       formData.append("banner", file);
 
       await updateBannerImage(formData).unwrap();
-      toast.success("Banner image updated successfully");
+      toast.success(t("page.bannerUpdated"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to update banner image";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.bannerFailed"));
       throw error; // Re-throw to let component handle cleanup
     }
   };
@@ -111,13 +116,13 @@ export default function MyProfilePage() {
   const handleRequestVerification = async () => {
     try {
       await requestAdminVerification().unwrap();
-      toast.success("Verification request submitted successfully");
+      toast.success(t("page.verificationSubmitted"));
     } catch (error) {
       const errorMessage =
         error && typeof error === "object" && "data" in error
           ? (error.data as { message?: string })?.message
-          : "Failed to submit verification request";
-      toast.error(errorMessage);
+          : undefined;
+      toast.error(errorMessage || t("page.verificationFailed"));
     }
   };
 
@@ -140,7 +145,7 @@ export default function MyProfilePage() {
           variant="outline"
           className="bg-yellow-50 border-yellow-200 text-yellow-700 cursor-default"
         >
-          <Clock size={20} height={20} /> Verification Pending
+          <Clock size={20} height={20} /> {t("page.verificationPending")}
         </Button>
       );
     }
@@ -154,7 +159,7 @@ export default function MyProfilePage() {
           disabled={isRequestingVerification}
         >
           <XCircle size={20} height={20} />{" "}
-          {isRequestingVerification ? "Requesting..." : "Request Again"}
+          {isRequestingVerification ? t("page.requesting") : t("page.requestAgain")}
         </Button>
       );
     }
@@ -167,7 +172,7 @@ export default function MyProfilePage() {
         disabled={isRequestingVerification}
       >
         <Award size={20} height={20} />{" "}
-        {isRequestingVerification ? "Requesting..." : "Add Verification Badge"}
+        {isRequestingVerification ? t("page.requesting") : t("page.addVerificationBadge")}
       </Button>
     );
   };
@@ -176,7 +181,7 @@ export default function MyProfilePage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
   const displayName = currentUser
     ? `${currentUser.firstName} ${currentUser.lastName}`.trim()
-    : "User";
+    : t("page.fallbackUser");
 
   const displayAvatar = currentUser?.profileImage
     ? `${BASE_URL}${currentUser.profileImage}`
@@ -186,7 +191,7 @@ export default function MyProfilePage() {
     ? `${BASE_URL}${currentUser.bannerImage}`
     : null;
 
-  const displayRole = roleLabel(currentUser?.role);
+  const displayRole = label("role", currentUser?.role);
 
   // Show the skeleton only until the signed-in user is known (no artificial wait)
   if (!currentUser) {
@@ -245,7 +250,7 @@ export default function MyProfilePage() {
               onClick={() => setIsUploadModalOpen(true)}
             >
               <Upload size={20} height={20} />
-              Upload Resume
+              {t("page.uploadResume")}
             </Button>
           </div>
         </div>
@@ -256,7 +261,7 @@ export default function MyProfilePage() {
         <div className="bg-white rounded-lg border shadow border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-md md:text-xl font-semibold text-gray-900">
-              Profile Information
+              {t("page.profileInformation")}
             </h2>
             <div className="flex items-center gap-3">
               <Button
@@ -266,7 +271,7 @@ export default function MyProfilePage() {
                 onClick={() => setIsEditProfileModalOpen(true)}
               >
                 <Edit className="w-4 h-4 mr-1" />
-                Edit
+                {t("page.edit")}
               </Button>
             </div>
           </div>
@@ -276,10 +281,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.position && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Position
+                  {t("fields.position")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.position}
+                  {label("position", currentUser.profile.position)}
                 </p>
               </div>
             )}
@@ -287,17 +292,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.dateOfBirth && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Date of birth
+                  {t("fields.dateOfBirth")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {new Date(currentUser.profile.dateOfBirth).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
+                  {f.dateLong(currentUser.profile.dateOfBirth)}
                 </p>
               </div>
             )}
@@ -305,7 +303,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.placeOfBirth && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Place of birth
+                  {t("fields.placeOfBirth")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.placeOfBirth}
@@ -316,7 +314,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.nationality && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Nationality
+                  {t("fields.nationality")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.nationality}
@@ -326,12 +324,12 @@ export default function MyProfilePage() {
 
             <div>
               <label className="text-sm text-gray-500 mb-1 block">
-                Phone number
+                {t("fields.phoneNumber")}
               </label>
               <p className="text-gray-900 font-medium">
                 {currentUser?.profile?.phoneNumber
                   ? currentUser.profile.phoneNumber
-                  : "N/A"}
+                  : t("page.notAvailable")}
               </p>
             </div>
 
@@ -339,10 +337,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.gender && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Gender
+                  {t("fields.gender")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.gender}
+                  {label("gender", currentUser.profile.gender)}
                 </p>
               </div>
             )}
@@ -350,11 +348,11 @@ export default function MyProfilePage() {
             {currentUser?.profile?.height && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Height
+                  {t("fields.height")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.height.size}{" "}
-                  {currentUser.profile.height.unit}
+                  {label("unit", currentUser.profile.height.unit)}
                 </p>
               </div>
             )}
@@ -362,11 +360,11 @@ export default function MyProfilePage() {
             {currentUser?.profile?.weight && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Weight
+                  {t("fields.weight")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.weight.size}{" "}
-                  {currentUser.profile.weight.unit}
+                  {label("unit", currentUser.profile.weight.unit)}
                 </p>
               </div>
             )}
@@ -374,7 +372,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.currentClub && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Current Club
+                  {t("fields.currentClub")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.currentClub}
@@ -385,7 +383,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.availability && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Available from
+                  {t("fields.availableFrom")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.availability}
@@ -395,9 +393,9 @@ export default function MyProfilePage() {
 
             {currentUser?.profile?.foot && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">Foot</label>
+                <label className="text-sm text-gray-500 mb-1 block">{t("fields.foot")}</label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.foot}
+                  {label("foot", currentUser.profile.foot)}
                 </p>
               </div>
             )}
@@ -405,7 +403,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.league && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  League
+                  {t("fields.league")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.league}
@@ -416,10 +414,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.country && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Country
+                  {t("fields.country")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.country}
+                  {label("country", currentUser.profile.country)}
                 </p>
               </div>
             )}
@@ -427,7 +425,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.agent && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Agent
+                  {t("fields.agent")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.agent}
@@ -438,7 +436,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.socialMedia && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Social Media
+                  {t("fields.socialMedia")}
                 </label>
                 <p className="text-blue-600 font-medium cursor-pointer hover:underline break-all">
                   {currentUser.profile.socialMedia}
@@ -450,7 +448,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.contractExpires && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Contract Expires
+                  {t("fields.contractExpires")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.contractExpires}
@@ -461,10 +459,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.division && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Division
+                  {t("fields.division")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.division}
+                  {label("division", currentUser.profile.division)}
                 </p>
               </div>
             )}
@@ -472,10 +470,10 @@ export default function MyProfilePage() {
             {currentUser?.profile?.nationalTeamCategory && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  National Team Category
+                  {t("fields.nationalTeamCategory")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {currentUser.profile.nationalTeamCategory}
+                  {label("category", currentUser.profile.nationalTeamCategory)}
                 </p>
               </div>
             )}
@@ -483,7 +481,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.nationalTeamGames && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  National Team Games
+                  {t("fields.nationalTeamGames")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.nationalTeamGames}
@@ -494,7 +492,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.teamsJoined && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Teams Joined
+                  {t("fields.teamsJoined")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.teamsJoined}
@@ -506,7 +504,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.schoolName && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  School Name
+                  {t("fields.schoolName")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.schoolName}
@@ -517,7 +515,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.collegeOrUniversity && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  College/University
+                  {t("fields.collegeUniversity")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.collegeOrUniversity}
@@ -528,7 +526,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.diploma && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Diploma
+                  {t("fields.diploma")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.diploma}
@@ -538,7 +536,7 @@ export default function MyProfilePage() {
 
             {currentUser?.profile?.gpa && (
               <div>
-                <label className="text-sm text-gray-500 mb-1 block">GPA</label>
+                <label className="text-sm text-gray-500 mb-1 block">{t("fields.gpa")}</label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.gpa}
                 </p>
@@ -548,7 +546,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.satOrAct && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  SAT/ACT
+                  {t("fields.satOrAct")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.satOrAct}
@@ -559,7 +557,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.category && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Category
+                  {t("fields.category")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.category}
@@ -571,7 +569,7 @@ export default function MyProfilePage() {
             {currentUser?.profile?.languages && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
-                  Languages
+                  {t("fields.languages")}
                 </label>
                 <p className="text-gray-900 font-medium">
                   {currentUser.profile.languages}
@@ -592,7 +590,7 @@ export default function MyProfilePage() {
             <InterviewAssessmentCard
               data={assessment}
               isLoading={isLoadingAssessment}
-              emptyText="Your interview assessment will appear here after you upload your interview video."
+              emptyText={t("page.assessmentEmpty")}
             />
           </div>
         )}
@@ -604,7 +602,7 @@ export default function MyProfilePage() {
         <ExperienceSection userId={currentUser?._id || ""} />
         <CertificateSection userId={currentUser?._id || ""} />
         <EducationSection userId={currentUser?._id || ""} />
-        <h2 className="text-xl font-semibold text-gray-900">My videos</h2>
+        <h2 className="text-xl font-semibold text-gray-900">{t("page.myVideos")}</h2>
         <VideoManager />
       </div>
 

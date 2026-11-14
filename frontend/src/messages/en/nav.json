@@ -1,1 +1,24 @@
-{}
+{
+  "userAvatar": "User avatar",
+  "adminDashboard": "Admin Dashboard",
+  "myProfile": "My Profile",
+  "logOut": "Log out",
+  "links": {
+    "home": "Home",
+    "candidates": "Candidates",
+    "employers": "Employers",
+    "jobBoard": "Job Board",
+    "myNetwork": "My Network",
+    "upgrade": "Upgrade",
+    "message": "Message",
+    "notification": "Notification"
+  },
+  "homeAria": "Jobsoccer Home",
+  "logoAlt": "Jobsoccer logo",
+  "openMenu": "Open navigation menu",
+  "mainNav": "Main navigation",
+  "mobileNav": "Mobile navigation",
+  "signIn": "Sign In",
+  "logIn": "Log in",
+  "menu": "Menu"
+}
