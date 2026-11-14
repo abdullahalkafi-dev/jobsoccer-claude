@@ -52,6 +52,8 @@ export type TProfileVideo = {
   title?: string;
   /** Public path of the English captions (WebVTT), set after transcription. */
   captionsUrl?: string;
+  /** Public paths of the caption tracks per language (WebVTT); en mirrors captionsUrl. */
+  captions?: Partial<Record<"en" | "es" | "fr", string>>;
   uploadedAt?: Date;
   /** Replacing the video is blocked until this date (admin can unlock early). */
   lockedUntil?: Date | null;

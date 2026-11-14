@@ -12,6 +12,7 @@
     "i18n:check": "vitest run src/shared/i18n",
     "storage:migrate": "tsc && node dist/scripts/migrateUploadsToStorage.js",
     "ai:eval": "tsc && node dist/scripts/aiEval.js",
+    "captions:backfill": "tsc && node dist/scripts/backfillCaptions.js",
     "e2e:flow": "tsc && node dist/e2e/run.js",
     "migrate:data-model": "tsc && node dist/scripts/migrateToNewDataModel.js"
   },

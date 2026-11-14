@@ -52,5 +52,14 @@
     "rateStars": "Donner {count, plural, one {# étoile} other {# étoiles}}",
     "youRated": "Vous avez évalué cet agent",
     "success": "Évaluation envoyée avec succès !"
+  },
+  "datePicker": {
+    "placeholder": "Sélectionner une date",
+    "today": "Aujourd'hui",
+    "clear": "Effacer",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "selectMonth": "Choisir le mois",
+    "selectYear": "Choisir l'année"
   }
 }

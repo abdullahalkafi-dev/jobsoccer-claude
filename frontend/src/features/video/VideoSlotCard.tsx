@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Lock, RefreshCw, Upload } from "lucide-react";
 import { useFormats } from "@/i18n/format";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { baseApi } from "@/redux/api/baseApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { GuideQuestions } from "@/components/questions/GuideQuestions";
 import { SetupPhotos } from "./SetupPhotos";
+import { getCaptionTracks, renderCaptionTracks } from "./captionTracks";
 import { checkVideoFile, formatClock } from "./checkVideoFile";
 import { useOptionalLiveConnection } from "@/components/providers/NotificationProvider";
 import { useUploadText } from "./useUploadText";
@@ -50,6 +51,7 @@ export function VideoSlotCard({
   consentOk: boolean;
 }) {
   const t = useTranslations("video");
+  const locale = useLocale();
   const f = useFormats();
   const text = useUploadText();
   const dispatch = useAppDispatch();
@@ -150,6 +152,7 @@ export function VideoSlotCard({
               {video ? (
                 <>
                   <video
+                    key={locale}
                     src={`${mediaUrl(video.url)}#t=0.1`}
                     controls
                     controlsList="nodownload"
@@ -158,11 +161,11 @@ export function VideoSlotCard({
                     playsInline
                     className="aspect-video w-full rounded-lg bg-black"
                   >
-                    {video.captionsUrl && <track kind="subtitles" src={mediaUrl(video.captionsUrl)} srcLang="en" label="English" default />}
+                    {renderCaptionTracks(video, locale, mediaUrl)}
                   </video>
                   <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-gray-600">
                     <span>
-                      {video.captionsUrl ? t("slot.captionsReady", { length: formatClock(video.durationSeconds) }) : t("slot.captionsCreating", { length: formatClock(video.durationSeconds) })}
+                      {getCaptionTracks(video).length ? t("slot.captionsReady", { length: formatClock(video.durationSeconds), languages: getCaptionTracks(video).map((track) => track.label).join(", ") }) : t("slot.captionsCreating", { length: formatClock(video.durationSeconds) })}
                     </span>
                     {video.isLocked ? (
                       <span className="flex items-center gap-1 text-amber-700">

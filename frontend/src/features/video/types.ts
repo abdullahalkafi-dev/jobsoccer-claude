@@ -46,6 +46,10 @@ export type TStoredVideo = {
   height?: number;
   title?: string;
   captionsUrl?: string;
+  /** Caption files per language (older videos have none of these but captionsUrl). */
+  captions?: Partial<Record<"en" | "es" | "fr", string>> | null;
+  /** Tracks the API lists for the player: English first. */
+  captionTracks?: { lang: "en" | "es" | "fr"; label: string; url: string }[];
   uploadedAt?: string;
   lockedUntil?: string | null;
   isLocked: boolean;

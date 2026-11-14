@@ -1,7 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { persistUploadedFiles } from "../../storage";
+import { localStorage, persistUploadedFiles, storage, toStorageKey } from "../../storage";
+import { UsageRecord } from "../client/openaiClient";
 import { TCaptionSegment } from "../transcription/transcriber";
+import { captionPath, TCaptionPaths } from "./captionTracks";
+import { cuesForLanguage, TTranslatedCaptionLang } from "./captionTranslation";
 
 /** "00:01:05.250" - the WebVTT time format. */
 const vttTime = (seconds: number): string => {
@@ -37,4 +40,41 @@ export const saveCaptions = async (sha256: string, segments: TCaptionSegment[]):
   await fs.promises.writeFile(filePath, toWebVtt(segments), "utf8");
   await persistUploadedFiles([filePath]);
   return `captions/${sha256}.vtt`;
+};
+
+/** True when a caption file is already stored (local disk or the configured storage). */
+export const captionFileExists = async (publicPath: string): Promise<boolean> => {
+  const key = toStorageKey(publicPath);
+  return (await localStorage.exists(key)) || (await storage.exists(key));
+};
+
+/**
+ * Write the Spanish / French caption files for one video, next to the English one.
+ * - A file that already exists is never overwritten (its path is returned as it is).
+ * - When the candidate spoke Spanish or French, that track is the original-language cues.
+ * - Otherwise the English cues are translated (one cheap call per language; see captionTranslation).
+ * A language that cannot be produced is simply missing from the result: captions are optional.
+ */
+export const saveTranslatedCaptions = async (
+  sha256: string,
+  source: { englishCues: TCaptionSegment[]; detectedLanguage?: string | null; originalSegments?: TCaptionSegment[] | null },
+  options: { langs?: TTranslatedCaptionLang[]; usage?: UsageRecord[] } = {}
+): Promise<TCaptionPaths> => {
+  const result: TCaptionPaths = {};
+  for (const lang of options.langs ?? (["es", "fr"] as TTranslatedCaptionLang[])) {
+    const publicPath = captionPath(sha256, lang);
+    if (await captionFileExists(publicPath)) {
+      result[lang] = publicPath;
+      continue;
+    }
+    const cues = await cuesForLanguage(lang, source, options.usage);
+    if (!cues.length) continue;
+    const directory = path.join(process.cwd(), "uploads", "captions");
+    await fs.promises.mkdir(directory, { recursive: true });
+    const filePath = path.join(directory, `${sha256}.${lang}.vtt`);
+    await fs.promises.writeFile(filePath, toWebVtt(cues), "utf8");
+    await persistUploadedFiles([filePath]);
+    result[lang] = publicPath;
+  }
+  return result;
 };

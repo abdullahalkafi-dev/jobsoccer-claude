@@ -21,7 +21,7 @@
     "upToEach": "up to {max} each",
     "recordingGuide": "Recording guide",
     "fileName": "Recommended file name: {name}",
-    "captionsReady": "{length} · English captions ready",
+    "captionsReady": "{length} · captions ready ({languages})",
     "captionsCreating": "{length} · captions are being created",
     "lockedUntil": "Locked until {date}",
     "replace": "Replace",

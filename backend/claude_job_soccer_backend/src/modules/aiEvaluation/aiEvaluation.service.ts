@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import AppError from "../../errors/AppError";
 import { aiConfig } from "../../shared/ai/ai.config";
 import { UsageRecord } from "../../shared/ai/client/openaiClient";
-import { saveCaptions } from "../../shared/ai/captions/captions";
+import { saveCaptions, saveTranslatedCaptions } from "../../shared/ai/captions/captions";
 import { EvaluationError, evaluateTranscript } from "../../shared/ai/evaluation/evaluator";
 import { EvaluationReport } from "../../shared/ai/evaluation/evaluation.types";
 import { buildReport, computeTotals } from "../../shared/ai/evaluation/guardrails";
@@ -30,7 +30,7 @@ import { VideoService } from "../video/video.service";
 import { TAiEvaluation } from "./aiEvaluation.interface";
 import { AiEvaluation } from "./aiEvaluation.model";
 import { getLocalizedTexts } from "./aiTranslations";
-import { transcribeCached } from "./transcriptCache";
+import { TCachedTranscript, transcribeCached } from "./transcriptCache";
 
 type Viewer = { id: string; userType: string };
 
@@ -164,7 +164,11 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       // English captions for the video player (best effort: never blocks the score).
       if (video.videoId) {
         saveCaptions(transcript.sha256, transcript.segments)
-          .then((url) => (url ? VideoService.setCaptions(userId, video.videoId!, url) : undefined))
+          .then(async (url) => {
+            if (!url) return;
+            await VideoService.setCaptions(userId, video.videoId!, url);
+            await writeTranslatedCaptions(userId, video.videoId!, transcript); // Spanish + French tracks
+          })
           .catch((error: any) => logger.warn("Could not write captions", { error: error.message }));
       }
       // Recording-setup check starts now and runs while the answers are scored.
@@ -285,6 +289,23 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
 };
 
 /**
+ * Spanish and French caption tracks for a video whose English captions are written.
+ * Optional extras: it never throws into the assessment (the caller decides whether to log or retry).
+ */
+const writeTranslatedCaptions = async (
+  userId: string,
+  videoId: string,
+  transcript: Pick<TCachedTranscript, "sha256" | "segments" | "detectedLanguage" | "originalSegments">
+): Promise<void> => {
+  const tracks = await saveTranslatedCaptions(transcript.sha256, {
+    englishCues: transcript.segments,
+    detectedLanguage: transcript.detectedLanguage,
+    originalSegments: transcript.originalSegments,
+  });
+  await VideoService.setTranslatedCaptions(userId, videoId, tracks);
+};
+
+/**
  * Worker step for videos that are not scored (methodology): transcribe and
  * write the English captions, so every video can be watched with subtitles.
  */
@@ -299,7 +320,11 @@ const processCaptions = async (videoId: string, userId: string): Promise<void> =
   try {
     const transcript = await transcribeCached(copy.path);
     const captionsUrl = await saveCaptions(transcript.sha256, transcript.segments);
-    if (captionsUrl) await VideoService.setCaptions(userId, videoId, captionsUrl);
+    if (captionsUrl) {
+      await VideoService.setCaptions(userId, videoId, captionsUrl);
+      // Spanish + French tracks: a failure here is retried by the queue, the English captions are already saved.
+      await writeTranslatedCaptions(userId, videoId, transcript);
+    }
   } finally {
     copy.release();
   }

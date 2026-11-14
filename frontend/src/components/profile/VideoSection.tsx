@@ -3,7 +3,8 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Play } from "lucide-react";
 import { useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { renderCaptionTracks } from "@/features/video/captionTracks";
 
 interface Video {
   _id: string;
@@ -12,8 +13,10 @@ interface Video {
   durationSeconds: number;
   uploadedAt: string;
   kind?: string;
-  /** Public path of the English captions (WebVTT). */
+  /** Public path of the English captions (WebVTT); `captions` / `captionTracks` add Spanish and French. */
   captionsUrl?: string;
+  captions?: Partial<Record<"en" | "es" | "fr", string>> | null;
+  captionTracks?: { lang: "en" | "es" | "fr"; label: string; url: string }[];
 }
 
 interface VideoSectionProps {
@@ -27,6 +30,7 @@ export default function VideoSection({
   readOnly = false,
 }: VideoSectionProps) {
   const t = useTranslations("profile.videos");
+  const locale = useLocale();
   const getVideoUrl = useCallback((video: Video): string => {
     if (!video?.url) return "";
 
@@ -66,6 +70,7 @@ export default function VideoSection({
                   <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
                     {/* Video Player */}
                     <video
+                      key={locale}
                       src={`${videoUrl}#t=0.1`}
                       controls
                       controlsList="nodownload"
@@ -82,9 +87,7 @@ export default function VideoSection({
                       }}
                       aria-label={video.title || t("video")}
                     >
-                      {video.captionsUrl && (
-                        <track kind="subtitles" src={getVideoUrl({ ...video, url: video.captionsUrl })} srcLang="en" label="English" default />
-                      )}
+                      {renderCaptionTracks(video, locale, (path) => getVideoUrl({ ...video, url: path }))}
                       {t("noSupport")}
                     </video>
                   </div>

@@ -14,6 +14,8 @@ export const profileVideoSchema = new Schema<TProfileVideo>({
   sizeBytes: { type: Number },
   title: { type: String, trim: true },
   captionsUrl: { type: String, trim: true },
+  /** Caption files per language (en is also kept in captionsUrl). Older videos have none of these. */
+  captions: { type: new Schema({ en: String, es: String, fr: String }, { _id: false }), default: undefined },
   uploadedAt: { type: Date, default: Date.now },
   lockedUntil: { type: Date, default: null },
 });
