@@ -39,7 +39,7 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { baseApi } from "@/redux/api/baseApi";
 import { useGetUnreadCountQuery } from "@/redux/features/notification/notificationApi";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
-import GoogleTranslate from "../googleTranslate/GoogleTranslate";
+import LanguageSwitcher from "../language/LanguageSwitcher";
 
 // ==================== Types ====================
 interface NavLink {
@@ -401,7 +401,7 @@ export function Navbar() {
 
           {/* Desktop User Menu */}
           <div className="hidden lg:flex gap-5 justify-end">
-            <GoogleTranslate />
+            <LanguageSwitcher />
             {!mounted || !loginRestored ? (
               // Same size as the button, so nothing moves when the real control appears
               <div className="h-9 w-[84px]" aria-hidden="true" />
@@ -464,6 +464,8 @@ export function Navbar() {
                 badge={link.name === "Notification" ? unreadCount : undefined}
               />
             ))}
+            <LanguageSwitcher className="self-start" />
+
 
             {mounted && loginRestored && !isLoggedIn && (
               <Link
