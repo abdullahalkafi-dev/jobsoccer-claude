@@ -60,7 +60,7 @@ export const assertVideoMeetsRules = (probe: TProbeResult, kind: VideoKind, maxS
     );
   }
   const shortSide = Math.min(probe.width, probe.height);
-  if (shortSide < VIDEO_LIMITS.minShortSide) {
+  if (VIDEO_LIMITS.minShortSide > 0 && shortSide < VIDEO_LIMITS.minShortSide) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
       `This video is ${probe.width}x${probe.height}. The minimum quality is 720p (1280x720).`

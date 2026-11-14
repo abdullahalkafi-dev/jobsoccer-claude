@@ -197,7 +197,7 @@ const TECHNICAL: TGuideSection = {
     "Good lighting and clear sound. Use a mini microphone (wireless or clip-on) connected to your phone, so your voice is clear from a distance.",
     "Quiet location: avoid wind, noise, and music.",
     "Speak in one language only, matching the role or market. English subtitles are created automatically.",
-    "Accepted formats: MP4 or MOV. Minimum quality: 720p. Maximum file size: 600 MB per video.",
+    "Accepted formats: MP4 or MOV. Any quality is accepted (720p or higher is recommended). Maximum file size: 600 MB per video.",
   ],
 };
 
