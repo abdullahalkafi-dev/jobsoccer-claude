@@ -6,6 +6,7 @@ import {
   Edit,
   Award,
   Upload,
+  CircleCheck,
   Mail,
   BadgeCheck,
   Clock,
@@ -22,6 +23,7 @@ import {
 } from "@/redux/features/user/userApi";
 import { useRequestAdminVerificationMutation } from "@/redux/features/adminVerification/adminVerificationApi";
 import UploadResumeModal from "@/components/modals/UploadResumeModal";
+import { useGetUserResumeQuery } from "@/redux/features/resume/resumeApi";
 import EditProfileModal from "@/components/modals/EditProfileModal";
 import EditPlayerDetailsModal from "@/components/modals/EditPlayerDetailsModal";
 import { useAppSelector } from "@/redux/hooks";
@@ -48,6 +50,9 @@ export default function MyProfilePage() {
   const { connected: liveConnected } = useNotificationContext();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
+  // A resume exists: the button shows a green check instead of the plain upload icon
+  const { data: myResumes } = useGetUserResumeQuery(currentUser?._id || "", { skip: !currentUser?._id });
+  const hasResume = (myResumes?.data?.length ?? 0) > 0;
 
   // Interview assessment (client scoring guide) for on-field staff; refreshes while it is being prepared
   // Interview assessment applies to on-field and office staff
@@ -249,8 +254,12 @@ export default function MyProfilePage() {
               className="flex items-center"
               onClick={() => setIsUploadModalOpen(true)}
             >
-              <Upload size={20} height={20} />
-              {t("page.uploadResume")}
+              {hasResume ? (
+                <CircleCheck size={20} className="text-green-600" aria-hidden="true" />
+              ) : (
+                <Upload size={20} height={20} />
+              )}
+              {hasResume ? t("page.resumeUploaded") : t("page.uploadResume")}
             </Button>
           </div>
         </div>

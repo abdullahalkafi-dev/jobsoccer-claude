@@ -158,6 +158,7 @@
     "edit": "Edit",
     "assessmentEmpty": "Your interview assessment will appear here after you upload your interview video.",
     "myVideos": "My videos",
-    "rootTitle": "Profile Page"
+    "rootTitle": "Profile Page",
+    "resumeUploaded": "Resume uploaded"
   }
 }

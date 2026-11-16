@@ -6,7 +6,7 @@ import catchAsync from "../../shared/util/catchAsync";
 import sendResponse from "../../shared/util/sendResponse";
 import { User } from "../user/user.model";
 import { UserType } from "../user/user.interface";
-import { PREMIUM_MIN_SCORE } from "./profileQuality.interface";
+import { PREMIUM_MIN_SCORE, QUALITY_RULES_VERSION } from "./profileQuality.interface";
 import { localizedBands } from "./profileQuality.view";
 import { ProfileQualityService } from "./profileQuality.service";
 
@@ -25,7 +25,9 @@ router.get(
     const user = await User.findById(req.user.id).select("profileQuality").lean();
     let quality = user?.profileQuality ?? (await ProfileQualityService.recalculate(req.user.id));
     // Results saved before translations existed have tips without keys: recalculate them once so they can be shown in the user's language
-    const legacy = quality?.categories?.some((category: any) => category.items?.some((item: any) => item.tip && !item.tipKey));
+    const legacy =
+      (quality as any)?.rulesVersion !== QUALITY_RULES_VERSION ||
+      quality?.categories?.some((category: any) => category.items?.some((item: any) => item.tip && !item.tipKey));
     if (legacy) quality = (await ProfileQualityService.recalculate(req.user.id)) ?? quality;
     sendResponse(res, {
       statusCode: StatusCodes.OK,

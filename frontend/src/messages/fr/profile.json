@@ -158,6 +158,7 @@
     "edit": "Modifier",
     "assessmentEmpty": "Votre évaluation d'entretien apparaîtra ici après le téléversement de votre vidéo d'entretien.",
     "myVideos": "Mes vidéos",
-    "rootTitle": "Page de profil"
+    "rootTitle": "Page de profil",
+    "resumeUploaded": "CV téléversé"
   }
 }

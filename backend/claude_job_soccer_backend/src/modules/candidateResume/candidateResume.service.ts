@@ -80,8 +80,19 @@ const removeResume = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Resume not found");
   }
 
-  // Only delete from database, keep file for job application history
-  await CandidateResume.deleteOne({ _id: resumeId });
+  // Only delete from database, keep file for job application history.
+  // Document-level delete (not a query delete) so the Profile Quality Score is recalculated.
+  const wasActive = resume.isActive;
+  await resume.deleteOne();
+
+  // The CV in use was removed: the newest remaining one takes its place, so the profile never ends up with CVs but none active.
+  if (wasActive) {
+    const newest = await CandidateResume.findOne({ userId }).sort({ createdAt: -1 });
+    if (newest) {
+      newest.isActive = true;
+      await newest.save();
+    }
+  }
 };
 
 /**

@@ -19,7 +19,7 @@ import { getProfileEntry } from "../profile/profile.registry";
 import { CandidateRole, UserType } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { judgeProfileText } from "./profileQuality.ai";
-import { TAiJudgement, TProfileQuality } from "./profileQuality.interface";
+import { QUALITY_RULES_VERSION, TAiJudgement, TProfileQuality } from "./profileQuality.interface";
 import { calculateProfileQuality, TQualitySnapshot } from "./profileQuality.rules";
 import { localizeQuality } from "./profileQuality.view";
 
@@ -181,7 +181,12 @@ const queueStaleRecalculations = async (limit = 200): Promise<number> => {
     userType: UserType.CANDIDATE,
     isDeleted: { $ne: true },
     profileId: { $exists: true, $ne: null },
-    $or: [{ "profileQuality.calculatedAt": { $exists: false } }, { "profileQuality.calculatedAt": { $lt: weekAgo } }],
+    $or: [
+      { "profileQuality.calculatedAt": { $exists: false } },
+      { "profileQuality.calculatedAt": { $lt: weekAgo } },
+      // Scores calculated with older point rules are recalculated once after the rules change
+      { "profileQuality.rulesVersion": { $ne: QUALITY_RULES_VERSION } },
+    ],
   })
     .select("_id")
     .limit(limit)

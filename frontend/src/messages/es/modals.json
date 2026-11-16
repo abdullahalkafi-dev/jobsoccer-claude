@@ -107,7 +107,15 @@
     "alreadyInProfile": "¡El currículum ya está en tu perfil!",
     "selectFirst": "Sube o selecciona un currículum",
     "noUrl": "No se pudo obtener la URL del currículum",
-    "uploadFailed": "No se pudo subir el currículum"
+    "uploadFailed": "No se pudo subir el currículum",
+    "current": "Actual",
+    "delete": "Eliminar este currículum",
+    "confirmDelete": "Eliminar",
+    "deleting": "Eliminando...",
+    "deleted": "Currículum eliminado.",
+    "deleteFailed": "No se pudo eliminar el currículum",
+    "nowCurrent": "Este currículum ahora es tu currículum actual.",
+    "useThis": "Usar este currículum"
   },
   "employer": {
     "title": "Editar información profesional",

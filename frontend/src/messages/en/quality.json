@@ -16,7 +16,8 @@
     "premiumQualified": "You are <b>Premium Qualified</b>: you can apply to premium opportunities.",
     "morePoints": "<b>{points, plural, one {# more point} other {# more points}}</b> unlock premium opportunities (5 stars).",
     "howToImprove": "How to improve",
-    "disclaimer": "This score shows how complete and verified your profile is. It is not a measure of your professional ability, and a high score does not guarantee a job."
+    "disclaimer": "This score shows how complete and verified your profile is. It is not a measure of your professional ability, and a high score does not guarantee a job.",
+    "checklistHint": "Tap a category to see exactly what earns points."
   },
   "premium": {
     "badge": "Premium",

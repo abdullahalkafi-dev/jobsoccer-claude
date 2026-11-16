@@ -46,6 +46,8 @@ export type TProfileQuality = {
    * hash of what it judged, so the AI is only called again when that text changes.
    */
   ai?: TAiJudgement;
+  /** Version of the point rules this score was calculated with (older scores are recalculated once). */
+  rulesVersion?: number;
   calculatedAt: Date;
 };
 
@@ -70,6 +72,12 @@ export const LEVEL_BANDS: { level: TProfileLevel; stars: 1 | 2 | 3 | 4 | 5; min:
   { level: "developing", stars: 2, min: 40, label: "Developing" },
   { level: "incomplete", stars: 1, min: 0, label: "Incomplete" },
 ];
+
+/**
+ * Bump when the point rules change: every saved score is then recalculated once.
+ * 2 = 2026-11-16: CV moved to Profile Completion, verification 13+12, interview 25 + methodology 5, new maintenance split.
+ */
+export const QUALITY_RULES_VERSION = 2;
 
 /** Candidates at or above this score may apply to premium jobs (client: 90). */
 export const PREMIUM_MIN_SCORE = 90;

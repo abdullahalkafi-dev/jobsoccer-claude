@@ -107,7 +107,15 @@
     "alreadyInProfile": "Resume already in your profile!",
     "selectFirst": "Please upload or select a resume",
     "noUrl": "Failed to get resume URL",
-    "uploadFailed": "Failed to upload resume"
+    "uploadFailed": "Failed to upload resume",
+    "current": "Current",
+    "delete": "Delete this resume",
+    "confirmDelete": "Delete",
+    "deleting": "Deleting...",
+    "deleted": "Resume deleted.",
+    "deleteFailed": "Could not delete the resume",
+    "nowCurrent": "This resume is now your current resume.",
+    "useThis": "Use this resume"
   },
   "employer": {
     "title": "Edit Professional Information",

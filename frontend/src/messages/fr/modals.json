@@ -107,7 +107,15 @@
     "alreadyInProfile": "Le CV figure déjà dans votre profil !",
     "selectFirst": "Veuillez téléverser ou sélectionner un CV",
     "noUrl": "Impossible d'obtenir l'URL du CV",
-    "uploadFailed": "Échec du téléversement du CV"
+    "uploadFailed": "Échec du téléversement du CV",
+    "current": "Actuel",
+    "delete": "Supprimer ce CV",
+    "confirmDelete": "Supprimer",
+    "deleting": "Suppression...",
+    "deleted": "CV supprimé.",
+    "deleteFailed": "Impossible de supprimer le CV",
+    "nowCurrent": "Ce CV est maintenant votre CV actuel.",
+    "useThis": "Utiliser ce CV"
   },
   "employer": {
     "title": "Modifier les informations professionnelles",

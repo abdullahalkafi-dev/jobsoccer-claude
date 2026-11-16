@@ -42,6 +42,7 @@ export const ITEM_LABELS: Record<string, Texts> = {
   freshness: { en: "Profile recently updated", es: "Perfil actualizado recientemente", fr: "Profil mis à jour récemment" },
   responsiveness: { en: "Replies to messages", es: "Respuesta a mensajes", fr: "Réponses aux messages" },
   sporting: { en: "Position and club", es: "Posición y club", fr: "Poste et club" },
+  phone: { en: "Phone number", es: "Número de teléfono", fr: "Numéro de téléphone" },
   contact: { en: "Contact and social media", es: "Contacto y redes sociales", fr: "Contact et réseaux sociaux" },
   schoolDetails: { en: "School details", es: "Datos del centro de estudios", fr: "Informations scolaires" },
   careerDetails: { en: "Career details", es: "Datos de la carrera", fr: "Informations de carrière" },

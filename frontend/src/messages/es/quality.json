@@ -16,7 +16,8 @@
     "premiumQualified": "Eres <b>Premium calificado</b>: puedes postularte a oportunidades premium.",
     "morePoints": "<b>{points, plural, one {# punto más} other {# puntos más}}</b> para desbloquear las oportunidades premium (5 estrellas).",
     "howToImprove": "Cómo mejorar",
-    "disclaimer": "Esta puntuación indica lo completo y verificado que está tu perfil. No mide tu capacidad profesional y una puntuación alta no garantiza un empleo."
+    "disclaimer": "Esta puntuación indica lo completo y verificado que está tu perfil. No mide tu capacidad profesional y una puntuación alta no garantiza un empleo.",
+    "checklistHint": "Toca una categoría para ver exactamente qué suma puntos."
   },
   "premium": {
     "badge": "Premium",

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Upload, FileText, X } from "lucide-react";
+import { Upload, FileText, X, Trash2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,6 +14,8 @@ import {
 import {
   useCreateResumeMutation,
   useGetUserResumeQuery,
+  useDeleteResumeMutation,
+  useActivateResumeMutation,
 } from "@/redux/features/resume/resumeApi";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
@@ -50,6 +52,10 @@ export default function UploadResumeModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [createResume, { isLoading: isCreating }] = useCreateResumeMutation();
+  const [deleteResume, { isLoading: isDeleting }] = useDeleteResumeMutation();
+  const [activateResume, { isLoading: isActivating }] = useActivateResumeMutation();
+  // The resume the visitor is asked to confirm deleting
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { data: existingResumes } = useGetUserResumeQuery(userId || "", {
     skip: !userId,
   });
@@ -136,7 +142,13 @@ export default function UploadResumeModal({
         resumeUrl = selectedResume?.resumeUrl || "";
 
         if (mode === "profile") {
-          toast.success(t("resume.alreadyInProfile"));
+          if (selectedResume && !selectedResume.isActive) {
+            // An older resume becomes the current one (employers see it and the score uses it)
+            await activateResume(selectedResume._id).unwrap();
+            toast.success(t("resume.nowCurrent"));
+          } else {
+            toast.success(t("resume.alreadyInProfile"));
+          }
         }
       } else {
         toast.error(t("resume.selectFirst"));
@@ -166,6 +178,18 @@ export default function UploadResumeModal({
       console.log("=== UploadResumeModal: Error in handleSubmit ===", error);
       toast.error(error.data?.message || t("resume.uploadFailed"));
       console.error("Failed to upload resume:", error);
+    }
+  };
+
+  const handleDeleteResume = async (resumeId: string) => {
+    try {
+      await deleteResume(resumeId).unwrap();
+      toast.success(t("resume.deleted"));
+      if (selectedResumeId === resumeId) setSelectedResumeId(null);
+    } catch (error: any) {
+      toast.error(error?.data?.message || t("resume.deleteFailed"));
+    } finally {
+      setConfirmDeleteId(null);
     }
   };
 
@@ -257,6 +281,40 @@ export default function UploadResumeModal({
                         </p>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+                      {resume.isActive && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          {t("resume.current")}
+                        </span>
+                      )}
+                      {confirmDeleteId === resume._id ? (
+                        <>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="destructive"
+                            disabled={isDeleting}
+                            onClick={() => handleDeleteResume(resume._id)}
+                          >
+                            {isDeleting ? t("resume.deleting") : t("resume.confirmDelete")}
+                          </Button>
+                          <Button type="button" size="sm" variant="outline" disabled={isDeleting} onClick={() => setConfirmDeleteId(null)}>
+                            {t("common.cancel")}
+                          </Button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          aria-label={t("resume.delete")}
+                          title={t("resume.delete")}
+                          className="rounded-md p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                          onClick={() => setConfirmDeleteId(resume._id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -308,12 +366,14 @@ export default function UploadResumeModal({
           <Button
             onClick={handleSubmit}
             disabled={
-              (uploadedFiles.length === 0 && !selectedResumeId) || isCreating
+              (uploadedFiles.length === 0 && !selectedResumeId) || isCreating || isActivating || isDeleting
             }
             className="bg-green-600 hover:bg-green-700 text-white"
           >
-            {isCreating
+            {isCreating || isActivating
               ? t("resume.uploading")
+              : mode === "profile" && selectedResumeId && uploadedFiles.length === 0
+              ? t("resume.useThis")
               : mode === "profile"
               ? t("resume.uploadButton")
               : t("resume.submitNow")}

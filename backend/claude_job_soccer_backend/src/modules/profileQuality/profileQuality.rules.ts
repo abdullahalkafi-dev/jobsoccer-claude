@@ -2,6 +2,7 @@ import { CandidateRole } from "../user/user.interface";
 import { VideoKind } from "../video/video.constant";
 import {
   LEVEL_BANDS,
+  QUALITY_RULES_VERSION,
   TProfileQuality,
   TQualityCategory,
   TQualityItem,
@@ -122,11 +123,10 @@ const staffCompletion = (s: TQualitySnapshot): TItemSpec[] => {
   const quality = s.ai?.experienceQuality ?? heuristicExperienceQuality(s.experiences);
   return [
     { key: "basics", labelKey: "basicsStaff", max: 8, fraction: fieldShare(s.profile, basics), ...missingTip(s.profile, basics) },
-    { key: "social", labelKey: "social", max: 2, fraction: filled(s.profile.socialMedia) ? 1 : 0, tipKey: "addSocial" },
     {
       key: "experience",
       labelKey: "experience",
-      max: 7,
+      max: 5,
       fraction: experienceCount ? 0.6 * (Math.min(experienceCount, 2) / 2) + 0.4 * quality : 0,
       ...(experienceCount === 0
         ? { tipKey: "addExperience" }
@@ -138,64 +138,66 @@ const staffCompletion = (s: TQualitySnapshot): TItemSpec[] => {
     {
       key: "licenses",
       labelKey: "licenses",
-      max: 4,
+      max: 3,
       fraction: s.licenses.length ? 1 : 0,
       // Not required for office roles (do not demand irrelevant qualifications).
       applicable: onField,
       tipKey: "addLicenses",
     },
+    // Any uploaded CV earns the full points (how well it fits the role is not used for the score).
+    { key: "cv", labelKey: "cv", max: 5, fraction: s.resume ? 1 : 0, tipKey: "uploadCv" },
   ];
 };
 
 const staffVerification = (s: TQualitySnapshot): TItemSpec[] => {
-  const credentialDocs = approvedCount(s.licenses) + approvedCount(s.educations);
-  const credentialPending = pendingCount(s.licenses) + pendingCount(s.educations);
+  // One approved document is enough: a licence, a qualification or a verified work history all count as credentials.
+  const credentialDocs = approvedCount(s.licenses) + approvedCount(s.educations) + approvedCount(s.experiences);
+  const credentialPending = pendingCount(s.licenses) + pendingCount(s.educations) + pendingCount(s.experiences);
   return [
     {
       key: "identity",
       labelKey: "identity",
-      max: 10,
+      max: 13,
       fraction: s.identityStatus === "approved" ? 1 : s.identityStatus === "pending" ? 0.3 : 0,
       ...(s.identityStatus === "pending" ? { tipKey: "identityWaiting", waiting: true } : { tipKey: "identityRequest" }),
     },
     {
       key: "credentials",
       labelKey: "credentials",
-      max: 8,
-      fraction: credentialDocs >= 2 ? 1 : credentialDocs === 1 ? 0.6 : credentialPending ? 0.2 : 0,
+      max: 12,
+      fraction: credentialDocs >= 1 ? 1 : credentialPending ? 0.2 : 0,
       ...(credentialPending && !credentialDocs ? { tipKey: "credentialsWaiting", waiting: true } : { tipKey: "credentialsUpload" }),
-    },
-    {
-      key: "history",
-      labelKey: "workHistoryVerified",
-      max: 7,
-      fraction: approvedCount(s.experiences) >= 1 ? 1 : pendingCount(s.experiences) ? 0.2 : 0,
-      ...(pendingCount(s.experiences) ? { tipKey: "workHistoryWaiting", waiting: true } : { tipKey: "workHistoryUpload" }),
     },
   ];
 };
 
 const staffMedia = (s: TQualitySnapshot): TItemSpec[] => {
   const has = (kind: VideoKind) => s.videos.some((v) => v.kind === kind);
-  const cvFraction = s.resume ? 0.6 + 0.4 * (s.ai?.cvRelevance ?? (s.resume.text ? 0.7 : 0.5)) : 0;
   return [
     { key: "photo", labelKey: "photo", max: 5, fraction: s.profileImage ? 1 : 0, tipKey: "addPhoto" },
-    { key: "cv", labelKey: "cv", max: 5, fraction: cvFraction, tipKey: s.resume ? "updateCv" : "uploadCv" },
-    // The methodology video is optional (5 points); the interview carries the rest, so media always adds up to 35.
-    { key: "interview", labelKey: "interview", max: 20, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tipKey: "recordInterview" },
+    // The methodology video is optional (5 points). Without it the best possible score is 95; premium starts at 90.
+    { key: "interview", labelKey: "interview", max: 25, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tipKey: "recordInterview" },
     { key: "methodology", labelKey: "methodology", max: 5, fraction: has(VideoKind.METHODOLOGY) ? 1 : 0, tipKey: "addMethodology" },
   ];
 };
 
-const maintenance = (s: TQualitySnapshot, weights: { availability: number; freshness: number; responsiveness: number }): TItemSpec[] => {
+type TMaintenanceWeights = { availability: number; freshness: number; responsiveness: number };
+
+/**
+ * Up-to-date information and availability always count; reply reliability only counts once the candidate has
+ * received messages (then the other two shrink to make room). Logins never earn points.
+ * A new profile was just updated, so a new candidate starts with the up-to-date points.
+ */
+const maintenance = (s: TQualitySnapshot, weights: { unrated: TMaintenanceWeights; rated: TMaintenanceWeights }): TItemSpec[] => {
+  const w = s.responseRate === null ? weights.unrated : weights.rated;
   const age = monthsSince(s.profile.updatedAt, s.now);
   return [
-    { key: "availability", labelKey: "availability", max: weights.availability, fraction: filled(s.profile.availability) ? 1 : 0, tipKey: "updateAvailability" },
-    { key: "freshness", labelKey: "freshness", max: weights.freshness, fraction: age <= 6 ? 1 : age <= 12 ? 0.6 : 0.2, tipKey: "reviewProfile" },
+    { key: "availability", labelKey: "availability", max: w.availability, fraction: filled(s.profile.availability) ? 1 : 0, tipKey: "updateAvailability" },
+    { key: "freshness", labelKey: "freshness", max: w.freshness, fraction: age <= 6 ? 1 : age <= 12 ? 0.6 : 0.2, tipKey: "reviewProfile" },
     {
       key: "responsiveness",
       labelKey: "responsiveness",
-      max: weights.responsiveness,
+      max: w.responsiveness,
       fraction: s.responseRate === null ? 0 : s.responseRate >= 0.7 ? 1 : s.responseRate >= 0.4 ? 0.6 : 0.2,
       // Only rated once the candidate has actually received messages.
       applicable: s.responseRate !== null,
@@ -215,27 +217,28 @@ const PLAYER_BACKGROUND_FIELDS: Partial<Record<CandidateRole, string[]>> = {
 const playerCompletion = (s: TQualitySnapshot): TItemSpec[] => {
   const sporting = ["position", "currentClub", s.role === CandidateRole.PROFESSIONAL_PLAYER ? "division" : "league"];
   const background = PLAYER_BACKGROUND_FIELDS[s.role];
-  const contactFields = ["phoneNumber", "socialMedia"];
+  const contactFields = ["phoneNumber"];
   const contactTip = missingTip(s.profile, contactFields);
   return [
     { key: "basics", labelKey: "basicsPlayer", max: 10, fraction: fieldShare(s.profile, PLAYER_BASIC_FIELDS), ...missingTip(s.profile, PLAYER_BASIC_FIELDS) },
     { key: "sporting", labelKey: "sporting", max: 6, fraction: fieldShare(s.profile, sporting), ...missingTip(s.profile, sporting) },
     {
       key: "contact",
-      labelKey: "contact",
-      max: 6,
+      labelKey: "phone",
+      max: 3,
       fraction: fieldShare(s.profile, contactFields),
-      ...(contactTip.tipKey ? contactTip : { tipKey: "addPhoneSocial" }),
+      ...contactTip,
     },
     {
       key: "background",
       labelKey: s.role === CandidateRole.HIGH_SCHOOL || s.role === CandidateRole.COLLEGE_UNIVERSITY ? "schoolDetails" : "careerDetails",
-      max: 8,
+      max: 6,
       fraction: background ? fieldShare(s.profile, background) : 0,
       applicable: !!background,
       ...(background ? missingTip(s.profile, background) : {}),
     },
     { key: "history", labelKey: "clubHistory", max: 5, fraction: s.experiences.length ? 1 : 0, tipKey: "addClubs" },
+    { key: "cv", labelKey: "cv", max: 5, fraction: s.resume ? 1 : 0, tipKey: "uploadCv" },
   ];
 };
 
@@ -262,7 +265,7 @@ const playerMedia = (s: TQualitySnapshot): TItemSpec[] => [
     key: "highlights",
     labelKey: "highlights",
     max: 30,
-    fraction: Math.min(s.videos.filter((v) => v.kind === VideoKind.HIGHLIGHTS).length, 2) / 2,
+    fraction: Math.min(s.videos.filter((v) => v.kind === VideoKind.HIGHLIGHTS).length, 1),
     tipKey: "uploadHighlights",
   },
 ];
@@ -324,13 +327,13 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
         buildCategory("completion", "Profile Completion", 35, playerCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 20, playerVerification(s)),
         buildCategory("media", "Media Portfolio", 35, playerMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { availability: 4, freshness: 3, responsiveness: 3 })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { unrated: { freshness: 7, availability: 3, responsiveness: 0 }, rated: { freshness: 5, availability: 2, responsiveness: 3 } })),
       ]
     : [
         buildCategory("completion", "Profile Completion", 25, staffCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 25, staffVerification(s)),
         buildCategory("media", "Media Portfolio", 35, staffMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { availability: 5, freshness: 5, responsiveness: 5 })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { unrated: { freshness: 10, availability: 5, responsiveness: 0 }, rated: { freshness: 7, availability: 3, responsiveness: 5 } })),
       ];
 
   const score = Math.min(100, categories.reduce((sum, category) => sum + category.earned, 0));
@@ -340,5 +343,5 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
     .map((item) => item.tip as string)
     .slice(0, 5);
 
-  return { score, level: band.level, stars: band.stars, categories, tips };
+  return { score, level: band.level, stars: band.stars, categories, tips, rulesVersion: QUALITY_RULES_VERSION };
 };

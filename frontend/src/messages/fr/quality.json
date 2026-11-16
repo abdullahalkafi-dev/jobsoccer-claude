@@ -16,7 +16,8 @@
     "premiumQualified": "Vous êtes <b>Premium qualifié</b> : vous pouvez postuler aux offres premium.",
     "morePoints": "<b>{points, plural, one {# point de plus} other {# points de plus}}</b> pour débloquer les offres premium (5 étoiles).",
     "howToImprove": "Comment l'améliorer",
-    "disclaimer": "Ce score indique à quel point votre profil est complet et vérifié. Il ne mesure pas vos compétences professionnelles et un score élevé ne garantit pas un emploi."
+    "disclaimer": "Ce score indique à quel point votre profil est complet et vérifié. Il ne mesure pas vos compétences professionnelles et un score élevé ne garantit pas un emploi.",
+    "checklistHint": "Touchez une catégorie pour voir exactement ce qui rapporte des points."
   },
   "premium": {
     "badge": "Premium",
