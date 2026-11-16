@@ -1,0 +1,232 @@
+{
+ "id": "emma_skip_first3",
+ "rubricId": "office_staff.digital_marketing.v1",
+ "description": "Emma with Q1-Q3 removed (starts at Q4): 14-15 answered. Her opening line (\"I work in digital marketing, mostly for sports and community organizations\") partly touches Q1, so Q1 may count either way",
+ "expectedAnswered": [
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18
+ ],
+ "segments": [
+  {
+   "start": 0,
+   "end": 9,
+   "text": "Hello, my name is Emma Walsh. I work in digital marketing, mostly for sports and community organizations."
+  },
+  {
+   "start": 9,
+   "end": 14,
+   "text": "I am applying for a digital marketing role in soccer."
+  },
+  {
+   "start": 51,
+   "end": 56,
+   "text": "First month I research the market and the audience."
+  },
+  {
+   "start": 56,
+   "end": 60,
+   "text": "Second month I launch content and a few campaigns."
+  },
+  {
+   "start": 60,
+   "end": 64,
+   "text": "Third month I look at the results and improve."
+  },
+  {
+   "start": 64,
+   "end": 68,
+   "text": "I would also choose the main channels."
+  },
+  {
+   "start": 68,
+   "end": 73,
+   "text": "I look at who is already engaging with us and who we want to reach."
+  },
+  {
+   "start": 73,
+   "end": 80,
+   "text": "Then I focus on the groups that are the most valuable, like parents and young players."
+  },
+  {
+   "start": 80,
+   "end": 85,
+   "text": "At the sports club I ran a campaign to sell tickets for a youth tournament."
+  },
+  {
+   "start": 85,
+   "end": 91,
+   "text": "I created posts and a short email series and added a small paid budget."
+  },
+  {
+   "start": 91,
+   "end": 94,
+   "text": "We sold most of the tickets."
+  },
+  {
+   "start": 94,
+   "end": 98,
+   "text": "I learned to start earlier and test different messages."
+  },
+  {
+   "start": 98,
+   "end": 104,
+   "text": "I start with what the audience likes, then plan the content in a calendar."
+  },
+  {
+   "start": 104,
+   "end": 110,
+   "text": "I create it, someone approves it, and I publish it on the right channels."
+  },
+  {
+   "start": 110,
+   "end": 113,
+   "text": "Afterwards I check how it performed."
+  },
+  {
+   "start": 114,
+   "end": 118,
+   "text": "I keep the main idea but change the tone and the benefits."
+  },
+  {
+   "start": 118,
+   "end": 122,
+   "text": "For parents it is safety and progress."
+  },
+  {
+   "start": 122,
+   "end": 126,
+   "text": "For clubs and partners it is results and visibility."
+  },
+  {
+   "start": 126,
+   "end": 130,
+   "text": "It depends on the goal and the budget."
+  },
+  {
+   "start": 130,
+   "end": 137,
+   "text": "Organic is good for community, paid for fast reach, email for people who already know us."
+  },
+  {
+   "start": 137,
+   "end": 140,
+   "text": "I try a mix and see what works."
+  },
+  {
+   "start": 140,
+   "end": 150,
+   "text": "Reach and impressions for awareness, likes and comments for engagement, signups for leads, and repeat visits for retention."
+  },
+  {
+   "start": 150,
+   "end": 154,
+   "text": "Conversion is how many people complete the action."
+  },
+  {
+   "start": 154,
+   "end": 159,
+   "text": "I check the numbers to see where people drop off."
+  },
+  {
+   "start": 159,
+   "end": 165,
+   "text": "Then I change the simplest thing first, like the message or the image, and test again."
+  },
+  {
+   "start": 165,
+   "end": 174,
+   "text": "I make a regular report that connects our results to the club's goals, for example more signups or more ticket sales."
+  },
+  {
+   "start": 174,
+   "end": 180,
+   "text": "I listen to everyone, then prioritize by what helps the main goal."
+  },
+  {
+   "start": 180,
+   "end": 186,
+   "text": "If I cannot do everything, I explain why and agree on a timeline."
+  },
+  {
+   "start": 186,
+   "end": 188,
+   "text": "I would not do it."
+  },
+  {
+   "start": 189,
+   "end": 191,
+   "text": "I would not do it."
+  },
+  {
+   "start": 191,
+   "end": 198,
+   "text": "I would explain that it is risky for the brand and the law, and suggest an honest alternative."
+  },
+  {
+   "start": 198,
+   "end": 206,
+   "text": "Strong passwords, limited access, and permission from parents before using photos of children."
+  },
+  {
+   "start": 206,
+   "end": 212,
+   "text": "I also keep a backup plan so the work continues if I am away."
+  },
+  {
+   "start": 212,
+   "end": 218,
+   "text": "I follow newsletters and some industry accounts, and I try new tools in small tests."
+  },
+  {
+   "start": 218,
+   "end": 223,
+   "text": "If it saves time or improves results, we keep it."
+  },
+  {
+   "start": 223,
+   "end": 228,
+   "text": "Once I scheduled a post with the wrong date for an event."
+  },
+  {
+   "start": 228,
+   "end": 233,
+   "text": "A parent pointed it out, I corrected it quickly and apologized."
+  },
+  {
+   "start": 233,
+   "end": 238,
+   "text": "Now I always have a second person check important posts."
+  },
+  {
+   "start": 239,
+   "end": 244,
+   "text": "I look at my results against the targets and ask for feedback from my manager."
+  },
+  {
+   "start": 244,
+   "end": 248,
+   "text": "Then I choose one thing to improve each month."
+  },
+  {
+   "start": 248,
+   "end": 252,
+   "text": "Thank you for the opportunity."
+  }
+ ],
+ "ambiguousAnswered": [
+  1
+ ]
+}

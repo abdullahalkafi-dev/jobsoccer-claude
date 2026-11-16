@@ -35,6 +35,8 @@
       "failed": "L'évaluation n'a pas pu être terminée. Notre équipe a été prévenue."
     },
     "notAnswered": "{count, plural, one {# question est restée sans réponse} other {# questions sont restées sans réponse}} lors de l'entretien, aucun niveau global n'est donc attribué.",
+    "answeredOf": "{answered} questions sur {total} ont reçu une réponse",
+    "notAnsweredList": "Sans réponse : questions {list}",
     "underReview": "Cette évaluation est en cours de vérification par notre équipe.",
     "strongest": "Points forts",
     "weaknesses": "Principaux points faibles",

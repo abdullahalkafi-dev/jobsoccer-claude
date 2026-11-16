@@ -3,6 +3,7 @@ import { bandFor } from "../rubric/rubric.registry";
 import { Rubric } from "../rubric/rubric.schema";
 import {
   Confidence,
+  EvaluationAlignmentInfo,
   EvaluationReport,
   EvaluationTotals,
   ModelOutput,
@@ -49,7 +50,9 @@ export const applyQuestionRules = (
   sectionId: string,
   questionId: number,
   proposal: ModelQuestion | undefined,
-  transcript: string
+  transcript: string,
+  /** Matched-answer mode: an answer with no quote that really is in its own answer text does not count as answered. */
+  strictEvidence = false
 ): QuestionResult => {
   const question = rubric.sections.flatMap((s) => s.questions).find((q) => q.id === questionId)!;
 
@@ -77,6 +80,23 @@ export const applyQuestionRules = (
   const evidence = verifyEvidence(proposal.evidence, transcript);
   if (evidence.length < proposal.evidence.length) {
     adjustments.push(`${proposal.evidence.length - evidence.length} quote(s) not found in transcript removed`);
+  }
+
+  // Matched-answer mode: "answered" must be backed by words the candidate really said in THIS answer.
+  if (strictEvidence && evidence.length === 0) {
+    return {
+      questionId,
+      sectionId,
+      status: "not_answered",
+      score: null,
+      modelScore: proposal.score,
+      confidence: "low",
+      evidence: [],
+      missingEvidence: proposal.missingEvidence,
+      redFlags: proposal.redFlags,
+      rationale: AI_TEXTS.noAnswer.en,
+      adjustments: ["no quote from the candidate's own answer could be verified, so it does not count as answered"],
+    };
   }
 
   // Client rule: 4/4 on a real-situation question needs situation + action + outcome.
@@ -131,15 +151,34 @@ export const computeTotals = (rubric: Rubric, questions: QuestionResult[]): Eval
   };
 };
 
+export interface BuildReportOptions {
+  /** Each question's own answer text. Quotes are checked against this instead of the whole transcript. */
+  sources?: Map<number, string>;
+  /** Answered needs a verified quote (use together with `sources`). */
+  strictEvidence?: boolean;
+  /** Extra reasons to send the interview to a human (answers out of order, readings disagreed...). */
+  extraReviewReasons?: string[];
+  /** The overall confidence is never higher than this (e.g. "medium" when the two readings disagreed). */
+  confidenceCap?: Confidence;
+  alignment?: EvaluationAlignmentInfo;
+}
+
 /** Turn a validated model output into the final report. */
-export const buildReport = (rubric: Rubric, output: ModelOutput, transcript: string): EvaluationReport => {
+export const buildReport = (
+  rubric: Rubric,
+  output: ModelOutput,
+  transcript: string,
+  options: BuildReportOptions = {}
+): EvaluationReport => {
   const byId = new Map(output.questions.map((q) => [q.questionId, q]));
   const questions = rubric.sections.flatMap((section) =>
-    section.questions.map((q) => applyQuestionRules(rubric, section.id, q.id, byId.get(q.id), transcript))
+    section.questions.map((q) =>
+      applyQuestionRules(rubric, section.id, q.id, byId.get(q.id), options.sources?.get(q.id) ?? transcript, options.strictEvidence)
+    )
   );
   const totals = computeTotals(rubric, questions);
 
-  const reviewReasons: string[] = [];
+  const reviewReasons: string[] = [...(options.extraReviewReasons ?? [])];
   const flagged = questions.filter((q) => q.redFlags.length > 0);
   if (flagged.length) reviewReasons.push(`red flags on question(s) ${flagged.map((q) => q.questionId).join(", ")}`);
   if (output.instructionAttempt) reviewReasons.push("the transcript tried to instruct the scoring");
@@ -149,6 +188,7 @@ export const buildReport = (rubric: Rubric, output: ModelOutput, transcript: str
   if (output.audioOrTranscriptProblem || totals.notAnsweredCount > rubric.questionCount / 2) {
     overallConfidence = lower(overallConfidence, "low");
   }
+  if (options.confidenceCap) overallConfidence = lower(overallConfidence, options.confidenceCap);
   if (overallConfidence === "low") reviewReasons.push("low confidence");
 
   return {
@@ -166,5 +206,6 @@ export const buildReport = (rubric: Rubric, output: ModelOutput, transcript: str
     reviewReasons,
     legacyScore100: Math.round(totals.percentage),
     disclaimer: DISCLAIMER,
+    ...(options.alignment ? { alignment: options.alignment } : {}),
   };
 };

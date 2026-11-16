@@ -61,7 +61,8 @@ const formatAnchors = (rubric: Rubric): string =>
     )
     .join("\n");
 
-const formatRubric = (rubric: Rubric): string => {
+/** Position, scale, mandatory rules, review flags and client-scored examples (no questions). */
+export const formatRubricHeader = (rubric: Rubric): string => {
   const lines: string[] = [];
   lines.push(`POSITION: ${rubric.displayName}${rubric.level ? ` (${rubric.level} level)` : ""}`);
   if (rubric.evaluationApproach.summary) lines.push(`APPROACH: ${rubric.evaluationApproach.summary}`);
@@ -78,20 +79,30 @@ const formatRubric = (rubric: Rubric): string => {
   }
 
   lines.push("", "CLIENT-SCORED EXAMPLES (other positions, for calibration only):", formatAnchors(rubric));
+  return lines.join("\n");
+};
+
+/** One question with what the client says a strong, acceptable and weak answer looks like. */
+export const formatQuestion = (q: Rubric["sections"][number]["questions"][number]): string[] => {
+  const lines: string[] = [];
+  lines.push(`Q${q.id}. ${q.text}`);
+  lines.push(`  Evaluates: ${q.evaluates}`);
+  lines.push(`  Strong (4): ${q.strong.join(" ")}`);
+  lines.push(`  Acceptable (2): ${q.acceptable}`);
+  lines.push(`  Weak or concerning (0-1): ${q.weakOrConcerning}`);
+  if (q.requiresRealSituation) {
+    lines.push("  Needs a real situation: 4/4 only with situation, action and outcome.");
+  }
+  return lines;
+};
+
+const formatRubric = (rubric: Rubric): string => {
+  const lines: string[] = [formatRubricHeader(rubric)];
 
   lines.push("", `QUESTIONS (${rubric.questionCount}):`);
   for (const section of rubric.sections) {
     lines.push("", `Section ${section.id}. ${section.name}`);
-    for (const q of section.questions) {
-      lines.push(`Q${q.id}. ${q.text}`);
-      lines.push(`  Evaluates: ${q.evaluates}`);
-      lines.push(`  Strong (4): ${q.strong.join(" ")}`);
-      lines.push(`  Acceptable (2): ${q.acceptable}`);
-      lines.push(`  Weak or concerning (0-1): ${q.weakOrConcerning}`);
-      if (q.requiresRealSituation) {
-        lines.push("  Needs a real situation: 4/4 only with situation, action and outcome.");
-      }
-    }
+    for (const q of section.questions) lines.push(...formatQuestion(q));
   }
 
   const overall = rubric.calibrationOverall;

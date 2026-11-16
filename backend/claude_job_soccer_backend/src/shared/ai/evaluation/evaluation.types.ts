@@ -124,6 +124,21 @@ export interface EvaluationTotals {
   bySection: Record<string, { earned: number; max: number }>;
 }
 
+/** How the recording was matched to the questions (kept for admins and for audits). */
+export interface EvaluationAlignmentInfo {
+  /** A second reading checked the first one. */
+  reviewed: boolean;
+  /** Questions where the two readings disagreed. */
+  disputedQuestionIds: number[];
+  /** Answers found out of the usual question order. */
+  outOfOrderQuestionIds: number[];
+  /** Words of speech that matched no question. */
+  unmatchedWords: number;
+  totalWords: number;
+  /** Which part of the recording was taken as the answer to each answered question. */
+  blocks: { questionId: number; lines: string; fromSec?: number; toSec?: number; words: number; coverage: "direct" | "partial" }[];
+}
+
 export interface EvaluationReport {
   rubricId: string;
   rubricVersion: number;
@@ -140,4 +155,5 @@ export interface EvaluationReport {
   /** Old 0-100 number kept in sync for cards and filters. */
   legacyScore100: number;
   disclaimer: string;
+  alignment?: EvaluationAlignmentInfo;
 }

@@ -35,6 +35,8 @@
       "failed": "No se pudo completar la evaluación. Nuestro equipo ha sido notificado."
     },
     "notAnswered": "{count, plural, one {# pregunta no fue respondida} other {# preguntas no fueron respondidas}} en la entrevista, por lo que no se asigna un nivel general.",
+    "answeredOf": "Respondidas {answered} de {total} preguntas",
+    "notAnsweredList": "Sin responder: preguntas {list}",
     "underReview": "Nuestro equipo está revisando esta evaluación.",
     "strongest": "Áreas más fuertes",
     "weaknesses": "Principales debilidades",

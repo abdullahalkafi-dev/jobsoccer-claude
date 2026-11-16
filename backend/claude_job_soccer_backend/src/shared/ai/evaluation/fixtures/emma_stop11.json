@@ -1,0 +1,135 @@
+{
+ "id": "emma_stop11",
+ "rubricId": "office_staff.digital_marketing.v1",
+ "description": "Emma's recording that stops after Q11 (real accent test, translated path): 11 answered",
+ "expectedAnswered": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11
+ ],
+ "segments": [
+  {
+   "start": 0,
+   "end": 6.92,
+   "text": "Hello, my name is Imawis. I work in digital marketing, mostly for sports and community"
+  },
+  {
+   "start": 6.92,
+   "end": 13.96,
+   "text": "organization. I am applying for a digital marketing role in soccer. I have around 4"
+  },
+  {
+   "start": 13.96,
+   "end": 20.76,
+   "text": "years in digital marketing. I have worked with a local sports club, a small online shop"
+  },
+  {
+   "start": 20.76,
+   "end": 29.76,
+   "text": "and a charity. I manage social media, newsletters and some paid ads. I love football and I think"
+  },
+  {
+   "start": 29.8,
+   "end": 36.16,
+   "text": "the audience is very passionate. It is a good place to build a community and to use marketing"
+  },
+  {
+   "start": 36.16,
+   "end": 43.16,
+   "text": "to connect people with the game. To grow the brand online, create good content, run campaigns,"
+  },
+  {
+   "start": 43.92,
+   "end": 50.92,
+   "text": "talk to the community and report the results to the club. First month I research the market"
+  },
+  {
+   "start": 51.92,
+   "end": 58.92,
+   "text": "and the audience. Second month I launch content and a few campaigns. Third month I look the"
+  },
+  {
+   "start": 62.48,
+   "end": 69.48,
+   "text": "result and the improve. I would also choose the main channels. I look at who is already"
+  },
+  {
+   "start": 72.28,
+   "end": 79.28,
+   "text": "engaged with us and how we want to reach. Then I focus on the groups that are most available"
+  },
+  {
+   "start": 81.44,
+   "end": 88.44,
+   "text": "like parents and the young players. At the sports club I run a campaign to sell tickets"
+  },
+  {
+   "start": 89,
+   "end": 96,
+   "text": "for a youth tournament. I created post and a short email series and added a small paid"
+  },
+  {
+   "start": 96.44,
+   "end": 103.44,
+   "text": "budget. We sold most of the tickets. I learnt to start earlier and test different messages."
+  },
+  {
+   "start": 104.44,
+   "end": 111.44,
+   "text": "I start with what the audience likes. Then the planned content in a calendar. I create"
+  },
+  {
+   "start": 114.72,
+   "end": 121.72,
+   "text": "it someone approve it and I published it on the right channels. Afterwards I check how"
+  },
+  {
+   "start": 123.6,
+   "end": 130.6,
+   "text": "it performed. I keep the main idea but changes the tone of the benefits. For parents it is"
+  },
+  {
+   "start": 133.92,
+   "end": 140.92,
+   "text": "safety and progress. For clubs and parents it is result and visibility. It depends on"
+  },
+  {
+   "start": 142.36,
+   "end": 149.36,
+   "text": "the goal and the budget. Organic is good for community, paid for first reach, emails for"
+  },
+  {
+   "start": 149.6,
+   "end": 156.6,
+   "text": "people who already know us. I try a mix and see what works. Reach and impressions for"
+  },
+  {
+   "start": 157.6,
+   "end": 164.6,
+   "text": "awareness, like and comment for engagements, sign in sign up for leads and repeat visit"
+  },
+  {
+   "start": 167,
+   "end": 174,
+   "text": "for rotations. Conversion is how many people complete the action. I check the number to"
+  },
+  {
+   "start": 175.4,
+   "end": 182.4,
+   "text": "see where people opt off. Then I change the simplest things first like the message or"
+  },
+  {
+   "start": 182.4,
+   "end": 185.4,
+   "text": "the image and test again."
+  }
+ ]
+}

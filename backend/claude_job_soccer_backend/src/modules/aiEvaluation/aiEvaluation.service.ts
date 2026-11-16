@@ -5,9 +5,12 @@ import AppError from "../../errors/AppError";
 import { aiConfig } from "../../shared/ai/ai.config";
 import { UsageRecord } from "../../shared/ai/client/openaiClient";
 import { saveCaptions, saveTranslatedCaptions } from "../../shared/ai/captions/captions";
-import { EvaluationError, evaluateTranscript } from "../../shared/ai/evaluation/evaluator";
+import { buildUnits, TSegment } from "../../shared/ai/evaluation/alignment";
+import { EvaluationError } from "../../shared/ai/evaluation/evaluator";
 import { EvaluationReport } from "../../shared/ai/evaluation/evaluation.types";
 import { buildReport, computeTotals } from "../../shared/ai/evaluation/guardrails";
+import { evaluateInterview } from "../../shared/ai/evaluation/interviewEvaluator";
+import { StructuredCallError } from "../../shared/ai/evaluation/structuredCall";
 import { AiLang } from "../../shared/ai/i18n/lang";
 import { aiText, interviewLanguageNote, isEnglishLanguage, localizeFixedText } from "../../shared/ai/i18n/aiTexts";
 import { NO_SPEECH_SUMMARY } from "../../shared/ai/evaluation/guardrails";
@@ -144,6 +147,9 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
 
     const parts: string[] = [];
     const originalParts: string[] = [];
+    // Timed caption lines of all scored videos, one after the other (the answers are matched to questions on these).
+    const timedLines: TSegment[] = [];
+    let timeOffset = 0;
     let isTranslated = false;
     const setupTasks: Promise<{ check: TSetupCheck; usage: UsageRecord } | null>[] = [];
     for (const video of evaluation.videos) {
@@ -157,6 +163,12 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       evaluation.detectedLanguage = transcript.detectedLanguage;
       if (transcript.text.trim()) {
         parts.push(transcript.text.trim());
+        const segments = transcript.segments ?? [];
+        if (segments.length) {
+          timedLines.push(...segments.map((s) => ({ start: s.start + timeOffset, end: s.end + timeOffset, text: s.text })));
+        } else {
+          timedLines.push({ start: timeOffset, end: timeOffset + (transcript.durationSeconds ?? 0), text: transcript.text.trim() });
+        }
         isTranslated = isTranslated || transcript.isTranslated;
         if (transcript.isTranslated && transcript.originalText?.trim()) originalParts.push(transcript.originalText.trim());
       }
@@ -183,6 +195,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
           })
         );
       }
+      timeOffset += transcript.durationSeconds ?? 0;
     }
     const transcriptText = parts.join("\n\n");
     evaluation.transcript = transcriptText;
@@ -244,12 +257,13 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
       evaluation.status = "evaluating";
       await evaluation.save();
       announce(userId, evaluationId, "evaluating");
-      const result = await evaluateTranscript(rubric, transcriptText, {
+      // Match the recording to the questions, score each answer on its own lines, then write the overall section.
+      const result = await evaluateInterview(rubric, buildUnits(timedLines, transcriptText), transcriptText, {
         spokenLanguage: evaluation.detectedLanguage,
         isTranslated,
       });
       usage.push(...result.usage);
-      report = buildReport(rubric, result.output, transcriptText);
+      report = result.report;
       evaluation.aiModel = result.model;
       evaluation.promptVersion = result.promptVersion;
       evaluation.rawModelOutput = result.rawOutput;
@@ -274,7 +288,7 @@ const processEvaluation = async (evaluationId: string, isFinalAttempt = true): P
     await completeEvaluation(evaluation, report);
     logger.info(`AI evaluation ${evaluationId} completed: ${report.totals.earned}/${report.totals.max}`);
   } catch (error: any) {
-    if (error instanceof EvaluationError) usage.push(...error.usage);
+    if (error instanceof EvaluationError || error instanceof StructuredCallError) usage.push(...error.usage);
     evaluation.usage = usage;
     evaluation.costUsd = totalCost(usage);
     evaluation.error = error.message;
@@ -399,6 +413,10 @@ export const toOverallView = async (doc: TAiEvaluation, lang: AiLang = "en") => 
       percentage: report.totals.percentage,
       classification: report.totals.band,
       notAnsweredCount: report.totals.notAnsweredCount,
+      /** "Answered X of N": always sent, also when nothing is missing. */
+      answeredCount: report.totals.answeredCount,
+      questionCount: report.questions.length,
+      notAnsweredQuestionIds: report.questions.filter((q) => q.status === "not_answered").map((q) => q.questionId),
       strongestAreas: texts.strongestAreas,
       mainWeaknesses: texts.mainWeaknesses,
       summary: localizeFixedText(texts.summary, lang),

@@ -54,7 +54,23 @@ export const aiConfig = {
   },
 
   reasoningEffort: toEffort(process.env.OPENAI_EVAL_REASONING_EFFORT),
-  promptVersion: process.env.AI_PROMPT_VERSION || "v1",
+  /** Part of the "same video, same result" reuse key: v2 = answers matched to questions in order, then scored one by one. */
+  promptVersion: process.env.AI_PROMPT_VERSION || "v2-aligned",
+
+  /**
+   * Matching the candidate's answers to the questions (quality first, speed second).
+   * Step 1 splits the interview into answers and matches them to questions in order;
+   * step 2 (review) lets the model check that result for mistakes before any scoring.
+   */
+  alignment: {
+    effort: (() => {
+      const value = process.env.AI_ALIGNMENT_REASONING_EFFORT;
+      return value === "low" || value === "medium" ? value : ("high" as ReasoningEffort);
+    })(),
+    review: toBool(process.env.AI_ALIGNMENT_REVIEW, true),
+    /** Questions scored at the same time (each question is scored on its own answer only). */
+    scoreConcurrency: toInt(process.env.AI_SCORE_CONCURRENCY, 6),
+  },
 
   client: {
     timeoutMs: toInt(process.env.OPENAI_TIMEOUT_MS, 120_000),

@@ -12,6 +12,10 @@ export type TInterviewAssessment = {
   percentage?: number;
   classification?: string | null;
   notAnsweredCount?: number;
+  /** Always sent, also when no question is missing. */
+  answeredCount?: number;
+  questionCount?: number;
+  notAnsweredQuestionIds?: number[];
   strongestAreas?: string[];
   mainWeaknesses?: string[];
   summary?: string;

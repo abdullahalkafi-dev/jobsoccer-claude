@@ -95,6 +95,11 @@ const transcribe = async (videoPath: string): Promise<TranscriptionResult> => {
     const original = { language, text: originalText, segments: originalSegments };
     const translatedText: string = translation.text ?? "";
     if (looksEnglish(translatedText)) {
+      // Whisper guesses the language from the first seconds and gets accented English wrong (it called it "bengali").
+      // When what it wrote down is itself clearly English, the candidate spoke English: no "translated" label, no foreign-language note.
+      if (countWords(originalText) >= 30 && looksEnglish(originalText)) {
+        return { text: translatedText, language: "english", segments: toSegments(translation), isTranslated: false, durationSeconds, model, usage };
+      }
       return { text: translatedText, language, segments: toSegments(translation), isTranslated: true, original, durationSeconds, model, usage };
     }
 

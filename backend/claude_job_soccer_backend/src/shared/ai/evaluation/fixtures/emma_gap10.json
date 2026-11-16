@@ -1,0 +1,149 @@
+{
+ "id": "emma_gap10",
+ "rubricId": "office_staff.digital_marketing.v1",
+ "description": "Emma with Q2, Q4, Q6, Q8, Q10, Q12, Q14, Q18 removed: 10 answered",
+ "expectedAnswered": [
+  1,
+  3,
+  5,
+  7,
+  9,
+  11,
+  13,
+  15,
+  16,
+  17
+ ],
+ "segments": [
+  {
+   "start": 0,
+   "end": 9,
+   "text": "Hello, my name is Emma Walsh. I work in digital marketing, mostly for sports and community organizations."
+  },
+  {
+   "start": 9,
+   "end": 14,
+   "text": "I am applying for a digital marketing role in soccer."
+  },
+  {
+   "start": 14,
+   "end": 18,
+   "text": "I have around four years in digital marketing."
+  },
+  {
+   "start": 18,
+   "end": 24,
+   "text": "I have worked with a local sports club, a small online shop and a charity."
+  },
+  {
+   "start": 24,
+   "end": 29,
+   "text": "I managed social media, newsletters and some paid ads."
+  },
+  {
+   "start": 41,
+   "end": 51,
+   "text": "To grow the brand online, create good content, run campaigns, talk to the community and report the results to the club."
+  },
+  {
+   "start": 68,
+   "end": 73,
+   "text": "I look at who is already engaging with us and who we want to reach."
+  },
+  {
+   "start": 73,
+   "end": 80,
+   "text": "Then I focus on the groups that are the most valuable, like parents and young players."
+  },
+  {
+   "start": 98,
+   "end": 104,
+   "text": "I start with what the audience likes, then plan the content in a calendar."
+  },
+  {
+   "start": 104,
+   "end": 110,
+   "text": "I create it, someone approves it, and I publish it on the right channels."
+  },
+  {
+   "start": 110,
+   "end": 113,
+   "text": "Afterwards I check how it performed."
+  },
+  {
+   "start": 126,
+   "end": 130,
+   "text": "It depends on the goal and the budget."
+  },
+  {
+   "start": 130,
+   "end": 137,
+   "text": "Organic is good for community, paid for fast reach, email for people who already know us."
+  },
+  {
+   "start": 137,
+   "end": 140,
+   "text": "I try a mix and see what works."
+  },
+  {
+   "start": 154,
+   "end": 159,
+   "text": "I check the numbers to see where people drop off."
+  },
+  {
+   "start": 159,
+   "end": 165,
+   "text": "Then I change the simplest thing first, like the message or the image, and test again."
+  },
+  {
+   "start": 174,
+   "end": 180,
+   "text": "I listen to everyone, then prioritize by what helps the main goal."
+  },
+  {
+   "start": 180,
+   "end": 186,
+   "text": "If I cannot do everything, I explain why and agree on a timeline."
+  },
+  {
+   "start": 198,
+   "end": 206,
+   "text": "Strong passwords, limited access, and permission from parents before using photos of children."
+  },
+  {
+   "start": 206,
+   "end": 212,
+   "text": "I also keep a backup plan so the work continues if I am away."
+  },
+  {
+   "start": 212,
+   "end": 218,
+   "text": "I follow newsletters and some industry accounts, and I try new tools in small tests."
+  },
+  {
+   "start": 218,
+   "end": 223,
+   "text": "If it saves time or improves results, we keep it."
+  },
+  {
+   "start": 223,
+   "end": 228,
+   "text": "Once I scheduled a post with the wrong date for an event."
+  },
+  {
+   "start": 228,
+   "end": 233,
+   "text": "A parent pointed it out, I corrected it quickly and apologized."
+  },
+  {
+   "start": 233,
+   "end": 238,
+   "text": "Now I always have a second person check important posts."
+  },
+  {
+   "start": 248,
+   "end": 252,
+   "text": "Thank you for the opportunity."
+  }
+ ]
+}

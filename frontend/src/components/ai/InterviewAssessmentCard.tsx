@@ -55,9 +55,19 @@ export default function InterviewAssessmentCard({ data, isLoading, emptyText }: 
         </div>
 
         {pending && <p className="text-xs text-gray-500">{pendingText(pending.status)}</p>}
+        {report.answeredCount !== undefined && report.questionCount !== undefined && (
+          <p className="text-sm font-medium text-gray-800">
+            {t("assessment.answeredOf", { answered: report.answeredCount, total: report.questionCount })}
+          </p>
+        )}
         {!!report.notAnsweredCount && (
           <p className="text-sm text-amber-700 bg-amber-50 rounded-md px-3 py-2">
             {t("assessment.notAnswered", { count: report.notAnsweredCount })}
+            {!!report.notAnsweredQuestionIds?.length && (
+              <span className="block mt-1 font-medium">
+                {t("assessment.notAnsweredList", { list: report.notAnsweredQuestionIds.join(", ") })}
+              </span>
+            )}
           </p>
         )}
         {report.underReview && (

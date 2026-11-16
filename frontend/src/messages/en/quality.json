@@ -35,6 +35,8 @@
       "failed": "The assessment could not be completed. Our team has been notified."
     },
     "notAnswered": "{count, plural, one {# question was} other {# questions were}} not answered in the interview, so no overall level is given.",
+    "answeredOf": "Answered {answered} of {total} questions",
+    "notAnsweredList": "Not answered: questions {list}",
     "underReview": "This assessment is being checked by our team.",
     "strongest": "Strongest areas",
     "weaknesses": "Main weaknesses",

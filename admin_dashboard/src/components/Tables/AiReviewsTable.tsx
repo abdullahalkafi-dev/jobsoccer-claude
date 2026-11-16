@@ -43,6 +43,17 @@ interface QuestionResult {
   adjustments: string[];
 }
 
+interface AnswerBlock {
+  questionId: number;
+  lines: string;
+  fromSec?: number;
+  toSec?: number;
+  words: number;
+  coverage: "direct" | "partial";
+}
+
+const clock = (seconds = 0) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+
 const errorMessage = (error: unknown) =>
   (error as { data?: { message?: string } })?.data?.message || "Something went wrong";
 
@@ -210,6 +221,16 @@ function AssessmentDetail({ userId, onClose }: { userId: string; onClose: () => 
               </div>
             </div>
             <p className="text-gray-700">{q.rationale}</p>
+            {(() => {
+              // Which part of the recording was taken as this question's answer (so a reviewer can jump to it)
+              const found = reviewed?.alignment?.blocks?.find((b: AnswerBlock) => b.questionId === q.questionId);
+              return found ? (
+                <p className="text-gray-400">
+                  Answer found {found.fromSec !== undefined ? `at ${clock(found.fromSec)}-${clock(found.toSec)}` : `in lines ${found.lines}`} ({found.words} words
+                  {found.coverage === "partial" ? ", covers part of the question" : ""})
+                </p>
+              ) : null;
+            })()}
             {q.evidence.length > 0 && <p className="text-gray-500">Evidence: “{q.evidence.join("” · “")}”</p>}
             {q.missingEvidence.length > 0 && <p className="text-gray-500">Missing: {q.missingEvidence.join("; ")}</p>}
             {q.redFlags.length > 0 && <p className="text-red-600">Red flags: {q.redFlags.join("; ")}</p>}

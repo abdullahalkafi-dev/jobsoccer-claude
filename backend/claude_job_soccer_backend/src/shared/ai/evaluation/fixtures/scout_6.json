@@ -1,0 +1,80 @@
+{
+ "id": "scout_6",
+ "rubricId": "on_field_staff.scout.v1",
+ "description": "Scout (Terry Miller): answers Q1-Q6 then stops",
+ "expectedAnswered": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "segments": [
+  {
+   "start": 0,
+   "end": 6,
+   "text": "Hi, I'm Terry Miller from Canada. The position I'm applying for is Scout for Montreal FC Pro Team."
+  },
+  {
+   "start": 6,
+   "end": 10,
+   "text": "The current club is Scout for FC Vancouver Pro Academy."
+  },
+  {
+   "start": 12,
+   "end": 19,
+   "text": "I developed my scouting experience through amateur and youth soccer, initially observing players while supporting coaches."
+  },
+  {
+   "start": 21,
+   "end": 25,
+   "text": "My responsibility is to identify players who fit the club's needs."
+  },
+  {
+   "start": 25,
+   "end": 31,
+   "text": "I assess their qualities and limitations, then provide clear recommendations to support the recruitment team's decisions."
+  },
+  {
+   "start": 33,
+   "end": 37,
+   "text": "I first clarify the club's playing philosophy, recruitment priorities, and budget."
+  },
+  {
+   "start": 37,
+   "end": 43,
+   "text": "I work with coaches to define the required player profiles and focus my observations on those specific needs."
+  },
+  {
+   "start": 46,
+   "end": 51,
+   "text": "I observe how players position themselves, scan their surroundings, and anticipate situations."
+  },
+  {
+   "start": 51,
+   "end": 57,
+   "text": "I pay particular attention to movement without the ball, and their ability to adapt during transitions."
+  },
+  {
+   "start": 59,
+   "end": 64,
+   "text": "I assess the options available, the timing of the decision, and its suitability for the situation."
+  },
+  {
+   "start": 64,
+   "end": 69,
+   "text": "A successful action is not always a good decision, so context matters."
+  },
+  {
+   "start": 71,
+   "end": 75,
+   "text": "I compare the players' habits with the team's playing model."
+  },
+  {
+   "start": 75,
+   "end": 82,
+   "text": "For example, a possession-based team needs players comfortable receiving under pressure, finding passing options, and maintaining positional discipline."
+  }
+ ]
+}

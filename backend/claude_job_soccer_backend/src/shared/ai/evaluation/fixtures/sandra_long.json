@@ -1,0 +1,83 @@
+{
+ "id": "sandra_long",
+ "rubricId": "office_staff.digital_marketing.v1",
+ "description": "Sandra (test04): answers do not follow this question list; true answer count unknown, report only",
+ "expectedAnswered": null,
+ "segments": [
+  {
+   "start": 0,
+   "end": 16,
+   "text": "Hi, I am Sandra Leight, from England. The position I'm applying for is Digital Marketing for Newton F.C., my current post Digital Marketing for the company Abbey Logistics in Manchester."
+  },
+  {
+   "start": 16,
+   "end": 40,
+   "text": "I simplify strategy by focusing on outcomes, reach, engagement, conversions, rather than technical jargon. I use visuals and plain language to make sure every stakeholder understands the value."
+  },
+  {
+   "start": 40,
+   "end": 69,
+   "text": "I research each audience and adapt tone and format accordingly, professional for clubs, inspirational for players, reassuring for parents. Platform-specific content ensures maximum relevance for each group."
+  },
+  {
+   "start": 70,
+   "end": 95,
+   "text": "I establish a clear, creative brief aligning everyone on goals and deadlines before execution. I act as the central coordination point with regular check-ins to keep all elements on track."
+  },
+  {
+   "start": 95,
+   "end": 118,
+   "text": "I conduct an honest post-campaign analysis and present leadership with a clear recovery plan and revised KPIs. Accountability builds more trust than excuses."
+  },
+  {
+   "start": 119,
+   "end": 143,
+   "text": "I monitor platform updates proactively and diversify content across multiple channels so no single algorithm change derails a campaign. Flexibility is built into every strategy from the start."
+  },
+  {
+   "start": 144,
+   "end": 166,
+   "text": "When a paid campaign underperformed I paused it, rebuilt the audience segments and adjusted the creative. The relaunched campaign exceeded the original target by 30%."
+  },
+  {
+   "start": 167,
+   "end": 190,
+   "text": "I use a 30-60-90-day planning framework mapped to business objectives with project management tools to track tasks and approvals. Nothing gets published without proper review."
+  },
+  {
+   "start": 191,
+   "end": 213,
+   "text": "I start by defining clear KPIs, build the campaign around audience and message, then monitor daily and optimize weekly. A full ROI report closes every campaign."
+  },
+  {
+   "start": 214,
+   "end": 232,
+   "text": "Every piece of content goes through a strict review process to ensure it is accurate, brand-aligned and legally compliant before publishing."
+  },
+  {
+   "start": 233,
+   "end": 254,
+   "text": "When asked to exaggerate product results I declined, explained the risks and proposed an alternative that highlighted genuine strengths, which performed better and protected the brand."
+  },
+  {
+   "start": 255,
+   "end": 276,
+   "text": "I follow industry blogs and platform updates daily and test new tools weekly. Learning is built into my workflow, not treated as an occasional activity."
+  },
+  {
+   "start": 277,
+   "end": 299,
+   "text": "Soccer's passionate community creates natural content opportunities. I would bring data-driven growth strategies focused on community building and user acquisition from day one."
+  },
+  {
+   "start": 300,
+   "end": 322,
+   "text": "I align closely with sales and product teams to address conversion gaps through targeted content. In one project this collaboration reduced user drop-off by 25% in the first month."
+  },
+  {
+   "start": 322,
+   "end": 336,
+   "text": "I produce monthly reports connecting marketing activity directly to business results, traffic, leads, conversions and cost per acquisition, so leadership sees marketing as a revenue driver."
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+{
+ "id": "headcoach_rt1",
+ "rubricId": "on_field_staff.head_coach.amateur.v1",
+ "description": "Real accented recording (rt1): Q7, Q10 and Q18 were never said (checked in the text of 7 different speech models)",
+ "expectedAnswered": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  8,
+  9,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17
+ ],
+ "segments": [
+  {
+   "start": 0,
+   "end": 12,
+   "text": "Hi, my name is Lame Charter. I am head coach from the United Kingdom with 11 years of experience in coaching and youth in amateur football."
+  },
+  {
+   "start": 13,
+   "end": 16,
+   "text": "This is job interview for The Job Soccer."
+  },
+  {
+   "start": 17,
+   "end": 29,
+   "text": "Two things first, a serious knee injury at 19 ended my playing career and it taught me to game through other people's development."
+  },
+  {
+   "start": 30,
+   "end": 40,
+   "text": "Second, six years coaching a youth academy under mentor who made my every session with clear purpose."
+  },
+  {
+   "start": 40,
+   "end": 53,
+   "text": "My mission to make players better and better footballers in safe, demanding environment."
+  },
+  {
+   "start": 53,
+   "end": 70,
+   "text": "If a player leaves me more confident, more intelligent, tactically with good habits than I have done in my life, winning followers from that is not the starting point."
+  },
+  {
+   "start": 70,
+   "end": 91,
+   "text": "I agree objectives that club at the start of the season, results player progression, how many players move up levels, then how I review every month."
+  },
+  {
+   "start": 91,
+   "end": 100,
+   "text": "I also look at attendance, injury and the player's feedback because of health squad is a sign at the work right."
+  },
+  {
+   "start": 100,
+   "end": 121,
+   "text": "I look at the plan against match data, chances created, short concern, recovering the opposition half and how we will keep our shape."
+  },
+  {
+   "start": 122,
+   "end": 137,
+   "text": "I also use video to separate two problems, the plan is wrong or the player executed badly. This makes difficult from a pitch."
+  },
+  {
+   "start": 137,
+   "end": 164,
+   "text": "I give every player one clear match task, then I check it clips from the game. For example, if he trains a pressing together, I could how open it appears on Saturday and if it doesn't show up, I back training and make it more game like."
+  },
+  {
+   "start": 165,
+   "end": 181,
+   "text": "Second and specific, I never show more than 10 minutes, I pick three clips, one press, two to improve, then I ask player what they saw about before I explain again."
+  },
+  {
+   "start": 181,
+   "end": 187,
+   "text": "People learn more from their discovery than my lecture."
+  },
+  {
+   "start": 188,
+   "end": 207,
+   "text": "What principle guide you style of play, how do you reinforce that they control the ball, press together and take behavior decisions."
+  },
+  {
+   "start": 208,
+   "end": 226,
+   "text": "I reinforce them with my simple words and the player use themselves. I repeat them in every warm up and I face the behavior, not only the result, a principle only lives in the field daily."
+  },
+  {
+   "start": 227,
+   "end": 238,
+   "text": "I simply before I repeat, I reduce the numbers, slow it down and shows how a small ball or video."
+  },
+  {
+   "start": 240,
+   "end": 250,
+   "text": "Last season, my defense struggled with a back four line and I worked small group and three week the line stays in fact in match."
+  },
+  {
+   "start": 251,
+   "end": 269,
+   "text": "I finish my club out of the best player race with new phrasing rules and start arriving late, I meet privately, I explain them the reason and standard applies for everyone."
+  },
+  {
+   "start": 270,
+   "end": 278,
+   "text": "I waited right after the match, I say very little and thanks and support, only thanks and support."
+  },
+  {
+   "start": 279,
+   "end": 293,
+   "text": "The real conversation happens next day when everyone is claimed, then we look at what we control and what we learn and what we change on Tuesday."
+  },
+  {
+   "start": 294,
+   "end": 296,
+   "text": "Emotions first, analytics second."
+  },
+  {
+   "start": 296,
+   "end": 317,
+   "text": "We were 1-0 down against a team that blocked at the middle and half of our team, half team I saw keep freezing the traffic, I moved on the midfielder wide, asked the full backs to overlap and change the target to far side."
+  },
+  {
+   "start": 318,
+   "end": 323,
+   "text": "We scored twice in the second half and won 2-1."
+  },
+  {
+   "start": 323,
+   "end": 343,
+   "text": "I go back basic routines, same preparation, same behavior, small targets, like winning the first 20 minutes, I also protect the players confidence by showing them what they are doing well. Standards are held by the habits, not speeches."
+  },
+  {
+   "start": 344,
+   "end": 360,
+   "text": "Also check each player, learn some, need to see them, I also see the videos of demonstration, I also need to feel it could be like them, a small game, some needs towards, and time."
+  },
+  {
+   "start": 361,
+   "end": 373,
+   "text": "Honestly and respect, I tell players to do even when they are not want to hear, I respect everyone in the club and keep men to the captain."
+  },
+  {
+   "start": 373,
+   "end": 390,
+   "text": "In my second season I lost 5 games in a row, I changed my system to open, I confused the players, now I stuck to the proper plan and find out the issues in that plan."
+  }
+ ]
+}

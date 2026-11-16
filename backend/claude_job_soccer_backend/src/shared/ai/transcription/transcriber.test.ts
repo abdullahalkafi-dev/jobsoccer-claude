@@ -96,6 +96,19 @@ describe("transcribeVideoFile", () => {
     expect(result.original?.text).toBe(WARM_UP_ES);
   });
 
+  it("recognises accented English that Whisper labelled as another language: no translated label, no foreign-language note", async () => {
+    const longEnglish = `${WARM_UP} After that I ask the players what they noticed, because they learn more from their own discoveries than from my explanations.`;
+    transcriptionsCreate.mockResolvedValue({ language: "bengali", text: longEnglish, segments: [{ start: 0, end: 2, text: longEnglish }] });
+    translationsCreate.mockResolvedValue({ text: longEnglish, segments: [{ start: 0, end: 2, text: longEnglish }] });
+
+    const result = await transcribeVideoFile(tempFile);
+
+    expect(result.language).toBe("english");
+    expect(result.isTranslated).toBe(false);
+    expect(result.original).toBeUndefined();
+    expect(result.text).toBe(longEnglish);
+  });
+
   it("keeps true English as is (not translated, no original copy)", async () => {
     transcriptionsCreate.mockResolvedValue({ language: "english", text: WARM_UP, segments: [] });
     const result = await transcribeVideoFile(tempFile);
