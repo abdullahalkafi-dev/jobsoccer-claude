@@ -14,6 +14,7 @@
     "ai:eval": "tsc && node dist/scripts/aiEval.js",
     "ai:align": "tsc && node dist/scripts/aiAlign.js",
     "captions:backfill": "tsc && node dist/scripts/backfillCaptions.js",
+    "reports:translate": "tsc && node dist/scripts/warmReportTranslations.js",
     "e2e:flow": "tsc && node dist/e2e/run.js",
     "migrate:data-model": "tsc && node dist/scripts/migrateToNewDataModel.js"
   },

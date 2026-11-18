@@ -121,6 +121,9 @@ const completeEvaluation = async (evaluation: any, report: EvaluationReport) => 
     "interview_assessment_ready",
     { displayName: report.displayName }
   ).catch((error: any) => logger.warn("Could not send AI notification", { error: error.message }));
+
+  // Spanish and French copies are made now, in the background, so the report opens instantly in every language.
+  void warmReportTranslations(evaluation._id.toString()).catch(() => undefined);
 };
 
 /**
@@ -462,6 +465,42 @@ export const fallbackTips = (report: EvaluationReport): string[] => {
   return tips;
 };
 
+/** The English texts of the full report: identical for every viewer, so one cached translation serves all of them. */
+const detailTextsOf = (rubric: Rubric, report: EvaluationReport) => {
+  const questionText = new Map(rubric.sections.flatMap((s) => s.questions.map((q) => [q.id, q.text] as const)));
+  return {
+    questions: report.questions.map((q) => questionText.get(q.questionId) ?? ""),
+    sections: rubric.sections.map((s) => s.name),
+    rationales: report.questions.map((q) => (q.status === "scored" ? q.rationale : "")),
+    missing: report.questions.map((q) => (q.status === "scored" ? q.missingEvidence.slice(0, 3) : [])),
+    tips: report.improvementTips?.length ? report.improvementTips : fallbackTips(report),
+  };
+};
+
+/**
+ * Translate a finished report into Spanish and French ahead of time, so the first person who opens it
+ * in those languages does not wait for the translation (~20 s). Best effort: a failure only means
+ * that viewer waits, as before. Returns the languages that are now ready.
+ */
+export const warmReportTranslations = async (evaluationId: string): Promise<AiLang[]> => {
+  const ready: AiLang[] = [];
+  for (const lang of ["es", "fr"] as AiLang[]) {
+    // Re-read each time: the summary and the details are stored in separate fields of the same record.
+    const doc = await AiEvaluation.findById(evaluationId).lean();
+    const rubric = doc ? getRubric(doc.rubricId) : null;
+    const report = doc && rubric ? applyCorrections(rubric, doc) : undefined;
+    if (!doc || !rubric || !report || doc.status !== "completed") return ready;
+    try {
+      await toOverallView(doc, lang);
+      await getLocalizedDetails(doc, detailTextsOf(rubric, report), lang);
+      ready.push(lang);
+    } catch (error: any) {
+      logger.warn(`Could not pre-translate report ${evaluationId} to ${lang}`, { error: error.message });
+    }
+  }
+  return ready;
+};
+
 /**
  * The full report (the "View full report" window): every question with its score, the candidate's own
  * words, why it got that score and, for the candidate and admins only, what would have earned more.
@@ -478,28 +517,17 @@ const getReportDetails = async (viewer: Viewer, candidateUserId: string, lang: A
   if (!doc || !rubric || !report) return null;
 
   const coaching = viewer.userType === UserType.ADMIN || viewer.id === candidateUserId;
-  const questionText = new Map(rubric.sections.flatMap((s) => s.questions.map((q) => [q.id, q.text] as const)));
   const blocks = new Map((report.alignment?.blocks ?? []).map((b) => [b.questionId, b]));
-  const tips = coaching ? (report.improvementTips?.length ? report.improvementTips : fallbackTips(report)) : [];
 
-  const texts = await getLocalizedDetails(
-    doc,
-    {
-      questions: report.questions.map((q) => questionText.get(q.questionId) ?? ""),
-      sections: rubric.sections.map((s) => s.name),
-      rationales: report.questions.map((q) => (q.status === "scored" ? q.rationale : "")),
-      missing: report.questions.map((q) => (coaching && q.status === "scored" ? q.missingEvidence.slice(0, 3) : [])),
-      tips,
-    },
-    lang
-  );
+  // Always the same full texts (one cached translation for every viewer); employers simply do not get the tips.
+  const texts = await getLocalizedDetails(doc, detailTextsOf(rubric, report), lang);
   const overall = await toOverallView(doc, lang);
 
   return {
     ...overall,
     /** True when the viewer may see the coaching tips (the candidate themself or an admin). */
     coaching,
-    improvementTips: texts.tips,
+    improvementTips: coaching ? texts.tips : [],
     interviewVideoId: doc.videos.find((v) => v.kind === VideoKind.INTERVIEW)?.videoId ?? doc.videos[0]?.videoId ?? null,
     sections: rubric.sections.map((s, i) => {
       const inSection = report.questions.filter((q) => q.sectionId === s.id);
@@ -521,7 +549,7 @@ const getReportDetails = async (viewer: Viewer, candidateUserId: string, lang: A
       rationale: texts.rationales[i],
       /** The candidate's own words (from the English transcript), at most two. */
       evidence: q.status === "scored" ? q.evidence.slice(0, 2) : [],
-      missing: texts.missing[i] ?? [],
+      missing: coaching ? texts.missing[i] ?? [] : [],
       /** Where this answer is in the interview video (null for reports scored before 2026-11-15). */
       startSec: blocks.get(q.questionId)?.fromSec ?? null,
       endSec: blocks.get(q.questionId)?.toSec ?? null,
