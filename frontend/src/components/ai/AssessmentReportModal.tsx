@@ -318,33 +318,46 @@ function QuestionRow({
 }) {
   const t = useTranslations("quality");
   const answered = q.status === "scored" && q.score !== null;
+  const chip = (
+    <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap", scoreStyle(q))}>
+      {answered ? `${q.score}/4 ${t(`report.scale.${q.score}`)}` : t("report.filters.notAnswered")}
+    </span>
+  );
   return (
     <li className={cn("text-sm", !answered && "bg-gray-50")}>
+      {/* Phone: the score sits under the question so the text keeps its width. Desktop: score, time and arrow in fixed columns. */}
       <div className="flex items-start gap-2 p-3">
         <button type="button" onClick={onToggle} className="flex min-w-0 flex-1 items-start gap-2 text-left" aria-expanded={open}>
-          <span className="shrink-0 font-semibold text-gray-900">Q{q.id}</span>
-          <span className={cn("min-w-0 flex-1 text-gray-800", !open && "line-clamp-1")}>{q.text}</span>
-          <ChevronDown className={cn("mt-0.5 size-4 shrink-0 text-gray-500 transition-transform", open && "rotate-180")} />
+          <span className="w-7 shrink-0 font-semibold text-gray-900">Q{q.id}</span>
+          <span className="min-w-0 flex-1">
+            <span className={cn("block text-gray-800", !open && "line-clamp-2 sm:line-clamp-1")}>{q.text}</span>
+            <span className="mt-1.5 flex sm:hidden">{chip}</span>
+          </span>
+          <span className="hidden w-36 shrink-0 justify-end sm:flex">{chip}</span>
         </button>
-        <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap", scoreStyle(q))}>
-          {answered ? `${q.score}/4 ${t(`report.scale.${q.score}`)}` : t("report.filters.notAnswered")}
-        </span>
-        {canPlay && q.startSec !== null && (
-          <button
-            type="button"
-            onClick={() => onPlay(q.startSec!)}
-            className="flex shrink-0 items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-blue-700 hover:bg-blue-50"
-            aria-label={t("report.play", { time: clock(q.startSec) })}
-            title={t("report.play", { time: clock(q.startSec) })}
-          >
-            <Play className="size-3" />
-            {clock(q.startSec)}
-          </button>
+        {canPlay && (
+          <span className="flex w-14 shrink-0 justify-end">
+            {q.startSec !== null && (
+              <button
+                type="button"
+                onClick={() => onPlay(q.startSec!)}
+                className="flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-blue-700 hover:bg-blue-50"
+                aria-label={t("report.play", { time: clock(q.startSec) })}
+                title={t("report.play", { time: clock(q.startSec) })}
+              >
+                <Play className="size-3" />
+                {clock(q.startSec)}
+              </button>
+            )}
+          </span>
         )}
+        <button type="button" onClick={onToggle} className="shrink-0 pt-0.5 text-gray-500" aria-hidden tabIndex={-1}>
+          <ChevronDown className={cn("size-4 transition-transform", open && "rotate-180")} />
+        </button>
       </div>
 
       {open && (
-        <div className="space-y-3 px-3 pb-3 pl-10">
+        <div className="space-y-3 px-3 pb-3 pl-12">
           {!answered ? (
             <p className="text-gray-600">{t("report.notAnsweredRow")}</p>
           ) : (
