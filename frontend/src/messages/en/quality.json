@@ -46,5 +46,43 @@
   "guide": {
     "title": "{name} – Interview Questionnaire ({count} Questions)",
     "intro": "In your video interview, answer these questions in the order shown. You may skip a question: it is shown as \"Not Answered\" and gets 0 points."
+  },
+  "report": {
+    "viewFull": "View full report",
+    "title": "Interview report",
+    "tabs": {
+      "overview": "Overview",
+      "questions": "Questions"
+    },
+    "bySection": "Score by topic",
+    "sectionAnswered": "{answered} of {total} answered",
+    "tipsTitle": "3 things to do better next time",
+    "filters": {
+      "all": "All",
+      "notAnswered": "Not answered",
+      "toImprove": "To improve",
+      "strong": "Strong"
+    },
+    "notAnsweredRow": "Not answered: 0 points",
+    "youSaid": "What you said",
+    "candidateSaid": "What the candidate said",
+    "why": "Why this score",
+    "higher": "To score higher",
+    "play": "Play from {time}",
+    "hideVideo": "Hide video",
+    "videoMissing": "The interview video is not available.",
+    "translatedQuotes": "Quotes are from the English translation of the interview.",
+    "scaleTitle": "How scores work",
+    "scaleHelp": "Each question is scored from 0 to 4. A 2 means relevant but general. A 4 needs a real example: the situation, what you did and the result. Short answers can score high; general answers stay in the middle. Unanswered questions get 0 points.",
+    "scale": {
+      "0": "Incorrect / concerning",
+      "1": "Weak",
+      "2": "Acceptable",
+      "3": "Good",
+      "4": "Strong"
+    },
+    "loading": "Loading the report…",
+    "unavailable": "The full report is not available yet.",
+    "noneInFilter": "No questions in this filter."
   }
 }

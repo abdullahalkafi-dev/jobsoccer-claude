@@ -39,6 +39,8 @@ const aiEvaluationSchema = new Schema<TAiEvaluation>(
      * generated on first read. The English text on the report stays the canonical one.
      */
     translations: { type: Schema.Types.Mixed },
+    /** Cached es/fr copy of the full report's texts, generated on first read. */
+    detailTranslations: { type: Schema.Types.Mixed },
     /** Recording-setup check (frames + transcript). Only flags for an admin, never changes the score. */
     setupCheck: { type: Schema.Types.Mixed },
     report: { type: Schema.Types.Mixed },

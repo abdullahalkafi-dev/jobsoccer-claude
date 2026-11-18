@@ -19,6 +19,18 @@ const getForCandidate = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Assessment retrieved", data: result });
 });
 
+/** GET /ai-evaluation/me/report - the candidate's full report (every question, with tips) */
+const getMyReport = catchAsync(async (req: Request, res: Response) => {
+  const result = await AiEvaluationService.getReportDetails(viewerOf(req), req.user.id, langOf(req));
+  sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Report retrieved", data: result });
+});
+
+/** GET /ai-evaluation/candidate/:userId/report - full report for the candidate, an admin or an accepted connection (no tips) */
+const getReportForCandidate = catchAsync(async (req: Request, res: Response) => {
+  const result = await AiEvaluationService.getReportDetails(viewerOf(req), req.params.userId as string, langOf(req));
+  sendResponse(res, { statusCode: StatusCodes.OK, success: true, message: "Report retrieved", data: result });
+});
+
 /** GET /ai-evaluation/:id/status */
 const getStatus = catchAsync(async (req: Request, res: Response) => {
   const result = await AiEvaluationService.getStatus(viewerOf(req), req.params.id as string);
@@ -68,6 +80,8 @@ const addCorrection = catchAsync(async (req: Request, res: Response) => {
 export const AiEvaluationController = {
   getMine,
   getForCandidate,
+  getMyReport,
+  getReportForCandidate,
   getStatus,
   getQuestions,
   listRubrics,

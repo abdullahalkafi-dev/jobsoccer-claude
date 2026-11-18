@@ -46,5 +46,43 @@
   "guide": {
     "title": "{name} – Cuestionario de entrevista ({count} preguntas)",
     "intro": "En tu entrevista en vídeo, responde a estas preguntas en el orden indicado. Puedes saltarte una pregunta: aparecerá como \"Sin responder\" y obtendrá 0 puntos."
+  },
+  "report": {
+    "viewFull": "Ver informe completo",
+    "title": "Informe de la entrevista",
+    "tabs": {
+      "overview": "Resumen",
+      "questions": "Preguntas"
+    },
+    "bySection": "Puntuación por tema",
+    "sectionAnswered": "{answered} de {total} respondidas",
+    "tipsTitle": "3 cosas para mejorar la próxima vez",
+    "filters": {
+      "all": "Todas",
+      "notAnswered": "Sin responder",
+      "toImprove": "Para mejorar",
+      "strong": "Fuertes"
+    },
+    "notAnsweredRow": "Sin responder: 0 puntos",
+    "youSaid": "Lo que dijiste",
+    "candidateSaid": "Lo que dijo el candidato",
+    "why": "Por qué esta puntuación",
+    "higher": "Para puntuar más alto",
+    "play": "Reproducir desde {time}",
+    "hideVideo": "Ocultar vídeo",
+    "videoMissing": "El vídeo de la entrevista no está disponible.",
+    "translatedQuotes": "Las citas provienen de la traducción al inglés de la entrevista.",
+    "scaleTitle": "Cómo funcionan las puntuaciones",
+    "scaleHelp": "Cada pregunta se puntúa de 0 a 4. Un 2 significa relevante pero general. Un 4 necesita un ejemplo real: la situación, lo que hiciste y el resultado. Las respuestas cortas pueden puntuar alto; las respuestas generales se quedan en el medio. Las preguntas sin responder obtienen 0 puntos.",
+    "scale": {
+      "0": "Incorrecta / preocupante",
+      "1": "Débil",
+      "2": "Aceptable",
+      "3": "Buena",
+      "4": "Fuerte"
+    },
+    "loading": "Cargando el informe…",
+    "unavailable": "El informe completo aún no está disponible.",
+    "noneInFilter": "No hay preguntas en este filtro."
   }
 }

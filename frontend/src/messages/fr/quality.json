@@ -46,5 +46,43 @@
   "guide": {
     "title": "{name} – Questionnaire d'entretien ({count} questions)",
     "intro": "Lors de votre entretien vidéo, répondez à ces questions dans l'ordre indiqué. Vous pouvez en passer une : elle apparaîtra comme « Sans réponse » et obtiendra 0 point."
+  },
+  "report": {
+    "viewFull": "Voir le rapport complet",
+    "title": "Rapport d'entretien",
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "questions": "Questions"
+    },
+    "bySection": "Score par thème",
+    "sectionAnswered": "{answered} sur {total} avec réponse",
+    "tipsTitle": "3 points à améliorer la prochaine fois",
+    "filters": {
+      "all": "Toutes",
+      "notAnswered": "Sans réponse",
+      "toImprove": "À améliorer",
+      "strong": "Solides"
+    },
+    "notAnsweredRow": "Sans réponse : 0 point",
+    "youSaid": "Ce que vous avez dit",
+    "candidateSaid": "Ce que le candidat a dit",
+    "why": "Pourquoi ce score",
+    "higher": "Pour obtenir un meilleur score",
+    "play": "Lire à partir de {time}",
+    "hideVideo": "Masquer la vidéo",
+    "videoMissing": "La vidéo de l'entretien n'est pas disponible.",
+    "translatedQuotes": "Les citations proviennent de la traduction anglaise de l'entretien.",
+    "scaleTitle": "Comment fonctionnent les scores",
+    "scaleHelp": "Chaque question est notée de 0 à 4. Un 2 signifie pertinent mais général. Un 4 demande un exemple réel : la situation, ce que vous avez fait et le résultat. Les réponses courtes peuvent obtenir un bon score ; les réponses générales restent au milieu. Les questions sans réponse obtiennent 0 point.",
+    "scale": {
+      "0": "Incorrecte / préoccupante",
+      "1": "Faible",
+      "2": "Acceptable",
+      "3": "Bonne",
+      "4": "Solide"
+    },
+    "loading": "Chargement du rapport…",
+    "unavailable": "Le rapport complet n'est pas encore disponible.",
+    "noneInFilter": "Aucune question dans ce filtre."
   }
 }

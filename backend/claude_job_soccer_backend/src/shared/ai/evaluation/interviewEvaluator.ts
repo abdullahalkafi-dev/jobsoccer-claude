@@ -160,11 +160,12 @@ export const evaluateInterview = async (
     answered: q.status === "scored",
     score: q.score,
     rationale: q.rationale,
+    missing: q.missingEvidence,
   }));
   const overall = await writeOverall(rubric, lines);
   usage.push(...overall.usage);
 
-  const report = buildReport(
+  const built = buildReport(
     rubric,
     {
       ...draft,
@@ -176,6 +177,7 @@ export const evaluateInterview = async (
     transcriptText,
     options
   );
+  const report: EvaluationReport = { ...built, improvementTips: (overall.output.improvementTips ?? []).slice(0, 3) };
 
   return {
     report,

@@ -38,6 +38,18 @@ export type TStoredTranslation = {
   createdAt: Date;
 };
 
+/** Texts of the full report (per question). Evidence quotes are never translated: they are the candidate's own words. */
+export type TDetailTexts = {
+  questions: string[];
+  sections: string[];
+  rationales: string[];
+  /** Per question: what would have earned a higher score. */
+  missing: string[][];
+  tips: string[];
+};
+
+export type TStoredDetailTranslation = { hash: string; texts: TDetailTexts; createdAt: Date };
+
 export type TAiEvaluation = {
   _id?: Types.ObjectId;
   candidateUserId: Types.ObjectId;
@@ -63,6 +75,8 @@ export type TAiEvaluation = {
   originalTranscript?: string;
   /** Cached es/fr versions of the AI texts, see aiTranslations. */
   translations?: Partial<Record<"es" | "fr", TStoredTranslation>>;
+  /** Cached es/fr copy of the full report's texts (questions, explanations, tips). */
+  detailTranslations?: Partial<Record<"es" | "fr", TStoredDetailTranslation>>;
   setupCheck?: TSetupCheck;
   report?: EvaluationReport;
   rawModelOutput?: string;

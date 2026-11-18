@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { AiLang } from "../../shared/ai/i18n/lang";
 import { NO_SPEECH_SUMMARY } from "../../shared/ai/evaluation/guardrails";
 import { translateAiTextGroups } from "../../shared/ai/translate/translateAiText";
-import { TAiEvaluation, TStoredTranslation } from "./aiEvaluation.interface";
+import { TAiEvaluation, TDetailTexts, TStoredDetailTranslation, TStoredTranslation } from "./aiEvaluation.interface";
 import { AiEvaluation } from "./aiEvaluation.model";
 
 type TTexts = { summary: string; strongestAreas: string[]; mainWeaknesses: string[] };
@@ -43,6 +43,47 @@ export const getLocalizedTexts = async (
   if (changed && doc._id) {
     const stored: TStoredTranslation = { hash, ...result, createdAt: new Date() };
     await AiEvaluation.updateOne({ _id: doc._id }, { $set: { [`translations.${key}`]: stored } }).catch(() => undefined);
+  }
+  return result;
+};
+
+/**
+ * The full report's texts in the viewer's language: one cheap call per language and evaluation,
+ * then cached on the evaluation (`detailTranslations`). English or any failure returns the English texts.
+ */
+export const getLocalizedDetails = async (
+  doc: Pick<TAiEvaluation, "_id" | "detailTranslations">,
+  texts: TDetailTexts,
+  lang: AiLang
+): Promise<TDetailTexts> => {
+  if (lang === "en") return texts;
+  const key = lang as "es" | "fr";
+  const hash = crypto.createHash("sha256").update(JSON.stringify(texts)).digest("hex").slice(0, 24);
+  const cached = doc.detailTranslations?.[key];
+  if (cached && cached.hash === hash) return cached.texts;
+
+  const translated = await translateAiTextGroups(
+    {
+      questions: texts.questions,
+      sections: texts.sections,
+      rationales: texts.rationales,
+      missing: texts.missing.flat(),
+      tips: texts.tips,
+    },
+    lang
+  );
+  let cursor = 0;
+  const missing = texts.missing.map((items) => {
+    const part = translated.missing.slice(cursor, cursor + items.length);
+    cursor += items.length;
+    return part;
+  });
+  const result: TDetailTexts = { ...translated, missing };
+
+  // Only a real translation is cached (a failure returns the English text, which must be retried next time).
+  if (JSON.stringify(result) !== JSON.stringify(texts) && doc._id) {
+    const stored: TStoredDetailTranslation = { hash, texts: result, createdAt: new Date() };
+    await AiEvaluation.updateOne({ _id: doc._id }, { $set: { [`detailTranslations.${key}`]: stored } }).catch(() => undefined);
   }
   return result;
 };

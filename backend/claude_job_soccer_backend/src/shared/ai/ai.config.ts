@@ -55,7 +55,7 @@ export const aiConfig = {
 
   reasoningEffort: toEffort(process.env.OPENAI_EVAL_REASONING_EFFORT),
   /** Part of the "same video, same result" reuse key: v2 = answers matched to questions in order, then scored one by one. */
-  promptVersion: process.env.AI_PROMPT_VERSION || "v2-aligned",
+  promptVersion: process.env.AI_PROMPT_VERSION || "v2.1-aligned",
 
   /**
    * Matching the candidate's answers to the questions (quality first, speed second).

@@ -124,17 +124,19 @@ export const overallSchema = z.object({
   mainWeaknesses: z.array(z.string()),
   summary: z.string(),
   overallConfidence: z.enum(CONFIDENCE),
+  improvementTips: z.array(z.string()),
 });
 
 export const overallJsonSchema = {
   type: "object",
   additionalProperties: false,
-  required: ["strongestAreas", "mainWeaknesses", "summary", "overallConfidence"],
+  required: ["strongestAreas", "mainWeaknesses", "summary", "overallConfidence", "improvementTips"],
   properties: {
     strongestAreas: { type: "array", items: { type: "string" } },
     mainWeaknesses: { type: "array", items: { type: "string" } },
     summary: { type: "string" },
     overallConfidence: { type: "string", enum: [...CONFIDENCE] },
+    improvementTips: { type: "array", items: { type: "string" } },
   },
 } as const;
 
@@ -144,6 +146,7 @@ The questions were already scored one by one. You are given those results. Do no
 Rules you must follow:
 - strongestAreas / mainWeaknesses: 2-4 short phrases each, based only on the question results below. If many questions were not answered, say so as the first weakness.
 - summary: 3-5 sentences, recruiter-facing, describing the evidence in the answers (not a hiring decision), in the style of the example. State plainly how many of the questions were answered (for example "14 of 18 questions were answered") and name the unanswered questions by number. Unanswered questions are missing evidence, not poor answers: do not describe them as weak.
+- improvementTips: exactly 3 short, practical tips written to the candidate ("you"), the ones that would raise the score most next time. Base them on the "missing" notes of the lowest-scored questions and on unanswered questions; name the question number (for example "Q10: link each metric to the campaign goal and give a target."). One sentence each, plain words, no jargon.
 - overallConfidence: "high" when the answers were clear and complete enough to judge, "medium" when some answers were thin or unclear, "low" when little could be judged.
 - Do not consider accent, grammar, speaking speed, appearance, age, gender, ethnicity or disability. Do not invent facts that are not in the results.
 - Write in English.`;
@@ -154,6 +157,8 @@ export interface OverallQuestionLine {
   answered: boolean;
   score: number | null;
   rationale: string;
+  /** What would have earned a higher score (from the question scorer). */
+  missing: string[];
 }
 
 export const buildOverallPrompt = (rubric: Rubric, lines: OverallQuestionLine[]) => {
@@ -162,7 +167,7 @@ export const buildOverallPrompt = (rubric: Rubric, lines: OverallQuestionLine[])
   const results = lines
     .map((l) =>
       l.answered
-        ? `Q${l.id}. ${l.text}\n   Score ${l.score}/4. ${l.rationale}`
+        ? `Q${l.id}. ${l.text}\n   Score ${l.score}/4. ${l.rationale}${l.missing.length ? `\n   Missing: ${l.missing.join("; ")}` : ""}`
         : `Q${l.id}. ${l.text}\n   NOT ANSWERED in the interview.`
     )
     .join("\n");

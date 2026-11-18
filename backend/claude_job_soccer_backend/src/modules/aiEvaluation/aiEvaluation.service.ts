@@ -32,7 +32,7 @@ import { VideoKind } from "../video/video.constant";
 import { VideoService } from "../video/video.service";
 import { TAiEvaluation } from "./aiEvaluation.interface";
 import { AiEvaluation } from "./aiEvaluation.model";
-import { getLocalizedTexts } from "./aiTranslations";
+import { getLocalizedDetails, getLocalizedTexts } from "./aiTranslations";
 import { TCachedTranscript, transcribeCached } from "./transcriptCache";
 
 type Viewer = { id: string; userType: string };
@@ -446,6 +446,89 @@ const getLatestForCandidate = async (viewer: Viewer, candidateUserId: string, la
   };
 };
 
+/** Tips for reports scored before the AI wrote them (v2.1): unanswered questions first, then the weakest answers. */
+export const fallbackTips = (report: EvaluationReport): string[] => {
+  const tips: string[] = [];
+  const missingIds = report.questions.filter((q) => q.status === "not_answered").map((q) => `Q${q.questionId}`);
+  if (missingIds.length) tips.push(`Answer every question: ${missingIds.join(", ")} ${missingIds.length === 1 ? "was" : "were"} not answered and got 0 points.`);
+  const weakest = report.questions
+    .filter((q) => q.status === "scored" && q.score !== null && q.score < 4 && q.missingEvidence.length)
+    .sort((a, b) => (a.score ?? 0) - (b.score ?? 0) || a.questionId - b.questionId);
+  for (const q of weakest) {
+    if (tips.length >= 3) break;
+    const item = q.missingEvidence[0].trim();
+    tips.push(`Q${q.questionId}: add ${item.charAt(0).toLowerCase()}${item.slice(1).replace(/\.$/, "")}.`);
+  }
+  return tips;
+};
+
+/**
+ * The full report (the "View full report" window): every question with its score, the candidate's own
+ * words, why it got that score and, for the candidate and admins only, what would have earned more.
+ * Employers with access see scores, quotes and explanations, but not the coaching tips.
+ */
+const getReportDetails = async (viewer: Viewer, candidateUserId: string, lang: AiLang = "en") => {
+  if (!Types.ObjectId.isValid(candidateUserId)) throw new AppError(StatusCodes.BAD_REQUEST, "Invalid candidate id");
+  if (!(await canViewCandidate(viewer, candidateUserId))) {
+    throw new AppError(StatusCodes.FORBIDDEN, "The candidate has not given you access to this assessment");
+  }
+  const doc = await AiEvaluation.findOne({ candidateUserId, isLatest: true, status: "completed" }).sort({ createdAt: -1 }).lean();
+  const rubric = doc ? getRubric(doc.rubricId) : null;
+  const report = doc && rubric ? applyCorrections(rubric, doc) : undefined;
+  if (!doc || !rubric || !report) return null;
+
+  const coaching = viewer.userType === UserType.ADMIN || viewer.id === candidateUserId;
+  const questionText = new Map(rubric.sections.flatMap((s) => s.questions.map((q) => [q.id, q.text] as const)));
+  const blocks = new Map((report.alignment?.blocks ?? []).map((b) => [b.questionId, b]));
+  const tips = coaching ? (report.improvementTips?.length ? report.improvementTips : fallbackTips(report)) : [];
+
+  const texts = await getLocalizedDetails(
+    doc,
+    {
+      questions: report.questions.map((q) => questionText.get(q.questionId) ?? ""),
+      sections: rubric.sections.map((s) => s.name),
+      rationales: report.questions.map((q) => (q.status === "scored" ? q.rationale : "")),
+      missing: report.questions.map((q) => (coaching && q.status === "scored" ? q.missingEvidence.slice(0, 3) : [])),
+      tips,
+    },
+    lang
+  );
+  const overall = await toOverallView(doc, lang);
+
+  return {
+    ...overall,
+    /** True when the viewer may see the coaching tips (the candidate themself or an admin). */
+    coaching,
+    improvementTips: texts.tips,
+    interviewVideoId: doc.videos.find((v) => v.kind === VideoKind.INTERVIEW)?.videoId ?? doc.videos[0]?.videoId ?? null,
+    sections: rubric.sections.map((s, i) => {
+      const inSection = report.questions.filter((q) => q.sectionId === s.id);
+      return {
+        id: s.id,
+        name: texts.sections[i],
+        earned: report.totals.bySection[s.id]?.earned ?? 0,
+        max: report.totals.bySection[s.id]?.max ?? s.questions.length * rubric.maxScorePerQuestion,
+        answeredCount: inSection.filter((q) => q.status === "scored").length,
+        questionCount: s.questions.length,
+      };
+    }),
+    questions: report.questions.map((q, i) => ({
+      id: q.questionId,
+      sectionId: q.sectionId,
+      text: texts.questions[i],
+      status: q.status,
+      score: q.score,
+      rationale: texts.rationales[i],
+      /** The candidate's own words (from the English transcript), at most two. */
+      evidence: q.status === "scored" ? q.evidence.slice(0, 2) : [],
+      missing: texts.missing[i] ?? [],
+      /** Where this answer is in the interview video (null for reports scored before 2026-11-15). */
+      startSec: blocks.get(q.questionId)?.fromSec ?? null,
+      endSec: blocks.get(q.questionId)?.toSec ?? null,
+    })),
+  };
+};
+
 const getStatus = async (viewer: Viewer, evaluationId: string) => {
   const doc = await AiEvaluation.findById(evaluationId).select("candidateUserId status error queuedAt startedAt finishedAt").lean();
   if (!doc) throw new AppError(StatusCodes.NOT_FOUND, "Evaluation not found");
@@ -564,6 +647,7 @@ export const AiEvaluationService = {
   requeuePending,
   canViewCandidate,
   getLatestForCandidate,
+  getReportDetails,
   getStatus,
   rescore,
   addCorrection,

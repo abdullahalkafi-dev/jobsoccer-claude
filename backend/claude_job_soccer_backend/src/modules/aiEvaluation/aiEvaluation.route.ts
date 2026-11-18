@@ -12,9 +12,11 @@ router.get("/questions", validateRequest(AiEvaluationDto.questionsDto), AiEvalua
 
 // Candidate: own assessment
 router.get("/me", auth(UserType.CANDIDATE), AiEvaluationController.getMine);
+router.get("/me/report", auth(UserType.CANDIDATE), AiEvaluationController.getMyReport);
 
 // Candidate / admin / accepted connection
 router.get("/candidate/:userId", auth(), AiEvaluationController.getForCandidate);
+router.get("/candidate/:userId/report", auth(), AiEvaluationController.getReportForCandidate);
 router.get("/:id/status", auth(), AiEvaluationController.getStatus);
 
 // Admin

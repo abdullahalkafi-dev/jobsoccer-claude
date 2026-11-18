@@ -54,6 +54,7 @@ const overall = (summary = "14 of 18 were answered.") => ({
   mainWeaknesses: ["b"],
   summary,
   overallConfidence: "high",
+  improvementTips: ["Q4: give a measurable goal.", "Q5: say how you choose the audience.", "Answer Q6."],
 });
 
 beforeEach(() => {

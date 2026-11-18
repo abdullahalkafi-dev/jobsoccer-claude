@@ -58,6 +58,7 @@ export const fr: Record<string, string> = {
 
   // ---- aiEvaluation
   "Assessment retrieved": "Évaluation récupérée.",
+  "Report retrieved": "Rapport récupéré.",
   "Status retrieved": "Statut récupéré.",
   "Questions retrieved": "Questions récupérées.",
   "Scoring guides retrieved": "Grilles de notation récupérées.",

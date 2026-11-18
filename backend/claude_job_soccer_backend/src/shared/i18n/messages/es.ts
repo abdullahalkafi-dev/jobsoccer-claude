@@ -58,6 +58,7 @@ export const es: Record<string, string> = {
 
   // ---- aiEvaluation
   "Assessment retrieved": "Evaluación obtenida.",
+  "Report retrieved": "Informe obtenido.",
   "Status retrieved": "Estado obtenido.",
   "Questions retrieved": "Preguntas obtenidas.",
   "Scoring guides retrieved": "Guías de puntuación obtenidas.",

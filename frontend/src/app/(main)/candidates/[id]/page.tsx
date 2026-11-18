@@ -512,7 +512,12 @@ export default function UserProfilePage() {
 
             {/* Interview assessment (client's overall section) */}
             {isOnFieldStaffCandidate && (
-              <InterviewAssessmentCard data={assessment} isLoading={isLoadingAssessment} />
+              <InterviewAssessmentCard
+                data={assessment}
+                isLoading={isLoadingAssessment}
+                candidateUserId={userId}
+                videos={user?.profile?.videos || []}
+              />
             )}
 
             {/* Additional Sections */}

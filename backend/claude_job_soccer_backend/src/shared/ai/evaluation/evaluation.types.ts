@@ -156,4 +156,6 @@ export interface EvaluationReport {
   legacyScore100: number;
   disclaimer: string;
   alignment?: EvaluationAlignmentInfo;
+  /** "3 things to do better next time", written to the candidate (reports from v2.1 on). */
+  improvementTips?: string[];
 }
