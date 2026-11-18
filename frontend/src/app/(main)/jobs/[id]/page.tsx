@@ -47,17 +47,18 @@ const JobDetailsPage = ({ params }: PageProps) => {
   const [saveJob, { isLoading: isSaving }] = useSaveJobMutation();
   const [unsaveJob, { isLoading: isUnsaving }] = useUnsaveJobMutation();
 
-  const { data: jobResponse, isLoading, refetch } = useGetSingleJobQuery(id);
-  // After a page refresh or a shared link the job is requested before the sign-in is restored, so the
-  // answer has no candidate details (premium access, applied, saved). Ask again once the token is there.
+  const { data: jobResponse, isLoading, isFetching, refetch } = useGetSingleJobQuery(id);
+  // After a page refresh or a shared link the job is requested before the saved sign-in is restored, so the
+  // answer has no candidate details (premium access, applied, saved). Ask again once the token is there
+  // and the first request is finished (a refetch is ignored while a request is still running).
   const token = useAppSelector((state) => state.auth.token);
   const askedWithToken = useRef(!!token);
   useEffect(() => {
-    if (token && !askedWithToken.current) {
+    if (token && !isFetching && !askedWithToken.current) {
       askedWithToken.current = true;
       refetch();
     }
-  }, [token, refetch]);
+  }, [token, isFetching, refetch]);
   const jobData: TJob | undefined = jobResponse?.data;
 
   // Use local state if available, otherwise use API data
