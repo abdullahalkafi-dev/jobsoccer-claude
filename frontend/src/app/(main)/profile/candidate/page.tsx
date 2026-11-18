@@ -33,6 +33,8 @@ import CertificateSection from "@/components/profile/CertificateSection";
 import EducationSection from "@/components/profile/EducationSection";
 import { VideoManager } from "@/features/video/VideoUploadStep";
 import { ProfileQualityCard } from "@/features/profileQuality/ProfileQualityCard";
+import { ProfileStrengthBar } from "@/features/profileQuality/ProfileStrengthBar";
+import { QUALITY_SECTION_IDS, type TQualityAction } from "@/features/profileQuality/qualityHelpers";
 import { useLiveCandidateEvents } from "@/features/video/useLiveCandidateEvents";
 import { useNotificationContext } from "@/components/providers/NotificationProvider";
 import ProfileBanner from "@/components/profile/ProfileBanner";
@@ -133,6 +135,38 @@ export default function MyProfilePage() {
 
   // Get verification status
   const verificationStatus = currentUser?.adminVerificationStatus;
+
+  // What the buttons in the Profile Quality card do: open the right window or scroll to the right section
+  const scrollToSection = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const runQualityAction = (action: TQualityAction) => {
+    switch (action) {
+      case "editProfile":
+        setIsEditProfileModalOpen(true);
+        break;
+      case "uploadCv":
+        setIsUploadModalOpen(true);
+        break;
+      case "verifyIdentity":
+        handleRequestVerification();
+        break;
+      case "experience":
+        scrollToSection(QUALITY_SECTION_IDS.experience);
+        break;
+      case "education":
+        scrollToSection(QUALITY_SECTION_IDS.education);
+        break;
+      case "certificates":
+        scrollToSection(QUALITY_SECTION_IDS.certificates);
+        break;
+      case "videos":
+        scrollToSection(QUALITY_SECTION_IDS.videos);
+        break;
+      case "photo":
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        break;
+    }
+  };
 
   // Render verification badge button based on status
   const renderVerificationBadge = () => {
@@ -263,6 +297,11 @@ export default function MyProfilePage() {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Profile strength: score, next step and a link to the full breakdown */}
+      <div className="mb-6 px-4">
+        <ProfileStrengthBar onAction={runQualityAction} />
       </div>
 
       <div className="p-4 md:p-6 border rounded-2xl shadow">
@@ -590,7 +629,7 @@ export default function MyProfilePage() {
 
         {/* -------------------------Profile Quality (rules + AI, with improvement actions)----------------------- */}
         <div className="mt-6">
-          <ProfileQualityCard />
+          <ProfileQualityCard onAction={runQualityAction} />
         </div>
 
         {/* -------------------------Interview Assessment----------------------- */}
@@ -608,10 +647,16 @@ export default function MyProfilePage() {
         <AnalyticsSection />
 
         {/* ------------------ Experience, Certificate, Education, and Video Sections --------------------*/}
-        <ExperienceSection userId={currentUser?._id || ""} />
-        <CertificateSection userId={currentUser?._id || ""} />
-        <EducationSection userId={currentUser?._id || ""} />
-        <h2 className="text-xl font-semibold text-gray-900">{t("page.myVideos")}</h2>
+        <div id={QUALITY_SECTION_IDS.experience} className="scroll-mt-24">
+          <ExperienceSection userId={currentUser?._id || ""} />
+        </div>
+        <div id={QUALITY_SECTION_IDS.certificates} className="scroll-mt-24">
+          <CertificateSection userId={currentUser?._id || ""} />
+        </div>
+        <div id={QUALITY_SECTION_IDS.education} className="scroll-mt-24">
+          <EducationSection userId={currentUser?._id || ""} />
+        </div>
+        <h2 id={QUALITY_SECTION_IDS.videos} className="scroll-mt-24 text-xl font-semibold text-gray-900">{t("page.myVideos")}</h2>
         <VideoManager />
       </div>
 

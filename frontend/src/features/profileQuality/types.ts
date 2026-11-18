@@ -8,7 +8,16 @@ export type TProfileLevel = "incomplete" | "developing" | "complete" | "advanced
 /** What cards, search and other people's views show. */
 export type TPublicQuality = { stars: number; level: TProfileLevel; label: string };
 
-export type TQualityItem = { key: string; label: string; earned: number; max: number; done: boolean; tip?: string };
+export type TQualityItem = {
+  key: string;
+  label: string;
+  earned: number;
+  max: number;
+  done: boolean;
+  tip?: string;
+  /** True when the item only waits for an admin review (nothing the candidate can press). */
+  waiting?: boolean;
+};
 
 export type TQualityCategory = {
   key: "completion" | "verification" | "media" | "maintenance";

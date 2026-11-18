@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 import {
   useGetSingleJobQuery,
@@ -16,7 +16,7 @@ import {
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { LoginRequiredModal } from "@/components/modals/LoginRequiredModal";
 import { addAppliedJob } from "@/redux/features/jobApplication/jobApplicationSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { TJob } from "@/types/job";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JobCard } from "@/components/cards/JobCard";
@@ -47,7 +47,17 @@ const JobDetailsPage = ({ params }: PageProps) => {
   const [saveJob, { isLoading: isSaving }] = useSaveJobMutation();
   const [unsaveJob, { isLoading: isUnsaving }] = useUnsaveJobMutation();
 
-  const { data: jobResponse, isLoading } = useGetSingleJobQuery(id);
+  const { data: jobResponse, isLoading, refetch } = useGetSingleJobQuery(id);
+  // After a page refresh or a shared link the job is requested before the sign-in is restored, so the
+  // answer has no candidate details (premium access, applied, saved). Ask again once the token is there.
+  const token = useAppSelector((state) => state.auth.token);
+  const askedWithToken = useRef(!!token);
+  useEffect(() => {
+    if (token && !askedWithToken.current) {
+      askedWithToken.current = true;
+      refetch();
+    }
+  }, [token, refetch]);
   const jobData: TJob | undefined = jobResponse?.data;
 
   // Use local state if available, otherwise use API data

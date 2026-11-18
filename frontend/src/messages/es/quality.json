@@ -84,5 +84,37 @@
     "loading": "Cargando el informe…",
     "unavailable": "El informe completo aún no está disponible.",
     "noneInFilter": "No hay preguntas en este filtro."
+  },
+  "next": {
+    "title": "Siguiente paso",
+    "waiting": "Pendiente de revisión",
+    "points": "{points, plural, one {+# punto} other {+# puntos}}",
+    "allDone": "No falta nada por ahora. Mantén tu perfil actualizado."
+  },
+  "strength": {
+    "title": "Fortaleza del perfil",
+    "premiumMark": "Premium calificado desde {points} puntos",
+    "seeDetails": "Ver el desglose completo"
+  },
+  "missing": {
+    "title": "Qué falta",
+    "more": "Más ideas"
+  },
+  "action": {
+    "editProfile": "Editar perfil",
+    "uploadCv": "Subir CV",
+    "verifyIdentity": "Añadir insignia de verificación",
+    "experience": "Ir a experiencia",
+    "education": "Ir a formación",
+    "certificates": "Ir a certificados",
+    "videos": "Ir a vídeos",
+    "photo": "Añadir foto"
+  },
+  "premiumPath": {
+    "title": "Premium también necesita la aprobación de nuestro equipo",
+    "approved": "Aprobado",
+    "inReview": "Pendiente de revisión",
+    "notRequested": "Aún no solicitado",
+    "note": "Un administrador revisa estos puntos, así que la aprobación puede tardar. Puedes ayudar subiendo los documentos."
   }
 }

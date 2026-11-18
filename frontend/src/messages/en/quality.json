@@ -84,5 +84,37 @@
     "loading": "Loading the report…",
     "unavailable": "The full report is not available yet.",
     "noneInFilter": "No questions in this filter."
+  },
+  "next": {
+    "title": "Next step",
+    "waiting": "Waiting for review",
+    "points": "{points, plural, one {+# point} other {+# points}}",
+    "allDone": "Nothing is missing right now. Keep your profile up to date."
+  },
+  "strength": {
+    "title": "Profile strength",
+    "premiumMark": "Premium Qualified from {points} points",
+    "seeDetails": "See the full breakdown"
+  },
+  "missing": {
+    "title": "What is missing",
+    "more": "More ideas"
+  },
+  "action": {
+    "editProfile": "Edit profile",
+    "uploadCv": "Upload Resume",
+    "verifyIdentity": "Add Verification Badge",
+    "experience": "Go to experience",
+    "education": "Go to education",
+    "certificates": "Go to certificates",
+    "videos": "Go to videos",
+    "photo": "Add photo"
+  },
+  "premiumPath": {
+    "title": "Premium also needs approval by our team",
+    "approved": "Approved",
+    "inReview": "Waiting for review",
+    "notRequested": "Not requested yet",
+    "note": "An admin reviews these, so approval can take some time. You can help by uploading the documents."
   }
 }

@@ -84,5 +84,37 @@
     "loading": "Chargement du rapport…",
     "unavailable": "Le rapport complet n'est pas encore disponible.",
     "noneInFilter": "Aucune question dans ce filtre."
+  },
+  "next": {
+    "title": "Prochaine étape",
+    "waiting": "En attente d'examen",
+    "points": "{points, plural, one {+# point} other {+# points}}",
+    "allDone": "Il ne manque rien pour le moment. Gardez votre profil à jour."
+  },
+  "strength": {
+    "title": "Solidité du profil",
+    "premiumMark": "Premium qualifié à partir de {points} points",
+    "seeDetails": "Voir le détail complet"
+  },
+  "missing": {
+    "title": "Ce qui manque",
+    "more": "Autres idées"
+  },
+  "action": {
+    "editProfile": "Modifier le profil",
+    "uploadCv": "Téléverser le CV",
+    "verifyIdentity": "Ajouter un badge de vérification",
+    "experience": "Aller à l'expérience",
+    "education": "Aller à la formation",
+    "certificates": "Aller aux certificats",
+    "videos": "Aller aux vidéos",
+    "photo": "Ajouter une photo"
+  },
+  "premiumPath": {
+    "title": "Premium nécessite aussi l'approbation de notre équipe",
+    "approved": "Approuvé",
+    "inReview": "En attente d'examen",
+    "notRequested": "Pas encore demandé",
+    "note": "Un administrateur examine ces éléments, l'approbation peut donc prendre du temps. Vous pouvez aider en téléversant les documents."
   }
 }
