@@ -59,8 +59,8 @@
     "dateOfBirth": "Fecha de nacimiento",
     "placeOfBirth": "Lugar de nacimiento",
     "phoneNumberOptional": "Número de teléfono (opcional)",
-    "nationalTeamCategory": "Categoría de la selección nacional",
-    "nationalTeamGames": "Partidos con la selección nacional",
+    "nationalTeamCategory": "Categoría de la selección nacional (opcional, puedes elegir varias)",
+    "nationalTeamGames": "Partidos con la selección nacional (opcional)",
     "divisionLevel": "Nivel de división",
     "teamSJoined": "Equipos en los que has estado",
     "contractExpires": "Vencimiento del contrato"

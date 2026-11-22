@@ -249,7 +249,6 @@ export const playerPositionOptions = [
   "Offensive midfielder",
   "Right winger",
   "Left winger",
-  "Forward",
   "Striker",
 ] as const;
 export type TPlayerPosition = (typeof playerPositionOptions)[number];

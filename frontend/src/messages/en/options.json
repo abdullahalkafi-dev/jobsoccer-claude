@@ -328,7 +328,9 @@
     "u_21": "U21",
     "current_international": "Current International",
     "adult": "Adult",
-    "senior": "Senior"
+    "senior": "Senior",
+    "professional": "Professional",
+    "amateur": "Amateur"
   },
   "foot": {
     "right": "Right",

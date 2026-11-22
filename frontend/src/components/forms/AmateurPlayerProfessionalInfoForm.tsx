@@ -1,5 +1,6 @@
 "use client";
 
+import MultiChipSelect from "@/components/forms/MultiChipSelect";
 import React from "react";
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
@@ -245,30 +246,15 @@ export function AmateurPlayerProfessionalInfoForm({
 
             {/* National Team Category */}
             <FormField
-              label={t("label.category")}
+              label={t("label.nationalTeamCategory")}
               error={errors.nationalTeamCategory?.message}
             >
-              <Select
-                defaultValue={initialData?.nationalTeamCategory as string | undefined}
-                onValueChange={(value) =>
-                  setValue(
-                    "nationalTeamCategory",
-                    value as unknown as TAmateurPlayerProfessionalInfo["nationalTeamCategory"],
-                    { shouldValidate: true, shouldDirty: true }
-                  )
-                }
-              >
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder={t("placeholder.selectCategory")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {amaturePlayerNationalTeamCategoryOptions.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {label("category", item)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MultiChipSelect
+                options={amaturePlayerNationalTeamCategoryOptions}
+                initial={initialData?.nationalTeamCategory}
+                labelFor={(item) => label("category", item)}
+                onChange={(selected) => setValue("nationalTeamCategory", selected, { shouldValidate: true, shouldDirty: true })}
+              />
             </FormField>
 
             {/* Foot */}

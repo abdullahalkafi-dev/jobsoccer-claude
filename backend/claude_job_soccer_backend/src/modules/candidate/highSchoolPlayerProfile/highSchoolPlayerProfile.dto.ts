@@ -33,7 +33,6 @@ const createHighSchoolPlayerProfileDto = z.object({
         "Offensive midfielder",
         "Right winger",
         "Left winger",
-        "Forward",
         "Striker",
     ]),
     agent: z.string().trim().min(1, "Agent is required").optional(),

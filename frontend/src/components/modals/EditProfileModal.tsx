@@ -1,5 +1,6 @@
 "use client";
 
+import MultiChipSelect, { toList } from "@/components/forms/MultiChipSelect";
 import {
   Dialog,
   DialogContent,
@@ -60,7 +61,7 @@ const formSchema = z.object({
   socialMedia: z.string().optional(),
   contractExpires: z.string().optional(),
   division: z.string().optional(),
-  nationalTeamCategory: z.string().optional(),
+  nationalTeamCategory: z.array(z.string()).optional(),
   nationalTeamGames: z.string().optional(),
   teamsJoined: z.string().optional(),
   schoolName: z.string().optional(),
@@ -126,7 +127,7 @@ export default function EditProfileModal({
       socialMedia: initialData?.socialMedia || "",
       contractExpires: initialData?.contractExpires || "",
       division: initialData?.division || "",
-      nationalTeamCategory: initialData?.nationalTeamCategory || "",
+      nationalTeamCategory: toList(initialData?.nationalTeamCategory),
       nationalTeamGames: initialData?.nationalTeamGames || "",
       teamsJoined: initialData?.teamsJoined || "",
       schoolName: initialData?.schoolName || "",
@@ -165,7 +166,7 @@ export default function EditProfileModal({
         socialMedia: initialData?.socialMedia || "",
         contractExpires: initialData?.contractExpires || "",
         division: initialData?.division || "",
-        nationalTeamCategory: initialData?.nationalTeamCategory || "",
+        nationalTeamCategory: toList(initialData?.nationalTeamCategory),
         nationalTeamGames: initialData?.nationalTeamGames || "",
         teamsJoined: initialData?.teamsJoined || "",
         schoolName: initialData?.schoolName || "",
@@ -186,7 +187,7 @@ export default function EditProfileModal({
       // Create a data object with only the fields that have values
       const profileData: Record<
         string,
-        string | number | { size?: number; unit?: string }
+        string | number | string[] | { size?: number; unit?: string }
       > = {};
 
       // Handle height and weight separately
@@ -610,25 +611,12 @@ export default function EditProfileModal({
                       label={t("profile.nationalTeamCategory")}
                       error={errors.nationalTeamCategory?.message}
                     >
-                      <Select
-                        defaultValue={initialData?.nationalTeamCategory}
-                        onValueChange={(value) =>
-                          setValue("nationalTeamCategory", value, {
-                            shouldValidate: true,
-                          })
-                        }
-                      >
-                        <SelectTrigger className="bg-gray-50 border-0 w-full">
-                          <SelectValue placeholder={t("profile.selectCategory")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {professionalPlayerNationalTeamCategoryOptions.map((item) => (
-                            <SelectItem key={item} value={item}>
-                              {label("category", item)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <MultiChipSelect
+                        options={professionalPlayerNationalTeamCategoryOptions}
+                        initial={initialData?.nationalTeamCategory}
+                        labelFor={(item) => label("category", item)}
+                        onChange={(selected) => setValue("nationalTeamCategory", selected, { shouldValidate: true, shouldDirty: true })}
+                      />
                     </FormField>
 
                     <FormField
@@ -661,25 +649,12 @@ export default function EditProfileModal({
                     label={t("profile.nationalTeamCategory")}
                     error={errors.nationalTeamCategory?.message}
                   >
-                    <Select
-                      defaultValue={initialData?.nationalTeamCategory}
-                      onValueChange={(value) =>
-                        setValue("nationalTeamCategory", value, {
-                          shouldValidate: true,
-                        })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-50 border-0 w-full">
-                        <SelectValue placeholder={t("profile.selectCategory")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {amaturePlayerNationalTeamCategoryOptions.map((item) => (
-                          <SelectItem key={item} value={item}>
-                            {label("category", item)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <MultiChipSelect
+                      options={amaturePlayerNationalTeamCategoryOptions}
+                      initial={initialData?.nationalTeamCategory}
+                      labelFor={(item) => label("category", item)}
+                      onChange={(selected) => setValue("nationalTeamCategory", selected, { shouldValidate: true, shouldDirty: true })}
+                    />
                   </FormField>
                 )}
 

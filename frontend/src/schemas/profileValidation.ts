@@ -79,7 +79,7 @@ export const getAmateurPlayerProfessionalInfoSchema = (t: Translator) =>
     height: heightRule(t),
     weight: weightRule(t),
     currentClub: reqRaw(t, "currentClub"),
-    nationalTeamCategory: reqRaw(t, "nationalTeamCategory"),
+    nationalTeamCategory: z.array(z.string()).optional(),
     foot: z.enum(["Right", "Left", "Both"], { error: t("foot") }),
     position: z.enum(
       [
@@ -91,7 +91,6 @@ export const getAmateurPlayerProfessionalInfoSchema = (t: Translator) =>
         "Offensive midfielder",
         "Right winger",
         "Left winger",
-        "Forward",
         "Striker",
       ],
       { error: t("position") },
@@ -151,7 +150,7 @@ export const getProfessionalPlayerProfessionalInfoSchema = (t: Translator) =>
     gender: reqRaw(t, "gender"),
     height: heightRule(t),
     weight: weightRule(t),
-    nationalTeamCategory: reqRaw(t, "nationalTeamCategory"),
+    nationalTeamCategory: z.array(z.string()).optional(),
     currentClub: reqRaw(t, "currentClub"),
     division: req(t, "division"),
     position: reqRaw(t, "position"),
@@ -160,7 +159,7 @@ export const getProfessionalPlayerProfessionalInfoSchema = (t: Translator) =>
     availability: optional(),
     socialMedia: optional(),
     foot: reqRaw(t, "foot"),
-    nationalTeamGames: reqRaw(t, "nationalTeamGames"),
+    nationalTeamGames: optional(),
     teamsJoined: reqRaw(t, "teamsJoined"),
     contractExpires: reqRaw(t, "contractExpires"),
   });

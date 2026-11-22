@@ -12,6 +12,7 @@ enum TNationalTeamCategory {
   U19 = "U19",
   U20 = "U20",
   U21 = "U21",
+  CURRENT_INTERNATIONAL = "Current International",
 }
 enum PlayerPosition {
   GK = "GK",
@@ -22,6 +23,7 @@ enum PlayerPosition {
   OFFENSIVE_MIDFIELDER = "Offensive midfielder",
   RIGHT_WINGER = "Right winger",
   LEFT_WINGER = "Left winger",
+  /** Legacy value (removed from the choices 2026-11-22; old profiles are migrated to Striker). */
   FORWARD = "Forward",
   STRIKER = "Striker",
 }
@@ -41,7 +43,7 @@ export type TProfessionalPlayerProfile = {
   languages?: string;
   gender: string;
   height: { size: number; unit: string };
-  nationalTeamCategory?: TNationalTeamCategory;
+  nationalTeamCategory?: TNationalTeamCategory[];
   currentClub: string;
   division: string;
   position: PlayerPosition;
@@ -49,7 +51,7 @@ export type TProfessionalPlayerProfile = {
   country: (typeof countryList)[number];
   availability: string;
   weight: { size: number; unit: string };
-  nationalTeamGames: string;
+  nationalTeamGames?: string;
   socialMedia?: string;
   foot: TFoot;
   teamsJoined: string;
@@ -69,9 +71,10 @@ const professionalPlayerProfileSchema = new Schema<TProfessionalPlayerProfile>(
             size: { type: Number, required: true },
             unit: { type: String, required: true, enum: ["cm", "m", "in", "ft"] },
         },
+        // A list: the player may have been in the national team in several categories (old documents hold one string).
         nationalTeamCategory: {
-            type: String,
-            enum: Object.values(TNationalTeamCategory),
+            type: [{ type: String, enum: Object.values(TNationalTeamCategory) }],
+            default: undefined,
             required: false,
         },
         currentClub: { type: String, required: true, trim: true },
@@ -95,7 +98,7 @@ const professionalPlayerProfileSchema = new Schema<TProfessionalPlayerProfile>(
             size: { type: Number, required: true },
             unit: { type: String, required: true, enum: ["kg", "lb"] },
         },
-        nationalTeamGames: { type: String, required: true, trim: true },
+        nationalTeamGames: { type: String, required: false, trim: true },
         socialMedia: { type: String, required: false, trim: true },
         foot: {
             type: String,

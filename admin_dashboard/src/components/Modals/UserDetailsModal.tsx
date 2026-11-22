@@ -391,7 +391,7 @@ export function UserDetailsModal({
                   <InfoItem
                     icon={<Award className="w-4 h-4" />}
                     label="National Team Category"
-                    value={user.profile.nationalTeamCategory}
+                    value={Array.isArray(user.profile.nationalTeamCategory) ? user.profile.nationalTeamCategory.join(", ") : user.profile.nationalTeamCategory}
                   />
                   <InfoItem
                     icon={<Award className="w-4 h-4" />}

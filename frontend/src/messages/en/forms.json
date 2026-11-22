@@ -59,8 +59,8 @@
     "dateOfBirth": "Date of birth",
     "placeOfBirth": "Place of birth",
     "phoneNumberOptional": "Phone number (optional)",
-    "nationalTeamCategory": "National Team Category",
-    "nationalTeamGames": "National Team Games",
+    "nationalTeamCategory": "National Team Category (optional, you can pick several)",
+    "nationalTeamGames": "National Team Games (optional)",
     "divisionLevel": "Division level",
     "teamSJoined": "Teams joined",
     "contractExpires": "Contract expires"

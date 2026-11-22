@@ -12,6 +12,7 @@ enum PlayerPosition {
   OFFENSIVE_MIDFIELDER = "Offensive midfielder",
   RIGHT_WINGER = "Right winger",
   LEFT_WINGER = "Left winger",
+  /** Legacy value (removed from the choices 2026-11-22; old profiles are migrated to Striker). */
   FORWARD = "Forward",
   STRIKER = "Striker",
 }

@@ -12,6 +12,7 @@ enum TNationalTeamCategory {
   U19 = "U19",
   U20 = "U20",
   U21 = "U21",
+  ADULT = "Adult",
 }
 enum PlayerPosition {
   GK = "GK",
@@ -22,6 +23,7 @@ enum PlayerPosition {
   OFFENSIVE_MIDFIELDER = "Offensive midfielder",
   RIGHT_WINGER = "Right winger",
   LEFT_WINGER = "Left winger",
+  /** Legacy value (removed from the choices 2026-11-22; old profiles are migrated to Striker). */
   FORWARD = "Forward",
   STRIKER = "Striker",
 }
@@ -42,7 +44,7 @@ export type TAmateurPlayerProfile = {
   gender: string;
   height: { size: number; unit: string };
   currentClub: string;
-  nationalTeamCategory?: TNationalTeamCategory;
+  nationalTeamCategory?: TNationalTeamCategory[];
   position: PlayerPosition;
   agent?: string;
   socialMedia?: string;
@@ -66,10 +68,11 @@ const amateurPlayerProfileSchema = new Schema<TAmateurPlayerProfile>(
       size: { type: Number, required: true },
       unit: { type: String, required: true, enum: ["cm", "m", "in", "ft"] },
     },
+    // A list: the player may have been in the national team in several categories (old documents hold one string).
     nationalTeamCategory: {
-      type: String,
-      enum: Object.values(TNationalTeamCategory),
-      required:  false,
+      type: [{ type: String, enum: Object.values(TNationalTeamCategory) }],
+      default: undefined,
+      required: false,
     },
     currentClub: { type: String, required: true, trim: true },
     position: {

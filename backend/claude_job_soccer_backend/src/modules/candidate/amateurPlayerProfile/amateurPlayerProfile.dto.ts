@@ -22,17 +22,12 @@ const createAmateurPlayerProfileDto = z.object({
     size: z.number().positive("Height must be positive"),
     unit: z.enum(["cm", "m", "in", "ft"]),
   }),
-  nationalTeamCategory: z.enum([
-    "U14",
-    "U15",
-    "U16",
-    "U17",
-    "U18",
-    "U19",
-    "U20",
-    "U21",
-    "Adult",
-  ]).optional(),
+  // Optional; a player may have been in the national team in several categories.
+  nationalTeamCategory: z.preprocess(
+    // Older clients and stored data send one value; it becomes a list of one.
+    (value) => (typeof value === "string" ? (value ? [value] : []) : value),
+    z.array(z.enum(["U14", "U15", "U16", "U17", "U18", "U19", "U20", "U21", "Adult"])).optional()
+  ),
   currentClub: z.string().trim().min(1, "Current club is required"),
   position: z.enum([
     "GK",
@@ -43,7 +38,6 @@ const createAmateurPlayerProfileDto = z.object({
     "Offensive midfielder",
     "Right winger",
     "Left winger",
-    "Forward",
     "Striker",
   ]),
   agent: z.string().trim().min(1, "Agent is required").optional(),

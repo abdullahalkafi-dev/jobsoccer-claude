@@ -515,13 +515,13 @@ export default function MyProfilePage() {
               </div>
             )}
 
-            {currentUser?.profile?.nationalTeamCategory && (
+            {[].concat(currentUser?.profile?.nationalTeamCategory ?? []).length > 0 && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
                   {t("fields.nationalTeamCategory")}
                 </label>
                 <p className="text-gray-900 font-medium">
-                  {label("category", currentUser.profile.nationalTeamCategory)}
+                  {[].concat(currentUser.profile.nationalTeamCategory).map((item: string) => label("category", item)).join(", ")}
                 </p>
               </div>
             )}
