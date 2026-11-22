@@ -133,14 +133,14 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     " (optional)": " (opcional)",
     // ---- highlights
     "Highlights": "Resumen de jugadas",
-    "Upload 2 highlight videos, up to 3 minutes each, that show you at your best.":
-      "Sube 2 vídeos de jugadas destacadas, de hasta 3 minutos cada uno, que te muestren en tu mejor nivel.",
+    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.":
+      "Sube solo jugadas destacadas de partidos. No se aceptan imágenes de entrenamientos. Las jugadas destacadas son opcionales, pero necesitas al menos 2 vídeos (de hasta 3 minutos cada uno) para alcanzar una puntuación de calidad de perfil alta.",
+    "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted.":
+      "Sube 2 vídeos de jugadas destacadas de partidos, de hasta 3 minutos cada uno. No se aceptan imágenes de entrenamientos.",
     "Tips": "Consejos",
-    "Show real match or training footage where you can be seen clearly.":
-      "Muestra imágenes reales de partidos o entrenamientos en las que se te vea con claridad.",
+    "Show real match footage where you can be seen clearly.":
+      "Muestra imágenes reales de partidos en las que se te vea con claridad.",
     "Keep each video focused and under 3 minutes.": "Mantén cada vídeo centrado y de menos de 3 minutos.",
-    "Only show other players (especially under-18s) if you have their or their parents' permission.":
-      "Muestra a otros jugadores (sobre todo menores de 18 años) solo si tienes su permiso o el de sus padres.",
     // ---- file name hints
     "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-Midfielder-2026-02-10)":
       "Nombre-Apellido-Posición-Fecha (AAAA-MM-DD, ejemplo: John-Smith-Centrocampista-2026-02-10)",
@@ -263,14 +263,14 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     "Highlight montages or edited sequences": "Montages d'actions ou séquences éditées",
     " (optional)": " (facultatif)",
     "Highlights": "Temps forts",
-    "Upload 2 highlight videos, up to 3 minutes each, that show you at your best.":
-      "Téléversez 2 vidéos de temps forts, de 3 minutes maximum chacune, qui vous montrent à votre meilleur niveau.",
+    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.":
+      "Téléversez uniquement des temps forts de matchs. Les images d'entraînement ne sont pas acceptées. Les temps forts sont facultatifs, mais il faut au moins 2 vidéos (de 3 minutes maximum chacune) pour obtenir un score de qualité de profil élevé.",
+    "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted.":
+      "Téléversez 2 vidéos de temps forts de matchs, de 3 minutes maximum chacune. Les images d'entraînement ne sont pas acceptées.",
     "Tips": "Conseils",
-    "Show real match or training footage where you can be seen clearly.":
-      "Montrez des images réelles de matchs ou d'entraînements où l'on vous voit clairement.",
+    "Show real match footage where you can be seen clearly.":
+      "Montrez des images réelles de matchs où l'on vous voit clairement.",
     "Keep each video focused and under 3 minutes.": "Gardez chaque vidéo ciblée et de moins de 3 minutes.",
-    "Only show other players (especially under-18s) if you have their or their parents' permission.":
-      "Ne montrez d'autres joueurs (surtout de moins de 18 ans) que si vous avez leur autorisation ou celle de leurs parents.",
     "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-Midfielder-2026-02-10)":
       "Prenom-Nom-Poste-Date (AAAA-MM-JJ, exemple : John-Smith-Milieu-2026-02-10)",
     "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-U15HeadCoach-2026-02-10)":

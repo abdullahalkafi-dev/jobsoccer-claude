@@ -35,7 +35,8 @@ export type TVideoPlan = {
   role: CandidateRole;
   position: string | null;
   slots: TVideoSlot[];
-  technical: TGuideSection;
+  /** Technical rules for staff videos. Null for players (highlights have no extra rules shown). */
+  technical: TGuideSection | null;
   consent: {
     /** Needed before any staff video; the AI reads, transcribes and scores it. */
     ai: { required: boolean; text: string };
@@ -43,8 +44,9 @@ export type TVideoPlan = {
     players: { required: boolean; text: string };
     version: string;
   };
-  lockNotice: string;
-  fileNameHint: string;
+  /** Players' highlights are never locked, so they get no notice. */
+  lockNotice: string | null;
+  fileNameHint: string | null;
   limits: { maxMegabytes: number; minShortSide: number; formats: string[] };
 };
 
@@ -252,16 +254,14 @@ const highlightsSlot = (required: boolean): TVideoSlot => ({
   maxSeconds: VIDEO_LIMITS.playerMaxSeconds,
   locked: false,
   title: "Highlights",
-  headline: "Upload 2 highlight videos, up to 3 minutes each, that show you at your best.",
+  headline: required
+    ? "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted."
+    : "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.",
   showSetupPhotos: false,
   sections: [
     {
       heading: "Tips",
-      items: [
-        "Show real match or training footage where you can be seen clearly.",
-        "Keep each video focused and under 3 minutes.",
-        "Only show other players (especially under-18s) if you have their or their parents' permission.",
-      ],
+      items: ["Show real match footage where you can be seen clearly.", "Keep each video focused and under 3 minutes."],
     },
   ],
 });
@@ -299,12 +299,15 @@ const buildPlan = (role: CandidateRole, position?: string | null): TVideoPlan | 
     return {
       ...base,
       slots: [highlightsSlot(playersMustUpload(role))],
+      // Players only see the short highlight tips: no technical block, file-name hint or lock notice (client, 2026-11-19).
+      technical: null,
+      lockNotice: null,
+      fileNameHint: null,
       consent: {
         ai: { required: false, text: AI_CONSENT_TEXT },
         players: { required: false, text: PLAYERS_CONSENT_TEXT },
         version: VIDEO_CONSENT_VERSION,
       },
-      fileNameHint: "Firstname-Lastname-Position-Date (YYYY-MM-DD, example: John-Smith-Midfielder-2026-02-10)",
     };
   }
 

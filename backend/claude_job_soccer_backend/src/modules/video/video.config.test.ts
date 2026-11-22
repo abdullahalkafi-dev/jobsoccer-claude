@@ -62,6 +62,6 @@ describe("video plan languages", () => {
   });
 
   it("file name examples use an unambiguous YYYY-MM-DD date", () => {
-    for (const plan of plans) expect(plan.fileNameHint).toMatch(/YYYY-MM-DD, example: .*-\d{4}-\d{2}-\d{2}\)$/);
+    for (const plan of plans.filter((p) => p.fileNameHint !== null)) expect(plan.fileNameHint).toMatch(/YYYY-MM-DD, example: .*-\d{4}-\d{2}-\d{2}\)$/);
   });
 });

@@ -9,11 +9,11 @@ export const planTexts = (plan: TVideoPlan): string[] => {
   const sectionTexts = (s: TGuideSection) => [s.heading, ...s.items];
   return [
     ...plan.slots.flatMap((slot) => [slot.title, slot.headline, ...slot.sections.flatMap(sectionTexts)]),
-    ...sectionTexts(plan.technical),
+    ...(plan.technical ? sectionTexts(plan.technical) : []),
     plan.consent.ai.text,
     plan.consent.players.text,
-    plan.lockNotice,
-    plan.fileNameHint,
+    ...(plan.lockNotice ? [plan.lockNotice] : []),
+    ...(plan.fileNameHint ? [plan.fileNameHint] : []),
   ];
 };
 
@@ -47,13 +47,13 @@ export const localizePlan = (plan: TVideoPlan, lang: Lang): TVideoPlan => {
   return {
     ...plan,
     slots: plan.slots.map((slot) => trSlot(slot, lang)),
-    technical: trSection(plan.technical, lang),
+    technical: plan.technical ? trSection(plan.technical, lang) : null,
     consent: {
       ...plan.consent,
       ai: { ...plan.consent.ai, text: tr(plan.consent.ai.text, lang) },
       players: { ...plan.consent.players, text: tr(plan.consent.players.text, lang) },
     },
-    lockNotice: tr(plan.lockNotice, lang),
-    fileNameHint: tr(plan.fileNameHint, lang),
+    lockNotice: plan.lockNotice ? tr(plan.lockNotice, lang) : null,
+    fileNameHint: plan.fileNameHint ? tr(plan.fileNameHint, lang) : null,
   };
 };

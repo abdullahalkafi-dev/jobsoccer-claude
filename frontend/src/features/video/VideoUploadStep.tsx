@@ -39,7 +39,7 @@ const Body = () => {
           consentOk={consentOk}
         />
       ))}
-      <p className="text-xs text-gray-500">{status.plan.lockNotice}</p>
+      {status.plan.lockNotice && <p className="text-xs text-gray-500">{status.plan.lockNotice}</p>}
     </div>
   );
 };

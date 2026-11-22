@@ -131,15 +131,17 @@ export function VideoSlotCard({
                 </ul>
               </div>
             ))}
-            <div>
-              <h4 className="font-semibold text-gray-800">{plan.technical.heading}</h4>
-              <ul className="mt-1 list-disc space-y-1 pl-5 text-gray-700">
-                {plan.technical.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <p className="mt-2 text-xs text-gray-500">{t("slot.fileName", { name: plan.fileNameHint })}</p>
-            </div>
+            {plan.technical && (
+              <div>
+                <h4 className="font-semibold text-gray-800">{plan.technical.heading}</h4>
+                <ul className="mt-1 list-disc space-y-1 pl-5 text-gray-700">
+                  {plan.technical.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                {plan.fileNameHint && <p className="mt-2 text-xs text-gray-500">{t("slot.fileName", { name: plan.fileNameHint })}</p>}
+              </div>
+            )}
             {slot.showSetupPhotos && <SetupPhotos />}
           </div>
         </details>

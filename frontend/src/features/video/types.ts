@@ -26,14 +26,14 @@ export type TVideoPlan = {
   role: string;
   position: string | null;
   slots: TVideoSlot[];
-  technical: TGuideSection;
+  technical: TGuideSection | null;
   consent: {
     ai: { required: boolean; text: string };
     players: { required: boolean; text: string };
     version: string;
   };
-  lockNotice: string;
-  fileNameHint: string;
+  lockNotice: string | null;
+  fileNameHint: string | null;
   limits: { maxMegabytes: number; minShortSide: number; formats: string[] };
 };
 
