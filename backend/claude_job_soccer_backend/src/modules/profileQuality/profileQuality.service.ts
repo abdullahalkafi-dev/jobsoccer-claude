@@ -73,6 +73,12 @@ const loadSnapshot = async (userId: string): Promise<{ snapshot: TQualitySnapsho
       educations: educations as any[],
       licenses: licenses as any[],
       resume: resume ? { text: resumeText } : null,
+      // When the candidate added real items (admin approvals touch updatedAt, so only creation dates are used)
+      activityDates: [
+        ...[...experiences, ...educations, ...licenses].map((item: any) => item.createdAt),
+        ...(resume ? [(resume as any).createdAt] : []),
+        ...((profile.videos ?? []) as any[]).map((video) => video.uploadedAt),
+      ].filter(Boolean),
       identityStatus: (verification?.status as TQualitySnapshot["identityStatus"]) ?? null,
       responseRate,
       now: new Date(),

@@ -27,7 +27,7 @@ interface PendingDocument {
   issuingOrganization?: string;
 }
 
-const TYPE_LABEL: Record<RecordType, string> = { experience: "Work history", education: "Education", license: "Licence / certification" };
+const TYPE_LABEL: Record<RecordType, string> = { experience: "Work history (reference letter)", education: "Education", license: "Licence / certification" };
 
 const describe = (doc: PendingDocument): string =>
   doc.type === "experience"

@@ -18,6 +18,7 @@ const fullStaffProfile = {
   league: "La Liga 2",
   socialMedia: "https://instagram.com/test",
   availability: "Immediately",
+  createdAt: new Date("2026-01-01T00:00:00Z"),
   updatedAt: recently,
 };
 
@@ -36,6 +37,7 @@ const fullStaff = (overrides: Partial<TQualitySnapshot> = {}): TQualitySnapshot 
   identityStatus: "approved",
   responseRate: 1,
   now,
+  activityDates: [recently],
   ai: { experienceQuality: 1, cvRelevance: 1 },
   ...overrides,
 });
@@ -79,21 +81,30 @@ describe("calculateProfileQuality (staff)", () => {
 
   it("ranks missing videos as the biggest improvement actions", () => {
     const result = calculateProfileQuality(fullStaff({ videos: [] }));
-    expect(result.score).toBe(70); // interview 25 + methodology 5 missing
+    expect(result.score).toBe(65); // interview 25 + methodology 10 missing
     expect(result.tips[0]).toBe("Record your video interview.");
     expect(result.tips).toContain("Optional: add a methodology video to stand out to employers.");
   });
 
-  it("caps staff at 95 without the optional methodology video (worth 5 points)", () => {
+  it("caps staff at 90 without the optional methodology video (worth 10 points)", () => {
     for (const role of [CandidateRole.ON_FIELD_STAFF, CandidateRole.OFFICE_STAFF]) {
       const result = calculateProfileQuality(fullStaff({ role, videos: [{ kind: VideoKind.INTERVIEW }] }));
-      expect(result.score).toBe(95);
+      expect(result.score).toBe(90);
       expect(result.level).toBe("premium");
       const media = result.categories.find((c) => c.key === "media")!;
       expect(media.max).toBe(35);
-      expect(media.items.find((i) => i.key === "methodology")!.max).toBe(5);
+      expect(media.items.find((i) => i.key === "methodology")!.max).toBe(10);
       expect(media.items.find((i) => i.key === "interview")!.max).toBe(25);
+      expect(media.items.map((i) => i.key)).not.toContain("photo"); // the photo is a basic detail now
     }
+  });
+
+  it("counts the profile photo among the basic details of Profile Completion", () => {
+    const withPhoto = calculateProfileQuality(fullStaff());
+    const withoutPhoto = calculateProfileQuality(fullStaff({ profileImage: null }));
+    expect(withPhoto.score).toBeGreaterThan(withoutPhoto.score);
+    expect(withoutPhoto.tips.join(" ")).toContain("profile photo");
+    expect(withoutPhoto.categories.find((c) => c.key === "media")!.earned).toBe(35);
   });
 
   it("puts the CV under Profile Completion (5 points) and any uploaded CV earns all of them", () => {
@@ -120,28 +131,45 @@ describe("calculateProfileQuality (staff)", () => {
     expect(verification(identityOnly).earned).toBe(13);
   });
 
-  it("gives a brand-new profile at least 10 of the 15 maintenance points and never rewards logins", () => {
-    const fresh = calculateProfileQuality(
-      fullStaff({ responseRate: null, profile: { ...fullStaffProfile, availability: "", updatedAt: now } })
-    );
-    const maintenance = fresh.categories.find((c) => c.key === "maintenance")!;
-    expect(maintenance.max).toBe(15);
-    expect(maintenance.earned).toBeGreaterThanOrEqual(10);
-    expect(maintenance.items.map((i) => i.key)).toEqual(["availability", "freshness"]);
+  it("gives a brand-new profile only the availability points, then earns the rest step by step (gradual)", () => {
+    const created = new Date("2026-11-04T23:00:00Z"); // one hour before "now"
+    const base = { responseRate: null, profile: { ...fullStaffProfile, createdAt: created, updatedAt: now }, activityDates: [now] };
+    const m = (snapshot: TQualitySnapshot) => calculateProfileQuality(snapshot).categories.find((c) => c.key === "maintenance")!;
+    const fresh = m(fullStaff(base));
+    expect(fresh.max).toBe(15);
+    expect(fresh.earned).toBe(5); // availability only: creating the profile earns nothing for being new
+    expect(fresh.items.map((i) => i.key)).toEqual(["availability", "freshness", "activity", "responsiveness"]);
+    // No availability text and nothing else: 0
+    expect(m(fullStaff({ ...base, profile: { ...base.profile, availability: "" } })).earned).toBe(0);
+    // First edit after the first day: +3
+    const edited = { ...base, profile: { ...base.profile, createdAt: new Date("2026-10-01T00:00:00Z"), updatedAt: recently }, activityDates: [] };
+    expect(m(fullStaff(edited)).earned).toBe(8);
+    // A new real item after the first day: +2
+    expect(m(fullStaff({ ...edited, activityDates: [recently] })).earned).toBe(10);
+    // Replies once rated: up to the full 15
+    expect(m(fullStaff({ ...edited, activityDates: [recently], responseRate: 1 })).earned).toBe(15);
   });
 
-  it("splits maintenance 7 + 3 + 5 once messages have been received (and 10 + 5 before)", () => {
-    const rated = calculateProfileQuality(fullStaff({ responseRate: 1 })).categories.find((c) => c.key === "maintenance")!;
-    expect(rated.items.map((i) => [i.key, i.max]).sort()).toEqual([["availability", 3], ["freshness", 7], ["responsiveness", 5]]);
+  it("older edits and items earn less (6 months full, 12 months 60%, older 20%)", () => {
+    const m = (updatedAt: Date) => calculateProfileQuality(fullStaff({ responseRate: null, activityDates: [], profile: { ...fullStaffProfile, createdAt: new Date("2024-01-01T00:00:00Z"), updatedAt } })).categories.find((c) => c.key === "maintenance")!.items.find((i) => i.key === "freshness")!;
+    expect(m(new Date("2026-08-01T00:00:00Z")).earned).toBe(3);
+    expect(m(new Date("2026-02-01T00:00:00Z")).earned).toBe(1.8);
+    expect(m(new Date("2025-06-01T00:00:00Z")).earned).toBe(0.6);
+  });
+
+  it("splits staff maintenance 5 + 3 + 2 + 5 and does not scale the reply points away before messages arrive", () => {
     const unrated = calculateProfileQuality(fullStaff({ responseRate: null })).categories.find((c) => c.key === "maintenance")!;
-    expect(unrated.items.map((i) => [i.key, i.max]).sort()).toEqual([["availability", 5], ["freshness", 10]]);
+    expect(unrated.items.map((i) => [i.key, i.max])).toEqual([["availability", 5], ["freshness", 3], ["activity", 2], ["responsiveness", 5]]);
+    const replies = unrated.items.find((i) => i.key === "responsiveness")!;
+    expect(replies).toMatchObject({ earned: 0, max: 5, done: false, waiting: true, tipKey: "repliesNotRated" });
+    expect(unrated.earned).toBe(10);
   });
 
   it("stamps the rules version so older saved scores are recalculated once", () => {
     expect(calculateProfileQuality(fullStaff()).rulesVersion).toBe(QUALITY_RULES_VERSION);
   });
 
-  it("does not demand licences from office staff and does not penalise missing messages", () => {
+  it("does not demand licences from office staff and does not penalise missing messages (they only keep 5 points waiting)", () => {
     const office = calculateProfileQuality(
       fullStaff({
         role: CandidateRole.OFFICE_STAFF,
@@ -151,9 +179,9 @@ describe("calculateProfileQuality (staff)", () => {
         videos: [{ kind: VideoKind.INTERVIEW }, { kind: VideoKind.METHODOLOGY }],
       })
     );
-    expect(office.score).toBeGreaterThanOrEqual(95);
+    expect(office.score).toBe(95); // 100 minus the 5 reply points that start counting after the first messages
     expect(office.categories.find((c) => c.key === "completion")!.items.map((i) => i.key)).not.toContain("licenses");
-    expect(office.categories.find((c) => c.key === "maintenance")!.items.map((i) => i.key)).not.toContain("responsiveness");
+    expect(office.categories.find((c) => c.key === "maintenance")!.items.find((i) => i.key === "responsiveness")).toMatchObject({ earned: 0, waiting: true });
   });
 
   it("rewards verified documents but gives partial credit while they wait for review", () => {
@@ -191,8 +219,8 @@ describe("calculateProfileQuality (players)", () => {
     socialMedia: "https://instagram.com/player",
     teamsJoined: "AS Test, FC Youth",
     contractExpires: "2027",
-    nationalTeamGames: "3",
     availability: "Now",
+    createdAt: new Date("2026-01-01T00:00:00Z"),
     updatedAt: recently,
   };
 
@@ -209,6 +237,7 @@ describe("calculateProfileQuality (players)", () => {
       identityStatus: "approved",
       responseRate: 1,
       now,
+      activityDates: [recently],
     });
     expect(result.categories.map((c) => c.max)).toEqual([35, 20, 35, 10]);
     expect(result.score).toBe(100);
@@ -216,21 +245,54 @@ describe("calculateProfileQuality (players)", () => {
     expect(result.categories.find((c) => c.key === "completion")!.items.find((i) => i.key === "cv")).toMatchObject({ max: 5, earned: 5 });
   });
 
-  it("gives the full highlight points for one video (the client asked for 1 or 2 videos)", () => {
-    const result = calculateProfileQuality({
-      role: CandidateRole.AMATEUR_PLAYER,
-      profile: playerProfile,
-      profileImage: "/images/p.webp",
-      videos: [{ kind: VideoKind.HIGHLIGHTS }],
-      experiences: [],
-      educations: [],
-      licenses: [],
-      resume: null,
-      identityStatus: null,
-      responseRate: null,
-      now,
-    });
-    const media = result.categories.find((c) => c.key === "media")!;
-    expect(media.earned).toBe(35); // photo 5 + highlights 30 (one video is enough)
+  const player = (role: CandidateRole, over: Partial<TQualitySnapshot> = {}): TQualitySnapshot => ({
+    role,
+    profile: playerProfile,
+    profileImage: "/images/p.webp",
+    videos: [],
+    experiences: [],
+    educations: [],
+    licenses: [],
+    resume: null,
+    identityStatus: null,
+    responseRate: null,
+    now,
+    ...over,
+  });
+  const media = (r: ReturnType<typeof calculateProfileQuality>) => r.categories.find((c) => c.key === "media")!;
+
+  it("gives half of the highlight points for one video and all of them for two (the client wants 2 for a high score)", () => {
+    const one = calculateProfileQuality(player(CandidateRole.AMATEUR_PLAYER, { videos: [{ kind: VideoKind.HIGHLIGHTS }] }));
+    expect(media(one).earned).toBe(20); // photo 5 + highlights 15
+    expect(one.tips.join(" ")).toContain("highlight");
+    const two = calculateProfileQuality(player(CandidateRole.AMATEUR_PLAYER, { videos: [{ kind: VideoKind.HIGHLIGHTS }, { kind: VideoKind.HIGHLIGHTS }] }));
+    expect(media(two).earned).toBe(35);
+  });
+
+  it("asks for club proof only from professional players (reference letter); the other player roles have identity only", () => {
+    const verification = (r: ReturnType<typeof calculateProfileQuality>) => r.categories.find((c) => c.key === "verification")!;
+    const completion = (r: ReturnType<typeof calculateProfileQuality>) => r.categories.find((c) => c.key === "completion")!;
+    const pro = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER));
+    expect(verification(pro).items.map((i) => [i.key, i.max])).toEqual([["identity", 10], ["history", 10]]);
+    expect(pro.tips.join(" ")).toContain("reference letter");
+    expect(completion(pro).items.map((i) => i.key)).toContain("history");
+    for (const role of [CandidateRole.AMATEUR_PLAYER, CandidateRole.HIGH_SCHOOL, CandidateRole.COLLEGE_UNIVERSITY]) {
+      const result = calculateProfileQuality(player(role));
+      expect(verification(result).items.map((i) => [i.key, i.max])).toEqual([["identity", 20]]);
+      expect(completion(result).items.map((i) => i.key)).not.toContain("history");
+      expect(result.tips.join(" ")).not.toMatch(/club/i);
+    }
+  });
+
+  it("does not count the optional national team games in Profile Completion", () => {
+    const without = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER));
+    const withGames = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER, { profile: { ...playerProfile, nationalTeamGames: "12" } }));
+    expect(withGames.score).toBe(without.score);
+    expect(without.tips.join(" ")).not.toContain("national team");
+  });
+
+  it("splits player maintenance 3 + 2 + 1 + 4", () => {
+    const m = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER)).categories.find((c) => c.key === "maintenance")!;
+    expect(m.items.map((i) => [i.key, i.max])).toEqual([["availability", 3], ["freshness", 2], ["activity", 1], ["responsiveness", 4]]);
   });
 });

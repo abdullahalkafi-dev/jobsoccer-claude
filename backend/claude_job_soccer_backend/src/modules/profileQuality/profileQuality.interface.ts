@@ -76,8 +76,10 @@ export const LEVEL_BANDS: { level: TProfileLevel; stars: 1 | 2 | 3 | 4 | 5; min:
 /**
  * Bump when the point rules change: every saved score is then recalculated once.
  * 2 = 2026-11-16: CV moved to Profile Completion, verification 13+12, interview 25 + methodology 5, new maintenance split.
+ * 3 = 2026-11-22: methodology 10 and the staff photo is a basic detail; highlights need 2 for full points; club items only for
+ *     professional players; national team games optional; gradual Maintenance (see doc/daily-workflow/maintenance-gradual-rules.md).
  */
-export const QUALITY_RULES_VERSION = 2;
+export const QUALITY_RULES_VERSION = 3;
 
 /** Candidates at or above this score may apply to premium jobs (client: 90). */
 export const PREMIUM_MIN_SCORE = 90;

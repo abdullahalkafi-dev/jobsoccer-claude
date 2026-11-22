@@ -82,7 +82,7 @@ export function DocumentProof({ type, record, readOnly = false }: { type: TRecor
         <>
           <input ref={inputRef} type="file" accept="application/pdf" className="hidden" onChange={(event) => upload(event.target.files?.[0])} />
           <Button type="button" size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={isUploading} onClick={() => inputRef.current?.click()}>
-            <FileUp className="mr-1 h-3 w-3" /> {isUploading ? t("proof.sending") : status === "rejected" ? t("proof.uploadNew") : t("proof.upload")}
+            <FileUp className="mr-1 h-3 w-3" /> {isUploading ? t("proof.sending") : status === "rejected" ? t("proof.uploadNew") : type === "experience" ? t("proof.uploadReference") : t("proof.upload")}
           </Button>
         </>
       )}

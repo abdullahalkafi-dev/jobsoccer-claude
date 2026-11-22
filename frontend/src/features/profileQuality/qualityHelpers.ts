@@ -118,7 +118,8 @@ export function missingItems(quality: TProfileQuality): TMissingItem[] {
 
 /** The one thing to do next (null when nothing is left). */
 export function nextStep(quality: TProfileQuality): TMissingItem | null {
-  return missingItems(quality)[0] ?? null;
+  // "Counts once you receive messages" is a note, not something the candidate can do now
+  return missingItems(quality).find((item) => !(item.key === "responsiveness" && item.waiting)) ?? null;
 }
 
 /** The admin checks (identity, documents) that stand between the candidate and premium. */

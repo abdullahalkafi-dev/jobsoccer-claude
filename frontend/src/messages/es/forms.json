@@ -159,7 +159,8 @@
     "notApprovedWithNote": "No aprobado: {note}",
     "sending": "Enviando…",
     "uploadNew": "Subir un documento nuevo",
-    "upload": "Subir comprobante (PDF)"
+    "upload": "Subir comprobante (PDF)",
+    "uploadReference": "Subir carta de referencia (PDF)"
   },
   "logo": {
     "upload": "Subir logotipo",

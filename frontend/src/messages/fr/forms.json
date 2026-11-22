@@ -159,7 +159,8 @@
     "notApprovedWithNote": "Non approuvé : {note}",
     "sending": "Envoi…",
     "uploadNew": "Téléverser un nouveau document",
-    "upload": "Téléverser un justificatif (PDF)"
+    "upload": "Téléverser un justificatif (PDF)",
+    "uploadReference": "Téléverser une lettre de référence (PDF)"
   },
   "logo": {
     "upload": "Téléverser le logo",

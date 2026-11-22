@@ -21,6 +21,10 @@ import { itemLabel, renderTip, TipParams } from "./profileQuality.i18n";
  * reliability before the candidate ever received a message) are left out and the
  * category is scaled to its full points, so nobody is penalised for them.
  * Recruitment results never add points.
+ *
+ * Maintenance is gradual (rules version 3): a new profile earns nothing for being new. Points come from availability,
+ * from editing the profile or adding real items AFTER the first day, and from replies once messages were received
+ * (not scaled away before that). See doc/daily-workflow/maintenance-gradual-rules.md.
  */
 
 /** Everything the rules need to know about one candidate (loaded by the service). */
@@ -36,6 +40,8 @@ export type TQualitySnapshot = {
   resume: { text?: string | null } | null;
   /** Account-level identity verification by an admin. */
   identityStatus: "approved" | "pending" | "rejected" | null;
+  /** When real items (experience, education, licence, CV, video) were created or changed; used for the "kept up to date" points. */
+  activityDates?: (Date | string)[];
   /** Chats where the candidate received a message in the last 90 days; null = fewer than 3 (not rated). */
   responseRate: number | null;
   now: Date;
@@ -118,11 +124,13 @@ const STAFF_BASIC_FIELDS = ["dateOfBirth", "placeOfBirth", "nationality", "count
 
 const staffCompletion = (s: TQualitySnapshot): TItemSpec[] => {
   const onField = s.role === CandidateRole.ON_FIELD_STAFF;
-  const basics = onField ? [...STAFF_BASIC_FIELDS, "league"] : STAFF_BASIC_FIELDS;
+  // The profile photo is one of the basic details (it used to be a separate 5 points in Media; Media is now interview 25 + methodology 10).
+  const basics = [...STAFF_BASIC_FIELDS, ...(onField ? ["league"] : []), "profileImage"];
+  const profile = { ...s.profile, profileImage: s.profileImage };
   const experienceCount = s.experiences.length;
   const quality = s.ai?.experienceQuality ?? heuristicExperienceQuality(s.experiences);
   return [
-    { key: "basics", labelKey: "basicsStaff", max: 8, fraction: fieldShare(s.profile, basics), ...missingTip(s.profile, basics) },
+    { key: "basics", labelKey: "basicsStaff", max: 8, fraction: fieldShare(profile, basics), ...missingTip(profile, basics) },
     {
       key: "experience",
       labelKey: "experience",
@@ -174,34 +182,52 @@ const staffVerification = (s: TQualitySnapshot): TItemSpec[] => {
 const staffMedia = (s: TQualitySnapshot): TItemSpec[] => {
   const has = (kind: VideoKind) => s.videos.some((v) => v.kind === kind);
   return [
-    { key: "photo", labelKey: "photo", max: 5, fraction: s.profileImage ? 1 : 0, tipKey: "addPhoto" },
-    // The methodology video is optional (5 points). Without it the best possible score is 95; premium starts at 90.
     { key: "interview", labelKey: "interview", max: 25, fraction: has(VideoKind.INTERVIEW) ? 1 : 0, tipKey: "recordInterview" },
-    { key: "methodology", labelKey: "methodology", max: 5, fraction: has(VideoKind.METHODOLOGY) ? 1 : 0, tipKey: "addMethodology" },
+    // The methodology video is optional (10 points). Without it the best possible score is 90; premium starts at 90.
+    { key: "methodology", labelKey: "methodology", max: 10, fraction: has(VideoKind.METHODOLOGY) ? 1 : 0, tipKey: "addMethodology" },
   ];
 };
 
-type TMaintenanceWeights = { availability: number; freshness: number; responsiveness: number };
+type TMaintenanceWeights = { availability: number; edit: number; activity: number; responsiveness: number };
+
+/** Edits and new items count only when made at least this long after the profile was created (creating it is not "keeping it up to date"). */
+const FIRST_DAY_MS = 24 * 3600 * 1000;
+
+/** 1 within 6 months, 0.6 within 12 months, 0.2 older. */
+const recency = (date: Date | string, now: Date): number => {
+  const months = monthsSince(date, now);
+  return months <= 6 ? 1 : months <= 12 ? 0.6 : 0.2;
+};
 
 /**
- * Up-to-date information and availability always count; reply reliability only counts once the candidate has
- * received messages (then the other two shrink to make room). Logins never earn points.
- * A new profile was just updated, so a new candidate starts with the up-to-date points.
+ * Gradual: a new profile starts with the availability points only.
+ *  - availability: text in "Available from".
+ *  - edit: the profile was edited after its first day (recent edits count fully, older ones less).
+ *  - activity: a real item (experience, education, licence, CV, video) was added or changed after the first day.
+ *  - replies: counted once the candidate has received enough messages. Before that it shows 0 and a neutral note;
+ *    it is NOT scaled away. Logins never earn points.
  */
-const maintenance = (s: TQualitySnapshot, weights: { unrated: TMaintenanceWeights; rated: TMaintenanceWeights }): TItemSpec[] => {
-  const w = s.responseRate === null ? weights.unrated : weights.rated;
-  const age = monthsSince(s.profile.updatedAt, s.now);
+const maintenance = (s: TQualitySnapshot, w: TMaintenanceWeights): TItemSpec[] => {
+  const created = s.profile.createdAt ? new Date(s.profile.createdAt).getTime() : null;
+  const afterFirstDay = (date: Date | string | undefined | null): date is Date | string =>
+    !!date && (created === null || new Date(date).getTime() >= created + FIRST_DAY_MS);
+
+  const editedAt = afterFirstDay(s.profile.updatedAt) ? s.profile.updatedAt : null;
+  const items = (s.activityDates ?? []).filter(afterFirstDay);
+  const latestItem = items.length ? items.reduce((a, b) => (new Date(a).getTime() > new Date(b).getTime() ? a : b)) : null;
+  const rated = s.responseRate !== null;
+
   return [
     { key: "availability", labelKey: "availability", max: w.availability, fraction: filled(s.profile.availability) ? 1 : 0, tipKey: "updateAvailability" },
-    { key: "freshness", labelKey: "freshness", max: w.freshness, fraction: age <= 6 ? 1 : age <= 12 ? 0.6 : 0.2, tipKey: "reviewProfile" },
+    { key: "freshness", labelKey: "freshness", max: w.edit, fraction: editedAt ? recency(editedAt, s.now) : 0, tipKey: "reviewProfile" },
+    { key: "activity", labelKey: "recentActivity", max: w.activity, fraction: latestItem ? recency(latestItem, s.now) : 0, tipKey: "addSomethingNew" },
     {
       key: "responsiveness",
       labelKey: "responsiveness",
       max: w.responsiveness,
-      fraction: s.responseRate === null ? 0 : s.responseRate >= 0.7 ? 1 : s.responseRate >= 0.4 ? 0.6 : 0.2,
-      // Only rated once the candidate has actually received messages.
-      applicable: s.responseRate !== null,
-      tipKey: "replyMessages",
+      fraction: !rated ? 0 : s.responseRate! >= 0.7 ? 1 : s.responseRate! >= 0.4 ? 0.6 : 0.2,
+      tipKey: rated ? "replyMessages" : "repliesNotRated",
+      ...(rated ? {} : { waiting: true }),
     },
   ];
 };
@@ -209,7 +235,8 @@ const maintenance = (s: TQualitySnapshot, weights: { unrated: TMaintenanceWeight
 const PLAYER_BASIC_FIELDS = ["dateOfBirth", "placeOfBirth", "nationality", "country", "gender", "height", "weight", "foot"];
 
 const PLAYER_BACKGROUND_FIELDS: Partial<Record<CandidateRole, string[]>> = {
-  [CandidateRole.PROFESSIONAL_PLAYER]: ["teamsJoined", "contractExpires", "nationalTeamGames"],
+  // National team games and category are optional, so they do not count.
+  [CandidateRole.PROFESSIONAL_PLAYER]: ["teamsJoined", "contractExpires"],
   [CandidateRole.HIGH_SCHOOL]: ["schoolName", "gpa", "satOrAct", "category"],
   [CandidateRole.COLLEGE_UNIVERSITY]: ["collegeOrUniversity", "schoolName", "gpa", "satOrAct"],
 };
@@ -237,7 +264,8 @@ const playerCompletion = (s: TQualitySnapshot): TItemSpec[] => {
       applicable: !!background,
       ...(background ? missingTip(s.profile, background) : {}),
     },
-    { key: "history", labelKey: "clubHistory", max: 5, fraction: s.experiences.length ? 1 : 0, tipKey: "addClubs" },
+    // Only professional players list their clubs here; the other player roles put them on the CV (client, 2026-11-20).
+    { key: "history", labelKey: "clubHistory", max: 5, fraction: s.experiences.length ? 1 : 0, applicable: s.role === CandidateRole.PROFESSIONAL_PLAYER, tipKey: "addClubs" },
     { key: "cv", labelKey: "cv", max: 5, fraction: s.resume ? 1 : 0, tipKey: "uploadCv" },
   ];
 };
@@ -251,10 +279,13 @@ const playerVerification = (s: TQualitySnapshot): TItemSpec[] => [
     ...(s.identityStatus === "pending" ? { tipKey: "identityWaiting", waiting: true } : { tipKey: "identityRequest" }),
   },
   {
+    // A reference letter confirming previous or current employment, approved by an admin. Professional players only:
+    // amateur, high school and college players have no contract, so identity is their only verification.
     key: "history",
     labelKey: "clubHistoryVerified",
     max: 10,
     fraction: approvedCount(s.experiences) >= 1 ? 1 : pendingCount(s.experiences) ? 0.2 : 0,
+    applicable: s.role === CandidateRole.PROFESSIONAL_PLAYER,
     ...(pendingCount(s.experiences) ? { tipKey: "clubHistoryWaiting", waiting: true } : { tipKey: "clubHistoryUpload" }),
   },
 ];
@@ -265,7 +296,8 @@ const playerMedia = (s: TQualitySnapshot): TItemSpec[] => [
     key: "highlights",
     labelKey: "highlights",
     max: 30,
-    fraction: Math.min(s.videos.filter((v) => v.kind === VideoKind.HIGHLIGHTS).length, 1),
+    // Two game highlights earn the full points; one earns half.
+    fraction: Math.min(s.videos.filter((v) => v.kind === VideoKind.HIGHLIGHTS).length, 2) / 2,
     tipKey: "uploadHighlights",
   },
 ];
@@ -327,19 +359,21 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
         buildCategory("completion", "Profile Completion", 35, playerCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 20, playerVerification(s)),
         buildCategory("media", "Media Portfolio", 35, playerMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { unrated: { freshness: 7, availability: 3, responsiveness: 0 }, rated: { freshness: 5, availability: 2, responsiveness: 3 } })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { availability: 3, edit: 2, activity: 1, responsiveness: 4 })),
       ]
     : [
         buildCategory("completion", "Profile Completion", 25, staffCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 25, staffVerification(s)),
         buildCategory("media", "Media Portfolio", 35, staffMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { unrated: { freshness: 10, availability: 5, responsiveness: 0 }, rated: { freshness: 7, availability: 3, responsiveness: 5 } })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { availability: 5, edit: 3, activity: 2, responsiveness: 5 })),
       ];
 
   const score = Math.min(100, categories.reduce((sum, category) => sum + category.earned, 0));
   const band = LEVEL_BANDS.find((b) => score >= b.min)!;
 
   const tips = selectTipItems(categories)
+    // "Counts once you have received messages" is a note on the card, not an improvement action
+    .filter((item) => !(item.key === "responsiveness" && item.waiting))
     .map((item) => item.tip as string)
     .slice(0, 5);
 

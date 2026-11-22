@@ -159,7 +159,8 @@
     "notApprovedWithNote": "Not approved: {note}",
     "sending": "Sending…",
     "uploadNew": "Upload a new document",
-    "upload": "Upload proof (PDF)"
+    "upload": "Upload proof (PDF)",
+    "uploadReference": "Upload reference letter (PDF)"
   },
   "logo": {
     "upload": "Upload Logo",
