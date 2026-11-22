@@ -27,15 +27,22 @@ import { useOptionLabel } from "@/i18n/options";
 import AddExperienceModal from "@/components/modals/AddExperienceModal";
 import EditExperienceModal from "@/components/modals/EditExperienceModal";
 
+/** Players do not describe their clubs, so their forms have no description. */
+const PLAYER_ROLES = ["Professional Player", "Amateur Player", "High School Player", "College/University Player"];
+
 interface ExperienceSectionProps {
   userId: string;
   readOnly?: boolean;
+  /** Role of the profile owner (used to hide the description for players). */
+  candidateRole?: string;
 }
 
 export default function ExperienceSection({
   userId,
   readOnly = false,
+  candidateRole,
 }: ExperienceSectionProps) {
+  const isPlayer = !!candidateRole && PLAYER_ROLES.includes(candidateRole);
   const t = useTranslations("profile");
   const [deleteExperience] = useDeleteExperienceMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -140,6 +147,7 @@ export default function ExperienceSection({
       <AddExperienceModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        isPlayer={isPlayer}
       />
 
       {editExperienceData && (
@@ -150,6 +158,7 @@ export default function ExperienceSection({
             setEditExperienceData(null);
           }}
           experienceData={editExperienceData}
+          isPlayer={isPlayer}
         />
       )}
 

@@ -9,6 +9,7 @@
     "year": "Año",
     "startDate": "Fecha de inicio",
     "endDate": "Fecha de finalización",
+    "endDateOptional": "Fecha de finalización (si aplica)",
     "pleaseSelect": "Selecciona una opción"
   },
   "education": {

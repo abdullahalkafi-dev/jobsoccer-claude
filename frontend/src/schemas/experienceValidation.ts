@@ -1,7 +1,8 @@
 import * as z from "zod";
 import { englishValidation, type Translator } from "./translator";
 
-export const getExperienceFormSchema = (t: Translator) =>
+/** The description is asked from staff only; players do not describe their clubs (client, 2026-11-19). */
+export const getExperienceFormSchema = (t: Translator, descriptionRequired = true) =>
   z.object({
     title: z.string(t("invalid")).min(1, t("title")),
     employmentType: z.string(t("invalid")).min(1, t("employmentType")),
@@ -12,7 +13,7 @@ export const getExperienceFormSchema = (t: Translator) =>
     startYear: z.string(t("invalid")).min(1, t("startYear")),
     endMonth: z.string().optional(),
     endYear: z.string().optional(),
-    description: z.string(t("invalid")).min(1, t("description")),
+    description: descriptionRequired ? z.string(t("invalid")).min(1, t("description")) : z.string(t("invalid")),
   });
 
 export type ExperienceFormData = z.infer<ReturnType<typeof getExperienceFormSchema>>;

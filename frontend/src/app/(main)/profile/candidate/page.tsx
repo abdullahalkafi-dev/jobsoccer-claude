@@ -648,7 +648,7 @@ export default function MyProfilePage() {
 
         {/* ------------------ Experience, Certificate, Education, and Video Sections --------------------*/}
         <div id={QUALITY_SECTION_IDS.experience} className="scroll-mt-24">
-          <ExperienceSection userId={currentUser?._id || ""} />
+          <ExperienceSection userId={currentUser?._id || ""} candidateRole={currentUser?.role} />
         </div>
         <div id={QUALITY_SECTION_IDS.certificates} className="scroll-mt-24">
           <CertificateSection userId={currentUser?._id || ""} />

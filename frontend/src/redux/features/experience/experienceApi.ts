@@ -26,7 +26,8 @@ export interface CreateExperienceRequest {
   endMonth?: string;
   endYear?: number;
   isCurrentlyWorking: boolean;
-  description: string;
+  /** Not asked from players. */
+  description?: string;
 }
 
 export interface GetExperiencesResponse {

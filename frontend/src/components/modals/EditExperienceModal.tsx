@@ -44,12 +44,15 @@ interface EditExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
   experienceData: ExperienceData | null;
+  /** Players do not describe their clubs. */
+  isPlayer?: boolean;
 }
 
 export default function EditExperienceModal({
   isOpen,
   onClose,
   experienceData,
+  isPlayer = false,
 }: EditExperienceModalProps) {
   const t = useTranslations("modals");
   const tv = useTranslations("validation");
@@ -57,7 +60,7 @@ export default function EditExperienceModal({
   const [updateExperience, { isLoading }] = useUpdateExperienceMutation();
 
   const form = useForm<ExperienceFormData>({
-    resolver: zodResolver(getExperienceFormSchema(tv)),
+    resolver: zodResolver(getExperienceFormSchema(tv, !isPlayer)),
     defaultValues: {
       title: "",
       employmentType: "",
@@ -108,7 +111,7 @@ export default function EditExperienceModal({
         startMonth: data.startMonth,
         startYear: parseInt(data.startYear),
         isCurrentlyWorking: data.isCurrentlyWorking,
-        description: data.description,
+        ...(!isPlayer && { description: data.description }),
         ...(data.endMonth && { endMonth: data.endMonth }),
         ...(data.endYear && { endYear: parseInt(data.endYear) }),
       };
@@ -324,7 +327,7 @@ export default function EditExperienceModal({
             {!isCurrentlyWorking && (
               <div>
                 <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
-                  {t("common.endDate")}
+                  {t("common.endDateOptional")}
                 </FormLabel>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
@@ -383,26 +386,28 @@ export default function EditExperienceModal({
               </div>
             )}
 
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("experience.description")}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t("experience.descriptionEditPh")}
-                      className="mt-1 min-h-[100px] resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Description (staff only) */}
+            {!isPlayer && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      {t("experience.description")}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("experience.descriptionEditPh")}
+                        className="mt-1 min-h-[100px] resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">

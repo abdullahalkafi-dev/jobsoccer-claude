@@ -9,6 +9,7 @@
     "year": "Year",
     "startDate": "Start date",
     "endDate": "End date",
+    "endDateOptional": "End date (if applicable)",
     "pleaseSelect": "Please select"
   },
   "education": {
