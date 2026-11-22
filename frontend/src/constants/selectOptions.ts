@@ -283,6 +283,10 @@ export const amaturePlayerNationalTeamCategoryOptions = [
 export type TAmaturePlayerNationalTeamCategory =
   (typeof amaturePlayerNationalTeamCategoryOptions)[number];
 
+// On-field staff category: the level of the club or organisation (client, 2026-11-20)
+export const staffCategoryOptions = ["Professional", "Amateur"] as const;
+export type TStaffCategory = (typeof staffCategoryOptions)[number];
+
 // Foot options
 export const footOptions = ["Right", "Left", "Both"] as const;
 export type TFoot = (typeof footOptions)[number];

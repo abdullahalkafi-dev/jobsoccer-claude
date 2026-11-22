@@ -206,6 +206,7 @@
     "languages": "Langues",
     "languagesPh": "Ex. : anglais, espagnol, français",
     "categoryStaffPh": "Ex. : Entraîneur principal",
+    "categoryIfApplicable": "Catégorie (le cas échéant)",
     "saveChanges": "Enregistrer les modifications",
     "updated": "Profil mis à jour avec succès",
     "updateFailed": "Échec de la mise à jour du profil"

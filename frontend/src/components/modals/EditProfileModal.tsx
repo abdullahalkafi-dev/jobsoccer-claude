@@ -38,6 +38,7 @@ import {
   officeStaffPositionOptions,
   fieldStaffPositionOptions,
   amaturePlayerNationalTeamCategoryOptions,
+  staffCategoryOptions,
   professionalPlayerNationalTeamCategoryOptions,
 } from "@/constants/selectOptions";
 
@@ -741,12 +742,22 @@ export default function EditProfileModal({
 
                 {/* Field Staff category */}
                 {isOnFieldStaff && (
-                  <FormField label={t("profile.category")} error={errors.category?.message}>
-                    <Input
-                      {...register("category")}
-                      placeholder={t("profile.categoryStaffPh")}
-                      className="bg-gray-50 border-0"
-                    />
+                  <FormField label={t("profile.categoryIfApplicable")} error={errors.category?.message}>
+                    <Select
+                      defaultValue={initialData?.category}
+                      onValueChange={(value) => setValue("category", value, { shouldValidate: true, shouldDirty: true })}
+                    >
+                      <SelectTrigger className="bg-gray-50 border-0 w-full">
+                        <SelectValue placeholder={t("profile.selectCategory")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {staffCategoryOptions.map((item) => (
+                          <SelectItem key={item} value={item}>
+                            {label("category", item)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormField>
                 )}
               </div>

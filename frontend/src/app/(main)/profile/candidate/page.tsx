@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -52,6 +53,11 @@ export default function MyProfilePage() {
   const { connected: liveConnected } = useNotificationContext();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
+  // A user who left the create-profile steps has no profile yet: send them back to finish it (editing would fail)
+  const router = useRouter();
+  useEffect(() => {
+    if (currentUser && !currentUser.profileId) router.replace("/create-profile/candidate");
+  }, [currentUser, router]);
   // A resume exists: the button shows a green check instead of the plain upload icon
   const { data: myResumes } = useGetUserResumeQuery(currentUser?._id || "", { skip: !currentUser?._id });
   const hasResume = (myResumes?.data?.length ?? 0) > 0;
@@ -233,7 +239,7 @@ export default function MyProfilePage() {
   const displayRole = label("role", currentUser?.role);
 
   // Show the skeleton only until the signed-in user is known (no artificial wait)
-  if (!currentUser) {
+  if (!currentUser || !currentUser.profileId) {
     return <ProfileSkeleton embedded />;
   }
 

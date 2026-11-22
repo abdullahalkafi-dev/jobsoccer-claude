@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -33,6 +35,11 @@ export default function EmployerProfilePage() {
   const f = useFormats();
   // Get user data from Redux store
   const currentUser = useAppSelector((state) => state.auth.user);
+  // A user who left the create-profile steps has no profile yet: send them back to finish it (editing would fail)
+  const router = useRouter();
+  useEffect(() => {
+    if (currentUser && !currentUser.profileId) router.replace("/create-profile/employer");
+  }, [currentUser, router]);
 
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
@@ -167,7 +174,7 @@ export default function EmployerProfilePage() {
   const displayRole = label("role", currentUser?.role);
 
   // Show the skeleton only until the signed-in user is known (no artificial wait)
-  if (!currentUser) {
+  if (!currentUser || !currentUser.profileId) {
     return <ProfileSkeleton embedded />;
   }
 

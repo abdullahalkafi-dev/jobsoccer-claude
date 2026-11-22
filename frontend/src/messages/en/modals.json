@@ -206,6 +206,7 @@
     "languages": "Languages",
     "languagesPh": "Ex. English, Spanish, French",
     "categoryStaffPh": "Ex. Head Coach",
+    "categoryIfApplicable": "Category (if applicable)",
     "saveChanges": "Save Changes",
     "updated": "Profile updated successfully",
     "updateFailed": "Failed to update profile"

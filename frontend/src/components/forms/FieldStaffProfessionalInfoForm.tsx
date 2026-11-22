@@ -23,6 +23,7 @@ import {
   countryList,
   fieldStaffPositionOptions,
   genderOptions,
+  staffCategoryOptions,
 } from "@/constants/selectOptions";
 
 interface IFieldStaffProfessionalInfoFormProps {
@@ -78,6 +79,41 @@ export function FieldStaffProfessionalInfoForm({
       <form className="space-y-8">
         <FormSection title={t("section.professionalInformation")}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Gender */}
+            <FormField label={t("label.gender")} error={errors.gender?.message}>
+              <Select defaultValue={initialData?.gender as string | undefined} onValueChange={(value) => setValue("gender", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder={t("placeholder.selectGender")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {genderOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {label("gender", item)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            {/* Position */}
+            <FormField
+              label={t("label.selectYourPosition")}
+              error={errors.position?.message}
+            >
+              <Select defaultValue={initialData?.position as string | undefined} onValueChange={(value) => setValue("position", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder={t("placeholder.selectPosition")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {fieldStaffPositionOptions.map((pos) => (
+                    <SelectItem key={pos} value={pos}>
+                      {label("position", pos)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
             {/* Current Employer */}
             <FormField
               label={t("label.currentEmployer")}
@@ -102,20 +138,13 @@ export function FieldStaffProfessionalInfoForm({
               />
             </FormField>
 
-            {/* Gender */}
-            <FormField label={t("label.gender")} error={errors.gender?.message}>
-              <Select defaultValue={initialData?.gender as string | undefined} onValueChange={(value) => setValue("gender", value)}>
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder={t("placeholder.selectGender")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {genderOptions.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {label("gender", item)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* League */}
+            <FormField label={t("label.league")} error={errors.league?.message}>
+              <Input
+                {...register("league")}
+                placeholder={t("placeholder.writeYourLeague")}
+                className="bg-gray-50 border-0"
+              />
             </FormField>
 
             {/* Country */}
@@ -146,46 +175,6 @@ export function FieldStaffProfessionalInfoForm({
               />
             </FormField>
 
-            {/* Category */}
-            <FormField
-              label={t("label.categoryIfApplicable")}
-              error={errors.category?.message}
-            >
-              <Input
-                {...register("category")}
-                placeholder={t("placeholder.writeYourCategory")}
-                className="bg-gray-50 border-0"
-              />
-            </FormField>
-
-            {/* Category */}
-            <FormField label={t("label.league")} error={errors.league?.message}>
-              <Input
-                {...register("league")}
-                placeholder={t("placeholder.writeYourLeague")}
-                className="bg-gray-50 border-0"
-              />
-            </FormField>
-
-            {/* Position */}
-            <FormField
-              label={t("label.selectYourPosition")}
-              error={errors.position?.message}
-            >
-              <Select defaultValue={initialData?.position as string | undefined} onValueChange={(value) => setValue("position", value)}>
-                <SelectTrigger className="bg-gray-50 border-0 w-full">
-                  <SelectValue placeholder={t("placeholder.selectPosition")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {fieldStaffPositionOptions.map((pos) => (
-                    <SelectItem key={pos} value={pos}>
-                      {label("position", pos)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormField>
-            
             {/* Social Media */}
             <FormField
               label={t("label.socialMediaOptional")}
@@ -196,6 +185,25 @@ export function FieldStaffProfessionalInfoForm({
                 placeholder={t("placeholder.httpsWwwExampleCom")}
                 className="bg-gray-50 border-0"
               />
+            </FormField>
+
+            {/* Category (Professional or Amateur) */}
+            <FormField
+              label={t("label.categoryIfApplicable")}
+              error={errors.category?.message}
+            >
+              <Select defaultValue={initialData?.category as string | undefined} onValueChange={(value) => setValue("category", value)}>
+                <SelectTrigger className="bg-gray-50 border-0 w-full">
+                  <SelectValue placeholder={t("placeholder.selectCategory")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {staffCategoryOptions.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {label("category", item)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormField>
           </div>
         </FormSection>
