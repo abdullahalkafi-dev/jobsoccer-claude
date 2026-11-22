@@ -52,7 +52,8 @@ const main = async () => {
     docs.forEach((doc) => plan.push({ collection, _id: doc._id, field: "position", from: "Forward", to: "Striker" }));
   }
   for (const collection of CATEGORY_COLLECTIONS) {
-    const docs = await db.collection(collection).find({ nationalTeamCategory: { $type: "string" } }).project({ nationalTeamCategory: 1 }).toArray();
+    const docs = await db.collection(collection)// $type: "string" would also match a list that holds strings, so compare the type of the whole field
+      .find({ $expr: { $eq: [{ $type: "$nationalTeamCategory" }, "string"] } }).project({ nationalTeamCategory: 1 }).toArray();
     docs.forEach((doc) =>
       plan.push({ collection, _id: doc._id, field: "nationalTeamCategory", from: doc.nationalTeamCategory, to: doc.nationalTeamCategory ? [doc.nationalTeamCategory] : [] })
     );
