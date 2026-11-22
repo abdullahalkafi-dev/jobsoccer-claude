@@ -8,6 +8,7 @@ import {
   normalizeAlignment,
   TAlignment,
   TAlignmentOutput,
+  pruneSharedOnly,
   TBlock,
   unmatchedWords,
 } from "./alignment";
@@ -63,8 +64,9 @@ describe("checkAlignment", () => {
     expect(checkAlignment(output([answer(1, 2), answer(2, 3, 4)]), 6, ids)).toBeNull();
   });
 
-  it("reports a line used for two questions, unknown questions and ranges outside the transcript", () => {
-    expect(checkAlignment(output([answer(1, 2, 4), answer(2, 4)]), 6, ids)).toMatch(/two different questions/);
+  it("accepts one line serving two questions, but reports three, unknown questions and ranges outside the transcript", () => {
+    expect(checkAlignment(output([answer(1, 2, 4), answer(2, 4)]), 6, ids)).toBeNull();
+    expect(checkAlignment(output([answer(1, 2, 4), answer(2, 4), answer(3, 4)]), 6, ids)).toMatch(/three or more/);
     expect(checkAlignment(output([answer(9, 1)]), 6, ids)).toMatch(/does not exist/);
     expect(checkAlignment(output([answer(1, 5, 9)]), 6, ids)).toMatch(/outside lines/);
     expect(checkAlignment(output([answer(1, 1), answer(1, 2)]), 6, ids)).toMatch(/listed twice/);
@@ -72,17 +74,37 @@ describe("checkAlignment", () => {
 });
 
 describe("normalizeAlignment", () => {
-  it("gives a contested line to the earlier question and records it", () => {
+  it("lets one line serve two questions (a campaign story that is also the fix of an underperforming campaign)", () => {
     const result = normalizeAlignment(output([answer(2, 4, 6), answer(1, 3, 4)]), 8, ids);
     expect(result.blocks.map((b) => b.questionId)).toEqual([1, 2]);
     expect(result.blocks[0].ranges).toEqual([{ from: 3, to: 4 }]);
-    expect(result.blocks[1].ranges).toEqual([{ from: 5, to: 6 }]);
+    expect(result.blocks[1].ranges).toEqual([{ from: 4, to: 6 }]);
+    expect(result.overlaps).toEqual([]);
+  });
+
+  it("drops a third claim on the same line (earlier questions keep it) and records it", () => {
+    const result = normalizeAlignment(output([answer(3, 4, 6), answer(2, 4), answer(1, 3, 4)]), 8, ids);
+    expect(result.blocks[0].ranges).toEqual([{ from: 3, to: 4 }]);
+    expect(result.blocks[1].ranges).toEqual([{ from: 4, to: 4 }]);
+    expect(result.blocks[2].ranges).toEqual([{ from: 5, to: 6 }]);
     expect(result.overlaps).toEqual([4]);
   });
 
   it("drops unknown questions and invalid ranges instead of failing", () => {
     const result = normalizeAlignment(output([answer(9, 1), answer(1, 7, 99), answer(2, 2)]), 8, ids);
     expect(result.blocks.map((b) => b.questionId)).toEqual([2]);
+  });
+});
+
+describe("pruneSharedOnly", () => {
+  it("drops a question that only borrows another question's line when the recording follows the order", () => {
+    const result = pruneSharedOnly(alignment([block(1, 1, 2), block(2, 3, 4), block(3, 5, 6), block(15, 5)]));
+    expect(result.blocks.map((b) => b.questionId)).toEqual([1, 2, 3]);
+  });
+
+  it("keeps shared lines when the recording clearly does not follow the question order", () => {
+    const shuffled = alignment([block(4, 1, 2), block(1, 3), block(7, 4, 5), block(2, 6), block(9, 7), block(3, 8), block(10, 8)]);
+    expect(pruneSharedOnly(shuffled).blocks).toHaveLength(7);
   });
 });
 

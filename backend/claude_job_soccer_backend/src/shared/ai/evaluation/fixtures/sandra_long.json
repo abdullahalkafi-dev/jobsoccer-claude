@@ -1,8 +1,9 @@
 {
  "id": "sandra_long",
  "rubricId": "office_staff.digital_marketing.v1",
- "description": "Sandra (test04): answers do not follow this question list; true answer count unknown, report only",
- "expectedAnswered": null,
+ "description": "Sandra (test04): a read prepared text whose answers do NOT follow the question order. Truth read from the text 2026-11-22: Q15 (data protection of youth players) and Q18 (own performance review) are never spoken; Q3, Q5, Q9, Q13, Q17 are only touched indirectly; the rest are spoken. The client wrote that Q15-Q18 are missing (he counted by position); the staging report said 10 of 18.",
+ "expectedAnswered": [1, 2, 4, 6, 7, 8, 10, 11, 12, 14, 16],
+ "ambiguousAnswered": [3, 5, 9, 13, 17],
  "segments": [
   {
    "start": 0,

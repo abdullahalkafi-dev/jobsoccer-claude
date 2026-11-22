@@ -12,9 +12,13 @@ import { callStructured } from "./structuredCall";
  * Why a separate step: when the whole interview and all questions go into one
  * scoring call, a model happily credits the same sentence to three different
  * questions and counts a loosely related remark as an "answer". Here every
- * transcript line can belong to at most ONE question, answers are expected in
- * the order of the questions, and a second reading checks the first.
+ * transcript line normally belongs to ONE question (at most TWO when one sentence
+ * clearly answers two questions), answers are expected in the order of the questions
+ * unless the recording clearly does not follow it, and a second reading checks the first.
  */
+
+/** One sentence may serve this many different questions (an example that also shows how a problem was fixed, a plan that names its KPIs). */
+export const MAX_QUESTIONS_PER_LINE = 2;
 
 // ─── Transcript lines ────────────────────────────────────────────────────────
 
@@ -167,8 +171,8 @@ export const checkAlignment = (output: TAlignmentOutput, unitCount: number, ques
   const problems: string[] = [];
   const known = new Set(questionIds);
   const seen = new Set<number>();
-  const owner = new Map<number, number>();
-  const shared = new Set<number>();
+  const owners = new Map<number, Set<number>>();
+  const crowded = new Set<number>();
 
   for (const answer of output.answers) {
     if (!known.has(answer.questionId)) problems.push(`question ${answer.questionId} does not exist`);
@@ -181,21 +185,23 @@ export const checkAlignment = (output: TAlignmentOutput, unitCount: number, ques
         continue;
       }
       for (let line = range.from; line <= range.to; line++) {
-        const current = owner.get(line);
-        if (current !== undefined && current !== answer.questionId) shared.add(line);
-        else owner.set(line, answer.questionId);
+        const set = owners.get(line) ?? new Set<number>();
+        set.add(answer.questionId);
+        owners.set(line, set);
+        if (set.size > MAX_QUESTIONS_PER_LINE) crowded.add(line);
       }
     }
   }
-  if (shared.size) problems.push(`line(s) ${[...shared].slice(0, 8).join(", ")} are used for two different questions; each line may belong to one question only`);
+  if (crowded.size)
+    problems.push(`line(s) ${[...crowded].slice(0, 8).join(", ")} are used for three or more different questions; a line may serve at most ${MAX_QUESTIONS_PER_LINE} questions`);
   return problems.length ? problems.slice(0, 4).join("; ") : null;
 };
 
-/** Tolerant clean-up: invalid pieces are dropped, a contested line goes to the earlier question. */
+/** Tolerant clean-up: invalid pieces are dropped; a line may serve two questions, a third claim on it is dropped (earlier questions first). */
 export const normalizeAlignment = (output: TAlignmentOutput, unitCount: number, questionIds: number[]): TAlignment => {
   const known = new Set(questionIds);
   const merged = new Map<number, TBlock>();
-  const owner = new Map<number, number>();
+  const owners = new Map<number, number[]>();
   const overlaps = new Set<number>();
 
   const answers = [...output.answers].sort((a, b) => a.questionId - b.questionId);
@@ -206,10 +212,11 @@ export const normalizeAlignment = (output: TAlignmentOutput, unitCount: number, 
       if (range.from < 1 || range.to > unitCount || range.from > range.to) continue;
       let start: number | null = null;
       for (let line = range.from; line <= range.to + 1; line++) {
-        const free = line <= range.to && (!owner.has(line) || owner.get(line) === answer.questionId);
+        const current = owners.get(line) ?? [];
+        const free = line <= range.to && (current.includes(answer.questionId) || current.length < MAX_QUESTIONS_PER_LINE);
         if (line <= range.to && !free) overlaps.add(line);
         if (free) {
-          owner.set(line, answer.questionId);
+          if (!current.includes(answer.questionId)) owners.set(line, [...current, answer.questionId]);
           if (start === null) start = line;
         } else if (start !== null) {
           ranges.push({ from: start, to: line - 1 });
@@ -296,6 +303,21 @@ const rangeLines = (block: TBlock): Set<number> => {
   return lines;
 };
 
+/**
+ * Sharing a line between two questions is meant for recordings that do not follow the question order (a read
+ * prepared text). When the recording follows the order (at most 2 answers out of place), a question that only
+ * has lines taken from another question is a mismatch, not an answer, and is dropped.
+ */
+export const pruneSharedOnly = (alignment: TAlignment): TAlignment => {
+  if (findOutOfOrder(alignment.blocks).length > 2) return alignment;
+  const uses = new Map<number, number>();
+  for (const block of alignment.blocks) for (const line of rangeLines(block)) uses.set(line, (uses.get(line) ?? 0) + 1);
+  const kept = alignment.blocks.filter((block) => [...rangeLines(block)].some((line) => uses.get(line) === 1));
+  if (kept.length === alignment.blocks.length) return alignment;
+  const dropped = alignment.blocks.filter((b) => !kept.includes(b)).map((b) => b.questionId);
+  return { ...alignment, blocks: kept, changes: [...alignment.changes, `dropped Q${dropped.join(", Q")}: only lines of another question, in a recording that follows the question order`] };
+};
+
 /** Questions where the first and the second reading disagree (answered or not, or a different part of the recording). */
 export const disputedQuestions = (a: TAlignment, b: TAlignment): number[] => {
   const left = new Map(a.blocks.map((x) => [x.questionId, x]));
@@ -329,10 +351,11 @@ How candidates normally answer:
 - They do not say the question number and often do not repeat the question. Work out from the meaning of the lines which question is being answered.
 - A candidate may skip a question (silence, "next question", "I'm not sure", or simply moving on). A skipped question gets NO lines. When a question is skipped, do not shift the following answers onto it: every answer belongs to the question it speaks to, even if that leaves gaps in the numbering.
 - Rarely a candidate answers out of order or returns to an earlier question later. Match that way only when the content clearly shows it.
+- Some candidates read a prepared text that does not follow the order of the questions. When the lines clearly do not follow the question order, stop using the order as a hint and match every line by what it says.
 
 Rules:
-1. A question is answered only when the lines speak to what that question asks. A sentence that is only on the same general topic (a general remark about quality, review or results) does not answer a specific question about something else.
-2. Every line belongs to at most one question. Never use the same line for two questions. If one sentence could fit two neighbouring questions, give it to the earlier question unless the content clearly points to the other.
+1. A question is answered when the lines speak to what that question asks, even briefly or in other words. A concrete statement of what it asks (a named example, a result, a list of KPIs, a process step) counts. A sentence that is only on the same general topic (a general remark about quality, review or results) does not answer a specific question about something else.
+2. A line normally belongs to one question. Use the same line for two different questions only when that one sentence clearly answers both (for example one campaign story that is both the campaign example and the fix of an underperforming campaign). Never use a line for three questions. If a sentence merely could fit two neighbouring questions, give it to the earlier question unless the content clearly points to the other.
 3. Use the smallest ranges that contain the whole answer. An answer is normally one continuous range; use more than one range only when the candidate clearly returns to the question later.
 4. Lines that belong to no question go into otherLines: intro (introduction), closing (thanks, goodbye), filler (very short asides), unmatched (real content that answers none of the questions, for example an answer to something that was not asked).
 5. coverage: "direct" if the lines speak to what the question asks; "partial" if they touch only a part of it. note: one short sentence on why these lines are this question's answer.
@@ -376,6 +399,7 @@ a) Does each block really answer its question, or does it answer a neighbouring 
 b) Is any question counted as answered only because a general sentence loosely matches it?
 c) Are there lines in otherLines, or on the wrong question, that actually answer a question the candidate otherwise skipped?
 d) Is a question missing its full answer because the range stops too early or too late?
+e) Is a question left without lines although the transcript states what it asks (a named example, a result, a list of KPIs)? A line that clearly answers two questions may serve both.
 Return the full corrected alignment in the same format (unchanged if it is already right) and list every change you made in "changes", one short sentence each (empty if none).`;
 
 export const buildReviewPrompt = (rubric: Rubric, units: TUnit[], proposal: TAlignment, context: TTranscriptContext = {}) => ({
@@ -425,12 +449,12 @@ export const alignInterview = async (rubric: Rubric, units: TUnit[], context: TT
   const firstReading = normalizeAlignment(first.output, units.length, questionIds);
   const usage = [...first.usage];
   if (!aiConfig.alignment.review) {
-    return { alignment: firstReading, firstReading, reviewed: false, disputed: [], rawOutput: first.rawOutput, model: first.model, usage };
+    return { alignment: pruneSharedOnly(firstReading), firstReading, reviewed: false, disputed: [], rawOutput: first.rawOutput, model: first.model, usage };
   }
 
   const second = await callStructured({ ...base, task: "interview-alignment-review", ...buildReviewPrompt(rubric, units, firstReading, context) });
   usage.push(...second.usage);
-  const alignment = normalizeAlignment(second.output, units.length, questionIds);
+  const alignment = pruneSharedOnly(normalizeAlignment(second.output, units.length, questionIds));
   return {
     alignment,
     firstReading,
