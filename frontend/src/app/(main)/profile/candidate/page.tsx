@@ -657,10 +657,10 @@ export default function MyProfilePage() {
           <ExperienceSection userId={currentUser?._id || ""} candidateRole={currentUser?.role} />
         </div>
         <div id={QUALITY_SECTION_IDS.certificates} className="scroll-mt-24">
-          <CertificateSection userId={currentUser?._id || ""} />
+          <CertificateSection userId={currentUser?._id || ""} candidateRole={currentUser?.role} />
         </div>
         <div id={QUALITY_SECTION_IDS.education} className="scroll-mt-24">
-          <EducationSection userId={currentUser?._id || ""} />
+          <EducationSection userId={currentUser?._id || ""} candidateRole={currentUser?.role} />
         </div>
         <h2 id={QUALITY_SECTION_IDS.videos} className="scroll-mt-24 text-xl font-semibold text-gray-900">{t("page.myVideos")}</h2>
         <VideoManager />

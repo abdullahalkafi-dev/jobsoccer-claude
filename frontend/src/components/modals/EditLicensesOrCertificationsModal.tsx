@@ -55,12 +55,15 @@ interface EditLicenseOrCertificationsModalProps {
   isOpen: boolean;
   onClose: () => void;
   certificationData: CertificateData | null;
+  /** Players have simpler forms. */
+  isPlayer?: boolean;
 }
 
 export default function EditLicenseOrCertificationsModal({
   isOpen,
   onClose,
   certificationData,
+  isPlayer = false,
 }: EditLicenseOrCertificationsModalProps) {
   const t = useTranslations("modals");
   const label = useOptionLabel();
@@ -371,26 +374,28 @@ export default function EditLicenseOrCertificationsModal({
               )}
             />
 
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("certificate.description")}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t("certificate.descriptionEditPh")}
-                      className="mt-1 min-h-[100px] resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Description */} (hidden for players)
+            {!isPlayer && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      {t("certificate.description")}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("certificate.descriptionEditPh")}
+                        className="mt-1 min-h-[100px] resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">

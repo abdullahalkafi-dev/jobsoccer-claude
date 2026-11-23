@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { isPlayerRole } from "@/utils/playerRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
@@ -30,12 +31,16 @@ import EditLicenseOrCertificationsModal from "@/components/modals/EditLicensesOr
 interface CertificateSectionProps {
   userId: string;
   readOnly?: boolean;
+  /** Role of the profile owner (players get no description). */
+  candidateRole?: string;
 }
 
 export default function CertificateSection({
   userId,
   readOnly = false,
+  candidateRole,
 }: CertificateSectionProps) {
+  const isPlayer = isPlayerRole(candidateRole);
   const t = useTranslations("profile");
   const [deleteCertificate] = useDeleteCertificateMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -142,11 +147,13 @@ export default function CertificateSection({
       <AddLicensesOrCertificationsModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        isPlayer={isPlayer}
       />
 
       {editCertificateData && (
         <EditLicenseOrCertificationsModal
           isOpen={isEditModalOpen}
+          isPlayer={isPlayer}
           onClose={() => {
             setIsEditModalOpen(false);
             setEditCertificateData(null);

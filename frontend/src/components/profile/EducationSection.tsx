@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { isPlayerRole } from "@/utils/playerRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
@@ -30,12 +31,16 @@ import EditEducationModal from "@/components/modals/EditEducationModal";
 interface EducationSectionProps {
   userId: string;
   readOnly?: boolean;
+  /** Role of the profile owner (players get a Diploma and no description). */
+  candidateRole?: string;
 }
 
 export default function EducationSection({
   userId,
   readOnly = false,
+  candidateRole,
 }: EducationSectionProps) {
+  const isPlayer = isPlayerRole(candidateRole);
   const t = useTranslations("profile");
   const [deleteEducation] = useDeleteEducationMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -131,6 +136,7 @@ export default function EducationSection({
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}
               readOnly={readOnly}
+              isPlayer={isPlayer}
             />
           )}
         </CardContent>
@@ -140,6 +146,7 @@ export default function EducationSection({
       <AddEducationModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        isPlayer={isPlayer}
       />
 
       {editEducationData && (
@@ -150,6 +157,7 @@ export default function EducationSection({
             setEditEducationData(null);
           }}
           educationData={editEducationData}
+          isPlayer={isPlayer}
         />
       )}
 
@@ -221,6 +229,7 @@ interface EducationListProps {
   onEditClick: (education: EducationData) => void;
   onDeleteClick: (educationId: string, instituteName: string) => void;
   readOnly?: boolean;
+  isPlayer?: boolean;
 }
 
 function EducationList({
@@ -228,6 +237,7 @@ function EducationList({
   onEditClick,
   onDeleteClick,
   readOnly = false,
+  isPlayer = false,
 }: EducationListProps) {
   return (
     <div className="space-y-6">
@@ -238,6 +248,7 @@ function EducationList({
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
           readOnly={readOnly}
+          isPlayer={isPlayer}
         />
       ))}
     </div>
@@ -249,6 +260,7 @@ interface EducationItemProps {
   onEditClick: (education: EducationData) => void;
   onDeleteClick: (educationId: string, instituteName: string) => void;
   readOnly?: boolean;
+  isPlayer?: boolean;
 }
 
 function EducationItem({
@@ -256,6 +268,7 @@ function EducationItem({
   onEditClick,
   onDeleteClick,
   readOnly = false,
+  isPlayer = false,
 }: EducationItemProps) {
   const t = useTranslations("profile");
   const label = useOptionLabel();
@@ -281,7 +294,7 @@ function EducationItem({
             <h3 className="font-semibold text-gray-900">
               {education.instituteName}
             </h3>
-            <p className="text-sm text-gray-600">{t("education.degree", { value: education.degree })}</p>
+            <p className="text-sm text-gray-600">{t(isPlayer ? "education.diploma" : "education.degree", { value: education.degree })}</p>
             <p className="text-sm text-gray-600">
               {t("education.fieldOfStudy", { value: education.fieldOfStudy })}
             </p>

@@ -52,11 +52,14 @@ export type FormData = z.infer<ReturnType<typeof getFormSchema>>;
 interface AddExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Players have simpler forms. */
+  isPlayer?: boolean;
 }
 
 export default function AddExperienceOrCertificationsModal({
   isOpen,
   onClose,
+  isPlayer = false,
 }: AddExperienceModalProps) {
   const t = useTranslations("modals");
   const label = useOptionLabel();
@@ -326,26 +329,28 @@ export default function AddExperienceOrCertificationsModal({
               )}
             />
 
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("certificate.description")}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t("certificate.descriptionPh")}
-                      className="mt-1 min-h-[100px] resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Description */} (hidden for players)
+            {!isPlayer && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      {t("certificate.description")}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("certificate.descriptionPh")}
+                        className="mt-1 min-h-[100px] resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">

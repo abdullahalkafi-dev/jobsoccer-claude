@@ -163,7 +163,8 @@ export default function AddExperienceModal({
                     <SelectContent>
                       <SelectItem value="FullTime">{t("experience.fullTime")}</SelectItem>
                       <SelectItem value="PartTime">{t("experience.partTime")}</SelectItem>
-                      <SelectItem value="Contract">{t("experience.contract")}</SelectItem>
+                      {/* Players have no contract (client, 2026-11-23) */}
+                      {!isPlayer && <SelectItem value="Contract">{t("experience.contract")}</SelectItem>}
                     </SelectContent>
                   </Select>
                   <FormMessage />

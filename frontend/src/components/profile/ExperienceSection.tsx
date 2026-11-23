@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { isPlayerRole } from "@/utils/playerRole";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DocumentProof } from "@/features/verification/DocumentProof";
 import { Button } from "@/components/ui/button";
@@ -27,9 +28,6 @@ import { useOptionLabel } from "@/i18n/options";
 import AddExperienceModal from "@/components/modals/AddExperienceModal";
 import EditExperienceModal from "@/components/modals/EditExperienceModal";
 
-/** Players do not describe their clubs, so their forms have no description. */
-const PLAYER_ROLES = ["Professional Player", "Amateur Player", "High School Player", "College/University Player"];
-
 interface ExperienceSectionProps {
   userId: string;
   readOnly?: boolean;
@@ -42,7 +40,7 @@ export default function ExperienceSection({
   readOnly = false,
   candidateRole,
 }: ExperienceSectionProps) {
-  const isPlayer = !!candidateRole && PLAYER_ROLES.includes(candidateRole);
+  const isPlayer = isPlayerRole(candidateRole);
   const t = useTranslations("profile");
   const [deleteExperience] = useDeleteExperienceMutation();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

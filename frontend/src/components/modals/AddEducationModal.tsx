@@ -41,11 +41,14 @@ import {
 interface AddEducationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Players have simpler forms. */
+  isPlayer?: boolean;
 }
 
 export default function AddEducationModal({
   isOpen,
   onClose,
+  isPlayer = false,
 }: AddEducationModalProps) {
   const t = useTranslations("modals");
   const tv = useTranslations("validation");
@@ -146,11 +149,11 @@ export default function AddEducationModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("education.degree")}
+                    {t(isPlayer ? "education.diploma" : "education.degree")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={t("education.degreePh")}
+                      placeholder={t(isPlayer ? "education.diplomaPh" : "education.degreePh")}
                       {...field}
                       className="mt-1"
                     />
@@ -347,26 +350,28 @@ export default function AddEducationModal({
               )}
             />
 
-            {/* Description (Optional) */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("education.description")}
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t("education.descriptionPh")}
-                      className="mt-1 min-h-[100px] resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Description (Optional) */} (hidden for players)
+            {!isPlayer && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">
+                      {t("education.description")}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("education.descriptionPh")}
+                        className="mt-1 min-h-[100px] resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-4">
