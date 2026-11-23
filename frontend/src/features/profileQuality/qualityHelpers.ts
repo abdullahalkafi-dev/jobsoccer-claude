@@ -102,7 +102,8 @@ export function missingItems(quality: TProfileQuality): TMissingItem[] {
   return quality.categories
     .flatMap((category) =>
       wholeNumberItems(category)
-        .filter((item) => !item.done && item.tip)
+        // "Counts once you receive messages" is only a note: the client found it confusing, so it is not listed
+        .filter((item) => !item.done && item.tip && !(item.key === "responsiveness" && item.waiting))
         .map((item) => ({
           ...item,
           categoryKey: category.key,

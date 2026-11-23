@@ -121,7 +121,7 @@ export function ProfileQualityCard({ onAction }: { onAction?: (action: TQualityA
                                   )}
                                   <span>
                                     {item.label}
-                                    {!item.done && item.tip && <span className="block text-xs text-gray-500">{item.tip}</span>}
+                                    {!item.done && item.tip && !(item.key === "responsiveness" && item.waiting) && <span className="block text-xs text-gray-500">{item.tip}</span>}
                                   </span>
                                 </span>
                                 <span className={`shrink-0 tabular-nums ${item.done ? "text-green-700" : "text-gray-500"}`}>
