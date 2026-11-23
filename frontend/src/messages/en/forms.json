@@ -33,7 +33,7 @@
     "socialMediaOptional": "Social Media (optional)",
     "fifaLicenseNumber": "FIFA license number",
     "gender": "Gender",
-    "availableFromOptional": "Available from (optional)",
+    "availableFromOptional": "Availability (optional)",
     "height": "Height",
     "weight": "Weight",
     "currentClub": "Current club",
@@ -62,7 +62,7 @@
     "nationalTeamCategory": "National Team Category (optional, you can pick several)",
     "nationalTeamGames": "National Team Games (optional)",
     "divisionLevel": "Division level",
-    "teamSJoined": "Teams joined",
+    "teamSJoined": "Team joined",
     "contractExpires": "Contract expires"
   },
   "placeholder": {
@@ -117,9 +117,9 @@
     "nationality": "Nationality",
     "exJohnDoeManager": "Ex. John Doe, Manager",
     "ex10": "Ex. 10",
-    "yourJoinedDetails": "Teams you have played for",
+    "yourJoinedDetails": "Ex. 21/01/2026",
     "agentName": "Agent name",
-    "contractExpires": "Contract expires",
+    "contractExpires": "Ex. 30/06/2027",
     "satActScore": "Write your SAT or ACT score"
   },
   "layout": {

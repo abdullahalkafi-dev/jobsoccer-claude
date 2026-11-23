@@ -33,7 +33,7 @@
     "socialMediaOptional": "Redes sociales (opcional)",
     "fifaLicenseNumber": "Número de licencia FIFA",
     "gender": "Género",
-    "availableFromOptional": "Disponible desde (opcional)",
+    "availableFromOptional": "Disponibilidad (opcional)",
     "height": "Altura",
     "weight": "Peso",
     "currentClub": "Club actual",
@@ -62,7 +62,7 @@
     "nationalTeamCategory": "Categoría de la selección nacional (opcional, puedes elegir varias)",
     "nationalTeamGames": "Partidos con la selección nacional (opcional)",
     "divisionLevel": "Nivel de división",
-    "teamSJoined": "Equipos en los que has estado",
+    "teamSJoined": "Equipo al que te uniste",
     "contractExpires": "Vencimiento del contrato"
   },
   "placeholder": {
@@ -117,9 +117,9 @@
     "nationality": "Nacionalidad",
     "exJohnDoeManager": "Ej. John Doe, gerente",
     "ex10": "Ej. 10",
-    "yourJoinedDetails": "Equipos en los que has jugado",
+    "yourJoinedDetails": "Ej.: 21/01/2026",
     "agentName": "Nombre del agente",
-    "contractExpires": "Vencimiento del contrato",
+    "contractExpires": "Ej.: 30/06/2027",
     "satActScore": "Escribe tu puntuación SAT o ACT"
   },
   "layout": {

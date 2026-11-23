@@ -256,7 +256,7 @@ const highlightsSlot = (required: boolean): TVideoSlot => ({
   title: "Highlights",
   headline: required
     ? "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted."
-    : "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.",
+    : "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score and unlock access to Premium opportunities.",
   showSetupPhotos: false,
   sections: [
     {

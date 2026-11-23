@@ -133,8 +133,8 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     " (optional)": " (opcional)",
     // ---- highlights
     "Highlights": "Resumen de jugadas",
-    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.":
-      "Sube solo jugadas destacadas de partidos. No se aceptan imágenes de entrenamientos. Las jugadas destacadas son opcionales, pero necesitas al menos 2 vídeos (de hasta 3 minutos cada uno) para alcanzar una puntuación de calidad de perfil alta.",
+    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score and unlock access to Premium opportunities.":
+      "Sube solo jugadas destacadas de partidos. No se aceptan imágenes de entrenamientos. Las jugadas destacadas son opcionales, pero necesitas al menos 2 vídeos (de hasta 3 minutos cada uno) para alcanzar una puntuación de calidad de perfil alta y desbloquear el acceso a oportunidades Premium.",
     "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted.":
       "Sube 2 vídeos de jugadas destacadas de partidos, de hasta 3 minutos cada uno. No se aceptan imágenes de entrenamientos.",
     "Tips": "Consejos",
@@ -263,8 +263,8 @@ export const VIDEO_TEXTS: Record<Exclude<Lang, "en">, Record<string, string>> = 
     "Highlight montages or edited sequences": "Montages d'actions ou séquences éditées",
     " (optional)": " (facultatif)",
     "Highlights": "Temps forts",
-    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score.":
-      "Téléversez uniquement des temps forts de matchs. Les images d'entraînement ne sont pas acceptées. Les temps forts sont facultatifs, mais il faut au moins 2 vidéos (de 3 minutes maximum chacune) pour obtenir un score de qualité de profil élevé.",
+    "Upload game highlights only. Training footage is not accepted. Highlights are optional, but you need at least 2 highlight videos (up to 3 minutes each) to reach a high Profile Quality Score and unlock access to Premium opportunities.":
+      "Téléversez uniquement des temps forts de matchs. Les images d'entraînement ne sont pas acceptées. Les temps forts sont facultatifs, mais il faut au moins 2 vidéos (de 3 minutes maximum chacune) pour obtenir un score de qualité de profil élevé et débloquer l'accès aux opportunités Premium.",
     "Upload 2 game highlight videos, up to 3 minutes each. Training footage is not accepted.":
       "Téléversez 2 vidéos de temps forts de matchs, de 3 minutes maximum chacune. Les images d'entraînement ne sont pas acceptées.",
     "Tips": "Conseils",
