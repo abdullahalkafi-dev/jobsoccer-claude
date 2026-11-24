@@ -11,6 +11,7 @@ import { FormSection } from "@/components/form/FormSection";
 import { FormField } from "@/components/form/fields/FormField";
 import { ImageUpload } from "@/components/form/fields/ImageUpload";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { getPersonalInfoSchema } from "@/schemas/profileValidation";
 import { TPersonalInfo } from "@/types/profile";
@@ -113,10 +114,10 @@ export function PersonalInfoForm({
               label={t("label.phoneNumberOptional")}
               error={errors.phoneNumber?.message}
             >
-              <Input
-                {...register("phoneNumber")}
+              <PhoneInput
+                value={watch("phoneNumber") ?? ""}
+                onChange={(v) => setValue("phoneNumber", v)}
                 placeholder={t("placeholder.enterYourPhoneNumber")}
-                className="bg-gray-50 border-0"
               />
             </FormField>
           </div>

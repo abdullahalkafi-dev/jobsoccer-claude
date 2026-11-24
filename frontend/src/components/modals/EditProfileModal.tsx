@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Button } from "@/components/ui/button";
 import {
@@ -303,10 +304,10 @@ export default function EditProfileModal({
                   label={t("profile.phoneNumber")}
                   error={errors.phoneNumber?.message}
                 >
-                  <Input
-                    {...register("phoneNumber")}
+                  <PhoneInput
+                    value={watch("phoneNumber") ?? ""}
+                    onChange={(v) => setValue("phoneNumber", v, { shouldValidate: true })}
                     placeholder={t("profile.phonePh")}
-                    className="bg-gray-50 border-0"
                   />
                 </FormField>
               </div>
