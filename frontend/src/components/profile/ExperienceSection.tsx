@@ -136,6 +136,7 @@ export default function ExperienceSection({
               onEditClick={handleEditClick}
               onDeleteClick={handleDeleteClick}
               readOnly={readOnly}
+              isPlayer={isPlayer}
             />
           )}
         </CardContent>
@@ -228,6 +229,7 @@ interface ExperienceListProps {
   onEditClick: (experience: ExperienceData) => void;
   onDeleteClick: (experienceId: string, clubName: string) => void;
   readOnly?: boolean;
+  isPlayer?: boolean;
 }
 
 function ExperienceList({
@@ -235,6 +237,7 @@ function ExperienceList({
   onEditClick,
   onDeleteClick,
   readOnly = false,
+  isPlayer = false,
 }: ExperienceListProps) {
   return (
     <div className="space-y-6">
@@ -245,6 +248,7 @@ function ExperienceList({
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
           readOnly={readOnly}
+          isPlayer={isPlayer}
         />
       ))}
     </div>
@@ -256,6 +260,7 @@ interface ExperienceItemProps {
   onEditClick: (experience: ExperienceData) => void;
   onDeleteClick: (experienceId: string, clubName: string) => void;
   readOnly?: boolean;
+  isPlayer?: boolean;
 }
 
 function ExperienceItem({
@@ -263,6 +268,7 @@ function ExperienceItem({
   onEditClick,
   onDeleteClick,
   readOnly = false,
+  isPlayer = false,
 }: ExperienceItemProps) {
   const t = useTranslations("profile");
   const label = useOptionLabel();
@@ -339,7 +345,8 @@ function ExperienceItem({
         </div>
 
         <p className="mt-3 text-sm text-gray-700">{experience.description}</p>
-        <DocumentProof type="experience" record={experience} readOnly={readOnly} />
+        {/* Players need no reference letter */}
+        {!isPlayer && <DocumentProof type="experience" record={experience} readOnly={readOnly} />}
       </div>
     </div>
   );

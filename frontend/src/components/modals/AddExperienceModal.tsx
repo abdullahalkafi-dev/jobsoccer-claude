@@ -132,7 +132,7 @@ export default function AddExperienceModal({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={t("experience.titlePh")}
+                      placeholder={isPlayer ? t("experience.titlePhPlayer") : t("experience.titlePh")}
                       {...field}
                       className="mt-1"
                     />
