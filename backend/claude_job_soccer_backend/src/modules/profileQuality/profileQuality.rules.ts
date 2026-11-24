@@ -22,9 +22,9 @@ import { itemLabel, renderTip, TipParams } from "./profileQuality.i18n";
  * category is scaled to its full points, so nobody is penalised for them.
  * Recruitment results never add points.
  *
- * Maintenance is gradual (rules version 3): a new profile earns nothing for being new. Points come from availability,
- * from editing the profile or adding real items AFTER the first day, and from replies once messages were received
- * (not scaled away before that). See doc/daily-workflow/maintenance-gradual-rules.md.
+ * Maintenance (rules version 4): everyone gets a flat 3 points once the profile is registered. The rest comes from
+ * availability, from real items added or changed in the last months (counted at once, no waiting time), and from
+ * replies once messages were received (not scaled away before that). See doc/daily-workflow/maintenance-gradual-rules.md.
  */
 
 /** Everything the rules need to know about one candidate (loaded by the service). */
@@ -188,10 +188,7 @@ const staffMedia = (s: TQualitySnapshot): TItemSpec[] => {
   ];
 };
 
-type TMaintenanceWeights = { availability: number; edit: number; activity: number; responsiveness: number };
-
-/** Edits and new items count only when made at least this long after the profile was created (creating it is not "keeping it up to date"). */
-const FIRST_DAY_MS = 24 * 3600 * 1000;
+type TMaintenanceWeights = { registered: number; availability: number; activity: number; responsiveness: number };
 
 /** 1 within 6 months, 0.6 within 12 months, 0.2 older. */
 const recency = (date: Date | string, now: Date): number => {
@@ -200,26 +197,20 @@ const recency = (date: Date | string, now: Date): number => {
 };
 
 /**
- * Gradual: a new profile starts with the availability points only.
+ *  - registered: a flat part for everyone whose profile exists (no waiting time).
  *  - availability: text in "Available from".
- *  - edit: the profile was edited after its first day (recent edits count fully, older ones less).
- *  - activity: a real item (experience, education, licence, CV, video) was added or changed after the first day.
+ *  - activity: a real item (experience, education, licence, CV, video) was added or changed; recent items count fully.
  *  - replies: counted once the candidate has received enough messages. Before that it shows 0 and a neutral note;
  *    it is NOT scaled away. Logins never earn points.
  */
 const maintenance = (s: TQualitySnapshot, w: TMaintenanceWeights): TItemSpec[] => {
-  const created = s.profile.createdAt ? new Date(s.profile.createdAt).getTime() : null;
-  const afterFirstDay = (date: Date | string | undefined | null): date is Date | string =>
-    !!date && (created === null || new Date(date).getTime() >= created + FIRST_DAY_MS);
-
-  const editedAt = afterFirstDay(s.profile.updatedAt) ? s.profile.updatedAt : null;
-  const items = (s.activityDates ?? []).filter(afterFirstDay);
+  const items = s.activityDates ?? [];
   const latestItem = items.length ? items.reduce((a, b) => (new Date(a).getTime() > new Date(b).getTime() ? a : b)) : null;
   const rated = s.responseRate !== null;
 
   return [
+    { key: "registered", labelKey: "registered", max: w.registered, fraction: 1 },
     { key: "availability", labelKey: "availability", max: w.availability, fraction: filled(s.profile.availability) ? 1 : 0, tipKey: "updateAvailability" },
-    { key: "freshness", labelKey: "freshness", max: w.edit, fraction: editedAt ? recency(editedAt, s.now) : 0, tipKey: "reviewProfile" },
     { key: "activity", labelKey: "recentActivity", max: w.activity, fraction: latestItem ? recency(latestItem, s.now) : 0, tipKey: "addSomethingNew" },
     {
       key: "responsiveness",
@@ -278,16 +269,7 @@ const playerVerification = (s: TQualitySnapshot): TItemSpec[] => [
     fraction: s.identityStatus === "approved" ? 1 : s.identityStatus === "pending" ? 0.3 : 0,
     ...(s.identityStatus === "pending" ? { tipKey: "identityWaiting", waiting: true } : { tipKey: "identityRequest" }),
   },
-  {
-    // A reference letter confirming previous or current employment, approved by an admin. Professional players only:
-    // amateur, high school and college players have no contract, so identity is their only verification.
-    key: "history",
-    labelKey: "clubHistoryVerified",
-    max: 10,
-    fraction: approvedCount(s.experiences) >= 1 ? 1 : pendingCount(s.experiences) ? 0.2 : 0,
-    applicable: s.role === CandidateRole.PROFESSIONAL_PLAYER,
-    ...(pendingCount(s.experiences) ? { tipKey: "clubHistoryWaiting", waiting: true } : { tipKey: "clubHistoryUpload" }),
-  },
+  // Players need no reference letter: identity is their only verification (scaled to the full 20 points).
 ];
 
 const playerMedia = (s: TQualitySnapshot): TItemSpec[] => [
@@ -359,13 +341,13 @@ export const calculateProfileQuality = (s: TQualitySnapshot): Omit<TProfileQuali
         buildCategory("completion", "Profile Completion", 35, playerCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 20, playerVerification(s)),
         buildCategory("media", "Media Portfolio", 35, playerMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { availability: 3, edit: 2, activity: 1, responsiveness: 4 })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 10, maintenance(s, { registered: 3, availability: 2, activity: 1, responsiveness: 4 })),
       ]
     : [
         buildCategory("completion", "Profile Completion", 25, staffCompletion(s)),
         buildCategory("verification", "Verification & Credentials", 25, staffVerification(s)),
         buildCategory("media", "Media Portfolio", 35, staffMedia(s)),
-        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { availability: 5, edit: 3, activity: 2, responsiveness: 5 })),
+        buildCategory("maintenance", "Maintenance & Responsiveness", 15, maintenance(s, { registered: 3, availability: 5, activity: 2, responsiveness: 5 })),
       ];
 
   const score = Math.min(100, categories.reduce((sum, category) => sum + category.earned, 0));

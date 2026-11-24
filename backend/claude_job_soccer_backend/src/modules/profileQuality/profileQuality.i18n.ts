@@ -39,7 +39,7 @@ export const ITEM_LABELS: Record<string, Texts> = {
   interview: { en: "Video interview", es: "Entrevista en vídeo", fr: "Entretien vidéo" },
   methodology: { en: "Methodology video", es: "Vídeo de metodología", fr: "Vidéo de méthodologie" },
   availability: { en: "Availability up to date", es: "Disponibilidad actualizada", fr: "Disponibilité à jour" },
-  freshness: { en: "Profile updated after sign-up", es: "Perfil actualizado tras el registro", fr: "Profil mis à jour après l'inscription" },
+  registered: { en: "Profile registered", es: "Perfil registrado", fr: "Profil enregistré" },
   recentActivity: { en: "New items added recently", es: "Elementos añadidos recientemente", fr: "Éléments ajoutés récemment" },
   responsiveness: { en: "Replies to messages", es: "Respuesta a mensajes", fr: "Réponses aux messages" },
   sporting: { en: "Position and club", es: "Posición y club", fr: "Poste et club" },
@@ -48,7 +48,6 @@ export const ITEM_LABELS: Record<string, Texts> = {
   schoolDetails: { en: "School details", es: "Datos del centro de estudios", fr: "Informations scolaires" },
   careerDetails: { en: "Career details", es: "Datos de la carrera", fr: "Informations de carrière" },
   clubHistory: { en: "Club history", es: "Historial de clubes", fr: "Historique des clubs" },
-  clubHistoryVerified: { en: "Reference letter verified", es: "Carta de referencia verificada", fr: "Lettre de référence vérifiée" },
   highlights: { en: "Highlight videos", es: "Vídeos de mejores jugadas", fr: "Vidéos de meilleurs moments" },
 };
 
@@ -101,14 +100,11 @@ const TIPS: Record<string, Texts> = {
   recordInterview: { en: "Record your video interview.", es: "Graba tu entrevista en vídeo.", fr: "Enregistrez votre entretien vidéo." },
   addMethodology: { en: "Optional: add a methodology video to stand out to employers.", es: "Opcional: añade un vídeo de metodología para destacar ante los empleadores.", fr: "Facultatif : ajoutez une vidéo de méthodologie pour vous démarquer auprès des employeurs." },
   updateAvailability: { en: "Update your availability.", es: "Actualiza tu disponibilidad.", fr: "Mettez à jour votre disponibilité." },
-  reviewProfile: { en: "Come back and review or update your profile.", es: "Vuelve y revisa o actualiza tu perfil.", fr: "Revenez relire ou mettre à jour votre profil." },
   replyMessages: { en: "Reply to the messages you receive from employers.", es: "Responde a los mensajes que recibes de los empleadores.", fr: "Répondez aux messages que vous recevez des employeurs." },
   addSomethingNew: { en: "Add something new to your profile (experience, education, licence, CV or video).", es: "Añade algo nuevo a tu perfil (experiencia, formación, licencia, CV o vídeo).", fr: "Ajoutez du nouveau à votre profil (expérience, formation, licence, CV ou vidéo)." },
   repliesNotRated: { en: "Counts once you have received a few messages from employers.", es: "Cuenta cuando hayas recibido algunos mensajes de empleadores.", fr: "Compte dès que vous avez reçu quelques messages d'employeurs." },
   addPhoneSocial: { en: "Add your phone number and social media.", es: "Añade tu número de teléfono y tus redes sociales.", fr: "Ajoutez votre numéro de téléphone et vos réseaux sociaux." },
   addClubs: { en: "Add the clubs you have played for.", es: "Añade los clubes en los que has jugado.", fr: "Ajoutez les clubs dans lesquels vous avez joué." },
-  clubHistoryWaiting: { en: "Your reference letter is waiting for review.", es: "Tu carta de referencia está pendiente de revisión.", fr: "Votre lettre de référence est en attente d'examen." },
-  clubHistoryUpload: { en: "Upload a reference letter that confirms your previous or current employment.", es: "Sube una carta de referencia que confirme tu empleo anterior o actual.", fr: "Téléversez une lettre de référence qui confirme votre emploi précédent ou actuel." },
   uploadHighlights: { en: "Upload two game highlight videos (training footage is not accepted).", es: "Sube dos vídeos de jugadas destacadas de partidos (no se aceptan entrenamientos).", fr: "Téléversez deux vidéos de temps forts de matchs (les entraînements ne sont pas acceptés)." },
 };
 

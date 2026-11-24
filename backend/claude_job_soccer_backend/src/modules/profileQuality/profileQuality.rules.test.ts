@@ -131,38 +131,36 @@ describe("calculateProfileQuality (staff)", () => {
     expect(verification(identityOnly).earned).toBe(13);
   });
 
-  it("gives a brand-new profile only the availability points, then earns the rest step by step (gradual)", () => {
-    const created = new Date("2026-11-04T23:00:00Z"); // one hour before "now"
-    const base = { responseRate: null, profile: { ...fullStaffProfile, createdAt: created, updatedAt: now }, activityDates: [now] };
+  it("gives every registered profile a flat 3 maintenance points at once and the rest follows what the person does", () => {
     const m = (snapshot: TQualitySnapshot) => calculateProfileQuality(snapshot).categories.find((c) => c.key === "maintenance")!;
-    const fresh = m(fullStaff(base));
+    const brandNew = { responseRate: null, profile: { ...fullStaffProfile, createdAt: new Date("2026-11-04T23:00:00Z") }, activityDates: [now] };
+    const fresh = m(fullStaff(brandNew));
     expect(fresh.max).toBe(15);
-    expect(fresh.earned).toBe(5); // availability only: creating the profile earns nothing for being new
-    expect(fresh.items.map((i) => i.key)).toEqual(["availability", "freshness", "activity", "responsiveness"]);
-    // No availability text and nothing else: 0
-    expect(m(fullStaff({ ...base, profile: { ...base.profile, availability: "" } })).earned).toBe(0);
-    // First edit after the first day: +3
-    const edited = { ...base, profile: { ...base.profile, createdAt: new Date("2026-10-01T00:00:00Z"), updatedAt: recently }, activityDates: [] };
-    expect(m(fullStaff(edited)).earned).toBe(8);
-    // A new real item after the first day: +2
-    expect(m(fullStaff({ ...edited, activityDates: [recently] })).earned).toBe(10);
-    // Replies once rated: up to the full 15
-    expect(m(fullStaff({ ...edited, activityDates: [recently], responseRate: 1 })).earned).toBe(15);
+    expect(fresh.items.map((i) => i.key)).toEqual(["registered", "availability", "activity", "responsiveness"]);
+    expect(fresh.items.find((i) => i.key === "registered")).toMatchObject({ earned: 3, max: 3, done: true });
+    // No waiting time: availability 5 + the items added while signing up 2 + registered 3
+    expect(fresh.earned).toBe(10);
+    // Nothing else filled in: everybody still has the 3 points
+    expect(m(fullStaff({ ...brandNew, profile: { ...brandNew.profile, availability: "" }, activityDates: [] })).earned).toBe(3);
+    // Replies once rated: the full 15
+    expect(m(fullStaff({ ...brandNew, responseRate: 1 })).earned).toBe(15);
   });
 
-  it("older edits and items earn less (6 months full, 12 months 60%, older 20%)", () => {
-    const m = (updatedAt: Date) => calculateProfileQuality(fullStaff({ responseRate: null, activityDates: [], profile: { ...fullStaffProfile, createdAt: new Date("2024-01-01T00:00:00Z"), updatedAt } })).categories.find((c) => c.key === "maintenance")!.items.find((i) => i.key === "freshness")!;
-    expect(m(new Date("2026-08-01T00:00:00Z")).earned).toBe(3);
-    expect(m(new Date("2026-02-01T00:00:00Z")).earned).toBe(1.8);
-    expect(m(new Date("2025-06-01T00:00:00Z")).earned).toBe(0.6);
+  it("older items earn less (6 months full, 12 months 60%, older 20%)", () => {
+    const m = (date: Date) => calculateProfileQuality(fullStaff({ responseRate: null, activityDates: [date] })).categories.find((c) => c.key === "maintenance")!.items.find((i) => i.key === "activity")!;
+    expect(m(new Date("2026-08-01T00:00:00Z")).earned).toBe(2);
+    expect(m(new Date("2026-02-01T00:00:00Z")).earned).toBe(1.2);
+    expect(m(new Date("2025-06-01T00:00:00Z")).earned).toBe(0.4);
   });
 
-  it("splits staff maintenance 5 + 3 + 2 + 5 and does not scale the reply points away before messages arrive", () => {
+  it("splits staff maintenance 3 + 5 + 2 + 5 and does not scale the reply points away before messages arrive", () => {
     const unrated = calculateProfileQuality(fullStaff({ responseRate: null })).categories.find((c) => c.key === "maintenance")!;
-    expect(unrated.items.map((i) => [i.key, i.max])).toEqual([["availability", 5], ["freshness", 3], ["activity", 2], ["responsiveness", 5]]);
+    expect(unrated.items.map((i) => [i.key, i.max])).toEqual([["registered", 3], ["availability", 5], ["activity", 2], ["responsiveness", 5]]);
     const replies = unrated.items.find((i) => i.key === "responsiveness")!;
     expect(replies).toMatchObject({ earned: 0, max: 5, done: false, waiting: true, tipKey: "repliesNotRated" });
     expect(unrated.earned).toBe(10);
+    // The "come back and review" item no longer exists
+    expect(unrated.items.map((i) => i.key)).not.toContain("freshness");
   });
 
   it("stamps the rules version so older saved scores are recalculated once", () => {
@@ -269,19 +267,21 @@ describe("calculateProfileQuality (players)", () => {
     expect(media(two).earned).toBe(35);
   });
 
-  it("asks for club proof only from professional players (reference letter); the other player roles have identity only", () => {
+  it("verifies players by identity only (20 of 20): no reference letter for any player role", () => {
     const verification = (r: ReturnType<typeof calculateProfileQuality>) => r.categories.find((c) => c.key === "verification")!;
     const completion = (r: ReturnType<typeof calculateProfileQuality>) => r.categories.find((c) => c.key === "completion")!;
-    const pro = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER));
-    expect(verification(pro).items.map((i) => [i.key, i.max])).toEqual([["identity", 10], ["history", 10]]);
-    expect(pro.tips.join(" ")).toContain("reference letter");
-    expect(completion(pro).items.map((i) => i.key)).toContain("history");
-    for (const role of [CandidateRole.AMATEUR_PLAYER, CandidateRole.HIGH_SCHOOL, CandidateRole.COLLEGE_UNIVERSITY]) {
+    for (const role of [CandidateRole.PROFESSIONAL_PLAYER, CandidateRole.AMATEUR_PLAYER, CandidateRole.HIGH_SCHOOL, CandidateRole.COLLEGE_UNIVERSITY]) {
       const result = calculateProfileQuality(player(role));
       expect(verification(result).items.map((i) => [i.key, i.max])).toEqual([["identity", 20]]);
-      expect(completion(result).items.map((i) => i.key)).not.toContain("history");
-      expect(result.tips.join(" ")).not.toMatch(/club/i);
+      expect(result.tips.join(" ")).not.toMatch(/reference letter/i);
     }
+    // Club items in Profile Completion stay for professional players only
+    expect(completion(calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER))).items.map((i) => i.key)).toContain("history");
+    for (const role of [CandidateRole.AMATEUR_PLAYER, CandidateRole.HIGH_SCHOOL, CandidateRole.COLLEGE_UNIVERSITY]) {
+      expect(completion(calculateProfileQuality(player(role))).items.map((i) => i.key)).not.toContain("history");
+    }
+    // Approved identity alone gives the whole category
+    expect(verification(calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER, { identityStatus: "approved" }))).earned).toBe(20);
   });
 
   it("does not count the optional national team games in Profile Completion", () => {
@@ -291,8 +291,8 @@ describe("calculateProfileQuality (players)", () => {
     expect(without.tips.join(" ")).not.toContain("national team");
   });
 
-  it("splits player maintenance 3 + 2 + 1 + 4", () => {
+  it("splits player maintenance 3 + 2 + 1 + 4 (registered, availability, new items, replies)", () => {
     const m = calculateProfileQuality(player(CandidateRole.PROFESSIONAL_PLAYER)).categories.find((c) => c.key === "maintenance")!;
-    expect(m.items.map((i) => [i.key, i.max])).toEqual([["availability", 3], ["freshness", 2], ["activity", 1], ["responsiveness", 4]]);
+    expect(m.items.map((i) => [i.key, i.max])).toEqual([["registered", 3], ["availability", 2], ["activity", 1], ["responsiveness", 4]]);
   });
 });
