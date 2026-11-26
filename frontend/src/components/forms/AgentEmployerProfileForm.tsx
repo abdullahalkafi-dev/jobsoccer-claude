@@ -178,7 +178,6 @@ export function AgentEmployerProfileForm({
               >
                 <Input
                   {...register("socialMedia")}
-                  placeholder={t("placeholder.httpsWwwExampleCom")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>

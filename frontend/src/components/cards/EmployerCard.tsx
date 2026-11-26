@@ -141,7 +141,7 @@ export function EmployerCard({ employer }: { employer: IEmployer }) {
             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
               <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">
-                {employer?.profile?.location || t("notAvailable")}
+                {(employer?.role === "Professional Club" ? employer?.profile?.country : employer?.profile?.location) || t("notAvailable")}
               </span>
             </div>
           </div>

@@ -150,16 +150,8 @@ export function ProfessionalClubEmployerProfileForm({
               </FormField>
             </div>
 
-            {/* Location and Address */}
+            {/* Address */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField label={t("label.location")} error={errors.location?.message}>
-                <Input
-                  {...register("location")}
-                  placeholder={t("placeholder.writeYourLocation")}
-                  className="bg-gray-50 border-0"
-                />
-              </FormField>
-
               <FormField label={t("label.address")} error={errors.address?.message}>
                 <Input
                   {...register("address")}
@@ -210,7 +202,7 @@ export function ProfessionalClubEmployerProfileForm({
               </FormField>
             </div>
 
-            {/* Website and Nationality */}
+            {/* Website and Social Media */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField label={t("label.website")} error={errors.website?.message}>
                 <Input
@@ -221,12 +213,11 @@ export function ProfessionalClubEmployerProfileForm({
               </FormField>
 
               <FormField
-                label={t("label.nationality")}
-                error={errors.nationality?.message}
+                label={t("label.socialMediaOptional")}
+                error={errors.socialMedia?.message}
               >
                 <Input
-                  {...register("nationality")}
-                  placeholder={t("placeholder.nationality")}
+                  {...register("socialMedia")}
                   className="bg-gray-50 border-0"
                 />
               </FormField>

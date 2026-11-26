@@ -40,6 +40,7 @@ const formSchema = z.object({
   founded: z.string().optional(),
   level: z.string().optional(),
   nationality: z.string().optional(),
+  socialMedia: z.string().optional(),
   clubContact: z.string().optional(),
   clubDescription: z.string().optional(),
 });
@@ -50,13 +51,17 @@ interface EditEmployerPersonalInformationModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialData: Partial<EmployerProfileFormData>;
+  /** Professional clubs are no longer asked for a location or a nationality. */
+  role?: string;
 }
 
 export default function EditEmployerPersonalInformationModal({
   isOpen,
   onClose,
   initialData,
+  role,
 }: EditEmployerPersonalInformationModalProps) {
+  const isClub = role === "Professional Club";
   const t = useTranslations("modals");
   const label = useOptionLabel();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
@@ -82,6 +87,7 @@ export default function EditEmployerPersonalInformationModal({
         : "",
       level: initialData?.level || "",
       nationality: initialData?.nationality || "",
+      socialMedia: initialData?.socialMedia || "",
       clubContact: initialData?.clubContact || "",
       clubDescription: initialData?.clubDescription || "",
     },
@@ -103,6 +109,7 @@ export default function EditEmployerPersonalInformationModal({
           : "",
         level: initialData?.level || "",
         nationality: initialData?.nationality || "",
+        socialMedia: initialData?.socialMedia || "",
         clubContact: initialData?.clubContact || "",
         clubDescription: initialData?.clubDescription || "",
       });
@@ -208,14 +215,14 @@ export default function EditEmployerPersonalInformationModal({
                   />
                 </FormField>
 
-                {/* Location */}
-                <FormField label={t("employer.location")} error={errors.location?.message}>
+                {/* Location (not asked from professional clubs) */}
+                {!isClub && <FormField label={t("employer.location")} error={errors.location?.message}>
                   <Input
                     {...register("location")}
                     placeholder={t("employer.locationPh")}
                     className="bg-gray-50 border-0"
                   />
-                </FormField>
+                </FormField>}
 
                 {/* Founded */}
                 <FormField label={t("employer.founded")} error={errors.founded?.message}>
@@ -247,8 +254,17 @@ export default function EditEmployerPersonalInformationModal({
                   </Select>
                 </FormField>
 
-                {/* Nationality */}
-                <FormField
+                {/* Social media */}
+                <FormField label={t("employer.socialMedia")} error={errors.socialMedia?.message}>
+                  <SocialMediaInput
+                    register={register("socialMedia")}
+                    value={watch("socialMedia") || ""}
+                    className="bg-gray-50 border-0"
+                  />
+                </FormField>
+
+                {/* Nationality (not asked from professional clubs) */}
+                {!isClub && <FormField
                   label={t("employer.nationality")}
                   error={errors.nationality?.message}
                 >
@@ -257,7 +273,7 @@ export default function EditEmployerPersonalInformationModal({
                     placeholder={t("employer.nationalityPh")}
                     className="bg-gray-50 border-0"
                   />
-                </FormField>
+                </FormField>}
 
                 {/* Club Contact */}
                 <FormField

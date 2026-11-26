@@ -220,7 +220,7 @@ export default function EmployerDetailsPage() {
                   <Link href={`mailto:${employer.email}`} className="text-sm truncate hover:underline cursor-pointer">{employer.email}</Link>
                 </div>
               )}
-              {employer?.profile?.location && (
+              {employer?.role !== "Professional Club" && employer?.profile?.location && (
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 shrink-0" />
                   <span className="truncate">{employer.profile.location}</span>
@@ -405,8 +405,8 @@ export default function EmployerDetailsPage() {
               </div>
             )}
 
-            {/* Location */}
-            {employer?.profile?.location && (
+            {/* Location (not asked from professional clubs any more) */}
+            {employer?.role !== "Professional Club" && employer?.profile?.location && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   {t("location")}
@@ -442,8 +442,25 @@ export default function EmployerDetailsPage() {
               </div>
             )}
 
-            {/* Nationality */}
-            {employer?.profile?.nationality && (
+            {/* Social media */}
+            {employer?.profile?.socialMedia && (() => {
+              const platform = detectSocialPlatform(employer.profile.socialMedia);
+              const PlatformIcon = platform.Icon;
+              return (
+                <div>
+                  <label className="text-xs sm:text-sm text-gray-500 mb-1 block">{platform.name}</label>
+                  <p className={`font-medium text-sm sm:text-base flex items-center gap-2 ${platform.colorClass}`}>
+                    <PlatformIcon className="h-4 w-4 shrink-0" />
+                    <a href={formatUrl(employer.profile.socialMedia)} target="_blank" rel="noopener noreferrer" className="truncate hover:underline">
+                      {employer.profile.socialMedia}
+                    </a>
+                  </p>
+                </div>
+              );
+            })()}
+
+            {/* Nationality (not asked from professional clubs any more) */}
+            {employer?.role !== "Professional Club" && employer?.profile?.nationality && (
               <div>
                 <label className="text-xs sm:text-sm text-gray-500 mb-1 block">
                   {t("nationality")}

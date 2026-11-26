@@ -216,7 +216,7 @@ export default function EmployerProfilePage() {
             {currentUser?.email && (
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">{currentUser.email}</span>
+                <a href={`mailto:${currentUser.email}`} className="text-sm hover:underline">{currentUser.email}</a>
               </div>
             )}
           </div>
@@ -347,8 +347,8 @@ export default function EmployerProfilePage() {
               </div>
             )}
 
-            {/* Location */}
-            {currentUser?.profile?.location && (
+            {/* Location (not asked from professional clubs any more) */}
+            {currentUser?.role !== "Professional Club" && currentUser?.profile?.location && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
                   {t("fields.location")}
@@ -383,8 +383,25 @@ export default function EmployerProfilePage() {
               </div>
             )}
 
-            {/* Nationality */}
-            {currentUser?.profile?.nationality && (
+            {/* Social media */}
+            {currentUser?.profile?.socialMedia && (() => {
+              const platform = detectSocialPlatform(currentUser.profile.socialMedia);
+              const PlatformIcon = platform.Icon;
+              return (
+                <div>
+                  <label className="text-sm text-gray-500 mb-1 block">{platform.name}</label>
+                  <p className={`font-medium flex items-center gap-2 text-sm ${platform.colorClass}`}>
+                    <PlatformIcon className="h-4 w-4 shrink-0" />
+                    <a href={formatUrl(currentUser.profile.socialMedia)} target="_blank" rel="noopener noreferrer" className="truncate hover:underline">
+                      {currentUser.profile.socialMedia}
+                    </a>
+                  </p>
+                </div>
+              );
+            })()}
+
+            {/* Nationality (not asked from professional clubs any more) */}
+            {currentUser?.role !== "Professional Club" && currentUser?.profile?.nationality && (
               <div>
                 <label className="text-sm text-gray-500 mb-1 block">
                   {t("fields.nationality")}
@@ -415,6 +432,7 @@ export default function EmployerProfilePage() {
         isOpen={isEditProfileModalOpen}
         onClose={() => setIsEditProfileModalOpen(false)}
         initialData={currentUser?.profile || {}}
+        role={currentUser?.role}
       />
     </div>
   );
