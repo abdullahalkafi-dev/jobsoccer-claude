@@ -19,11 +19,9 @@ export interface EmployerRun {
 const CLUB_PROFILE = {
   country: "United Kingdom",
   address: "1 Stadium Road, Manchester",
-  location: "Manchester",
   level: "Professional",
   founded: "1901",
   website: "https://e2e-club.example.com",
-  nationality: "English",
   phoneNumber: "+447700900200",
   clubName: "E2E Test United",
   clubContact: "scouting@e2e-club.example.com",

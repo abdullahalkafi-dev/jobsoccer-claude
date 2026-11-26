@@ -3,11 +3,10 @@ import { z } from "zod";
 const createProfessionalClubEmployerProfileDto = z.object({
     country: z.string().min(1, "Country is required"),
     address: z.string().trim().min(1, "Address is required"),
-    location: z.string().trim().min(1, "Location is required"),
     level: z.string().trim().min(1, "Level is required"),
     founded: z.string().trim().min(1, "Founded is required"),
     website: z.string().trim().min(1, "Website is required"),
-    nationality: z.string().trim().min(1, "Nationality is required"),
+    socialMedia: z.string().trim().min(1, "Social media is required").optional(),
     phoneNumber: z.string().trim().min(1, "Phone number is required").optional(),
     clubName: z.string().trim().min(1, "Club name is required"),
     clubContact: z.string().trim().min(1, "Club contact is required"),

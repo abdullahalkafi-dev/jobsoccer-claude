@@ -4,11 +4,13 @@ import { countryList } from "../../../shared/constant/country.constant";
 export type TProfessionalClubEmployerProfile = {
   country: (typeof countryList)[number];
   address: string;
-  location: string;
+  /** No longer asked (client, 2026-11-26); old clubs keep what they saved. */
+  location?: string;
   level: string;
   founded: string;
   website: string;
-  nationality: string;
+  nationality?: string;
+  socialMedia?: string;
   phoneNumber?: string;
   clubName: string;
   clubContact: string;
@@ -27,7 +29,7 @@ const professionalClubEmployerProfileSchema = new Schema<TProfessionalClubEmploy
   },
   location: {
     type: String,
-    required: true,
+    required: false,
   },
   level: {
     type: String,
@@ -43,7 +45,11 @@ const professionalClubEmployerProfileSchema = new Schema<TProfessionalClubEmploy
   },
   nationality: {
     type: String,
-    required: true,
+    required: false,
+  },
+  socialMedia: {
+    type: String,
+    required: false,
   },
   phoneNumber: {
     type: String,
